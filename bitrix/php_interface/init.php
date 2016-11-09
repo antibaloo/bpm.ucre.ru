@@ -1,4 +1,72 @@
 <?php
+AddEventHandler('crm', 'OnBeforeCrmDealUpdate', 'DealCheck');
+function DealCheck(&$arFieldsNew){
+	$dbResult = CCrmDeal::GetList(array(),array("ID"=>$arFieldsNew["ID"]),array());
+	$arFieldsCur = $dbResult->Fetch();
+	//file_put_contents('/home/bitrix/www_bpm/new.txt', var_export($arFieldsNew, true));
+	//file_put_contents('/home/bitrix/www_bpm/cur.txt', var_export($arFieldsCur, true));
+	CIBlockElement::SetPropertyValuesEx($arFieldsCur['UF_CRM_1469534140'], 42, array("ID_DEAL" => $arFieldsNew['ID']));
+	if ($arFieldsCur['UF_CRM_1469534140']){//Если сделка связана с каким-либо объектом
+		if ($arFieldsNew['UF_CRM_579897C010103']){//Если поменялась цена, синхронизируем объект
+			CIBlockElement::SetPropertyValuesEx($arFieldsCur['UF_CRM_1469534140'], 42, array("PRICE" => $arFieldsNew['UF_CRM_579897C010103']));
+			CEventLog::Add(array(
+				"SEVERITY" => "SECURITY",
+				"AUDIT_TYPE_ID" => "DEAL_BEFORE_UPDATE",
+				"MODULE_ID" => "main",
+				"ITEM_ID" => 'Заявки (сделки)',
+				"DESCRIPTION" => "Для заявки № ".$arFieldsNew['ID']." обновлена цена в объекте № ".$arFieldsCur['UF_CRM_1469534140'],
+			));
+		}
+		
+		if ($arFieldsNew['ASSIGNED_BY_ID'] && ($arFieldsNew['ASSIGNED_BY_ID']!=$arFieldsCur['ASSIGNED_BY_ID'])){//Если поменялся ответственный за заявку
+			CIBlockElement::SetPropertyValuesEx($arFieldsCur['UF_CRM_1469534140'], 42, array("ASSIGNED_BY" => $arFieldsNew['ASSIGNED_BY_ID']));
+			CEventLog::Add(array(
+				"SEVERITY" => "SECURITY",
+				"AUDIT_TYPE_ID" => "DEAL_BEFORE_UPDATE",
+				"MODULE_ID" => "main",
+				"ITEM_ID" => 'Заявки (сделки)',
+				"DESCRIPTION" => "Для заявки № ".$arFieldsNew['ID']." обновлен ответственный в объекте № ".$arFieldsCur['UF_CRM_1469534140'],
+			));
+		}
+		if ($arFieldsNew['COMMENTS'] && ($arFieldsNew['COMMENTS']!=$arFieldsCur['COMMENTS'])){//Если поменялось описание заявки
+			$el = new CIBlockElement;
+			if ($el->Update($arFieldsCur['UF_CRM_1469534140'], array("DETAIL_TEXT" => $arFieldsNew['COMMENTS']))){
+			CEventLog::Add(array(
+				"SEVERITY" => "SECURITY",
+				"AUDIT_TYPE_ID" => "DEAL_BEFORE_UPDATE",
+				"MODULE_ID" => "main",
+				"ITEM_ID" => 'Заявки (сделки)',
+				"DESCRIPTION" => "Для заявки № ".$arFieldsNew["ID"]." обновлено описание в связанном объекте № ".$arFieldsCur['UF_CRM_1469534140'],
+			));
+		}else{
+			CEventLog::Add(array(
+				"SEVERITY" => "SECURITY",
+				"AUDIT_TYPE_ID" => "DEAL_BEFORE_UPDATE",
+				"MODULE_ID" => "main",
+				"ITEM_ID" => 'Заявки (сделки)',
+				"DESCRIPTION" => "Ошибка обновления объекта № ".$arFieldsNew['UF_CRM_1469534140'].", ".$el->LAST_ERROR,
+			));
+			}
+		}
+		
+		if ($arFieldsNew['STAGE_ID']!=$arFieldsCur['STAGE_ID']){//Если поменялся статус заявки
+			if (CCrmDeal::GetStageName($arFieldsCur['STAGE_ID'])=="Предлистинг" && !in_array(CCrmSecurityHelper::GetCurrentUserID(), array(24,1,11,12,26))){
+				$arFieldsNew['RESULT_MESSAGE'] = "Заявку из предлистинга может вывести только администратор.";
+				return false;
+			}
+			CIBlockElement::SetPropertyValuesEx($arFieldsCur['UF_CRM_1469534140'], 42, array("STATUS" => CCrmDeal::GetStageName($arFieldsNew['STAGE_ID'])));
+			CEventLog::Add(array(
+				"SEVERITY" => "SECURITY",
+				"AUDIT_TYPE_ID" => "DEAL_BEFORE_UPDATE",
+				"MODULE_ID" => "main",
+				"ITEM_ID" => 'Заявки (сделки)',
+				"DESCRIPTION" => "Для заявки № ".$arFieldsNew['ID']." обновлен статус в объекте № ".$arFieldsCur['UF_CRM_1469534140']." на ".CCrmDeal::GetStageName($arFieldsNew['STAGE_ID']),
+			));
+		}
+	}
+	
+}
+
 function avito_Export()
 {
 	$start = microtime(true);//Засекаем время выполнения скрипта
