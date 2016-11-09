@@ -1,4 +1,80 @@
 <?php
+AddEventHandler("iblock", "OnAfterIBlockElementAdd", "addnews");
+AddEventHandler("iblock", "OnAfterIBlockElementUpdate", "updatenews");
+function addnews(&$arFields){
+	if ($arFields['IBLOCK_ID'] == 1 || $arFields['IBLOCK_ID'] == 2){
+		$url = "http://ucre.ru/getnewsfrombpm.php";
+		$arSelect = array("ID", "ACTIVE", "NAME", "TAGS", "PREVIEW_PICTURE", "PREVIEW_TEXT", "DETAIL_PICTURE", "DETAIL_TEXT", "IBLOCK_ID");
+		$arFilter = array('ID' =>$arFields['ID'], 'IBLOCK_ID' => $arFields['IBLOCK_ID']);
+		$res = CIBlockElement::GetList(array(), $arFilter, false, false, $arSelect);
+		$ob = $res->GetNextElement();
+		$news = $ob->GetFields();
+		$data = array(
+			'ACTION'					=>	'ADD',
+			'TIMESTAMP'				=>	ConvertTimeStamp(time(), "FULL"),
+			'ID'							=>	$arFields['ID'],
+			'IBLOCK_ID'				=>	$arFields['IBLOCK_ID'],
+			'ACTIVE'					=>	$news['ACTIVE'],
+			'NAME'						=>	$news['NAME'],
+			'TAGS'						=>	$news['TAGS'],
+			'PREVIEW_PICTURE'	=>	($news['PREVIEW_PICTURE'])?"https://bpm.ucre.ru".CFile::GetPath($news['PREVIEW_PICTURE']):"",
+			'PREVIEW_TEXT'		=>	$news['PREVIEW_TEXT'],
+			'DETAIL_PICTURE'	=>	($news['DETAIL_PICTURE'])?"https://bpm.ucre.ru".CFile::GetPath($news['DETAIL_PICTURE']):"",
+			'DETAIL_TEXT'			=>	$news['DETAIL_TEXT'],
+		);
+		$options = array(
+			'http' => array(
+			'method'  => 'POST',
+			'content' => json_encode( $data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES ),
+			'header'=>  "Content-Type: application/json\r\n" .
+			"Accept: application/json\r\n"
+		));
+		//$context  = stream_context_create($options);
+		//$result = file_get_contents( $url, false, $context );
+		//$response = json_decode( $result );
+		$log_json = fopen('/home/bitrix/www_bpm/sendnews2ucre.log', 'a');
+		fwrite( $log_json, json_encode( $data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES )."\r\n");
+		fclose( $log_json );
+	}
+}
+
+function updatenews(&$arFields){
+	if ($arFields['IBLOCK_ID'] == 1 || $arFields['IBLOCK_ID'] == 2){
+		$url = "http://ucre.ru/getnewsfrombpm.php";
+		$arSelect = array("ID", "ACTIVE", "NAME", "TAGS", "PREVIEW_PICTURE", "PREVIEW_TEXT", "DETAIL_PICTURE", "DETAIL_TEXT", "IBLOCK_ID");
+		$arFilter = array('ID' =>$arFields['ID'], 'IBLOCK_ID' => $arFields['IBLOCK_ID']);
+		$res = CIBlockElement::GetList(array(), $arFilter, false, false, $arSelect);
+		$ob = $res->GetNextElement();
+		$news = $ob->GetFields();
+		$data = array(
+			'ACTION'					=>	'UPDATE',
+			'TIMESTAMP'				=>	ConvertTimeStamp(time(), "FULL"),
+			'ID'							=>	$arFields['ID'],
+			'IBLOCK_ID'				=>	$arFields['IBLOCK_ID'],
+			'ACTIVE'					=>	$news['ACTIVE'],
+			'NAME'						=>	$news['NAME'],
+			'TAGS'						=>	$news['TAGS'],
+			'PREVIEW_PICTURE'	=>	($news['PREVIEW_PICTURE'])?"https://bpm.ucre.ru".CFile::GetPath($news['PREVIEW_PICTURE']):"",
+			'PREVIEW_TEXT'		=>	$news['PREVIEW_TEXT'],
+			'DETAIL_PICTURE'	=>	($news['DETAIL_PICTURE'])?"https://bpm.ucre.ru".CFile::GetPath($news['DETAIL_PICTURE']):"",
+			'DETAIL_TEXT'			=>	$news['DETAIL_TEXT'],
+		);
+		$options = array(
+			'http' => array(
+			'method'  => 'POST',
+			'content' => json_encode( $data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES ),
+			'header'=>  "Content-Type: application/json\r\n" .
+			"Accept: application/json\r\n"
+		));
+		//$context  = stream_context_create($options);
+		//$result = file_get_contents( $url, false, $context );
+		//$response = json_decode( $result );
+		$log_json = fopen('/home/bitrix/www_bpm/sendnews2ucre.log', 'a');
+		fwrite( $log_json, json_encode( $data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES )."\r\n");
+		fclose( $log_json );
+	}
+}
+
 AddEventHandler('crm', 'OnBeforeCrmDealUpdate', 'DealCheck');
 function DealCheck(&$arFieldsNew){
 	$dbResult = CCrmDeal::GetList(array(),array("ID"=>$arFieldsNew["ID"]),array());
