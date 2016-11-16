@@ -4,19 +4,75 @@ global $USER;
 $APPLICATION->SetTitle("Лог загрузки объявлений на avito.ru");
 echo $USER::GetFullName().', Ваш идентификатор в системе: '.$USER::GetID();
 if ($USER::GetID() == 24) {
-  if($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["add_log"]) && $_POST["add_log"]!=""){
-    $i++;
+  if($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["add_log"]) && $_POST["log_link"]!="" && $_POST["avito_login"]!="" && $_POST["avito_pass"]!=""){
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL,"https://www.avito.ru/profile/messenger");
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+    curl_setopt($ch, CURLOPT_COOKIEJAR, $_SERVER['DOCUMENT_ROOT'].'/cookie.txt');
+    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_USERAGENT, "Opera/10.0 (Windows NT 5.1; U; en");
+    curl_setopt($ch, CURLOPT_REFERER, "http://avito.ru/profile"); 
+    curl_setopt($ch, CURLOPT_POSTFIELDS, "login=".$_POST["avito_login"]."&password=".$_POST["avito_pass"]."&submit=logon");
+    $result = curl_exec($ch);
+    curl_setopt($ch, CURLOPT_URL,$_POST["log_link"]);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+    curl_setopt($ch, CURLOPT_USERAGENT, "Opera/10.0 (Windows NT 5.1; U; en");
+    $result = curl_exec($ch);
+    $avito_result = fopen('/home/bitrix/www_bpm/temp_avito_log.html', 'w');
+    fwrite( $avito_result, $result);
+    fclose( $avito_result );
+    
+    $dom = new DomDocument();
+    $dom->loadHTMLFile('/home/bitrix/www_bpm/temp_avito_log.html');
+    $xpath = new DomXPath($dom);
+    $_error = $xpath->query("/html/body");
+    $error = strripos(utf8_decode(utf8_decode($_error->item(0)->nodeValue)), "Ошибка:");
+    if ($error===false){
+      //Парсим ID лога из отчета AVITO_ID
+      $_avitoid = $xpath->query("/html/body/div[@class='width']/div[@class='block block__report-info']/div[@class='block-title']");
+      $avitoid = substr(stristr(utf8_decode($_avitoid->item(0)->nodeValue),"№"),1);
+      
+      $query = 'SELECT * FROM ucre_avito_log WHERE UF_AVITO_ID="'.$avitoid.'"';
+      $rsData = $DB->Query($query);
+      if ($avitolog = $rsData->Fetch()){ //Если запись с таким AVITO_ID есть
+        $ID = $avitolog['ID']; // то запоминаем id этой записи, будем обновлять даннеы в ней
+      } else {
+        $ID = 0;// в противном случае будем добавлять новую запись
+      }
+      $DB->PrepareFields("ucre_avito_log");
+      $_params = $xpath->query("/html/body/div[@class='width']/div[@class='form-section form-section_blue']/fieldset[@class='form-fieldset is-readonly']");
+      $arFields = array(//Наполняем поля данными
+        'UF_AVITO_ID' =>  "'".$avitoid."'",
+        'UF_STATUS'   =>  "'".utf8_decode($_params->item(0)->childNodes->item(2)->nodeValue)."'",
+        'UF_LINK'     =>  "'http://avito.ru".$_params->item(1)->childNodes->item(2)->childNodes->item(1)->getAttributeNode("href")->nodeValue."'",
+        'UF_TIME'     =>  $DB->CharToDateFunction($_params->item(2)->childNodes->item(2)->nodeValue)
+      );
+      $DB->StartTransaction();
+      if ($ID > 0) {
+        $DB->Update("ucre_avito_log", $arFields, "WHERE ID='".$ID."'", $err_mess.__LINE__);
+      } else {
+        $ID = $DB->Insert("ucre_avito_log", $arFields, $err_mess.__LINE__);
+      }
+      $ID = intval($ID);
+      if (strlen($strError)<=0) {
+        $DB->Commit();
+      } else $DB->Rollback();
+    } else {
+      $log_message = utf8_decode($_error->item(0)->nodeValue);
+    }
   }
 ?>
 <hr>
-<h2>Загрузить лог</h2>
+<h2>Загрузка лога Авито: <?=$log_message?></h2>
 <form method="POST" enctype="multipart/form-data">
   <table>
     <tr>
       <td align="right">Логин на avito.ru: </td><td><input type="email" name="avito_login"></td>
     </tr>
     <tr>
-      <td align="right">Пароль на avito.ru: </td><td><input type="password" name="avit_pass"></td>
+      <td align="right">Пароль на avito.ru: </td><td><input type="password" name="avito_pass"></td>
     </tr>
     <tr>
       <td align="right">Ссылка на отчет об автозагрузке: </td><td><input name = "log_link" type="text" size="70"></td>
@@ -30,5 +86,17 @@ if ($USER::GetID() == 24) {
 <hr>
 <?
 }
+$APPLICATION->IncludeComponent("bitrix:highloadblock.list","",array(
+        "BLOCK_ID" => "21",
+        "DETAIL_URL" => ""
+    )
+);
+
+$APPLICATION->IncludeComponent("bitrix:highloadblock.list","",array(
+        "BLOCK_ID" => "22",
+        "DETAIL_URL" => ""
+    )
+);
+
 require($_SERVER["DOCUMENT_ROOT"]."/bitrix/footer.php");
 ?>
