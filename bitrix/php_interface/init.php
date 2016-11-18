@@ -69,8 +69,21 @@ AddEventHandler('crm', 'OnBeforeCrmDealUpdate', 'DealCheck');
 function DealCheck(&$arFieldsNew){
 	$dbResult = CCrmDeal::GetList(array(),array("ID"=>$arFieldsNew["ID"]),array());
 	$arFieldsCur = $dbResult->Fetch();
-	//file_put_contents('/home/bitrix/www_bpm/new.txt', var_export($arFieldsNew, true));
-	//file_put_contents('/home/bitrix/www_bpm/cur.txt', var_export($arFieldsCur, true));
+	file_put_contents('/home/bitrix/www_bpm/new.txt', var_export($arFieldsNew, true));
+	file_put_contents('/home/bitrix/www_bpm/cur.txt', var_export($arFieldsCur, true));
+	if ($arFieldsNew['UF_CRM_1469534140']!='' && $arFieldsNew['UF_CRM_1469534140']!=$arFieldsCur['UF_CRM_1469534140']){
+		$ro_res = CIBlockElement::GetByID($arFieldsNew['UF_CRM_1469534140']);
+		$ro_element = $ro_res->GetNextElement();
+		$ro_props = $ro_element->GetProperties();
+		file_put_contents('/home/bitrix/www_bpm/props.txt', var_export($ro_props, true));
+		$arFieldsNew['UF_CRM_1476448884'] = $ro_props['ROOMS']['VALUE']; //Кол-во комнат
+		$arFieldsNew['UF_CRM_1476448585'] = $ro_props['FLOOR']['VALUE']; //Этаж
+		$arFieldsNew['UF_CRM_1475915490'] = $ro_props['TOTAL_AREA']['VALUE']; //Общ. площадь
+	} else {
+		$arFieldsNew['UF_CRM_1476448884'] = 0; //Кол-во комнат
+		$arFieldsNew['UF_CRM_1476448585'] = 0; //Этаж
+		$arFieldsNew['UF_CRM_1475915490'] = 0; //Общ. площадь
+	}
 	CIBlockElement::SetPropertyValuesEx($arFieldsCur['UF_CRM_1469534140'], 42, array("ID_DEAL" => $arFieldsNew['ID']));
 	if ($arFieldsCur['UF_CRM_1469534140']){//Если сделка связана с каким-либо объектом
 		if ($arFieldsNew['UF_CRM_579897C010103']){//Если поменялась цена, синхронизируем объект
