@@ -13,7 +13,8 @@ if ($USER::GetID() == 24) {
     curl_setopt($ch, CURLOPT_POST, 1);
     curl_setopt($ch, CURLOPT_USERAGENT, "Opera/10.0 (Windows NT 5.1; U; en");
     curl_setopt($ch, CURLOPT_REFERER, "http://avito.ru/profile"); 
-    curl_setopt($ch, CURLOPT_POSTFIELDS, "login=".$_POST["avito_login"]."&password=".$_POST["avito_pass"]."&submit=logon");
+    curl_setopt($ch, CURLOPT_POSTFIELDS, "login=admin@ucre.ru&password=t0jt3uxn&submit=logon");
+    //curl_setopt($ch, CURLOPT_POSTFIELDS, "login=".$_POST["avito_login"]."&password=".$_POST["avito_pass"]."&submit=logon");
     $result = curl_exec($ch);
     curl_setopt($ch, CURLOPT_URL,$_POST["log_link"]);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -46,7 +47,7 @@ if ($USER::GetID() == 24) {
       $arFields = array(//Наполняем поля данными
         'UF_AVITO_ID' =>  "'".$avitoid."'", //ID Лога на Авито
         'UF_STATUS'   =>  "'".utf8_decode($_params->item(0)->childNodes->item(2)->nodeValue)."'", //Общий статус загрузки
-        'UF_LINK'     =>  "'http://avito.ru".$_params->item(1)->childNodes->item(2)->childNodes->item(1)->getAttributeNode("href")->nodeValue."'", //Ссылка xml фмд загриузки
+        'UF_LINK'     =>  "'http://avito.ru".$_params->item(1)->childNodes->item(2)->childNodes->item(1)->getAttributeNode("href")->nodeValue."'", //Ссылка xml фид загрузки
         'UF_LOG_LINK' =>  "'".$_POST["log_link"]."'",
         'UF_TIME'     =>  $DB->CharToDateFunction($_params->item(2)->childNodes->item(2)->nodeValue)  //Время обработки фида
       );
@@ -69,6 +70,7 @@ if ($USER::GetID() == 24) {
       $uf_deleted = 0;
       foreach ($_res as $row){
         $children = $row->childNodes;
+        $DB->PrepareFields("ucre_avito_log_element");
         if ($children->length == 10){
           $arElementFields = array(
             'UF_AVITO_LOG_ID' =>  "'".$avitoid."'",
@@ -115,6 +117,7 @@ if ($USER::GetID() == 24) {
         if (utf8_decode($children->item(4)->childNodes->item(1)->nodeValue)=="Удалены из файла") $uf_deleted++;
         $uf_processed++;
       }
+      
       $arFields = array(
         'UF_PROCESSED'  =>  $uf_processed,
         'UF_SUCCESS'    =>  $uf_success,
@@ -123,7 +126,7 @@ if ($USER::GetID() == 24) {
         'UF_DELETED'    =>  $uf_deleted
       );
       $DB->StartTransaction();
-      $DB->Update("ucre_avito_log", $arFields, "WHERE ID='".$ID."'", $err_mess.__LINE__);
+      $DB->Update("ucre_avito_log", $arFields, "WHERE UF_AVITO_ID = ".$avitoid, $err_mess.__LINE__);
       if (strlen($strError)<=0) {
         $DB->Commit();
       } else $DB->Rollback();
@@ -155,16 +158,19 @@ if ($USER::GetID() == 24) {
 <hr>
 <?
 }
-$APPLICATION->IncludeComponent("bitrix:highloadblock.list","",array(
-        "BLOCK_ID" => "21",
-        "DETAIL_URL" => ""
-    )
+echo "Логи автозагрузок: <br>";
+$APPLICATION->IncludeComponent(
+  'baloo:crm.avitolog.list',
+  '',
+  array('AVITOLOG_COUNT' => '10')
 );
-
-$APPLICATION->IncludeComponent("bitrix:highloadblock.list","",array(
-        "BLOCK_ID" => "22",
-        "DETAIL_URL" => ""
-    )
+echo "Расшифровки логов: <br>";
+$APPLICATION->IncludeComponent(
+  'baloo:crm.avitologelement.list',
+  '',
+  array('AVITOELEMENT_COUNT' => '50',
+        'AVITO_ID' => $_GET['AVITO_ID']
+       )
 );
 
 require($_SERVER["DOCUMENT_ROOT"]."/bitrix/footer.php");
