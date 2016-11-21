@@ -13,8 +13,7 @@ if ($USER::GetID() == 24) {
     curl_setopt($ch, CURLOPT_POST, 1);
     curl_setopt($ch, CURLOPT_USERAGENT, "Opera/10.0 (Windows NT 5.1; U; en");
     curl_setopt($ch, CURLOPT_REFERER, "http://avito.ru/profile"); 
-    curl_setopt($ch, CURLOPT_POSTFIELDS, "login=admin@ucre.ru&password=t0jt3uxn&submit=logon");
-    //curl_setopt($ch, CURLOPT_POSTFIELDS, "login=".$_POST["avito_login"]."&password=".$_POST["avito_pass"]."&submit=logon");
+    curl_setopt($ch, CURLOPT_POSTFIELDS, "login=".$_POST["avito_login"]."&password=".$_POST["avito_pass"]."&submit=logon");
     $result = curl_exec($ch);
     curl_setopt($ch, CURLOPT_URL,$_POST["log_link"]);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
