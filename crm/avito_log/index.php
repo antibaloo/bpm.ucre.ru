@@ -129,7 +129,6 @@ if ($USER::GetID() == 24) {
       if (strlen($strError)<=0) {
         $DB->Commit();
       } else $DB->Rollback();
-      echo "Всего - ".$uf_processed.", успешно - ".$uf_success.", с проблемами - ".$uf_problems.", ошибки - ".$uf_errors.", удалено - ".$uf_deleted;
     } else {
       $log_message = utf8_decode($_error->item(0)->nodeValue);
     }
@@ -163,14 +162,15 @@ $APPLICATION->IncludeComponent(
   '',
   array('AVITOLOG_COUNT' => '10')
 );
-echo "Расшифровки логов: <br>";
-$APPLICATION->IncludeComponent(
-  'baloo:crm.avitologelement.list',
-  '',
-  array('AVITOELEMENT_COUNT' => '50',
-        'AVITO_ID' => $_GET['AVITO_ID']
-       )
-);
-
+if (isset($_GET['AVITO_ID']) && $_GET['AVITO_ID']!="") {
+  echo "<br>Расшифровки логов: <br>";
+  $APPLICATION->IncludeComponent(
+    'baloo:crm.avitologelement.list',
+    '',
+    array('AVITOELEMENT_COUNT' => '50',
+          'AVITO_ID' => $_GET['AVITO_ID']
+         )
+  );
+}
 require($_SERVER["DOCUMENT_ROOT"]."/bitrix/footer.php");
 ?>
