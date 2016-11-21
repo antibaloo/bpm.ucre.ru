@@ -135,10 +135,6 @@ function DealCheck(&$arFieldsNew){
 		}
 		
 		if ($arFieldsNew['STAGE_ID']!=$arFieldsCur['STAGE_ID']){//Если поменялся статус заявки
-			if (CCrmDeal::GetStageName($arFieldsCur['STAGE_ID'])=="Предлистинг" && !in_array(CCrmSecurityHelper::GetCurrentUserID(), array(24,1,11,12,26))){
-				$arFieldsNew['RESULT_MESSAGE'] = "Заявку из предлистинга может вывести только администратор.";
-				return false;
-			}
 			CIBlockElement::SetPropertyValuesEx($arFieldsCur['UF_CRM_1469534140'], 42, array("STATUS" => CCrmDeal::GetStageName($arFieldsNew['STAGE_ID'])));
 			CEventLog::Add(array(
 				"SEVERITY" => "SECURITY",
