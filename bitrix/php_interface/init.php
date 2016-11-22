@@ -82,6 +82,7 @@ function DealCheck(&$arFieldsNew){
 		$arFieldsNew['UF_CRM_1479470711'] = $ro_props['STREET']['VALUE']; //улица
 		$arFieldsNew['UF_CRM_1479470723'] = $ro_props['HOUSE']['VALUE']; //дом
 		$arFieldsNew['UF_CRM_1479470770'] = $ro_props['FLAT']['VALUE']; //квартира
+		CIBlockElement::SetPropertyValuesEx($arFieldsNew['UF_CRM_1469534140'], 42, array("ASSIGNED_BY" => $arFieldsNew['ASSIGNED_BY_ID']));//При каждом сохранении синхронизируется ответственный в связанном объекте
 	} else {
 		$arFieldsNew['UF_CRM_1476448884'] = 0; //Кол-во комнат
 		$arFieldsNew['UF_CRM_1476448585'] = 0; //Этаж
@@ -90,7 +91,7 @@ function DealCheck(&$arFieldsNew){
 		$arFieldsNew['UF_CRM_1479470723'] = 0; //дом
 		$arFieldsNew['UF_CRM_1479470770'] = 0; //квартира
 	}
-	CIBlockElement::SetPropertyValuesEx($arFieldsCur['UF_CRM_1469534140'], 42, array("ID_DEAL" => $arFieldsNew['ID']));
+	CIBlockElement::SetPropertyValuesEx($arFieldsNew['UF_CRM_1469534140'], 42, array("ID_DEAL" => $arFieldsNew['ID']));
 	if ($arFieldsCur['UF_CRM_1469534140']){//Если сделка связана с каким-либо объектом
 		if ($arFieldsNew['UF_CRM_579897C010103']){//Если поменялась цена, синхронизируем объект
 			CIBlockElement::SetPropertyValuesEx($arFieldsCur['UF_CRM_1469534140'], 42, array("PRICE" => $arFieldsNew['UF_CRM_579897C010103']));
@@ -102,7 +103,7 @@ function DealCheck(&$arFieldsNew){
 				"DESCRIPTION" => "Для заявки № ".$arFieldsNew['ID']." обновлена цена в объекте № ".$arFieldsCur['UF_CRM_1469534140'],
 			));
 		}
-		
+		/*
 		if ($arFieldsNew['ASSIGNED_BY_ID'] && ($arFieldsNew['ASSIGNED_BY_ID']!=$arFieldsCur['ASSIGNED_BY_ID'])){//Если поменялся ответственный за заявку
 			CIBlockElement::SetPropertyValuesEx($arFieldsCur['UF_CRM_1469534140'], 42, array("ASSIGNED_BY" => $arFieldsNew['ASSIGNED_BY_ID']));
 			CEventLog::Add(array(
@@ -112,7 +113,7 @@ function DealCheck(&$arFieldsNew){
 				"ITEM_ID" => 'Заявки (сделки)',
 				"DESCRIPTION" => "Для заявки № ".$arFieldsNew['ID']." обновлен ответственный в объекте № ".$arFieldsCur['UF_CRM_1469534140'],
 			));
-		}
+		}*/
 		if ($arFieldsNew['COMMENTS'] && ($arFieldsNew['COMMENTS']!=$arFieldsCur['COMMENTS'])){//Если поменялось описание заявки
 			$el = new CIBlockElement;
 			if ($el->Update($arFieldsCur['UF_CRM_1469534140'], array("DETAIL_TEXT" => $arFieldsNew['COMMENTS']))){
