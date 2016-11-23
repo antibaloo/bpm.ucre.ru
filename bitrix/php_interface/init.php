@@ -336,8 +336,11 @@ function avito_Export()
 	  	  $Ad->appendChild($Rooms);
 	    }
 			switch ($aRes['PROPERTY_210']){
-				case 382:
 				case 381:
+					$Square = $dom->createElement("Square",number_format($aRes['PROPERTY_228'],2,".",""));
+					$Ad->appendChild($Square);
+					break;
+				case 382:
 				case 387:
 					$Square = $dom->createElement("Square",number_format($aRes['PROPERTY_224'],2,".",""));
 					$Ad->appendChild($Square);
