@@ -52,7 +52,7 @@ if(CModule::IncludeModule('iblock') && CModule::IncludeModule("crm")) {
     $tmp_appointment = CIBlockPropertyEnum::GetByID($aRes["PROPERTY_238"]);
     switch ($aRes['PROPERTY_210']){
       case 381:
-        $name = mb_strtoupper(substr($tmp_type["VALUE"],0,1)).substr($tmp_type["VALUE"],1)." ".number_format($aRes['PROPERTY_224'],2)." кв.м., ".$aRes["PROPERTY_217"].", ".$aRes["PROPERTY_218"];
+        $name = mb_strtoupper(substr($tmp_type["VALUE"],0,1)).substr($tmp_type["VALUE"],1)." ".number_format($aRes['PROPERTY_228'],2)." кв.м., ".$aRes["PROPERTY_217"].", ".$aRes["PROPERTY_218"];
         break;
       case 382:
         $name = intval($aRes["PROPERTY_229"])."-к ".$tmp_type["VALUE"]." ".number_format($aRes['PROPERTY_224'],2)." кв.м., ".$aRes["PROPERTY_217"].", ".$aRes["PROPERTY_218"];
@@ -96,7 +96,7 @@ if(CModule::IncludeModule('iblock') && CModule::IncludeModule("crm")) {
                        'PLOT'             => number_format($aRes['PROPERTY_292'],2),
                        'ASSIGNED_BY'      => $aRes['PROPERTY_313'],
                        'PRICE'            => $deal['UF_CRM_579897C010103'],//Цену берем из заявки
-                       'DESCRIPTION'      => $deal['COMMENTS']/*$aRes['DETAIL_TEXT']*/,
+                       'DESCRIPTION'      => $deal['COMMENTS']." Номер в базе: ".$aRes['ID']/*$aRes['DETAIL_TEXT']*/,
                        'PHOTOS'           => $photos,
                        'PLANS'            => $plans,
                        'MD5'						  => $md5,
