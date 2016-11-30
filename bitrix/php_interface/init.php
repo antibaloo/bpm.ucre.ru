@@ -65,88 +65,79 @@ function sendnews(&$arFields){
 		}
 	}
 }
-AddEventHandler('crm', 'OnBeforeCrmDealUpdate', 'DealCheck');
-function DealCheck(&$arFieldsNew){
-	$dbResult = CCrmDeal::GetList(array(),array("ID"=>$arFieldsNew["ID"]),array());
-	$arFieldsCur = $dbResult->Fetch();
-	//file_put_contents('/home/bitrix/www_bpm/new.txt', var_export($arFieldsNew, true));
-	//file_put_contents('/home/bitrix/www_bpm/cur.txt', var_export($arFieldsCur, true));
-	if ($arFieldsNew['UF_CRM_1469534140']!=''/* && $arFieldsNew['UF_CRM_1469534140']!=$arFieldsCur['UF_CRM_1469534140']*/){
-		$ro_res = CIBlockElement::GetByID($arFieldsNew['UF_CRM_1469534140']);
+
+AddEventHandler('crm', 'OnAfterCrmDealAdd', 'myDealAdd');
+function myDealAdd (&$arFields){
+	if ($arFields['UF_CRM_1469534140']) {//Если при создании заявки, с ней был связан объект
+		CIBlockElement::SetPropertyValuesEx($arFields['UF_CRM_1469534140'], 42, array("ID_DEAL" => $arFields['ID']));// передаем в объект ID заявки
+		CIBlockElement::SetPropertyValuesEx($arFields['UF_CRM_1469534140'], 42, array("ASSIGNED_BY" => $arFields['ASSIGNED_BY_ID']));//передаем в объект ID ответственного
+		CIBlockElement::SetPropertyValuesEx($arFields['UF_CRM_1469534140'], 42, array("PRICE" => $arFields['UF_CRM_579897C010103']));//передаем в объект данные о цене
+		CIBlockElement::SetPropertyValuesEx($arFields['UF_CRM_1469534140'], 42, array("STATUS" => CCrmDeal::GetStageName($arFields['STAGE_ID'])));//передаем в объект статус заявки
+		$el = new CIBlockElement;
+		$el->Update($arFields['UF_CRM_1469534140'], array("DETAIL_TEXT" => $arFields['COMMENTS']));
+	}
+	//file_put_contents('/home/bitrix/www_bpm/myadd.log', var_export($arFields, true));
+}
+
+AddEventHandler('crm', 'OnAfterCrmDealUpdate', 'myDealUpdate');
+function myDealUpdate (&$arFields){
+	$dbResult = CCrmDeal::GetList(array(),array("ID"=>$arFields["ID"]),array());//Получаем полный вектор полей заявки, не зависимо от того, какие поля сохранялись
+	$arFieldsExist = $dbResult->Fetch();
+	if ($arFieldsExist['UF_CRM_1469534140']) {//Если у завки есть связанный объект
+		CIBlockElement::SetPropertyValuesEx($arFieldsExist['UF_CRM_1469534140'], 42, array("ID_DEAL" => $arFieldsExist['ID']));// передаем в объект ID заявки
+		CIBlockElement::SetPropertyValuesEx($arFieldsExist['UF_CRM_1469534140'], 42, array("ASSIGNED_BY" => $arFieldsExist['ASSIGNED_BY_ID']));//передаем в объект ID ответственного
+		CIBlockElement::SetPropertyValuesEx($arFieldsExist['UF_CRM_1469534140'], 42, array("PRICE" => $arFieldsExist['UF_CRM_579897C010103']));//передаем в объект данные о цене
+		CIBlockElement::SetPropertyValuesEx($arFieldsExist['UF_CRM_1469534140'], 42, array("STATUS" => CCrmDeal::GetStageName($arFieldsExist['STAGE_ID'])));//передаем в объект статус заявки
+		$el = new CIBlockElement;
+		$el->Update($arFieldsExist['UF_CRM_1469534140'], array("DETAIL_TEXT" => $arFieldsExist['COMMENTS']));
+	}
+	//file_put_contents('/home/bitrix/www_bpm/myupdate.log', var_export($arFieldsExist, true));
+}
+
+AddEventHandler('crm', 'OnBeforeCrmDealAdd', 'DealAdd');
+function DealAdd(&$arFields){
+	if ($arFields['UF_CRM_1469534140']!=''){
+		$ro_res = CIBlockElement::GetByID($arFields['UF_CRM_1469534140']);
 		$ro_element = $ro_res->GetNextElement();
 		$ro_props = $ro_element->GetProperties();
-		//file_put_contents('/home/bitrix/www_bpm/props.txt', var_export($ro_props, true));
-		$arFieldsNew['UF_CRM_1476448884'] = $ro_props['ROOMS']['VALUE']; //Кол-во комнат
-		$arFieldsNew['UF_CRM_1476448585'] = $ro_props['FLOOR']['VALUE']; //Этаж
-		$arFieldsNew['UF_CRM_1475915490'] = $ro_props['TOTAL_AREA']['VALUE']; //Общ. площадь
-		$arFieldsNew['UF_CRM_1479470711'] = $ro_props['STREET']['VALUE']; //улица
-		$arFieldsNew['UF_CRM_1479470723'] = $ro_props['HOUSE']['VALUE']; //дом
-		$arFieldsNew['UF_CRM_1479470770'] = $ro_props['FLAT']['VALUE']; //квартира
-		CIBlockElement::SetPropertyValuesEx($arFieldsNew['UF_CRM_1469534140'], 42, array("ASSIGNED_BY" => $arFieldsNew['ASSIGNED_BY_ID']));//При каждом сохранении синхронизируется ответственный в связанном объекте
+		$arFields['UF_CRM_1476448884'] = $ro_props['ROOMS']['VALUE']; //Кол-во комнат
+		$arFields['UF_CRM_1476448585'] = $ro_props['FLOOR']['VALUE']; //Этаж
+		$arFields['UF_CRM_1475915490'] = $ro_props['TOTAL_AREA']['VALUE']; //Общ. площадь
+		$arFields['UF_CRM_1479470711'] = $ro_props['STREET']['VALUE']; //улица
+		$arFields['UF_CRM_1479470723'] = $ro_props['HOUSE']['VALUE']; //дом
+		$arFields['UF_CRM_1479470770'] = $ro_props['FLAT']['VALUE']; //квартира
 	} else {
-		$arFieldsNew['UF_CRM_1476448884'] = 0; //Кол-во комнат
-		$arFieldsNew['UF_CRM_1476448585'] = 0; //Этаж
-		$arFieldsNew['UF_CRM_1475915490'] = 0; //Общ. площадь
-		$arFieldsNew['UF_CRM_1479470711'] = 0; //улица
-		$arFieldsNew['UF_CRM_1479470723'] = 0; //дом
-		$arFieldsNew['UF_CRM_1479470770'] = 0; //квартира
-	}
-	CIBlockElement::SetPropertyValuesEx($arFieldsNew['UF_CRM_1469534140'], 42, array("ID_DEAL" => $arFieldsNew['ID']));
-	if ($arFieldsCur['UF_CRM_1469534140']){//Если сделка связана с каким-либо объектом
-		if ($arFieldsNew['UF_CRM_579897C010103']){//Если поменялась цена, синхронизируем объект
-			CIBlockElement::SetPropertyValuesEx($arFieldsCur['UF_CRM_1469534140'], 42, array("PRICE" => $arFieldsNew['UF_CRM_579897C010103']));
-			CEventLog::Add(array(
-				"SEVERITY" => "SECURITY",
-				"AUDIT_TYPE_ID" => "DEAL_BEFORE_UPDATE",
-				"MODULE_ID" => "main",
-				"ITEM_ID" => 'Заявки (сделки)',
-				"DESCRIPTION" => "Для заявки № ".$arFieldsNew['ID']." обновлена цена в объекте № ".$arFieldsCur['UF_CRM_1469534140'],
-			));
-		}
-		/*
-		if ($arFieldsNew['ASSIGNED_BY_ID'] && ($arFieldsNew['ASSIGNED_BY_ID']!=$arFieldsCur['ASSIGNED_BY_ID'])){//Если поменялся ответственный за заявку
-			CIBlockElement::SetPropertyValuesEx($arFieldsCur['UF_CRM_1469534140'], 42, array("ASSIGNED_BY" => $arFieldsNew['ASSIGNED_BY_ID']));
-			CEventLog::Add(array(
-				"SEVERITY" => "SECURITY",
-				"AUDIT_TYPE_ID" => "DEAL_BEFORE_UPDATE",
-				"MODULE_ID" => "main",
-				"ITEM_ID" => 'Заявки (сделки)',
-				"DESCRIPTION" => "Для заявки № ".$arFieldsNew['ID']." обновлен ответственный в объекте № ".$arFieldsCur['UF_CRM_1469534140'],
-			));
-		}*/
-		if ($arFieldsNew['COMMENTS'] && ($arFieldsNew['COMMENTS']!=$arFieldsCur['COMMENTS'])){//Если поменялось описание заявки
-			$el = new CIBlockElement;
-			if ($el->Update($arFieldsCur['UF_CRM_1469534140'], array("DETAIL_TEXT" => $arFieldsNew['COMMENTS']))){
-			CEventLog::Add(array(
-				"SEVERITY" => "SECURITY",
-				"AUDIT_TYPE_ID" => "DEAL_BEFORE_UPDATE",
-				"MODULE_ID" => "main",
-				"ITEM_ID" => 'Заявки (сделки)',
-				"DESCRIPTION" => "Для заявки № ".$arFieldsNew["ID"]." обновлено описание в связанном объекте № ".$arFieldsCur['UF_CRM_1469534140'],
-			));
-		}else{
-			CEventLog::Add(array(
-				"SEVERITY" => "SECURITY",
-				"AUDIT_TYPE_ID" => "DEAL_BEFORE_UPDATE",
-				"MODULE_ID" => "main",
-				"ITEM_ID" => 'Заявки (сделки)',
-				"DESCRIPTION" => "Ошибка обновления объекта № ".$arFieldsNew['UF_CRM_1469534140'].", ".$el->LAST_ERROR,
-			));
-			}
-		}
-		
-		if ($arFieldsNew['STAGE_ID']!=$arFieldsCur['STAGE_ID']){//Если поменялся статус заявки
-			CIBlockElement::SetPropertyValuesEx($arFieldsCur['UF_CRM_1469534140'], 42, array("STATUS" => CCrmDeal::GetStageName($arFieldsNew['STAGE_ID'])));
-			CEventLog::Add(array(
-				"SEVERITY" => "SECURITY",
-				"AUDIT_TYPE_ID" => "DEAL_BEFORE_UPDATE",
-				"MODULE_ID" => "main",
-				"ITEM_ID" => 'Заявки (сделки)',
-				"DESCRIPTION" => "Для заявки № ".$arFieldsNew['ID']." обновлен статус в объекте № ".$arFieldsCur['UF_CRM_1469534140']." на ".CCrmDeal::GetStageName($arFieldsNew['STAGE_ID']),
-			));
-		}
-	}
-	
+		$arFields['UF_CRM_1476448884'] = 0; //Кол-во комнат
+		$arFields['UF_CRM_1476448585'] = 0; //Этаж
+		$arFields['UF_CRM_1475915490'] = 0; //Общ. площадь
+		$arFields['UF_CRM_1479470711'] = 0; //улица
+		$arFields['UF_CRM_1479470723'] = 0; //дом
+		$arFields['UF_CRM_1479470770'] = 0; //квартира
+	}	
+}
+
+
+
+AddEventHandler('crm', 'OnBeforeCrmDealUpdate', 'DealUpdate');
+function DealUpdate(&$arFields){
+	if ($arFields['UF_CRM_1469534140']!=''){
+		$ro_res = CIBlockElement::GetByID($arFields['UF_CRM_1469534140']);
+		$ro_element = $ro_res->GetNextElement();
+		$ro_props = $ro_element->GetProperties();
+		$arFields['UF_CRM_1476448884'] = $ro_props['ROOMS']['VALUE']; //Кол-во комнат
+		$arFields['UF_CRM_1476448585'] = $ro_props['FLOOR']['VALUE']; //Этаж
+		$arFields['UF_CRM_1475915490'] = $ro_props['TOTAL_AREA']['VALUE']; //Общ. площадь
+		$arFields['UF_CRM_1479470711'] = $ro_props['STREET']['VALUE']; //улица
+		$arFields['UF_CRM_1479470723'] = $ro_props['HOUSE']['VALUE']; //дом
+		$arFields['UF_CRM_1479470770'] = $ro_props['FLAT']['VALUE']; //квартира
+	} else {
+		$arFields['UF_CRM_1476448884'] = 0; //Кол-во комнат
+		$arFields['UF_CRM_1476448585'] = 0; //Этаж
+		$arFields['UF_CRM_1475915490'] = 0; //Общ. площадь
+		$arFields['UF_CRM_1479470711'] = 0; //улица
+		$arFields['UF_CRM_1479470723'] = 0; //дом
+		$arFields['UF_CRM_1479470770'] = 0; //квартира
+	}	
 }
 
 function avito_Export()
