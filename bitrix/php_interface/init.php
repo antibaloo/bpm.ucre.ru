@@ -107,12 +107,12 @@ function DealAdd(&$arFields){
 		$arFields['UF_CRM_1479470723'] = $ro_props['HOUSE']['VALUE']; //дом
 		$arFields['UF_CRM_1479470770'] = $ro_props['FLAT']['VALUE']; //квартира
 	} else {
-		$arFields['UF_CRM_1476448884'] = 0; //Кол-во комнат
-		$arFields['UF_CRM_1476448585'] = 0; //Этаж
-		$arFields['UF_CRM_1475915490'] = 0; //Общ. площадь
-		$arFields['UF_CRM_1479470711'] = 0; //улица
-		$arFields['UF_CRM_1479470723'] = 0; //дом
-		$arFields['UF_CRM_1479470770'] = 0; //квартира
+		$arFields['UF_CRM_1476448884'] = ""; //Кол-во комнат
+		$arFields['UF_CRM_1476448585'] = ""; //Этаж
+		$arFields['UF_CRM_1475915490'] = ""; //Общ. площадь
+		$arFields['UF_CRM_1479470711'] = ""; //улица
+		$arFields['UF_CRM_1479470723'] = ""; //дом
+		$arFields['UF_CRM_1479470770'] = ""; //квартира
 	}	
 }
 
@@ -120,24 +120,26 @@ function DealAdd(&$arFields){
 
 AddEventHandler('crm', 'OnBeforeCrmDealUpdate', 'DealUpdate');
 function DealUpdate(&$arFields){
-	if ($arFields['UF_CRM_1469534140']!=''){
-		$ro_res = CIBlockElement::GetByID($arFields['UF_CRM_1469534140']);
-		$ro_element = $ro_res->GetNextElement();
-		$ro_props = $ro_element->GetProperties();
-		$arFields['UF_CRM_1476448884'] = $ro_props['ROOMS']['VALUE']; //Кол-во комнат
-		$arFields['UF_CRM_1476448585'] = $ro_props['FLOOR']['VALUE']; //Этаж
-		$arFields['UF_CRM_1475915490'] = $ro_props['TOTAL_AREA']['VALUE']; //Общ. площадь
-		$arFields['UF_CRM_1479470711'] = $ro_props['STREET']['VALUE']; //улица
-		$arFields['UF_CRM_1479470723'] = $ro_props['HOUSE']['VALUE']; //дом
-		$arFields['UF_CRM_1479470770'] = $ro_props['FLAT']['VALUE']; //квартира
-	} else {
-		$arFields['UF_CRM_1476448884'] = 0; //Кол-во комнат
-		$arFields['UF_CRM_1476448585'] = 0; //Этаж
-		$arFields['UF_CRM_1475915490'] = 0; //Общ. площадь
-		$arFields['UF_CRM_1479470711'] = 0; //улица
-		$arFields['UF_CRM_1479470723'] = 0; //дом
-		$arFields['UF_CRM_1479470770'] = 0; //квартира
-	}	
+	if (isset($arFields['UF_CRM_1469534140'])){
+		if ($arFields['UF_CRM_1469534140']!=''){
+			$ro_res = CIBlockElement::GetByID($arFields['UF_CRM_1469534140']);
+			$ro_element = $ro_res->GetNextElement();
+			$ro_props = $ro_element->GetProperties();
+			$arFields['UF_CRM_1476448884'] = $ro_props['ROOMS']['VALUE']; //Кол-во комнат
+			$arFields['UF_CRM_1476448585'] = $ro_props['FLOOR']['VALUE']; //Этаж
+			$arFields['UF_CRM_1475915490'] = $ro_props['TOTAL_AREA']['VALUE']; //Общ. площадь
+			$arFields['UF_CRM_1479470711'] = $ro_props['STREET']['VALUE']; //улица
+			$arFields['UF_CRM_1479470723'] = $ro_props['HOUSE']['VALUE']; //дом
+			$arFields['UF_CRM_1479470770'] = $ro_props['FLAT']['VALUE']; //квартира
+		} else {
+			$arFields['UF_CRM_1476448884'] = ""; //Кол-во комнат
+			$arFields['UF_CRM_1476448585'] = ""; //Этаж
+			$arFields['UF_CRM_1475915490'] = ""; //Общ. площадь
+			$arFields['UF_CRM_1479470711'] = ""; //улица
+			$arFields['UF_CRM_1479470723'] = ""; //дом
+			$arFields['UF_CRM_1479470770'] = ""; //квартира
+		}	
+	}
 }
 
 function avito_Export()
