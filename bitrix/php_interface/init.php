@@ -106,6 +106,7 @@ function DealAdd(&$arFields){
 		$arFields['UF_CRM_1479470711'] = $ro_props['STREET']['VALUE']; //улица
 		$arFields['UF_CRM_1479470723'] = $ro_props['HOUSE']['VALUE']; //дом
 		$arFields['UF_CRM_1479470770'] = $ro_props['FLAT']['VALUE']; //квартира
+		$arFields['UF_CRM_1469597960'] = $ro_props['ADDRESS']['VALUE']; //Адрес
 	} else {
 		$arFields['UF_CRM_1476448884'] = ""; //Кол-во комнат
 		$arFields['UF_CRM_1476448585'] = ""; //Этаж
@@ -113,6 +114,7 @@ function DealAdd(&$arFields){
 		$arFields['UF_CRM_1479470711'] = ""; //улица
 		$arFields['UF_CRM_1479470723'] = ""; //дом
 		$arFields['UF_CRM_1479470770'] = ""; //квартира
+		$arFields['UF_CRM_1469597960'] = ""; //Адрес
 	}	
 }
 
@@ -131,6 +133,7 @@ function DealUpdate(&$arFields){
 			$arFields['UF_CRM_1479470711'] = $ro_props['STREET']['VALUE']; //улица
 			$arFields['UF_CRM_1479470723'] = $ro_props['HOUSE']['VALUE']; //дом
 			$arFields['UF_CRM_1479470770'] = $ro_props['FLAT']['VALUE']; //квартира
+			$arFields['UF_CRM_1469597960'] = $ro_props['ADDRESS']['VALUE']; //Адрес
 		} else {
 			$arFields['UF_CRM_1476448884'] = ""; //Кол-во комнат
 			$arFields['UF_CRM_1476448585'] = ""; //Этаж
@@ -138,6 +141,7 @@ function DealUpdate(&$arFields){
 			$arFields['UF_CRM_1479470711'] = ""; //улица
 			$arFields['UF_CRM_1479470723'] = ""; //дом
 			$arFields['UF_CRM_1479470770'] = ""; //квартира
+			$arFields['UF_CRM_1469597960'] = ""; //Адрес
 		}	
 	}
 }
