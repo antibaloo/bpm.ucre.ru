@@ -112,7 +112,6 @@ foreach($arParams["TABS"] as $tab)
 	}
 	$arResult["TABS"][$tab["id"]]["fields"] = $aFields;
 }
-
 $arResult["TABS_META"] = array();
 $arResult["AVAILABLE_FIELDS"] = array();
 
@@ -197,7 +196,7 @@ if($arParams["SHOW_SETTINGS"])
 	
 		if($arResult["OPTIONS"]["settings_disabled"] <> "Y")
 		{
-			$arResult["TABS"] = $aTabs;
+			//$arResult["TABS"] = $aTabs;
 		}
 	}
 	else
