@@ -176,6 +176,8 @@ if(!empty($arResult['FIELDS']['tab_event']))
 	);
 }
 
+
+
 $element = isset($arResult['ELEMENT']) ? $arResult['ELEMENT'] : null;
 
 $APPLICATION->IncludeComponent(
@@ -211,6 +213,7 @@ $APPLICATION->IncludeComponent(
 	$component, array('HIDE_ICONS' => 'Y')
 );
 $APPLICATION->AddHeadScript('/bitrix/js/crm/instant_editor.js');
+//if($USER->GetId() == 24){var_dump($arTabs);}
 ?>
 
 
