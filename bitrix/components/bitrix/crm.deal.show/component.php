@@ -1300,6 +1300,15 @@ if ($arResult['ELEMENT']['LEAD_ID'] > 0 && CCrmLead::CheckReadPermission(0, $use
 		'value' => $sVal
 	);
 }
+//--Подготовка данных для вкладки лога Авито--
+$arResult['FIELDS']['tab_avito'][] = array(
+		'id' => 'DEAL_AVITO',
+		'name' => "Лог Авито-Недвижимость",
+		'colspan' => true,
+		'type' => 'custom',
+		'value' => "<h1>АВИТО</h1>"
+	);
+//----------------------------------------------
 $arResult['FIELDS']['tab_event'][] = array(
 	'id' => 'section_event_grid',
 	'name' => GetMessage('CRM_SECTION_EVENT_MAIN')."1",
