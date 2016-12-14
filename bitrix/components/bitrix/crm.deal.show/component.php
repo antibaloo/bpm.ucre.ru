@@ -75,7 +75,6 @@ $obFields = CCrmDeal::GetListEx(
 	)
 );
 $arFields = $obFields->GetNext();
-
 $arFields['CONTACT_FM'] = array();
 if(isset($arFields['CONTACT_ID']) && intval($arFields['CONTACT_ID']) > 0)
 {
@@ -1301,13 +1300,72 @@ if ($arResult['ELEMENT']['LEAD_ID'] > 0 && CCrmLead::CheckReadPermission(0, $use
 	);
 }
 //--Подготовка данных для вкладки лога Авито--
-$arResult['FIELDS']['tab_avito'][] = array(
+$tempDeal = new CCrmDeal;
+$tempob = $tempDeal->GetListEx(array(), array("ID" => $arResult['ELEMENT']['ID']), false, false, array("UF_CRM_1469534140"),array());
+$temFields = $tempob->Fetch();
+if ($temFields['UF_CRM_1469534140']){ //Вкладка формируется если есть связанный объект
+	$rsData = $DB->Query('SELECT ucre_avito_log_element.*, ucre_avito_log.UF_TIME FROM ucre_avito_log_element LEFT JOIN ucre_avito_log ON ucre_avito_log_element.UF_AVITO_LOG_ID = ucre_avito_log.UF_AVITO_ID WHERE UF_CRM_ID = '.$temFields['UF_CRM_1469534140'].' ORDER BY UF_AVITO_LOG_ID DESC');
+
+	/*
+		$aCols = array(
+			'UF_AVITO_LINK' =>  '<a href="'.$arItem['UF_AVITO_LINK'].'" target="_blank" alt="Ссылка на объявление">'.$arItem['UF_AVITO_LINK'].'</a>',
+		);
+
+	}*/
+
+	ob_start();
+	?>
+
+	<table widht="100%">
+		<tr><th>Дата загрузки</th><th>Ссылка на объявление</th><th>Статус</th><th>Дополнительно</th><th>Срок размещения</th><th>Сообщение</th></tr>
+	<?while($arItem = $rsData->Fetch()){
+			$time = ParseDateTime($arItem['UF_TIME'], "YYYY.MM.DD HH:MI:SS");
+			$till = ParseDateTime($arItem['UF_TILL'], "YYYY.MM.DD HH:MI:SS");
+	?>
+		
+		<tr>
+			<td><?=$time['HH'].":".$time['MI'].":".$time['SS']." ".$time['DD'].".".$time['MM'].".".$time['YYYY']." г."?></td>
+			<td><a href="<?=$arItem['UF_AVITO_LINK']?>" target="_blank">Объявление на Авито</a></td>
+			<td><?=$arItem['UF_STATUS']?></td>
+			<td><?=$arItem['UF_STATUS_MORE']?></td>
+			<td><?=$till['HH'].":".$till['MI'].":".$till['SS']." ".$till['DD'].".".$till['MM'].".".$till['YYYY']." г."?></td>
+			<td><?=$arItem['UF_MESSAGE']?></td>
+		</tr>
+	<?}?>
+		<tr><td colspan="6">Всего было выгрузок: <?=$rsData->SelectedRowsCount()?></td></tr>
+	</table>
+	<?
+	/*$APPLICATION->IncludeComponent(
+		'bitrix:main.interface.grid',
+		'',
+		array('GRID_ID'          => 'avito_grid_'.$temFields['UF_CRM_1469534140'],
+					'HEADERS'          => $headers,
+					//'SORT'             => $arResult['SORT'],
+					//'SORT_VARS'        => $arResult['SORT_VARS'],
+					'ROWS'             => $aRows,
+					'FOOTER'           => array(array('title'=>'Всего', 'value' => $rsData->SelectedRowsCount())),
+					'ACTIONS'          => array(),
+					'EDITABLE'         => false,
+					'NAV_OBJECT'       => $rsData,
+					'AJAX_MODE'        => 'Y',
+					'AJAX_OPTION_JUMP' => 'N',
+					'AJAX_OPTION_STYLE'=> 'Y',
+					"FILTER_TEMPLATE_NAME" => "tabbed",
+					'FILTER'           => array()
+				 ),
+		false
+	);*/
+	$avitoVal = ob_get_contents();
+	ob_end_clean();
+	
+	$arResult['FIELDS']['tab_avito'][] = array(
 		'id' => 'DEAL_AVITO',
 		'name' => "Лог Авито-Недвижимость",
 		'colspan' => true,
 		'type' => 'custom',
-		'value' => "<h1>АВИТО</h1>"
+		'value' => $avitoVal//"<h2>Тут будет информация о выгрузках связанного с заявкой объекта на avito.ru</h2>".$temFields['UF_CRM_1469534140']
 	);
+}
 //----------------------------------------------
 $arResult['FIELDS']['tab_event'][] = array(
 	'id' => 'section_event_grid',
@@ -1350,7 +1408,6 @@ if(!isset($_REQUEST['bxajaxid']) && \Bitrix\Crm\Settings\HistorySettings::getCur
 {
 	CCrmEvent::RegisterViewEvent(CCrmOwnerType::Deal, $arParams['ELEMENT_ID'], $currentUserID);
 }
-//if($USER->GetId() == 24){var_dump($arResult['FIELDS']);}
 $this->IncludeComponentTemplate();
 include_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/components/bitrix/crm.deal/include/nav.php');
 ?>
