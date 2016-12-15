@@ -1302,9 +1302,16 @@ if ($arResult['ELEMENT']['LEAD_ID'] > 0 && CCrmLead::CheckReadPermission(0, $use
 //--Подготовка данных для вкладки лога Авито--
 $tempDeal = new CCrmDeal;
 $tempob = $tempDeal->GetListEx(array(), array("ID" => $arResult['ELEMENT']['ID']), false, false, array("UF_CRM_1469534140"),array());
-$temFields = $tempob->Fetch();
-if ($temFields['UF_CRM_1469534140']){ //Вкладка формируется если есть связанный объект
-	$rsData = $DB->Query('SELECT ucre_avito_log_element.*, ucre_avito_log.UF_TIME FROM ucre_avito_log_element LEFT JOIN ucre_avito_log ON ucre_avito_log_element.UF_AVITO_LOG_ID = ucre_avito_log.UF_AVITO_ID WHERE UF_CRM_ID = '.$temFields['UF_CRM_1469534140'].' ORDER BY UF_AVITO_LOG_ID DESC');
+$tempFields = $tempob->Fetch();
+if ($tempFields['UF_CRM_1469534140']){ //Вкладка формируется если есть связанный объект
+	if (intval($tempFields['UF_CRM_1469534140']) > 5560)
+		$rsData = $DB->Query('SELECT ucre_avito_log_element.*, ucre_avito_log.UF_TIME FROM ucre_avito_log_element LEFT JOIN ucre_avito_log ON ucre_avito_log_element.UF_AVITO_LOG_ID = ucre_avito_log.UF_AVITO_ID WHERE UF_CRM_ID = '.$tempFields['UF_CRM_1469534140'].' ORDER BY UF_AVITO_LOG_ID DESC');
+	
+	if (intval($tempFields['UF_CRM_1469534140']) <= 5560){
+		$res = CIBlockElement::GetByID(intval($tempFields['UF_CRM_1469534140']));
+		if($ar_res = $res->GetNext())
+			$rsData = $DB->Query('SELECT ucre_avito_log_element.*, ucre_avito_log.UF_TIME FROM ucre_avito_log_element LEFT JOIN ucre_avito_log ON ucre_avito_log_element.UF_AVITO_LOG_ID = ucre_avito_log.UF_AVITO_ID WHERE UF_CRM_ID = '.$ar_res['CODE'].' ORDER BY UF_AVITO_LOG_ID DESC');
+	}
 
 	/*
 		$aCols = array(
@@ -1335,26 +1342,7 @@ if ($temFields['UF_CRM_1469534140']){ //Вкладка формируется е
 		<tr><td colspan="6">Всего было выгрузок: <?=$rsData->SelectedRowsCount()?></td></tr>
 	</table>
 	<?
-	/*$APPLICATION->IncludeComponent(
-		'bitrix:main.interface.grid',
-		'',
-		array('GRID_ID'          => 'avito_grid_'.$temFields['UF_CRM_1469534140'],
-					'HEADERS'          => $headers,
-					//'SORT'             => $arResult['SORT'],
-					//'SORT_VARS'        => $arResult['SORT_VARS'],
-					'ROWS'             => $aRows,
-					'FOOTER'           => array(array('title'=>'Всего', 'value' => $rsData->SelectedRowsCount())),
-					'ACTIONS'          => array(),
-					'EDITABLE'         => false,
-					'NAV_OBJECT'       => $rsData,
-					'AJAX_MODE'        => 'Y',
-					'AJAX_OPTION_JUMP' => 'N',
-					'AJAX_OPTION_STYLE'=> 'Y',
-					"FILTER_TEMPLATE_NAME" => "tabbed",
-					'FILTER'           => array()
-				 ),
-		false
-	);*/
+	
 	$avitoVal = ob_get_contents();
 	ob_end_clean();
 	
