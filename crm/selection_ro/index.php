@@ -99,6 +99,7 @@ if (!(empty($_REQUEST['TYPE']) && empty($_REQUEST['ROOMS']) && empty($_REQUEST['
   while($aRes = $db_res->GetNext()){
     $map_data['PLACEMARKS'][] = array('LAT' => $aRes['PROPERTY_298'],'LON' => $aRes['PROPERTY_299'],'TEXT' => '<a href="https://bpm.ucre.ru/crm/ro/?show&id='.$aRes['ID'].'" target="_blank" title="'.$aRes['PROPERTY_209'].'">'.$aRes['NAME']."<br>".number_format($aRes['PROPERTY_321'],2,"."," ").' &#8381;<br>'.$aRes['PROPERTY_221'].'/'.$aRes['PROPERTY_222'].' эт.</a>',);
     $objects[$aRes['ID']] = '<a href="https://bpm.ucre.ru/crm/ro/?show&id='.$aRes['ID'].'" target="_blank" title="'.$aRes['PROPERTY_209'].'">'.$aRes['NAME'].'</a>';
+    $ids[] = $aRes['ID'];
     $num++;
   }
 }
@@ -128,10 +129,21 @@ $APPLICATION->SetTitle("Подбор объектов недвижимости: 
 </div>
 <div style="margin-left: 10px">
   <table>
-    <tr><th>ID</th><th>Название</th></tr>
+    <tr>
+      <th>ID</th>
+      <th>Название</th>
+      <th>
+        <?
+        if (count($objects)){
+          echo "<a href='ro_table.php?ids=".serialize($ids)."' target='_blank'>Отчет</a>";
+        }
+        ?>
+      </th>
+    </tr>
   <?
   foreach ($objects as $key=> $object)
-    echo "<tr><td>".$key."</td><td>".$object."</td></tr>";
+    echo "<tr><td>".$key."</td><td>".$object."</td><td></td></tr>";
+    //echo "<tr><td>".$key."</td><td>".$object."</td><td><a href='ro_show.php?id=".$key."' target='_blank'>\/</a></td></tr>";
   ?>
   </table>
 </div>  
