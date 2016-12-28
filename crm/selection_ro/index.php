@@ -60,7 +60,6 @@ $APPLICATION->SetTitle("Подбор объектов недвижимости:"
 <?}?>
 -->
 <?
-
 echo "<br>";
 $map_data = array();
 $map_data['yandex_lat'] = "51.7687567";
@@ -135,7 +134,7 @@ $APPLICATION->SetTitle("Подбор объектов недвижимости: 
       <th>
         <?
         if (count($objects)){
-          echo "<a href='ro_table.php?ids=".serialize($ids)."' target='_blank'>Отчет</a>";
+          echo "<a href='ro_table.php?ids=".serialize($ids)."&params=".serialize($_POST)."' target='_blank'>Отчет</a>";
         }
         ?>
       </th>
