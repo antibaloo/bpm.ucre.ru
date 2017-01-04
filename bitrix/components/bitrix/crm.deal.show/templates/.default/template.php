@@ -152,6 +152,20 @@ if (!empty($arResult['FIELDS']['tab_lead']))
 		'fields' => $arResult['FIELDS']['tab_lead']
 	);
 }
+//--Вкладка лог Авито
+if (!empty($arResult['FIELDS']['tab_208445']))
+{
+	//$leadCount = intval($arResult[LEAD_COUNT]);
+	$arTabs[] = array(
+		'id' => 'tab_avito',
+		//'name' => GetMessage('CRM_TAB_4')." ($leadCount)",
+		'name' => "Лог Авито-Недвижимость",
+		'title' => "Лог Авито-Недвижимость",
+		'icon' => '',
+		'fields' => $arResult['FIELDS']['tab_208445']
+	);
+}
+//-------------------------------------------------------
 if (isset($arResult['BIZPROC']) && $arResult['BIZPROC'] === 'Y' && !empty($arResult['FIELDS']['tab_bizproc']))
 {
 	$arTabs[] = array(
