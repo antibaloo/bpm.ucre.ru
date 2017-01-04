@@ -1,5 +1,5 @@
 <?if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) die();
-use \Bitrix\Crm\Category\DealCategory;
+
 use \Bitrix\Crm\Integration\StorageType;
 
 if (!empty($arResult['ERROR_MESSAGE']))
@@ -14,23 +14,6 @@ if(SITE_TEMPLATE_ID === 'bitrix24')
 {
 	$APPLICATION->SetAdditionalCSS("/bitrix/themes/.default/bitrix24/crm-entity-show.css");
 }
-?>
-<!-- Add mousewheel plugin (this is optional) -->
-<script type="text/javascript" src="/bitrix/js/baloo/fancybox/lib/jquery.mousewheel-3.0.6.pack.js"></script>
-
-<!-- Add fancyBox -->
-<link rel="stylesheet" href="/bitrix/js/baloo/fancybox/source/jquery.fancybox.css?v=2.1.5" type="text/css" media="screen" />
-<script type="text/javascript" src="/bitrix/js/baloo/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
-
-<!-- Optionally add helpers - button, thumbnail and/or media -->
-<link rel="stylesheet" href="/bitrix/js/baloo/fancybox/source/helpers/jquery.fancybox-buttons.css?v=1.0.5" type="text/css" media="screen" />
-<script type="text/javascript" src="/bitrix/js/baloo/fancybox/source/helpers/jquery.fancybox-buttons.js?v=1.0.5"></script>
-<script type="text/javascript" src="/bitrix/js/baloo/fancybox/source/helpers/jquery.fancybox-media.js?v=1.0.6"></script>
-
-<link rel="stylesheet" href="/bitrix/js/baloo/fancybox/source/helpers/jquery.fancybox-thumbs.css?v=1.0.7" type="text/css" media="screen" />
-<script type="text/javascript" src="/bitrix/js/baloo/fancybox/source/helpers/jquery.fancybox-thumbs.js?v=1.0.7"></script>
-
-<?
 
 //Preliminary registration of disk api.
 if(CCrmActivity::GetDefaultStorageTypeID() === StorageType::Disk)
@@ -38,7 +21,7 @@ if(CCrmActivity::GetDefaultStorageTypeID() === StorageType::Disk)
 	CJSCore::Init(array('uploader', 'file_dialog'));
 }
 
-$arResult['CRM_CUSTOM_PAGE_TITLE'] = DealCategory::getName($arResult['CATEGORY_ID']).": ".GetMessage(
+$arResult['CRM_CUSTOM_PAGE_TITLE'] = GetMessage(
 	'CRM_DEAL_SHOW_TITLE',
 	array(
 		'#ID#' => $arResult['ELEMENT']['ID'],
@@ -153,20 +136,6 @@ if (!empty($arResult['FIELDS']['tab_lead']))
 		'fields' => $arResult['FIELDS']['tab_lead']
 	);
 }
-//--Вкладка лоаг Авито
-if (!empty($arResult['FIELDS']['tab_avito']))
-{
-	//$leadCount = intval($arResult[LEAD_COUNT]);
-	$arTabs[] = array(
-		'id' => 'tab_avito',
-		//'name' => GetMessage('CRM_TAB_4')." ($leadCount)",
-		'name' => "Лог Авито-Недвижимость",
-		'title' => "Лог Авито-Недвижимость",
-		'icon' => '',
-		'fields' => $arResult['FIELDS']['tab_avito']
-	);
-}
-//-------------------------------------------------------
 if (isset($arResult['BIZPROC']) && $arResult['BIZPROC'] === 'Y' && !empty($arResult['FIELDS']['tab_bizproc']))
 {
 	$arTabs[] = array(
@@ -189,8 +158,6 @@ if(!empty($arResult['FIELDS']['tab_event']))
 		'fields' => $arResult['FIELDS']['tab_event']
 	);
 }
-
-
 
 $element = isset($arResult['ELEMENT']) ? $arResult['ELEMENT'] : null;
 
@@ -227,7 +194,6 @@ $APPLICATION->IncludeComponent(
 	$component, array('HIDE_ICONS' => 'Y')
 );
 $APPLICATION->AddHeadScript('/bitrix/js/crm/instant_editor.js');
-//if($USER->GetId() == 24){var_dump($arTabs);}
 ?>
 
 
