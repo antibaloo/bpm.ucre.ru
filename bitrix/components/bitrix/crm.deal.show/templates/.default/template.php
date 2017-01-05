@@ -1,4 +1,5 @@
-<?if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) die();
+<?/*В оригинальный шаблон добавлены стили и js-скрипты для корректной работы галереи fancybox и данные для вкладки Лог Авито*/
+if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) die();
 use \Bitrix\Crm\Category\DealCategory;
 use \Bitrix\Crm\Integration\StorageType;
 
