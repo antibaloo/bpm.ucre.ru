@@ -176,7 +176,7 @@ if(CModule::IncludeModule('iblock') && CModule::IncludeModule("crm")) {
 	  $Object->appendChild($DistMetro);
 		
 		$dealFilter = array("ID" => $arProps['ID_DEAL']['VALUE'],"CHECK_PERMISSIONS" => "N");
-    $dealSelect = array("ID","COMMENTS","UF_CRM_1469533039","UF_CRM_579897C010103","COMMENTS");
+    $dealSelect = array("ID","COMMENTS","UF_CRM_1469533039","UF_CRM_579897C010103","UF_CRM_1472038962","UF_CRM_1476517423");
     $deal_res = CCrmDeal::GetList(Array('DATE_CREATE' => 'DESC'), $dealFilter, $dealSelect);
     $deal = $deal_res->GetNext();
 		$rsContract = CUserFieldEnum::GetList(array(), array("ID" => $deal['UF_CRM_1469533039'],));
@@ -204,11 +204,11 @@ if(CModule::IncludeModule('iblock') && CModule::IncludeModule("crm")) {
 		$Longtitude = $dom->createElement("Longtitude",($arProps['LONGITUDE']['VALUE'])?$arProps['LONGITUDE']['VALUE']:"55.0988000");
 		$Object->appendChild($Longtitude);
 		
-		foreach ($aRes['PROPERTY_237']as $imageid){
+		foreach ($deal['UF_CRM_1472038962'] as $imageid){
 			$Image = $dom->createElement("Image","http://bpm.ucre.ru/".CFile::GetPath($imageid));
 			$Object->appendChild($Image);
 		}
-		foreach ($aRes['PROPERTY_236'] as $imageid){
+		foreach ($deal['UF_CRM_1476517423'] as $imageid){
 			$Image = $dom->createElement("Image","http://bpm.ucre.ru/".CFile::GetPath($imageid));
 			$Object->appendChild($Image);
 		}
