@@ -12,7 +12,7 @@ $APPLICATION->SetTitle(GetMessage("CRM_TITLE"));
 	BX.ready(function(){
 		//обработка открытия вкладки 
 		BX.addCustomEvent('BX_CRM_INTERFACE_FORM_TAB_SELECTED', BX.delegate(function(self, name, tab_id){
-			//вкладка остатков поставщиков 
+			//вкладка "Лог авито"
 			if (!arTabLoading[tab_id] && self.oTabsMeta[tab_id].name.toLowerCase().indexOf('авито') !== -1) { 
 				var innerTab = BX('inner_tab_'+tab_id), 
 						dealId = 0, matches = null, 
@@ -41,6 +41,37 @@ $APPLICATION->SetTitle(GetMessage("CRM_TITLE"));
 						} 
 					}); 
 				} 
+			}
+			//Вкладка "Просмотры на сайтах"
+			if (!arTabLoading[tab_id] && self.oTabsMeta[tab_id].name.toLowerCase().indexOf('просмотры') !== -1) { 
+				var innerTab = BX('inner_tab_'+tab_id), 
+						dealId = 0, matches = null, 
+						waiter = BX.showWait(innerTab); 
+				if (matches = window.location.href.match(/\/crm\/deal\/show\/([\d]+)\//i)) { 
+					var dealId = parseInt(matches[1]); 
+				}
+				if (dealId > 0) { 
+					//чтобы не грузить повторно 
+					arTabLoading[tab_id] = true; 
+					BX.ajax({ 
+						url: '/ajax/views.php', 
+						method: 'POST', 
+						dataType: 'html', 
+						data: { 
+							id: dealId,
+							step: 0,
+						}, 
+						onsuccess: function(data) 
+						{ 
+							innerTab.innerHTML = data; 
+							BX.closeWait(innerTab, waiter); //$this <-> innerTab. в противном случае вызывал ошибку дебагера Битрикс
+						}, 
+						onfailure: function(data) 
+						{ 
+							BX.closeWait(innerTab, waiter); 
+						} 
+					}); 
+				}
 			}
 		})); 
 	});
