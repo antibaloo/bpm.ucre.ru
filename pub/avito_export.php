@@ -171,7 +171,124 @@ while($aRes = $db_res->GetNext()){
       $Ad->appendChild($Longitude);
     }
   }
-  
+  if ($aRes['PROPERTY_210']==382 || $aRes['PROPERTY_210']==381){
+    $Rooms = $dom->createElement("Rooms", intval($aRes['PROPERTY_229']));
+    $Ad->appendChild($Rooms);
+  }
+  switch ($aRes['PROPERTY_210']){
+    case 381:
+      $Square = $dom->createElement("Square",number_format($aRes['PROPERTY_228'],2,".",""));
+      $Ad->appendChild($Square);
+      break;
+    case 382:
+    case 387:
+      $Square = $dom->createElement("Square",number_format($aRes['PROPERTY_224'],2,".",""));
+      $Ad->appendChild($Square);
+      break;
+    case 386:
+      $LandArea = $dom->createElement("LandArea",number_format($aRes['PROPERTY_292'],2,".",""));
+      $Ad->appendChild($LandArea);
+      break;
+    case 383:
+    case 384:
+    case 385:
+      $Square = $dom->createElement("Square",number_format($aRes['PROPERTY_224'],2,".",""));
+      $Ad->appendChild($Square);
+      $LandArea = $dom->createElement("LandArea",number_format($aRes['PROPERTY_292'],2,".",""));
+      $Ad->appendChild($LandArea);
+      break;
+  }
+  if ($aRes['PROPERTY_210']==382 || $aRes['PROPERTY_210']==381){
+    $HouseType = $dom->createElement("HouseType", $housetype[$aRes['PROPERTY_243']]);
+    $Ad->appendChild($HouseType);
+  }			
+  if ($aRes['PROPERTY_210']==382 || $aRes['PROPERTY_210']==381){
+    $Floor = $dom->createElement("Floor", $aRes['PROPERTY_221']);
+    $Ad->appendChild($Floor);
+  }
+  if ($aRes['PROPERTY_210']!=386){
+    $Floors = $dom->createElement("Floors", $aRes['PROPERTY_222']);
+    $Ad->appendChild($Floors);
+  }
+  if ($aRes['PROPERTY_210']==383 || $aRes['PROPERTY_210']==384 || $aRes['PROPERTY_210']==385) {
+    $WallsType = $dom->createElement("WallsType", $walls[$aRes['PROPERTY_242']]);
+    $Ad->appendChild($WallsType);
+  }
+  switch($aRes['PROPERTY_210']){
+    case 383:
+      $ObjectType = $dom->createElement("ObjectType", "Дом");
+      $Ad->appendChild($ObjectType);
+      break;
+    case 384:
+      $ObjectType = $dom->createElement("ObjectType", "Таунхаус");
+      $Ad->appendChild($ObjectType);
+      break;
+    case 385:
+      $ObjectType = $dom->createElement("ObjectType", "Дача");
+      $Ad->appendChild($ObjectType);
+      break;
+    case 386:
+      $ObjectType = $dom->createElement("ObjectType", $plotcat[$aRes['PROPERTY_295']]);
+      $Ad->appendChild($ObjectType);
+      break;
+    case 387:
+      $ObjectType = $dom->createElement("ObjectType", $appointment[$aRes['PROPERTY_238']]);
+      $Ad->appendChild($ObjectType);
+      break;
+  }
+  switch($aRes['PROPERTY_210']){
+    case 383:
+    case 384:
+    case 385:
+    case 386:
+      $DistanceToCity = $dom->createElement("DistanceToCity", intval($aRes['PROPERTY_281']));
+      $Ad->appendChild($DistanceToCity);
+      break;
+  }
+  $dealFilter = array("ID" => $aRes['PROPERTY_319'], "CHECK_PERMISSIONS" => "N");//"CHECK_PERMISSIONS" => "N" Обязательный параметр фильтра при вызове из агента, ибо агент выполняется под анонимным пользователем
+  $dealSelect = array("ID","UF_CRM_579897C010103", "COMMENTS","UF_CRM_1472038962","UF_CRM_1476517423");
+  $deal_res = CCrmDeal::GetList(Array('DATE_CREATE' => 'DESC'), $dealFilter, $dealSelect);
+  $deal = $deal_res->GetNext();
+  $Price = $dom->createElement("Price", $deal['UF_CRM_579897C010103']);
+  $Ad->appendChild($Price);
+  if($aRes['PROPERTY_300']=="Сдам"){
+    $PriceType = $dom->createElement("PriceType", "в месяц за м2");
+    $Ad->appendChild($PriceType);
+  }
+  $Description = $dom->createElement("Description", html_entity_decode($deal['COMMENTS']/*$aRes['DETAIL_TEXT']*/)." Номер в базе: ".$aRes['ID']);//Номер в базе - новый ID
+  $Ad->appendChild($Description);
+  if ($aRes['PROPERTY_210']==382){
+    $MarketType = $dom->createElement("MarketType", ($aRes['PROPERTY_258']=="")? "Вторичка":"Новостройка");
+    $Ad->appendChild($MarketType);
+  }
+  if ($aRes['PROPERTY_258']!=""){
+    $NewDevelopmentId = $dom->createElement("NewDevelopmentId",substr($aRes['PROPERTY_258'],0,strpos($aRes['PROPERTY_258']," ")));
+    $Ad->appendChild($NewDevelopmentId);
+  }
+  $Images = $dom->createElement("Images");
+  foreach (/*$aRes['PROPERTY_237']*/$deal['UF_CRM_1472038962'] as $imageid){
+    $Image = $dom->createElement("Image");
+    $Image->setAttribute("url", "http://bpm.ucre.ru/".CFile::GetPath($imageid));
+    $Images->appendChild($Image);
+  }
+  foreach (/*$aRes['PROPERTY_236']*/$deal['UF_CRM_1476517423'] as $imageid){
+    $Image = $dom->createElement("Image");
+    $Image->setAttribute("url", "http://bpm.ucre.ru/".CFile::GetPath($imageid));
+    $Images->appendChild($Image);
+  }
+  $Ad->appendChild($Images);
+  $CompanyName = $dom->createElement("CompanyName","Единый центр недвижимости «Этажи»");
+  $Ad->appendChild($CompanyName);
+  $rsUser = CUser::GetByID($aRes['PROPERTY_313']);
+  $arUser = $rsUser->Fetch();
+  $ManagerName = $dom->createElement("ManagerName",$arUser['LAST_NAME']." ".$arUser['NAME']." ".$arUser['SECOND_NAME']);
+  $Ad->appendChild($ManagerName);
+  $EMail = $dom->createElement("EMail", $arUser['EMAIL']);
+  $Ad->appendChild($EMail);
+  $ContactPhone = $dom->createElement("ContactPhone", $arUser['PERSONAL_PHONE']);
+  $Ad->appendChild($ContactPhone);
+  $Ads->appendChild($Ad); // Добавляем в корневой узел "Ads" узел "Ad"
+	$num++;
 }
 $result = $dom->save("/home/bitrix/www_bpm/orenburg_avito.xml"); // Сохраняем полученный XML-документ в файл
 $time = microtime(true) - $start;
