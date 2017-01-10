@@ -15,10 +15,15 @@ if(CModule::IncludeModule('iblock') && CModule::IncludeModule("crm")) {
   $iblock_filter = array ("IBLOCK_ID" => 42, /*"ACTIVE"=>"Y"*/"PROPERTY_266" => array("Активная стадия","Активный","Свободный"));
   $db_res = CIBlockElement::GetList(array("ID"=>"ASC"), $iblock_filter, false, false, $arSelect);
   while($aRes = $db_res->GetNext()){
+    $dealFilter = array("ID" => $aRes['PROPERTY_319'],"CHECK_PERMISSIONS" => "N");
+    $dealSelect = array("ID","UF_CRM_579897C010103","COMMENTS","UF_CRM_1472038962","UF_CRM_1476517423");
+    $deal_res = CCrmDeal::GetList(Array('DATE_CREATE' => 'DESC'), $dealFilter, $dealSelect);
+    $deal = $deal_res->GetNext();
+    
     $photos = array();
     $plans = array();
     $md5 = array();
-    foreach ($aRes['PROPERTY_237'] as $imgid){
+    foreach (/*$aRes['PROPERTY_237']*/$deal['UF_CRM_1472038962'] as $imgid){
       $photos[] = stripslashes("https://bpm.ucre.ru".CFile::GetPath($imgid));
       $file_path = "/home/bitrix/www_bpm".CFile::GetPath($imgid);
       $tmp = explode(".",$file_path);
@@ -31,7 +36,7 @@ if(CModule::IncludeModule('iblock') && CModule::IncludeModule("crm")) {
         file_put_contents($md5_path, $result[0]);
       }
     }
-    foreach ($aRes['PROPERTY_236'] as $plnid){
+    foreach (/*$aRes['PROPERTY_236']*/$deal['UF_CRM_1476517423'] as $plnid){
       $plans[] = stripslashes("https://bpm.ucre.ru".CFile::GetPath($plnid));
       $file_path = "/home/bitrix/www_bpm".CFile::GetPath($plnid);
       $tmp = explode(".",$file_path);
@@ -44,10 +49,7 @@ if(CModule::IncludeModule('iblock') && CModule::IncludeModule("crm")) {
         file_put_contents($md5_path, $result[0]);
       }
     }
-    $dealFilter = array("ID" => $aRes['PROPERTY_319'],"CHECK_PERMISSIONS" => "N");
-    $dealSelect = array("ID","UF_CRM_579897C010103","COMMENTS");
-    $deal_res = CCrmDeal::GetList(Array('DATE_CREATE' => 'DESC'), $dealFilter, $dealSelect);
-    $deal = $deal_res->GetNext();
+
     $tmp_type = CIBlockPropertyEnum::GetByID($aRes["PROPERTY_210"]);
     $tmp_appointment = CIBlockPropertyEnum::GetByID($aRes["PROPERTY_238"]);
     switch ($aRes['PROPERTY_210']){
