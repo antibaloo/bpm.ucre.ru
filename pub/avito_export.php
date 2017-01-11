@@ -97,6 +97,8 @@ while($aRes = $db_res->GetNext()){
   $Ad->appendChild($OperationType);// Добавляем в узел "Ad" узел "OperationType"
   $DateEnd = $dom->createElement('DateEnd', date("Y-m-d", strtotime("+30 days")));
   $Ad->appendChild($DateEnd);
+	$ListingFee = $dom->createElement('ListingFee','PackageSingle');
+	$Ad->appendChild($ListingFee);
   $Region = $dom->createElement("Region",($aRes['PROPERTY_213']=="Оренбургская обл")?"Оренбургская область":$aRes['PROPERTY_213']);
   $Ad->appendChild($Region);
   //Формирование адреса объекта в зхависимости от типа объекта и наличия населенного пункта в справочнике Авито
