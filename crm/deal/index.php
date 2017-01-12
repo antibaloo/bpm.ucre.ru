@@ -59,7 +59,37 @@ $APPLICATION->SetTitle(GetMessage("CRM_TITLE"));
 						dataType: 'html', 
 						data: { 
 							id: dealId,
-							step: 0,
+							step: 0
+						}, 
+						onsuccess: function(data) 
+						{ 
+							innerTab.innerHTML = data; 
+							BX.closeWait(innerTab, waiter); //$this <-> innerTab. в противном случае вызывал ошибку дебагера Битрикс
+						}, 
+						onfailure: function(data) 
+						{ 
+							BX.closeWait(innerTab, waiter); 
+						} 
+					}); 
+				}
+			}
+			//Вкладка "Встречные заявки"
+			if (!arTabLoading[tab_id] && self.oTabsMeta[tab_id].name.toLowerCase().indexOf('встречные') !== -1) { 
+				var innerTab = BX('inner_tab_'+tab_id), 
+						dealId = 0, matches = null, 
+						waiter = BX.showWait(innerTab); 
+				if (matches = window.location.href.match(/\/crm\/deal\/show\/([\d]+)\//i)) { 
+					var dealId = parseInt(matches[1]); 
+				}
+				if (dealId > 0) { 
+					//чтобы не грузить повторно 
+					arTabLoading[tab_id] = true; 
+					BX.ajax({ 
+						url: '/ajax/selection.php', 
+						method: 'POST', 
+						dataType: 'html', 
+						data: { 
+							id: dealId
 						}, 
 						onsuccess: function(data) 
 						{ 
