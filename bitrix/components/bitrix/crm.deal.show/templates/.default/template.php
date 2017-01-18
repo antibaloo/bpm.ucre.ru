@@ -247,7 +247,22 @@ if ($mainDeal["CATEGORY_ID"] == 0 || $mainDeal["CATEGORY_ID"] == 4){
 				<div class="crm-offer-info-label-wrap"><span class="crm-offer-info-label">Площадь участка:</span></div>
 			</td>
 			<td class="crm-offer-info-right">
-				<div class="crm-offer-info-label-wrap"><span class="crm-offer-info-label"><?=($objectFields['PROPERTIES']['PLOT_AREA']['VALUE'])?$objectFields['PROPERTIES']['PLOT_AREA']['VALUE']:"нет данных"?></span></div>
+				<div class="crm-offer-info-label-wrap"><span class="crm-offer-info-label"><?=($objectFields['PROPERTIES']['PLOT_AREA']['VALUE'])?$objectFields['PROPERTIES']['PLOT_AREA']['VALUE']." сот.":"нет данных"?></span></div>
+			</td>
+		</tr>
+		<tr class="crm-offer-row">
+			<td class="crm-offer-info-drg-btn"></td>
+			<td class="crm-offer-info-left">
+				<div class="crm-offer-info-label-wrap"><span class="crm-offer-info-label">Этаж:</span></div>
+			</td>
+			<td class="crm-offer-info-right">
+				<div class="crm-offer-info-label-wrap"><span class="crm-offer-info-label"><?=($objectFields['PROPERTIES']['FLOOR']['VALUE'])?$objectFields['PROPERTIES']['FLOOR']['VALUE']:"нет данных"?></span></div>
+			</td>
+			<td class="crm-offer-info-left">
+				<div class="crm-offer-info-label-wrap"><span class="crm-offer-info-label">Этажность:</span></div>
+			</td>
+			<td class="crm-offer-info-right">
+				<div class="crm-offer-info-label-wrap"><span class="crm-offer-info-label"><?=($objectFields['PROPERTIES']['FLOORALL']['VALUE'])?$objectFields['PROPERTIES']['FLOORALL']['VALUE']:"нет данных"?></span></div>
 			</td>
 		</tr>
 	</tbody>
