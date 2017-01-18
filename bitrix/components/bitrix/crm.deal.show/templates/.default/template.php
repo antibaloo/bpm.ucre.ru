@@ -153,20 +153,6 @@ if (!empty($arResult['FIELDS']['tab_lead']))
 		'fields' => $arResult['FIELDS']['tab_lead']
 	);
 }
-//--Вкладка лог Авито
-if (!empty($arResult['FIELDS']['tab_208445']))
-{
-	//$leadCount = intval($arResult[LEAD_COUNT]);
-	$arTabs[] = array(
-		'id' => 'tab_avito',
-		//'name' => GetMessage('CRM_TAB_4')." ($leadCount)",
-		'name' => "Лог Авито-Недвижимость",
-		'title' => "Лог Авито-Недвижимость",
-		'icon' => '',
-		'fields' => $arResult['FIELDS']['tab_208445']
-	);
-}
-//-------------------------------------------------------
 if (isset($arResult['BIZPROC']) && $arResult['BIZPROC'] === 'Y' && !empty($arResult['FIELDS']['tab_bizproc']))
 {
 	$arTabs[] = array(
@@ -210,7 +196,47 @@ $APPLICATION->IncludeComponent(
 	$component,
 	array('HIDE_ICONS' => 'Y')
 );
-
+/*---------Блок информации о связанном объекте----------*/
+$rsDeal = CCrmDeal::GetListEx(
+	array(), 
+	array("ID" => $element['ID']), 
+	false, 
+	false, 
+	array("CATEGORY_ID", "UF_CRM_1469534140"),
+	array()
+);
+$mainDeal = $rsDeal->Fetch();
+if ($mainDeal["CATEGORY_ID"] == 0 || $mainDeal["CATEGORY_ID"] == 4){
+	if ($mainDeal["UF_CRM_1469534140"]){
+		if ($USER->GetID() == 24){
+?>
+<table class="crm-offer-info-table crm-offer-main-info-text">
+	<tbody>
+		<tr><td colspan="5"><div class="crm-offer-title">Об объекте</div></td></tr>
+		<tr class="crm-offer-row">
+			<td class="crm-offer-info-drg-btn"></td>
+			<td class="crm-offer-info-left">
+				<div class="crm-offer-info-label-wrap">Метка:</div>
+			</td>
+			<td class="crm-offer-info-right">Значение</td>
+			<td class="crm-offer-info-left">
+				<div class="crm-offer-info-label-wrap">Метка:</div>
+			</td>
+			<td class="crm-offer-info-right">Значение</td>
+		</tr>
+	</tbody>
+</table>
+<?
+}
+	} else {
+?>
+<table class="crm-offer-info-table crm-offer-main-info-text">
+	<tbody><tr><td colspan="5"><div class="crm-offer-title">Нет связанного объекта</div></td></tr></tbody>
+</table>
+<?		
+	}
+}
+/*------Конец блока информации о связанном объекте----------*/
 $APPLICATION->IncludeComponent(
 	'bitrix:crm.interface.form',
 	'show',
