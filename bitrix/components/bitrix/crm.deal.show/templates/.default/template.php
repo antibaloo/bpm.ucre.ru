@@ -1,6 +1,5 @@
-<?/*В оригинальный шаблон добавлены стили и js-скрипты для корректной работы галереи fancybox и данные для вкладки Лог Авито*/
-if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) die();
-use \Bitrix\Crm\Category\DealCategory;
+<?if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) die();
+
 use \Bitrix\Crm\Integration\StorageType;
 
 if (!empty($arResult['ERROR_MESSAGE']))
@@ -15,30 +14,14 @@ if(SITE_TEMPLATE_ID === 'bitrix24')
 {
 	$APPLICATION->SetAdditionalCSS("/bitrix/themes/.default/bitrix24/crm-entity-show.css");
 }
-?>
-<!-- Add mousewheel plugin (this is optional) -->
-<script type="text/javascript" src="/bitrix/js/baloo/fancybox/lib/jquery.mousewheel-3.0.6.pack.js"></script>
 
-<!-- Add fancyBox -->
-<link rel="stylesheet" href="/bitrix/js/baloo/fancybox/source/jquery.fancybox.css?v=2.1.5" type="text/css" media="screen" />
-<script type="text/javascript" src="/bitrix/js/baloo/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
-
-<!-- Optionally add helpers - button, thumbnail and/or media -->
-<link rel="stylesheet" href="/bitrix/js/baloo/fancybox/source/helpers/jquery.fancybox-buttons.css?v=1.0.5" type="text/css" media="screen" />
-<script type="text/javascript" src="/bitrix/js/baloo/fancybox/source/helpers/jquery.fancybox-buttons.js?v=1.0.5"></script>
-<script type="text/javascript" src="/bitrix/js/baloo/fancybox/source/helpers/jquery.fancybox-media.js?v=1.0.6"></script>
-
-<link rel="stylesheet" href="/bitrix/js/baloo/fancybox/source/helpers/jquery.fancybox-thumbs.css?v=1.0.7" type="text/css" media="screen" />
-<script type="text/javascript" src="/bitrix/js/baloo/fancybox/source/helpers/jquery.fancybox-thumbs.js?v=1.0.7"></script>
-
-<?
 //Preliminary registration of disk api.
 if(CCrmActivity::GetDefaultStorageTypeID() === StorageType::Disk)
 {
 	CJSCore::Init(array('uploader', 'file_dialog'));
 }
 
-$arResult['CRM_CUSTOM_PAGE_TITLE'] = DealCategory::getName($arResult['CATEGORY_ID']).": ".GetMessage(
+$arResult['CRM_CUSTOM_PAGE_TITLE'] = GetMessage(
 	'CRM_DEAL_SHOW_TITLE',
 	array(
 		'#ID#' => $arResult['ELEMENT']['ID'],
@@ -49,6 +32,7 @@ $arResult['CRM_CUSTOM_PAGE_TITLE'] = DealCategory::getName($arResult['CATEGORY_I
 $enableInstantEdit = $arResult['ENABLE_INSTANT_EDIT'];
 $instantEditorID = strtolower($arResult['FORM_ID']).'_editor';
 $bizprocDispatcherID = strtolower($arResult['FORM_ID']).'_bp_disp';
+$treeDispatcherID = strtolower($arResult['FORM_ID']).'_tree_disp';
 
 $arTabs = array();
 $arTabs[] = array(
@@ -153,6 +137,16 @@ if (!empty($arResult['FIELDS']['tab_lead']))
 		'fields' => $arResult['FIELDS']['tab_lead']
 	);
 }
+if (!empty($arResult['FIELDS']['tab_automation']))
+{
+	$arTabs[] = array(
+		'id' => 'tab_automation',
+		'name' => GetMessage('CRM_TAB_AUTOMATION'),
+		'title' => GetMessage('CRM_TAB_AUTOMATION_TITLE'),
+		'icon' => '',
+		'fields' => $arResult['FIELDS']['tab_automation']
+	);
+}
 if (isset($arResult['BIZPROC']) && $arResult['BIZPROC'] === 'Y' && !empty($arResult['FIELDS']['tab_bizproc']))
 {
 	$arTabs[] = array(
@@ -163,6 +157,13 @@ if (isset($arResult['BIZPROC']) && $arResult['BIZPROC'] === 'Y' && !empty($arRes
 		'fields' => $arResult['FIELDS']['tab_bizproc']
 	);
 }
+$arTabs[] = array(
+	'id' => 'tab_tree',
+	'name' => GetMessage('CRM_TAB_TREE'),
+	'title' => GetMessage('CRM_TAB_TREE_TITLE'),
+	'icon' => '',
+	'fields' => $arResult['FIELDS']['tab_tree']
+);
 if(!empty($arResult['FIELDS']['tab_event']))
 {
 	//$eventCount = intval($arResult[EVENT_COUNT]);
@@ -196,87 +197,7 @@ $APPLICATION->IncludeComponent(
 	$component,
 	array('HIDE_ICONS' => 'Y')
 );
-/*---------Блок информации о связанном объекте----------*/
-$rsDeal = CCrmDeal::GetListEx(
-	array(), 
-	array("ID" => $element['ID']), 
-	false, 
-	false, 
-	array("CATEGORY_ID", "UF_CRM_1469534140"),
-	array()
-);
-$mainDeal = $rsDeal->Fetch();
-if ($mainDeal["CATEGORY_ID"] == 0 || $mainDeal["CATEGORY_ID"] == 4){
-	if ($mainDeal["UF_CRM_1469534140"]){
-		$rsObject = CIBlockElement::GetById($mainDeal["UF_CRM_1469534140"]);
-		$mainObject = $rsObject->GetNextElement();
-		$objectFields = $mainObject->GetFields();
-		$objectFields['PROPERTIES'] = $mainObject->GetProperties();
-?>
-<table class="crm-offer-info-table crm-offer-main-info-text">
-	<tbody>
-		<tr><td colspan="5"><div class="crm-offer-title">Характеристики объекта по адресу: <?=$objectFields['PROPERTIES']['ADDRESS']['VALUE']?></div></td></tr>
-		<tr class="crm-offer-row">
-			<td class="crm-offer-info-drg-btn"></td>
-			<td class="crm-offer-info-left">
-				<div class="crm-offer-info-label-wrap"><span class="crm-offer-info-label">Тип недвижимости:</span></div>
-			</td>
-			<td class="crm-offer-info-right">
-				<div class="crm-offer-info-label-wrap"><span class="crm-offer-info-label"><?=$objectFields['PROPERTIES']['TYPE']['VALUE']?></span></div>
-			</td>
-			<td class="crm-offer-info-left">
-				<div class="crm-offer-info-label-wrap"><span class="crm-offer-info-label">Кол-во комнат:</span></div>
-			</td>
-			<td class="crm-offer-info-right">
-				<div class="crm-offer-info-label-wrap"><span class="crm-offer-info-label"><?=($objectFields['PROPERTIES']['ROOMS']['VALUE'])?$objectFields['PROPERTIES']['ROOMS']['VALUE']:"нет данных"?></span></div>
-			</td>
-		</tr>
-		<tr class="crm-offer-row">
-			<td class="crm-offer-info-drg-btn"></td>
-			<td class="crm-offer-info-left">
-				<div class="crm-offer-info-label-wrap"><span class="crm-offer-info-label">Площади (общ./жил./кух.):</span></div>
-			</td>
-			<td class="crm-offer-info-right">
-				<div class="crm-offer-info-label-wrap">
-					<span class="crm-offer-info-label">
-						<?=($objectFields['PROPERTIES']['TOTAL_AREA']['VALUE'])?$objectFields['PROPERTIES']['TOTAL_AREA']['VALUE']:"нет данных"?>/<?=($objectFields['PROPERTIES']['LIVE_AREA']['VALUE'])?$objectFields['PROPERTIES']['LIVE_AREA']['VALUE']:"нет данных"?>/<?=($objectFields['PROPERTIES']['KITCHEN_AREA']['VALUE'])?$objectFields['PROPERTIES']['KITCHEN_AREA']['VALUE']:"нет данных"?>
-					</span>
-				</div>
-			</td>
-			<td class="crm-offer-info-left">
-				<div class="crm-offer-info-label-wrap"><span class="crm-offer-info-label">Площадь участка:</span></div>
-			</td>
-			<td class="crm-offer-info-right">
-				<div class="crm-offer-info-label-wrap"><span class="crm-offer-info-label"><?=($objectFields['PROPERTIES']['PLOT_AREA']['VALUE'])?$objectFields['PROPERTIES']['PLOT_AREA']['VALUE']." сот.":"нет данных"?></span></div>
-			</td>
-		</tr>
-		<tr class="crm-offer-row">
-			<td class="crm-offer-info-drg-btn"></td>
-			<td class="crm-offer-info-left">
-				<div class="crm-offer-info-label-wrap"><span class="crm-offer-info-label">Этаж:</span></div>
-			</td>
-			<td class="crm-offer-info-right">
-				<div class="crm-offer-info-label-wrap"><span class="crm-offer-info-label"><?=($objectFields['PROPERTIES']['FLOOR']['VALUE'])?$objectFields['PROPERTIES']['FLOOR']['VALUE']:"нет данных"?></span></div>
-			</td>
-			<td class="crm-offer-info-left">
-				<div class="crm-offer-info-label-wrap"><span class="crm-offer-info-label">Этажность:</span></div>
-			</td>
-			<td class="crm-offer-info-right">
-				<div class="crm-offer-info-label-wrap"><span class="crm-offer-info-label"><?=($objectFields['PROPERTIES']['FLOORALL']['VALUE'])?$objectFields['PROPERTIES']['FLOORALL']['VALUE']:"нет данных"?></span></div>
-			</td>
-		</tr>
-	</tbody>
-</table>
-<?
-	} else {
-?>
-<table class="crm-offer-info-table crm-offer-main-info-text">
-	<tbody><tr><td colspan="5"><div class="crm-offer-title">Нет связанного объекта</div></td></tr></tbody>
-</table>
-<?		
-	}
-}
-/*------Конец блока информации о связанном объекте----------*/
+
 $APPLICATION->IncludeComponent(
 	'bitrix:crm.interface.form',
 	'show',
@@ -292,7 +213,34 @@ $APPLICATION->IncludeComponent(
 );
 $APPLICATION->AddHeadScript('/bitrix/js/crm/instant_editor.js');
 ?>
+<script type="text/javascript">
+	BX.ready(function(){
+		var treeContainerId = '<?=$arResult['TREE_CONTAINER_ID']?>';
+		if (!BX(treeContainerId))
+		{
+			return;
+		}
 
+		BX.CrmEntityTreeDispatcher.create(
+			'dispatcher<?= CUtil::JSEscape($treeDispatcherID)?>',
+			{
+				containerID: treeContainerId,
+				entityTypeName: '<?= CCrmOwnerType::DealName?>',
+				entityID: <?=$arResult['ELEMENT_ID']?>,
+				serviceUrl: '/bitrix/components/bitrix/crm.entity.tree/ajax.php?<?=bitrix_sessid_get()?>',
+				formID: '<?= CUtil::JSEscape($arResult['FORM_ID'])?>',
+				selected: <?= $arResult['TAB_TREE_OPEN'] ? 'true' : 'false'?>,
+				pathToLeadShow: '<?= CUtil::JSEscape($arParams['PATH_TO_LEAD_SHOW'])?>',
+				pathToContactShow: '<?= CUtil::JSEscape($arParams['PATH_TO_CONTACT_SHOW'])?>',
+				pathToCompanyShow: '<?= CUtil::JSEscape($arParams['PATH_TO_COMPANY_SHOW'])?>',
+				pathToDealShow: '<?= CUtil::JSEscape($arParams['PATH_TO_DEAL_SHOW'])?>',
+				pathToQuoteShow: '<?= CUtil::JSEscape($arParams['PATH_TO_QUOTE_SHOW'])?>',
+				pathToInvoiceShow: '<?= CUtil::JSEscape($arParams['PATH_TO_INVOICE_SHOW'])?>',
+				pathToUserProfile: '<?=CUtil::JSEscape($arParams['PATH_TO_USER_PROFILE'])?>'
+			}
+		);
+	});
+</script>
 
 <?if($arResult['ENABLE_INSTANT_EDIT']):?>
 <script type="text/javascript">
