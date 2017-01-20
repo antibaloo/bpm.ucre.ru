@@ -93,7 +93,7 @@ function myDealUpdate (&$arFields){
 	}
 	//file_put_contents('/home/bitrix/www_bpm/myupdate.log', var_export($arFieldsExist, true));
 }
-
+/*
 AddEventHandler('crm', 'OnBeforeCrmDealAdd', 'DealAdd');
 function DealAdd(&$arFields){
 	if ($arFields['UF_CRM_1469534140']!=''){
@@ -144,6 +144,6 @@ function DealUpdate(&$arFields){
 			$arFields['UF_CRM_1469597960'] = ""; //Адрес
 		}	
 	}
-}
+}*/
 
 ?>
