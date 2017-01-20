@@ -1,7 +1,10 @@
 <?if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) die();
-
+use \Bitrix\Crm\Category\DealCategory;
 use \Bitrix\Crm\Integration\StorageType;
-
+?>
+<link rel="stylesheet" href="/bitrix/js/baloo/fancyapps/source/jquery.fancybox.css" type="text/css" media="screen" />
+<script type="text/javascript" src="/bitrix/js/baloo/fancyapps/source/jquery.fancybox.pack.js"></script>
+<?
 if (!empty($arResult['ERROR_MESSAGE']))
 {
 	ShowError($arResult['ERROR_MESSAGE']);
@@ -10,18 +13,18 @@ if (!empty($arResult['ERROR_MESSAGE']))
 global $APPLICATION;
 $APPLICATION->SetAdditionalCSS('/bitrix/js/crm/css/crm.css');
 $APPLICATION->SetAdditionalCSS("/bitrix/themes/.default/crm-entity-show.css");
+
 if(SITE_TEMPLATE_ID === 'bitrix24')
 {
 	$APPLICATION->SetAdditionalCSS("/bitrix/themes/.default/bitrix24/crm-entity-show.css");
 }
-
 //Preliminary registration of disk api.
 if(CCrmActivity::GetDefaultStorageTypeID() === StorageType::Disk)
 {
 	CJSCore::Init(array('uploader', 'file_dialog'));
 }
 
-$arResult['CRM_CUSTOM_PAGE_TITLE'] = GetMessage(
+$arResult['CRM_CUSTOM_PAGE_TITLE'] = DealCategory::getName($arResult['CATEGORY_ID']).": ".GetMessage(
 	'CRM_DEAL_SHOW_TITLE',
 	array(
 		'#ID#' => $arResult['ELEMENT']['ID'],
@@ -197,7 +200,87 @@ $APPLICATION->IncludeComponent(
 	$component,
 	array('HIDE_ICONS' => 'Y')
 );
-
+/*---------Блок информации о связанном объекте----------*/		 +
+$rsDeal = CCrmDeal::GetListEx(		
+	array(), 		
+	array("ID" => $element['ID']), 		
+	false, 		
+	false, 		
+	array("CATEGORY_ID", "UF_CRM_1469534140"),		
+	array()		
+);		
+$mainDeal = $rsDeal->Fetch();		
+if ($mainDeal["CATEGORY_ID"] == 0 || $mainDeal["CATEGORY_ID"] == 4){		
+	if ($mainDeal["UF_CRM_1469534140"]){		
+		$rsObject = CIBlockElement::GetById($mainDeal["UF_CRM_1469534140"]);		
+		$mainObject = $rsObject->GetNextElement();		
+		$objectFields = $mainObject->GetFields();		
+		$objectFields['PROPERTIES'] = $mainObject->GetProperties();		
+?>		
+<table class="crm-offer-info-table crm-offer-main-info-text">		
+	<tbody>		
+		<tr><td colspan="5"><div class="crm-offer-title">Характеристики объекта по адресу: <?=$objectFields['PROPERTIES']['ADDRESS']['VALUE']?></div></td></tr>		
+	<tr class="crm-offer-row">		
+			<td class="crm-offer-info-drg-btn"></td>		
+			<td class="crm-offer-info-left">		
+				<div class="crm-offer-info-label-wrap"><span class="crm-offer-info-label">Тип недвижимости:</span></div>		
+			</td>		
+			<td class="crm-offer-info-right">		
+				<div class="crm-offer-info-label-wrap"><span class="crm-offer-info-label"><?=$objectFields['PROPERTIES']['TYPE']['VALUE']?></span></div>		
+			</td>		
+			<td class="crm-offer-info-left">		
+				<div class="crm-offer-info-label-wrap"><span class="crm-offer-info-label">Кол-во комнат:</span></div>		
+			</td>		
+			<td class="crm-offer-info-right">		
+				<div class="crm-offer-info-label-wrap"><span class="crm-offer-info-label"><?=($objectFields['PROPERTIES']['ROOMS']['VALUE'])?$objectFields['PROPERTIES']['ROOMS']['VALUE']:"нет данных"?></span></div>		
+			</td>		
+		</tr>		
+		<tr class="crm-offer-row">		
+			<td class="crm-offer-info-drg-btn"></td>		
+			<td class="crm-offer-info-left">		
+				<div class="crm-offer-info-label-wrap"><span class="crm-offer-info-label">Площади (общ./жил./кух.):</span></div>		
+			</td>		
+			<td class="crm-offer-info-right">		
+				<div class="crm-offer-info-label-wrap">		
+					<span class="crm-offer-info-label">		
+						<?=($objectFields['PROPERTIES']['TOTAL_AREA']['VALUE'])?$objectFields['PROPERTIES']['TOTAL_AREA']['VALUE']:"нет данных"?>/<?=($objectFields['PROPERTIES']['LIVE_AREA']['VALUE'])?$objectFields['PROPERTIES']['LIVE_AREA']['VALUE']:"нет данных"?>/<?=($objectFields['PROPERTIES']['KITCHEN_AREA']['VALUE'])?$objectFields['PROPERTIES']['KITCHEN_AREA']['VALUE']:"нет данных"?>		
+					</span>		
+				</div>		
+			</td>		
+			<td class="crm-offer-info-left">		
+				<div class="crm-offer-info-label-wrap"><span class="crm-offer-info-label">Площадь участка:</span></div>		
+			</td>		
+			<td class="crm-offer-info-right">		
+				<div class="crm-offer-info-label-wrap"><span class="crm-offer-info-label"><?=($objectFields['PROPERTIES']['PLOT_AREA']['VALUE'])?$objectFields['PROPERTIES']['PLOT_AREA']['VALUE']." сот.":"нет данных"?></span></div>		
+			</td>		
+		</tr>		
+		<tr class="crm-offer-row">		
+			<td class="crm-offer-info-drg-btn"></td>		
+			<td class="crm-offer-info-left">		
+				<div class="crm-offer-info-label-wrap"><span class="crm-offer-info-label">Этаж:</span></div>		
+			</td>		
+			<td class="crm-offer-info-right">		
+ 				<div class="crm-offer-info-label-wrap"><span class="crm-offer-info-label"><?=($objectFields['PROPERTIES']['FLOOR']['VALUE'])?$objectFields['PROPERTIES']['FLOOR']['VALUE']:"нет данных"?></span></div>		
+ 			</td>		
+ 			<td class="crm-offer-info-left">		
+ 				<div class="crm-offer-info-label-wrap"><span class="crm-offer-info-label">Этажность:</span></div>		
+ 			</td>		
+ 			<td class="crm-offer-info-right">		
+ 				<div class="crm-offer-info-label-wrap"><span class="crm-offer-info-label"><?=($objectFields['PROPERTIES']['FLOORALL']['VALUE'])?$objectFields['PROPERTIES']['FLOORALL']['VALUE']:"нет данных"?></span></div>		
+ 			</td>		
+ 		</tr>		
+ 	</tbody>		
+ </table>		
+ <?		
+ 	} else {		
+ ?>		
+ <table class="crm-offer-info-table crm-offer-main-info-text">		
+ 	<tbody><tr><td colspan="5"><div class="crm-offer-title">Нет связанного объекта</div></td></tr></tbody>		
+ </table>		
+ <?				
+ 	}		
+ }		
+ /*------Конец блока информации о связанном объекте----------*/
 $APPLICATION->IncludeComponent(
 	'bitrix:crm.interface.form',
 	'show',
