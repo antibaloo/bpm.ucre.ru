@@ -257,16 +257,22 @@ if ($mainDeal["CATEGORY_ID"] == 0 || $mainDeal["CATEGORY_ID"] == 4){
 		<tr class="crm-offer-row">		
 			<td class="crm-offer-info-drg-btn"></td>		
 			<td class="crm-offer-info-left">		
-				<div class="crm-offer-info-label-wrap"><span class="crm-offer-info-label">Этаж:</span></div>		
+				<div class="crm-offer-info-label-wrap"><span class="crm-offer-info-label">Этаж/Этажность:</span></div>		
 			</td>		
 			<td class="crm-offer-info-right">		
- 				<div class="crm-offer-info-label-wrap"><span class="crm-offer-info-label"><?=($objectFields['PROPERTIES']['FLOOR']['VALUE'])?$objectFields['PROPERTIES']['FLOOR']['VALUE']:"нет данных"?></span></div>		
+ 				<div class="crm-offer-info-label-wrap"><span class="crm-offer-info-label"><?=($objectFields['PROPERTIES']['FLOOR']['VALUE'])?$objectFields['PROPERTIES']['FLOOR']['VALUE']:"нет данных"?>/<?=($objectFields['PROPERTIES']['FLOORALL']['VALUE'])?$objectFields['PROPERTIES']['FLOORALL']['VALUE']:"нет данных"?></span></div>		
  			</td>		
  			<td class="crm-offer-info-left">		
- 				<div class="crm-offer-info-label-wrap"><span class="crm-offer-info-label">Этажность:</span></div>		
+ 				<div class="crm-offer-info-label-wrap"><span class="crm-offer-info-label">Ссылка на сайте:</span></div>		
  			</td>		
  			<td class="crm-offer-info-right">		
- 				<div class="crm-offer-info-label-wrap"><span class="crm-offer-info-label"><?=($objectFields['PROPERTIES']['FLOORALL']['VALUE'])?$objectFields['PROPERTIES']['FLOORALL']['VALUE']:"нет данных"?></span></div>		
+				<div class="crm-offer-info-label-wrap">
+					<span class="crm-offer-info-label">
+						<a href="<?=($objectFields['PROPERTIES']['LINK']['VALUE'])?$objectFields['PROPERTIES']['LINK']['VALUE']:"#"?>" target="_blank">
+							<?=($objectFields['PROPERTIES']['LINK']['VALUE'])?$objectFields['PROPERTIES']['LINK']['VALUE']:"нет данных"?>
+						</a>
+					</span>
+				</div>		
  			</td>		
  		</tr>		
  	</tbody>		
