@@ -71,7 +71,16 @@ if(CModule::IncludeModule('iblock') && CModule::IncludeModule("crm")) {
       $Locality = $dom->createElement("Locality", $aRes['PROPERTY_216']);
       $Object->appendChild($Locality);
     }
-    $Street = $dom->createElement("Street",$aRes['PROPERTY_217']);
+		/*-Не подменяем название улицы для выгрузки на Мегаполис (клиентов пугает снт в адресе)-*/
+		if (strripos($aRes['PROPERTY_217'],"|")){
+			$arr_street = explode("|",$aRes['PROPERTY_217']);
+			$street = $arr_street[0];
+		}else{
+			$street = $aRes['PROPERTY_217'];
+		}
+		/*--------------------------------------------------------------------*/
+
+    $Street = $dom->createElement("Street",$street);
     $Object->appendChild($Street);
     $House = $dom->createElement("House",$aRes['PROPERTY_218']);
     $Object->appendChild($House);

@@ -101,6 +101,14 @@ while($aRes = $db_res->GetNext()){
 	$Ad->appendChild($ListingFee);
   $Region = $dom->createElement("Region",($aRes['PROPERTY_213']=="Оренбургская обл")?"Оренбургская область":$aRes['PROPERTY_213']);
   $Ad->appendChild($Region);
+	/*-Подмена улицы для выгрузки на Авито (клиентов пугает снт в адресе)-*/
+	if (strripos($aRes['PROPERTY_217'],"|")){
+		$arr_street = explode("|",$aRes['PROPERTY_217']);
+		$street = $arr_street[1];
+	}else{
+		$street = $aRes['PROPERTY_217'];
+	}
+	/*--------------------------------------------------------------------*/
   //Формирование адреса объекта в зхависимости от типа объекта и наличия населенного пункта в справочнике Авито
   if ($aRes['PROPERTY_215'] == 'Оренбург г'){//Если объект в Оренбурге
     $City = $dom->createElement("City",'Оренбург');
@@ -112,24 +120,24 @@ while($aRes = $db_res->GetNext()){
       }
       if ($aRes['PROPERTY_210']==382 || $aRes['PROPERTY_210']==381) {
         if ($aRes['PROPERTY_258']==""){
-          $Street = $dom->createElement("Street",$aRes['PROPERTY_217'].', '.$aRes['PROPERTY_218']);//Улица, дом
+          $Street = $dom->createElement("Street",$street.', '.$aRes['PROPERTY_218']);//Улица, дом
           $Ad->appendChild($Street);
         }
       }else{
         if ($aRes['PROPERTY_258']==""){
-          $Street = $dom->createElement("Street",$aRes['PROPERTY_217']);//Улица
+          $Street = $dom->createElement("Street",$street);//Улица
           $Ad->appendChild($Street);
         }
       }
     }else{//Если района в справочнике нет
       if ($aRes['PROPERTY_210']==382 || $aRes['PROPERTY_210']==381) {
         if ($aRes['PROPERTY_258']==""){
-          $Street = $dom->createElement("Street",$aRes['PROPERTY_216'].','.$aRes['PROPERTY_217'].', '.$aRes['PROPERTY_218']);//Район, улица, дом
+          $Street = $dom->createElement("Street",$aRes['PROPERTY_216'].','.$street.', '.$aRes['PROPERTY_218']);//Район, улица, дом
           $Ad->appendChild($Street);
         }
       }else{
         if ($aRes['PROPERTY_258']==""){
-          $Street = $dom->createElement("Street",$aRes['PROPERTY_216'].','.$aRes['PROPERTY_217']);//Район, улица
+          $Street = $dom->createElement("Street",$aRes['PROPERTY_216'].','.$street);//Район, улица
           $Ad->appendChild($Street);
         }
       }
@@ -140,12 +148,12 @@ while($aRes = $db_res->GetNext()){
       $Ad->appendChild($City);
       if ($aRes['PROPERTY_210']==382 || $aRes['PROPERTY_210']==381) {
         if ($aRes['PROPERTY_258']==""){
-          $Street = $dom->createElement("Street",$aRes['PROPERTY_217'].', '.$aRes['PROPERTY_218']);//Улица, дом
+          $Street = $dom->createElement("Street",$street.', '.$aRes['PROPERTY_218']);//Улица, дом
           $Ad->appendChild($Street);
         }
       }else{
         if ($aRes['PROPERTY_258']==""){
-          $Street = $dom->createElement("Street",$aRes['PROPERTY_217']);//Улица
+          $Street = $dom->createElement("Street",$street);//Улица
           $Ad->appendChild($Street);
         }
       }
@@ -154,12 +162,12 @@ while($aRes = $db_res->GetNext()){
       $Ad->appendChild($City);
       if ($aRes['PROPERTY_210']==382 || $aRes['PROPERTY_210']==381) {
         if ($aRes['PROPERTY_258']==""){
-          $Street = $dom->createElement("Street",$aRes['PROPERTY_214'].','.$aRes['PROPERTY_215'].', '.$aRes['PROPERTY_217'].', '.$aRes['PROPERTY_218']);//Район, нас. пункт, улица, дом
+          $Street = $dom->createElement("Street",$aRes['PROPERTY_214'].','.$aRes['PROPERTY_215'].', '.$street.', '.$aRes['PROPERTY_218']);//Район, нас. пункт, улица, дом
           $Ad->appendChild($Street);
         }
       }else{
         if ($aRes['PROPERTY_258']==""){
-          $Street = $dom->createElement("Street",$aRes['PROPERTY_214'].','.$aRes['PROPERTY_215'].', '.$aRes['PROPERTY_217']);//Район, нас. пункт, улица
+          $Street = $dom->createElement("Street",$aRes['PROPERTY_214'].','.$aRes['PROPERTY_215'].', '.$street);//Район, нас. пункт, улица
           $Ad->appendChild($Street);
         }
       }

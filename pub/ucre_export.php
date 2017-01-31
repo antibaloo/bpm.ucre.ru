@@ -52,27 +52,37 @@ if(CModule::IncludeModule('iblock') && CModule::IncludeModule("crm")) {
 
     $tmp_type = CIBlockPropertyEnum::GetByID($aRes["PROPERTY_210"]);
     $tmp_appointment = CIBlockPropertyEnum::GetByID($aRes["PROPERTY_238"]);
+    /*-Подмена улицы для выгрузки на сайт (клиентов пугает снт в адресе)-*/
+    if (strripos($aRes['PROPERTY_217'],"|")){
+      $arr_street = explode("|",$aRes['PROPERTY_217']);
+      $street = $arr_street[1];
+    }else{
+      $street = $aRes['PROPERTY_217'];
+    }
+    /*--------------------------------------------------------------------*/
+
+    
     switch ($aRes['PROPERTY_210']){
       case 381:
-        $name = mb_strtoupper(substr($tmp_type["VALUE"],0,1)).substr($tmp_type["VALUE"],1)." ".number_format($aRes['PROPERTY_228'],2,".","")." кв.м., ".$aRes["PROPERTY_217"].", ".$aRes["PROPERTY_218"];
+        $name = mb_strtoupper(substr($tmp_type["VALUE"],0,1)).substr($tmp_type["VALUE"],1)." ".number_format($aRes['PROPERTY_228'],2,".","")." кв.м., ".$street.", ".$aRes["PROPERTY_218"];
         break;
       case 382:
-        $name = intval($aRes["PROPERTY_229"])."-к ".$tmp_type["VALUE"]." ".number_format($aRes['PROPERTY_224'],2,".","")." кв.м., ".$aRes["PROPERTY_217"].", ".$aRes["PROPERTY_218"];
+        $name = intval($aRes["PROPERTY_229"])."-к ".$tmp_type["VALUE"]." ".number_format($aRes['PROPERTY_224'],2,".","")." кв.м., ".$street.", ".$aRes["PROPERTY_218"];
         break;
       case 383:
-        $name = intval($aRes["PROPERTY_229"])."-к ".$tmp_type["VALUE"]." ".number_format($aRes['PROPERTY_224'],2,".","")." кв.м., ".$aRes["PROPERTY_217"];
+        $name = intval($aRes["PROPERTY_229"])."-к ".$tmp_type["VALUE"]." ".number_format($aRes['PROPERTY_224'],2,".","")." кв.м., ".$street;
         break;
       case 384:
-        $name = intval($aRes["PROPERTY_229"])."-к ".$tmp_type["VALUE"]." ".number_format($aRes['PROPERTY_224'],2,".","")." кв.м., ".$aRes["PROPERTY_217"];
+        $name = intval($aRes["PROPERTY_229"])."-к ".$tmp_type["VALUE"]." ".number_format($aRes['PROPERTY_224'],2,".","")." кв.м., ".$street;
         break;
       case 385:
-        $name = mb_strtoupper(substr($tmp_type["VALUE"],0,1)).substr($tmp_type["VALUE"],1)." ".number_format($aRes['PROPERTY_292'],2,".","")." сот., ".$aRes["PROPERTY_217"];
+        $name = mb_strtoupper(substr($tmp_type["VALUE"],0,1)).substr($tmp_type["VALUE"],1)." ".number_format($aRes['PROPERTY_292'],2,".","")." сот., ".$street;
         break;
       case 386:
-        $name = mb_strtoupper(substr($tmp_type["VALUE"],0,1)).substr($tmp_type["VALUE"],1)." ".number_format($aRes['PROPERTY_292'],2,".","")." сот., ".$aRes["PROPERTY_217"];
+        $name = mb_strtoupper(substr($tmp_type["VALUE"],0,1)).substr($tmp_type["VALUE"],1)." ".number_format($aRes['PROPERTY_292'],2,".","")." сот., ".$street;
         break;
       case 387:
-        $name = mb_strtoupper(substr($tmp_appointment["VALUE"],0,1)).substr($tmp_appointment["VALUE"],1)." ".number_format($aRes['PROPERTY_224'],2,".","")." кв.м., ".$aRes["PROPERTY_217"].", ".$aRes["PROPERTY_218"];
+        $name = mb_strtoupper(substr($tmp_appointment["VALUE"],0,1)).substr($tmp_appointment["VALUE"],1)." ".number_format($aRes['PROPERTY_224'],2,".","")." кв.м., ".$street.", ".$aRes["PROPERTY_218"];
         break;
     }
     $json_ro[] = array('ID'               => $aRes['ID'],
@@ -83,7 +93,7 @@ if(CModule::IncludeModule('iblock') && CModule::IncludeModule("crm")) {
                        'DISTRICT'         => ($aRes['PROPERTY_214']=='обл. подчинения')? "":$aRes['PROPERTY_214'],
                        'CITY'             => $aRes['PROPERTY_215'],
                        'AREA'             => ($aRes['PROPERTY_216']=="" || $aRes['PROPERTY_216']=="отсутствует")? "":$aRes['PROPERTY_216'],
-                       'ADDRESS'          => ($aRes['TYPE']==381 || $aRes['PROPERTY_210']==382)? $aRes['PROPERTY_217'].", ".$aRes['PROPERTY_218']:$aRes['PROPERTY_217'],
+                       'ADDRESS'          => ($aRes['TYPE']==381 || $aRes['PROPERTY_210']==382)? $street.", ".$aRes['PROPERTY_218']:$street,
                        'LATITUDE'				  => $aRes['PROPERTY_298'],
                        'LONGITUDE'			  => $aRes['PROPERTY_299'],
                        'SQUARE'           => number_format($aRes['PROPERTY_224'],2,".",""),
