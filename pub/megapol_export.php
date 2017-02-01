@@ -147,7 +147,7 @@ if(CModule::IncludeModule('iblock') && CModule::IncludeModule("crm")) {
       $SaleRooms = $dom->createElement("SaleRooms", 1);
       $Object->appendChild($SaleRooms);
 	  }
-    if ($aRes['PROPERTY_210']==381 || $aRes['PROPERTY_210']==382){
+    if ($aRes['PROPERTY_210']==381 || $aRes['PROPERTY_210']==382 || $aRes['PROPERTY_210']==383 || $aRes['PROPERTY_210']==384 || $aRes['PROPERTY_210']==385){
       $FloorAll = $dom->createElement("FloorAll", $arProps['FLOORALL']['VALUE']);
       $Object->appendChild($FloorAll);
       $Floor = $dom->createElement("Floor", $arProps['FLOOR']['VALUE']);
@@ -166,8 +166,13 @@ if(CModule::IncludeModule('iblock') && CModule::IncludeModule("crm")) {
 			$Object->appendChild($Elevator);
 			$Phone = $dom->createElement("Phone", ($arProps['PHONE']['VALUE']=="")?"Нет":$arProps['PHONE']['VALUE']);
 			$Object->appendChild($Phone);
+			if ($aRes['PROPERTY_210']==381 || $aRes['PROPERTY_210']==382){
+				$DirectSale = $dom->createElement("DirectSale","да");
+			$Object->appendChild($DirectSale);
+			}
+			/*
 			$State = $dom->createElement("State","прямая продажа");
-			$Object->appendChild($State);
+			$Object->appendChild($State);*/
 			$Condition = $dom->createElement("Condition", "хорошее состояние");
 			$Object->appendChild($Condition);
 			$Mortgage = $dom->createElement("Mortgage","Да");
