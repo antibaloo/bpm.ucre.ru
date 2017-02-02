@@ -170,9 +170,9 @@ if(CModule::IncludeModule('iblock') && CModule::IncludeModule("crm")) {
 				$DirectSale = $dom->createElement("DirectSale","да");
 			$Object->appendChild($DirectSale);
 			}
-			/*
-			$State = $dom->createElement("State","прямая продажа");
-			$Object->appendChild($State);*/
+			
+			$State = $dom->createElement("State","свободна");
+			$Object->appendChild($State);
 			$Condition = $dom->createElement("Condition", "хорошее состояние");
 			$Object->appendChild($Condition);
 			$Mortgage = $dom->createElement("Mortgage","Да");
