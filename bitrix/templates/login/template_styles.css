@@ -63,7 +63,9 @@ body {
 	height: 100%;
 	overflow: hidden;
 	width: 100%;
-	background: url(images/bg_clouds_3.png) no-repeat center 69px;
+	background: url(images/ucre.jpg) no-repeat center;
+	background-size: contain;
+	/*background: url(images/bg_clouds_3.png) no-repeat center 69px;*/
 }
 
 .log-bottom-cell,
