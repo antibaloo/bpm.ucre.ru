@@ -403,6 +403,12 @@ $arUrlRewrite = array(
 		"PATH" => "/crm/lead/index.php",
 	),
 	array(
+		"CONDITION" => "#^/crm/lead_ucre/#",
+		"RULE" => "",
+		"ID" => "ucre:crm.lead",
+		"PATH" => "/crm/lead_ucre/index.php",
+	),
+	array(
 		"CONDITION" => "#^/rest/#",
 		"RULE" => "",
 		"ID" => "bitrix:rest.provider",
