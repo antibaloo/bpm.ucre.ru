@@ -200,7 +200,7 @@ if(CModule::IncludeModule('iblock') && CModule::IncludeModule("crm")) {
 		$Object->appendChild($Relationship);	  
 	  $PMG = $dom->createElement("PMG", "Да");
 	  $Object->appendChild($PMG);
-		$Price = $dom->createElement("Price",$deal['UF_CRM_579897C010103']);
+		$Price = $dom->createElement("Price",$deal['UF_CRM_58958B5734602']);//UF_CRM_58958B5734602 - новая //UF_CRM_579897C010103 - старая
 		$Object->appendChild($Price);
 		$Elite = $dom->createElement("Elite", "0");
 	  $Object->appendChild($Elite);

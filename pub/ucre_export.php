@@ -107,7 +107,7 @@ if(CModule::IncludeModule('iblock') && CModule::IncludeModule("crm")) {
                        'APPOINTMENT'      => $appointment[$aRes['PROPERTY_238']],
                        'PLOT'             => number_format($aRes['PROPERTY_292'],2,".",""),
                        'ASSIGNED_BY'      => $aRes['PROPERTY_313'],
-                       'PRICE'            => $deal['UF_CRM_579897C010103'],//Цену берем из заявки
+                       'PRICE'            => $deal['UF_CRM_58958B5734602'],//Цену берем из заявки //UF_CRM_58958B5734602 новая цена //UF_CRM_579897C010103
                        'DESCRIPTION'      => $deal['COMMENTS']." Номер в базе: ".$aRes['ID']/*$aRes['DETAIL_TEXT']*/,
                        'PHOTOS'           => $photos,
                        'PLANS'            => $plans,

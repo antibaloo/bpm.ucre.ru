@@ -259,7 +259,7 @@ while($aRes = $db_res->GetNext()){
   $dealSelect = array("ID","UF_CRM_579897C010103", "COMMENTS","UF_CRM_1472038962","UF_CRM_1476517423");
   $deal_res = CCrmDeal::GetList(Array('DATE_CREATE' => 'DESC'), $dealFilter, $dealSelect);
   $deal = $deal_res->GetNext();
-  $Price = $dom->createElement("Price", $deal['UF_CRM_579897C010103']);
+  $Price = $dom->createElement("Price", $deal['UF_CRM_58958B5734602']);//UF_CRM_58958B5734602 - новая //UF_CRM_579897C010103 - страная цена
   $Ad->appendChild($Price);
   if($aRes['PROPERTY_300']=="Сдам"){
     $PriceType = $dom->createElement("PriceType", "в месяц за м2");
