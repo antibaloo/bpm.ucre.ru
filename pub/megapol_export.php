@@ -190,7 +190,7 @@ if(CModule::IncludeModule('iblock') && CModule::IncludeModule("crm")) {
 	  $Object->appendChild($DistMetro);
 		
 		$dealFilter = array("ID" => $arProps['ID_DEAL']['VALUE'],"CHECK_PERMISSIONS" => "N");
-    $dealSelect = array("ID","COMMENTS","UF_CRM_1469533039","UF_CRM_579897C010103","UF_CRM_1472038962","UF_CRM_1476517423");
+    $dealSelect = array("ID","COMMENTS","UF_CRM_1469533039","UF_CRM_58958B5734602","UF_CRM_1472038962","UF_CRM_1476517423");
     $deal_res = CCrmDeal::GetList(Array('DATE_CREATE' => 'DESC'), $dealFilter, $dealSelect);
     $deal = $deal_res->GetNext();
 		$rsContract = CUserFieldEnum::GetList(array(), array("ID" => $deal['UF_CRM_1469533039'],));

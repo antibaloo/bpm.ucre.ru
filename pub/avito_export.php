@@ -256,7 +256,7 @@ while($aRes = $db_res->GetNext()){
       break;
   }
   $dealFilter = array("ID" => $aRes['PROPERTY_319'], "CHECK_PERMISSIONS" => "N");//"CHECK_PERMISSIONS" => "N" Обязательный параметр фильтра при вызове из агента, ибо агент выполняется под анонимным пользователем
-  $dealSelect = array("ID","UF_CRM_579897C010103", "COMMENTS","UF_CRM_1472038962","UF_CRM_1476517423");
+  $dealSelect = array("ID","UF_CRM_58958B5734602", "COMMENTS","UF_CRM_1472038962","UF_CRM_1476517423");
   $deal_res = CCrmDeal::GetList(Array('DATE_CREATE' => 'DESC'), $dealFilter, $dealSelect);
   $deal = $deal_res->GetNext();
   $Price = $dom->createElement("Price", $deal['UF_CRM_58958B5734602']);//UF_CRM_58958B5734602 - новая //UF_CRM_579897C010103 - страная цена

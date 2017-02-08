@@ -16,7 +16,7 @@ if(CModule::IncludeModule('iblock') && CModule::IncludeModule("crm")) {
   $db_res = CIBlockElement::GetList(array("ID"=>"ASC"), $iblock_filter, false, false, $arSelect);
   while($aRes = $db_res->GetNext()){
     $dealFilter = array("ID" => $aRes['PROPERTY_319'],"CHECK_PERMISSIONS" => "N");
-    $dealSelect = array("ID","UF_CRM_579897C010103","COMMENTS","UF_CRM_1472038962","UF_CRM_1476517423");
+    $dealSelect = array("ID","UF_CRM_58958B5734602","COMMENTS","UF_CRM_1472038962","UF_CRM_1476517423");
     $deal_res = CCrmDeal::GetList(Array('DATE_CREATE' => 'DESC'), $dealFilter, $dealSelect);
     $deal = $deal_res->GetNext();
     
