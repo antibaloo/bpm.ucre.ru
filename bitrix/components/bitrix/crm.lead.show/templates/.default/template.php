@@ -180,6 +180,43 @@ $APPLICATION->IncludeComponent(
 	$component,
 	array('HIDE_ICONS' => 'Y')
 );
+/*---------------Дополнительный блок об объявлении Авито, если лид был сформирован из объявления-----------------*/
+//
+/*----------------------------------------------------------------------------------------------------------------*/
+$rsLead = CCrmLead::GetListEx(
+	array(),
+	array('ID' => $element['ID']),
+	false,
+	false,
+	array('ID', 'UF_CRM_1486619563','UF_CRM_1486619533'),
+	array()
+);
+$mainLead = $rsLead->Fetch();
+if ($mainLead['UF_CRM_1486619563']){
+?>
+<table class="crm-offer-info-table crm-offer-main-info-text">
+	<tbody>
+		<tr><td colspan="5"><div class="crm-offer-title">Лид был создан автоматически парсером Авито-Недвижимость</div></td></tr>
+		<tr class="crm-offer-row">
+			<td class="crm-offer-info-drg-btn"></td>
+			<td class="crm-offer-info-left">
+				<div class="crm-offer-info-label-wrap"><span class="crm-offer-info-label">Ссылка на объявление:</span></div>
+			</td>
+			<td class="crm-offer-info-right">
+				<div class="crm-offer-info-label-wrap"><span class="crm-offer-info-label"><a href='<?=$mainLead['UF_CRM_1486619533']?>'><?=$mainLead['UF_CRM_1486619533']?></a></span></div>
+			</td>	
+			<td class="crm-offer-info-left">		
+				<div class="crm-offer-info-label-wrap"><span class="crm-offer-info-label">Волшебная кнопка</span></div>		
+			</td>		
+			<td class="crm-offer-info-right">		
+				<div class="crm-offer-info-label-wrap"><span class="crm-offer-info-label">Пока не работает.</span></div>		
+			</td>		
+		</tr>	
+	</tbody>
+</table>
+<?
+}
+/*--------------------------------------Конец дополнительного блока------------------------------------------------*/
 $APPLICATION->IncludeComponent(
 	'bitrix:crm.interface.form',
 	'show',
