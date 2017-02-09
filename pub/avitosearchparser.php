@@ -1,4 +1,6 @@
 <?php
+require ($_SERVER['DOCUMENT_ROOT'] . "/bitrix/modules/main/include/prolog_before.php");
+CModule::IncludeModule('crm');
 function rus_date() {
   $translate = array( "am" => "дп", "pm" => "пп","AM" => "ДП","PM" => "ПП","Monday" => "Понедельник","Mon" => "Пн","Tuesday" => "Вторник", "Tue" => "Вт", "Wednesday" => "Среда", "Wed" => "Ср",
                      "Thursday" => "Четверг", "Thu" => "Чт", "Friday" => "Пятница","Fri" => "Пт",    "Saturday" => "Суббота", "Sat" => "Сб","Sunday" => "Воскресенье","Sun" => "Вс","January" => "Января",
@@ -47,11 +49,11 @@ if( $curl = curl_init() ) {
               }
               if ($parameter->getAttribute('class') =='data'){
                 $addate = trim(utf8_decode ($parameter->nodeValue));
-                if (strpos($addata, "Сегодня")){
-                  $addate = strtolower(str_replace("Сегодня",rus_date("j F"),$addate))." ";
+                if (strpos($addate, "Сегодня") !== false){
+                  $addate = strtolower(str_replace("Сегодня",rus_date("j F"),$addate));
                 }
-                if (strpos($addate, "Вчера")){
-                  $addate = strtolower(str_replace("Вчера",rus_date("j F",strtotime("-1 days")),$addate))." ";
+                if (strpos($addate, "Вчера") !== false){
+                  $addate = strtolower(str_replace("Вчера",rus_date("j F",strtotime("-1 days")),$addate));
                 }
               }
             }
@@ -62,7 +64,7 @@ if( $curl = curl_init() ) {
         'id' => $adid,
         'link' => $adlink,
         'name' => $adname,
-        'price' => $adprice,
+        'price' => intval($adprice),
         'address' => $adaddress,
         'date' => $addate
       );
@@ -86,12 +88,12 @@ if( $curl = curl_init() ) {
                 $adaddress = trim(utf8_decode ($parameter->nodeValue));
               }
               if ($parameter->getAttribute('class') =='data'){
-                $addata = trim(utf8_decode ($parameter->nodeValue));
-                if (strpos($addata, "Сегодня")){
-                  $addata = strtolower(str_replace("Сегодня",rus_date("j F"),$addata))." ";
+                $addate = trim(utf8_decode ($parameter->nodeValue));
+                if (strpos($addate, "Сегодня")!==false){
+                  $addate = strtolower(str_replace("Сегодня",rus_date("j F"),$addate));
                 }
-                if (strpos($addata, "Вчера")){
-                  $addata = strtolower(str_replace("Вчера",rus_date("j F",strtotime("-1 days")),$addata))." ";
+                if (strpos($addate, "Вчера")!==false){
+                  $addate = strtolower(str_replace("Вчера",rus_date("j F",strtotime("-1 days")),$addate));
                 }
               }
             }
@@ -102,19 +104,58 @@ if( $curl = curl_init() ) {
         'id' => $adid,
         'link' => $adlink,
         'name' => $adname,
-        'price' => $adprice,
+        'price' => intval($adprice),
         'address' => $adaddress,
         'date' => $addate
       );
     }
   }
-  echo "Всего объявлений: ".count($avitoAds);
-  echo "<pre>";
-  print_r($avitoAds);
-  echo "</pre>";
+  $finishedStatusId = array('2','4','5','JUNK','CONVERTED');
+  foreach ($avitoAds as $avitoAd){
+    $arFilter = array('UF_CRM_1486619563'=>$avitoAd['id']);
+    $arSelect = array('ID','STATUS_ID');
+    $rs = CCrmLead::GetList(array(), $arFilter, $arSelect);
+    if ($curLead = $rs->Fetch()){
+      if (in_array($curLead['STATUS_ID'],$finishedStatusId)){
+        echo "Лид закрыт! Ничего не делаем!<br>";
+      } else {
+        $leadFields = array(
+          'UF_CRM_1486118874' => $avitoAd['address'],
+          'UF_CRM_1486194356' => $avitoAd['price'],
+        );
+        $Lead = new CCrmLead;
+        if($Lead->Update($curLead['ID'],$leadFields)){
+          echo "Лид ".$curLead['ID']." обновлен!<br>";
+        } else {
+          echo "При обновлении лида ".$curLead['ID']." произошла ошибка: ".$newLead->LAST_ERROR."<br>";
+        }
+      }
+    } else {
+      $leadFields = array(
+        'TITLE' => $avitoAd['name'],
+        'STATUS_ID' => 'NEW',
+        'ASSIGNED_BY_ID' => 98,
+        'SOURCE_ID' => 10,
+        'SOURCE_DESCRIPTION' => "Размещено: ".$avitoAd['date'],
+        'UF_CRM_1486022615' => 590, //Направление лида - продажа
+        'UF_CRM_1486119847' => 616, //Тип недвижимости - квартира
+        'UF_CRM_1486207685' => array('0'=>'825'), //Признак недвижимости - вторичная
+        'UF_CRM_1486118874' => $avitoAd['address'],
+        'UF_CRM_1486194356' => $avitoAd['price'],
+        'UF_CRM_1486619563' => $avitoAd['id'],
+        'UF_CRM_1486619533' => $avitoAd['link'],
+      );
+      $newLead = new CCrmLead;
+      if($leadId = $newLead->Add($leadFields)){
+        echo "Лида нет. Создан лид с id ".$leadId."!<br>";
+      } else {
+        echo "Лида нет. При создании лида произошла ошибка: ".$newLead->LAST_ERROR."<br>";
+      }
+    }
+  }
+  
   $avito_result = fopen('/home/bitrix/www_bpm/avitoparser.html', 'w');
   fwrite( $avito_result, $out);
   fclose( $avito_result );
-
 }
 ?>
