@@ -71,10 +71,10 @@ function myDealAdd (&$arFields){
 	if ($arFields['UF_CRM_1469534140']) {//Если при создании заявки, с ней был связан объект
 		CIBlockElement::SetPropertyValuesEx($arFields['UF_CRM_1469534140'], 42, array("ID_DEAL" => $arFields['ID']));// передаем в объект ID заявки
 		CIBlockElement::SetPropertyValuesEx($arFields['UF_CRM_1469534140'], 42, array("ASSIGNED_BY" => $arFields['ASSIGNED_BY_ID']));//передаем в объект ID ответственного
-		CIBlockElement::SetPropertyValuesEx($arFields['UF_CRM_1469534140'], 42, array("PRICE" => $arFields['UF_CRM_579897C010103']));//передаем в объект данные о цене
+		//CIBlockElement::SetPropertyValuesEx($arFields['UF_CRM_1469534140'], 42, array("PRICE" => $arFields['UF_CRM_579897C010103']));//передаем в объект данные о цене
 		CIBlockElement::SetPropertyValuesEx($arFields['UF_CRM_1469534140'], 42, array("STATUS" => CCrmDeal::GetStageName($arFields['STAGE_ID'])));//передаем в объект статус заявки
-		$el = new CIBlockElement;
-		$el->Update($arFields['UF_CRM_1469534140'], array("DETAIL_TEXT" => $arFields['COMMENTS']));
+		//$el = new CIBlockElement;
+		//$el->Update($arFields['UF_CRM_1469534140'], array("DETAIL_TEXT" => $arFields['COMMENTS']));
 	}
 	//file_put_contents('/home/bitrix/www_bpm/myadd.log', var_export($arFields, true));
 }
@@ -86,10 +86,10 @@ function myDealUpdate (&$arFields){
 	if ($arFieldsExist['UF_CRM_1469534140']) {//Если у завки есть связанный объект
 		CIBlockElement::SetPropertyValuesEx($arFieldsExist['UF_CRM_1469534140'], 42, array("ID_DEAL" => $arFieldsExist['ID']));// передаем в объект ID заявки
 		CIBlockElement::SetPropertyValuesEx($arFieldsExist['UF_CRM_1469534140'], 42, array("ASSIGNED_BY" => $arFieldsExist['ASSIGNED_BY_ID']));//передаем в объект ID ответственного
-		CIBlockElement::SetPropertyValuesEx($arFieldsExist['UF_CRM_1469534140'], 42, array("PRICE" => $arFieldsExist['UF_CRM_579897C010103']));//передаем в объект данные о цене
+		//CIBlockElement::SetPropertyValuesEx($arFieldsExist['UF_CRM_1469534140'], 42, array("PRICE" => $arFieldsExist['UF_CRM_579897C010103']));//передаем в объект данные о цене
 		CIBlockElement::SetPropertyValuesEx($arFieldsExist['UF_CRM_1469534140'], 42, array("STATUS" => CCrmDeal::GetStageName($arFieldsExist['STAGE_ID'])));//передаем в объект статус заявки
-		$el = new CIBlockElement;
-		$el->Update($arFieldsExist['UF_CRM_1469534140'], array("DETAIL_TEXT" => $arFieldsExist['COMMENTS']));
+		//$el = new CIBlockElement;
+		//$el->Update($arFieldsExist['UF_CRM_1469534140'], array("DETAIL_TEXT" => $arFieldsExist['COMMENTS']));
 	}
 	//file_put_contents('/home/bitrix/www_bpm/myupdate.log', var_export($arFieldsExist, true));
 }
