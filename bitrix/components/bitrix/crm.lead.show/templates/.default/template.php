@@ -203,7 +203,7 @@ if ($mainLead['UF_CRM_1486619563']){
 				<div class="crm-offer-info-label-wrap"><span class="crm-offer-info-label">Ссылка на объявление:</span></div>
 			</td>
 			<td class="crm-offer-info-right">
-				<div class="crm-offer-info-label-wrap"><span class="crm-offer-info-label"><a href='<?=$mainLead['UF_CRM_1486619533']?>'><?=$mainLead['UF_CRM_1486619533']?></a></span></div>
+				<div class="crm-offer-info-label-wrap"><span class="crm-offer-info-label"><a href='<?=$mainLead['UF_CRM_1486619533']?>' target='_blank'><?=$mainLead['UF_CRM_1486619533']?></a></span></div>
 			</td>	
 			<td class="crm-offer-info-left">		
 				<div class="crm-offer-info-label-wrap"><span class="crm-offer-info-label">Волшебная кнопка</span></div>		
