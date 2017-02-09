@@ -3,7 +3,6 @@
   padding: 0;
   list-style: none;
   border: 1px solid #e5e5e5;
-  width: auto;
 }
 .main-menu li {
   display: inline-block;
@@ -22,6 +21,9 @@
 .main-menu a:hover{
   background: #eeeeee;
 }
-.workarea-content-paddings{
+.workarea-content-paddings {
   padding:0px!important;
+}
+.ucre_lead_list {
+  padding: 15px;
 }

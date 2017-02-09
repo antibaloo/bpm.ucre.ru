@@ -1,15 +1,15 @@
 <?
 if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED!==true)die();
-
 if (!CModule::IncludeModule('crm'))
 {
 	ShowError(GetMessage('CRM_MODULE_NOT_INSTALLED'));
 	return;
 }
-
 $arDefaultUrlTemplates404 = array(
 	'index' => 'index.php',
 	'list' => 'list/',
+  'create' => 'create/#category#/#type#/',
+  'copy' => 'copy/#lead_id#/',
 	'service' => 'service/',
 	'import' => 'import/',
 	'widget' => 'widget/',
@@ -19,28 +19,21 @@ $arDefaultUrlTemplates404 = array(
 	'convert' => 'convert/#lead_id#/',
 	'dedupe' => 'dedupe/'
 );
-
 $arDefaultVariableAliases404 = array(
-
 );
 $arDefaultVariableAliases = array();
 $componentPage = '';
 $arComponentVariables = array('lead_id');
-
 $arParams['NAME_TEMPLATE'] = empty($arParams['NAME_TEMPLATE']) ? CSite::GetNameFormat(false) : str_replace(array("#NOBR#","#/NOBR#"), array("",""), $arParams["NAME_TEMPLATE"]);
-
 if ($arParams['SEF_MODE'] == 'Y')
 {
 	$arVariables = array();
 	$arUrlTemplates = CComponentEngine::MakeComponentUrlTemplates($arDefaultUrlTemplates404, $arParams['SEF_URL_TEMPLATES']);
 	$arVariableAliases = CComponentEngine::MakeComponentVariableAliases($arDefaultVariableAliases404, $arParams['VARIABLE_ALIASES']);
 	$componentPage = CComponentEngine::ParseComponentPath($arParams['SEF_FOLDER'], $arUrlTemplates, $arVariables);
-
 	if (empty($componentPage) || (!array_key_exists($componentPage, $arDefaultUrlTemplates404)))
 		$componentPage = 'index';
-
 	CComponentEngine::InitComponentVariables($componentPage, $arComponentVariables, $arVariableAliases, $arVariables);
-
 	foreach ($arUrlTemplates as $url => $value)
 	{
 		if(strlen($arParams['PATH_TO_LEAD_'.strToUpper($url)]) <= 0)
@@ -52,11 +45,9 @@ if ($arParams['SEF_MODE'] == 'Y')
 else
 {
 	$arComponentVariables[] = $arParams['VARIABLE_ALIASES']['lead_id'];
-
 	$arVariables = array();
 	$arVariableAliases = CComponentEngine::MakeComponentVariableAliases($arDefaultVariableAliases, $arParams['VARIABLE_ALIASES']);
 	CComponentEngine::InitComponentVariables(false, $arComponentVariables, $arVariableAliases, $arVariables);
-
 	$componentPage = 'index';
 	if (isset($_REQUEST['edit']))
 		$componentPage = 'edit';
@@ -72,7 +63,6 @@ else
 		$componentPage = 'show';
 	elseif (isset($_REQUEST['dedupe']))
 		$componentPage = 'dedupe';
-
 	$arResult['PATH_TO_LEAD_LIST'] = $arResult['PATH_TO_LEAD_DEDUPE'] = $APPLICATION->GetCurPage();
 	$arResult['PATH_TO_LEAD_SHOW'] = $APPLICATION->GetCurPage()."?$arVariableAliases[lead_id]=#lead_id#&show";
 	$arResult['PATH_TO_LEAD_EDIT'] = $APPLICATION->GetCurPage()."?$arVariableAliases[lead_id]=#lead_id#&edit";
@@ -80,7 +70,6 @@ else
 	$arResult['PATH_TO_LEAD_WIDGET'] = $APPLICATION->GetCurPage()."?widget";
 	$arResult['PATH_TO_LEAD_KANBAN'] = $APPLICATION->GetCurPage()."?kanban";
 }
-
 $arResult = array_merge(
 	array(
 		'VARIABLES' => $arVariables,
@@ -96,7 +85,6 @@ $arResult = array_merge(
 	),
 	$arResult
 );
-
 $arResult['NAVIGATION_CONTEXT_ID'] = 'LEAD';
 $this->IncludeComponentTemplate($componentPage);
 ?>
