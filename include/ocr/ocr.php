@@ -1,11 +1,27 @@
 
 <?
 /*----------------------------------------------------------------------------*/
+//Функция расчета hash для ссылки на png с телефоном продавца на Авито из статьи
+//по ссылке: http://rche.ru/1683_parsing-telefonov-s-avito.html
 //Класс для распознавания телефона в объявлениях Авито взят из статьи по ссылке: 
 //http://lifeexample.ru/php-primeryi-skriptov/raspoznavanie-kapchi-php.html
 //Модифицирован ассоциативный массив соответствий для распознавания символов 
 //нужного размера
 /*----------------------------------------------------------------------------*/
+function phoneDemixer($key,$id) {
+  preg_match_all("/[\da-f]+/",$key,$pre);
+  $pre = $id%2==0 ? array_reverse($pre[0]) : $pre[0];
+  $mixed = join('',$pre);
+  $s = strlen($mixed);
+  $r='';
+  for($k=0; $k<$s; ++$k) {
+    if ($k%3==0) {
+      $r .= substr($mixed,$k,1);
+    }
+  }
+  return $r;
+}
+
 class crackCapcha {
   public $im;
   public $binaryMartix;
