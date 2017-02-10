@@ -12,20 +12,12 @@
     </div>
     <div>
       <?
-      require($_SERVER["DOCUMENT_ROOT"]."/include/ocr/ocr.php");  
-      function phoneDemixer($key,$id) {
-        preg_match_all("/[\da-f]+/",$key,$pre);
-        $pre = $id%2==0 ? array_reverse($pre[0]) : $pre[0];
-        $mixed = join('',$pre);
-        $s = strlen($mixed);
-        $r='';
-        for($k=0; $k<$s; ++$k) {
-          if ($k%3==0) {
-            $r .= substr($mixed,$k,1);
-          }
-        }
-        return $r;
-      }
+      require($_SERVER["DOCUMENT_ROOT"]."/include/ocr/ocr.php");
+      /*-------------------------------------------------*/
+      //Получение телеыонов в объявлениях организовано по
+      //статье по ссылке
+      //http://rche.ru/1683_parsing-telefonov-s-avito.html/ 
+      /*-------------------------------------------------*/
       if (isset($_POST['url']) && !empty($_POST['url'])) {
         if(get_headers($_POST['url'], 1)){
           echo "Ведется поиск информации по ссылке: ".$_POST['url']."<br>";
