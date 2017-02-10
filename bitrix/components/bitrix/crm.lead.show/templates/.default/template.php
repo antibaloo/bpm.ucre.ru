@@ -188,10 +188,10 @@ $rsLead = CCrmLead::GetListEx(
 	array('ID' => $element['ID']),
 	false,
 	false,
-	array('ID', 'UF_CRM_1486619563','UF_CRM_1486619533'),
+	array('ID', 'UF_CRM_1486619563','UF_CRM_1486619533','UF_CRM_1486723225'),
 	array()
 );
-$mainLead = $rsLead->Fetch();
+$mainLead = $rsLead->Fetch();//UF_CRM_1486723225
 if ($mainLead['UF_CRM_1486619563']){
 ?>
 <table class="crm-offer-info-table crm-offer-main-info-text">
@@ -204,14 +204,37 @@ if ($mainLead['UF_CRM_1486619563']){
 			</td>
 			<td class="crm-offer-info-right">
 				<div class="crm-offer-info-label-wrap"><span class="crm-offer-info-label"><a href='<?=$mainLead['UF_CRM_1486619533']?>' target='_blank'><?=$mainLead['UF_CRM_1486619533']?></a></span></div>
-			</td>	
-			<td class="crm-offer-info-left">		
-				<div class="crm-offer-info-label-wrap"><span class="crm-offer-info-label">Волшебная кнопка</span></div>		
-			</td>		
+			</td>
+			<td class="crm-offer-info-left">
+				<div class="crm-offer-info-label-wrap"><span class="crm-offer-info-label"></span></div>
+			</td>
 			<td class="crm-offer-info-right">		
-				<div class="crm-offer-info-label-wrap"><span class="crm-offer-info-label">Пока не работает.</span></div>		
-			</td>		
-		</tr>	
+				<div class="crm-offer-info-label-wrap">
+					<span class="crm-offer-info-label">
+						<form id="avito">
+							<input type="hidden" name="lead_id" value="<?=$mainLead['ID']?>">
+							<input type="hidden" name="avito_id" value="<?=$mainLead['UF_CRM_1486619563']?>">
+							<input type="button" id="sync" value="Синхронизировать"/>
+						</form>
+					</span>
+				</div>
+			</td>
+		</tr>
+		<tr class="crm-offer-row">
+			<td class="crm-offer-info-drg-btn"></td>
+			<td class="crm-offer-info-left">
+				<div class="crm-offer-info-label-wrap"><span class="crm-offer-info-label">Телефон из объявления:</span></div>
+			</td>
+			<td class="crm-offer-info-right">
+				<div class="crm-offer-info-label-wrap"><span class="crm-offer-info-label"><img src='<?=$mainLead['UF_CRM_1486723225']?>' height="25" width ="auto"></span></div>
+			</td>
+			<td class="crm-offer-info-left">
+				<div class="crm-offer-info-label-wrap"><span class="crm-offer-info-label">Результат синхронизации:</span></div>
+			</td>	
+			<td class="crm-offer-info-right">
+				<div class="crm-offer-info-label-wrap"><span class="crm-offer-info-label"><div id="result"></div></span></div>
+			</td>	
+		</tr>
 	</tbody>
 </table>
 <?
