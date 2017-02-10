@@ -16,16 +16,6 @@ $plans = "";
 $objdocs = "";
 $ownerdocs = "";
 $file = new CFile();
-foreach ($arResult['DATA']['PROPERTY_237'] as $imageid){
-	$fileInfo = $file->GetFileArray($imageid);
-	$images .='<a class="fancybox" rel="gallery1" href="https://bpm.ucre.ru'.$fileInfo['SRC'].'"><img src="https://bpm.ucre.ru/'.$fileInfo['SRC'].'" width="auto" height="150" alt=""/></a>&nbsp;';
-	//$images .= CFile::ShowImage($imageid, 250, 150, "border=0", "", true)." ";
-}
-foreach ($arResult['DATA']['PROPERTY_236'] as $imageid){
-	$fileInfo = $file->GetFileArray($imageid);
-	$plans .='<a class="fancybox" rel="gallery1" href="https://bpm.ucre.ru'.$fileInfo['SRC'].'"><img src="https://bpm.ucre.ru/'.$fileInfo['SRC'].'" width="auto" height="150" alt=""/></a>&nbsp;';
-	//$plans .= CFile::ShowImage($imageid, 250, 150, "border=0", "", true)." ";
-}
 foreach ($arResult['DATA']['PROPERTY_293'] as $key=>$objid){
 	$i=$key+1;
 	$objdocs .= '<a href="'.CFile::GetPath($objid).'" target="_blank">Документ №'.$i.'</a><br>';
@@ -75,10 +65,6 @@ $APPLICATION->IncludeComponent(
 				array("id"=>"PROPERTY_252", "name"=>"WWW-страница","type"=>"label"),
 				array("id" => ($arResult['DATA']['PROPERTY_246']=='Ф') ? "PROPERTY_256":"PROPERTY_253", "name" => ($arResult['DATA']['PROPERTY_246']=='Ф') ? "Домашний телефон":"ИНН", "type" => "label"),
 				array("id" => ($arResult['DATA']['PROPERTY_246']=='Ф') ? "PROPERTY_257":"PROPERTY_254", "name" => ($arResult['DATA']['PROPERTY_246']=='Ф') ? "Дата рождения":"КПП", "type" => "label"),
-			)),
-			array("id"=>"tab6", "name"=>"Изображения", "icon"=>"", "fields"=>array(
-				array("id" => "PROPERTY_237", "name" => "Фотографии", "type" => "custom", "value"=>$images),
-				array("id" => "PROPERTY_236", "name" => "Планировки", "type" => "custom", "value"=>$plans),
 			)),
 			array("id"=>"tab10", "name"=>"Приложения", "icon"=>"", "fields"=>array(
 				array("id" => "PROPERTY_293", "name" => "Документы объекта", "type" => "custom", "value"=>$objdocs),
@@ -140,10 +126,6 @@ $APPLICATION->IncludeComponent(
 			)),
 			array("id"=>"tab5", "name"=>"Данные собственника", "icon"=>"", "fields"=>array(
 				array("id" => ($arResult['DATA']['PROPERTY_246']=='Ф') ? "PROPERTY_244":"PROPERTY_245", "name" => ($arResult['DATA']['PROPERTY_246']=='Ф') ? "ФИО собственника":"Наименование", "type" => "label"),
-			)),
-			array("id"=>"tab6", "name"=>"Изображения", "icon"=>"", "fields"=>array(
-				array("id" => "PROPERTY_237", "name" => "Фотографии", "type" => "custom", "value"=>$images),
-				array("id" => "PROPERTY_236", "name" => "Планировки", "type" => "custom", "value"=>$plans),
 			)),
 			array("id"=>"tab7", "name"=>"Описание", "icon"=>"", "fields"=>array(
 				array("id"=>"DETAIL_TEXT", "name" => "Подробное описание объекта", "type"=>"label"),
