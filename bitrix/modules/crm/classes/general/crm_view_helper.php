@@ -1797,7 +1797,8 @@ class CCrmViewHelper
 
 			if($processed > 0)
 			{
-				echo '<span class="bx-br-separator"><br/></span>';
+				echo '<span class="bx-br-separator">&nbsp;</span>';
+				//echo '<span class="bx-br-separator"><br/></span>';
 			}
 
 			echo '<span class="fields files">';
