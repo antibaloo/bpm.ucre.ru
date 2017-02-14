@@ -1,4 +1,7 @@
 $(document).ready(function() {
+		$("a.fancybox").fancybox();
+	});
+$(document).ready(function() {
   $('#sync').on('click', function () {
     var data = $('#avito').serialize();
     $.ajax({
@@ -8,10 +11,10 @@ $(document).ready(function() {
       data: data,
       success: function (html) {
         $("#result").html(html);
-        //location.reload(true);
+        location.reload(true);
       },
       error: function (html) {
-        $("#result").html("Zhopa!");
+        $("#result").html("Что-то пошло не так!");
       },
     });
   });
