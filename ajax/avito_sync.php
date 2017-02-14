@@ -70,7 +70,7 @@ if (isset($_POST['lead_id']) && !empty($_POST['lead_id']) && isset($_POST['avito
         $params['wallstype'] = trim($temp_param[1]);
         break;
       case "Площадь":
-        $params['square'] = preg_replace("/[^0-9]/", '', $temp_param[1]);
+        $params['square'] = floatval(trim($temp_param[1]));
         break;
     }
   }
@@ -96,7 +96,7 @@ if (isset($_POST['lead_id']) && !empty($_POST['lead_id']) && isset($_POST['avito
   $address_query = $xpath->query("//*[contains(@class, 'item-map-location')]");
   $address = trim(utf8_decode($address_query->item(0)->nodeValue));
   $address = str_replace("Адрес:","",$address);
-  $address = str_replace("Скрыть карту","",$address);
+  $address = trim(str_replace("Скрыть карту","",$address));
   
   //Описание
   $desc_query = $xpath->query("//*[contains(@class, 'item-description-text')]");
@@ -110,7 +110,7 @@ if (isset($_POST['lead_id']) && !empty($_POST['lead_id']) && isset($_POST['avito
   }
   
   $leadFields = array(
-    //"FM" => array('PHONE' => array('n0'=>array('VALUE' => "+7".substr($phoneNumber,1), 'VALUE_TYPE' => 'MOBILE'))),
+    "FM" => array('PHONE' => array('n0'=>array('VALUE' => "+7".substr($phoneNumber,1), 'VALUE_TYPE' => 'MOBILE'))),
     'NAME'              =>  $name,
     'UF_CRM_1487055132' =>  $profile,
     'UF_CRM_1486119738' =>  $params['wallstype'],
