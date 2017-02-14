@@ -36,8 +36,8 @@ if( $curl = curl_init() ) {
         }
         if ($param->getAttribute('class') == 'param floor'){ 
           $temp = explode("/",$param->nodeValue);
-          $avitoFloor = $params['square'] = preg_replace("/[^0-9]/", '', $temp[0]);
-          $avitoFloors = $params['square'] = preg_replace("/[^0-9]/", '', $temp[1]);
+          $avitoFloor = preg_replace("/[^0-9]/", '', $temp[0]);
+          $avitoFloors = preg_replace("/[^0-9]/", '', $temp[1]);
         }
         if ($param->getAttribute('class') == 'param address'){
           foreach($param->childNodes as $addressPart){
@@ -66,10 +66,6 @@ if( $curl = curl_init() ) {
         }
       }
     }
-    echo "<pre>";
-    //print_r($item->childNodes);
-    //print_r($xpath->query("*[contains(@class, 'title description-title')]",$item)->item(0)->childNodes);
-    echo "</pre>";
     $adCount++;
     $avitoAds[] = array(
       'id'      =>  $avitoId,
@@ -111,8 +107,8 @@ if( $curl = curl_init() ) {
           }
           if ($param->getAttribute('class') == 'param floor'){ 
             $temp = explode("/",$param->nodeValue);
-            $avitoFloor = $params['square'] = preg_replace("/[^0-9]/", '', $temp[0]);
-            $avitoFloors = $params['square'] = preg_replace("/[^0-9]/", '', $temp[1]);
+            $avitoFloor = preg_replace("/[^0-9]/", '', $temp[0]);
+            $avitoFloors = preg_replace("/[^0-9]/", '', $temp[1]);
           }
           if ($param->getAttribute('class') == 'param address'){
             foreach($param->childNodes as $addressPart){
@@ -169,9 +165,9 @@ if( $curl = curl_init() ) {
         );
         $Lead = new CCrmLead;
         if($Lead->Update($curLead['ID'],$leadFields)){
-          echo "Лид <a href='https://bpm/ucre.ru/crm/lead/".$curLead['ID']."/'>".$curLead['ID']."</a> обновлен!<br>";
+          echo "Лид <a href='https://bpm.ucre.ru/crm/lead/show/".$curLead['ID']."/'>".$curLead['ID']."</a> обновлен!<br>";
         } else {
-          echo "При обновлении лида <a href='https://bpm/ucre.ru/crm/lead/".$curLead['ID']."/".$curLead['ID']."</a> произошла ошибка: ".$Lead->LAST_ERROR."<br>";
+          echo "При обновлении лида <a href='https://bpm.ucre.ru/crm/lead/show/".$curLead['ID']."/".$curLead['ID']."</a> произошла ошибка: ".$Lead->LAST_ERROR."<br>";
         }
       }
     } else {
@@ -195,16 +191,12 @@ if( $curl = curl_init() ) {
       );
       $newLead = new CCrmLead;
       if($leadId = $newLead->Add($leadFields)){
-        echo "Для объявления ".$avitoAd['id']." лида нет. Создан лид <a href='https://bpm/ucre.ru/crm/lead/".$curLead['ID']."/'>".$leadId."</a>!<br>";
+        echo "Для объявления ".$avitoAd['id']." лида нет. Создан лид <a href='https://bpm.ucre.ru/crm/lead/show/".$curLead['ID']."/'>".$leadId."</a>!<br>";
       } else {
         echo "Для объявления ".$avitoAd['id']." лида нет. При создании лида произошла ошибка: ".$newLead->LAST_ERROR."<br>";
       }
     }
   }
-  /*
-  echo "<pre>";
-  print_r($avitoAds);
-  echo "</pre>";*/
   echo "Итого: ".$adCount;
 }
 ?>
