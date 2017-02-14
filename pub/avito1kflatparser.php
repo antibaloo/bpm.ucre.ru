@@ -154,9 +154,57 @@ if( $curl = curl_init() ) {
       );
     }
   }
+  
+  foreach ($avitoAds as $avitoAd){
+    $arFilter = array('UF_CRM_1486619563'=>$avitoAd['id']);
+    $arSelect = array('ID','STATUS_ID');
+    $rs = CCrmLead::GetList(array(), $arFilter, $arSelect);
+    if ($curLead = $rs->Fetch()){
+      if (in_array($curLead['STATUS_ID'],$finishedStatusId)){
+        echo "Лид ".$curLead['ID']." закрыт! Ничего не делаем!<br>";
+      } else {
+        $leadFields = array(
+          'UF_CRM_1486118874' => $avitoAd['address'],
+          'UF_CRM_1486194356' => $avitoAd['price'],
+        );
+        $Lead = new CCrmLead;
+        if($Lead->Update($curLead['ID'],$leadFields)){
+          echo "Лид <a href='https://bpm/ucre.ru/crm/lead/".$curLead['ID']."/'>".$curLead['ID']."</a> обновлен!<br>";
+        } else {
+          echo "При обновлении лида <a href='https://bpm/ucre.ru/crm/lead/".$curLead['ID']."/".$curLead['ID']."</a> произошла ошибка: ".$Lead->LAST_ERROR."<br>";
+        }
+      }
+    } else {
+      $leadFields = array(
+        'TITLE' => $avitoAd['name'],
+        'STATUS_ID' => 'NEW',
+        'ASSIGNED_BY_ID' => 98,
+        'SOURCE_ID' => 10,
+        'SOURCE_DESCRIPTION' => "Размещено: ".$avitoAd['date'],
+        'UF_CRM_1486022615' => 590, //Направление лида - продажа
+        'UF_CRM_1486119847' => 616, //Тип недвижимости - квартира
+        'UF_CRM_1486207685' => array('0'=>'825'), //Признак недвижимости - вторичная
+        'UF_CRM_1486191523' => 1,
+        'UF_CRM_1486118874' => $avitoAd['address'],
+        'UF_CRM_1486194356' => $avitoAd['price'],
+        'UF_CRM_1486619563' => $avitoAd['id'],
+        'UF_CRM_1486619533' => $avitoAd['link'],
+        'UF_CRM_1486189899' => $avitoAd['square'],
+        'UF_CRM_1486119588' => $avitoAd['floor'],
+        'UF_CRM_1486119569' => $avitoAd['floors'],
+      );
+      $newLead = new CCrmLead;
+      if($leadId = $newLead->Add($leadFields)){
+        echo "Для объявления ".$avitoAd['id']." лида нет. Создан лид <a href='https://bpm/ucre.ru/crm/lead/".$curLead['ID']."/'>".$leadId."</a>!<br>";
+      } else {
+        echo "Для объявления ".$avitoAd['id']." лида нет. При создании лида произошла ошибка: ".$newLead->LAST_ERROR."<br>";
+      }
+    }
+  }
+  /*
   echo "<pre>";
   print_r($avitoAds);
-  echo "</pre>";
+  echo "</pre>";*/
   echo "Итого: ".$adCount;
 }
 ?>
