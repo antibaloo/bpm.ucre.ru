@@ -58,7 +58,7 @@
             echo $link."<br>";
             
             $pic_dump = json_decode($pic, true);
-            //echo "<img src='".$pic_dump['image64']."'/><br>";
+            echo "<img src='".$pic_dump['image64']."'/><br>";
             
             $ifp = fopen("phone_image_".$id.".png", "wb");
             $data = explode(',', $pic_dump['image64']);
@@ -68,13 +68,80 @@
             $phoneNumber = $phoneImage->resolve;
             echo "Номер телефона: ".$phoneNumber."<br>";
           }
-                   
+                
           
           $dom = new DomDocument();
           $dom->loadHTML($adOut);
           $xpath = new DomXPath($dom);
           $adItem = $xpath->query("/html/body/div[@class='item-view-page-layout item-view-page-layout_content']/div[@class='l-content clearfix']/div[@class='item-view']/div[@class='item-view-content']");
-          print_r($adItem->item(0)->childNodes);
+          
+          //Имя продавца
+          $name_query = $xpath->query("//*[contains(@class, 'seller-info-name')]");
+          $name = trim(utf8_decode ($name_query->item(0)->nodeValue));
+      
+          echo "Имя продавца: ".$name."<br>";
+          
+          //Профиль на Авито
+          $profile_query = $xpath->query("//*[contains(@class, 'seller-info-avatar-image js-public-profile-link')]");
+          $profile = "https://www.avito.ru".$profile_query->item(0)->getAttribute('href');
+
+          echo "Ссылка на профиль Авито: ".$profile."<br>";
+          
+          //Параметры объявления
+          $params_query = $xpath->query("//*[contains(@class, 'item-params-list')]");
+          $params = array();
+          foreach ($params_query->item(0)->childNodes as $param){
+            $temp_param = explode(":",trim(utf8_decode ($param->nodeValue)));
+            switch ($temp_param[0]){
+              case "Количество комнат":
+                $params['rooms'] = trim(substr($temp_param[1],1,strpos($temp_param[1],"-")-1));
+                break;
+              case "Этаж":
+                $params['floor'] = trim($temp_param[1]);
+                break;
+              case "Этажей в доме":
+                $params['floors'] = trim($temp_param[1]);
+                break;
+              case "Тип дома":
+                $params['wallstype'] = trim($temp_param[1]);
+                break;
+              case "Площадь":
+                $params['square'] = preg_replace("/[^0-9]/", '', $temp_param[1]);
+                break;
+            }
+
+          }
+          
+          echo "<pre>";
+          print_r($params);
+          echo "</pre>"; 
+          
+          //Адрес
+          
+          $address_query = $xpath->query("//*[contains(@class, 'item-map-location')]");
+          $address = trim(utf8_decode($address_query->item(0)->nodeValue));
+          $address = str_replace("Адрес:","",$address);
+          $address = str_replace("Скрыть карту","",$address);
+          echo "Адрес объекта: ".$address."<br>";
+          
+          //Фотографии
+          
+          $photos_query = $xpath->query("//*[contains(@class, 'gallery-img-frame js-gallery-img-frame')]");
+          $photos = array();
+          foreach ($photos_query as $photo_query){
+            $photos[] = "https:".$photo_query->getAttribute('data-url');
+          }
+          echo "<pre>";
+          print_r(serialize($photos));
+          echo "</pre>";
+          
+          //Описание
+          
+          $desc_query = $xpath->query("//*[contains(@class, 'item-description-text')]");
+          $description = trim(utf8_decode ($desc_query->item(0)->nodeValue));
+          echo "Описание объекта: ".$description."<br>";
+          
+          print_r($adItem->item(0)->childNodes); 
         } else {
           echo "Ссылка: ".$_POST['url']." никуда не ведет.";
         }
