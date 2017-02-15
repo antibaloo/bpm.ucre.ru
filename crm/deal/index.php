@@ -9,10 +9,10 @@ $APPLICATION->SetTitle(GetMessage("CRM_TITLE"));
 -->
 <script type="text/javascript">
 	$(document).ready(function() {
-		if (pagetitle.innerHTML.indexOf("Продажа",0)==-1 && pagetitle.innerHTML.indexOf("Новостройки",0)==-1){
+		if (pagetitle.innerHTML.indexOf("Продажа: ",0)==-1 && pagetitle.innerHTML.indexOf("Новостройки: ",0)==-1){
 			CRM_DEAL_SHOW_V12_tab_tab_208445.remove();
 		}
-		if (pagetitle.innerHTML.indexOf("Продажа",0)==-1 && pagetitle.innerHTML.indexOf("Покупка",0)==-1 && pagetitle.innerHTML.indexOf("Новостройки",0)==-1){
+		if (pagetitle.innerHTML.indexOf("Продажа: ",0)==-1 && pagetitle.innerHTML.indexOf("Покупка: ",0)==-1 && pagetitle.innerHTML.indexOf("Новостройки: ",0)==-1){
 			CRM_DEAL_SHOW_V12_tab_tab_583919.remove();
 		}
 	});
@@ -20,7 +20,7 @@ $APPLICATION->SetTitle(GetMessage("CRM_TITLE"));
 	BX.ready(function(){
 		//обработка открытия вкладки 
 		BX.addCustomEvent('BX_CRM_INTERFACE_FORM_TAB_SELECTED', BX.delegate(function(self, name, tab_id){
-			if (pagetitle.innerHTML.indexOf("Продажа",0)!=-1 || pagetitle.innerHTML.indexOf("Новостройки",0)!=-1){
+			if (pagetitle.innerHTML.indexOf("Продажа: ",0)!=-1 || pagetitle.innerHTML.indexOf("Новостройки: ",0)!=-1){
 				//вкладка "Лог авито"
 				if (!arTabLoading[tab_id] && self.oTabsMeta[tab_id].name.toLowerCase().indexOf('авито') !== -1) { 
 					var innerTab = BX('inner_tab_'+tab_id), 
@@ -53,7 +53,7 @@ $APPLICATION->SetTitle(GetMessage("CRM_TITLE"));
 				}
 			}
 			//Вкладка "Встречные заявки"
-			if (pagetitle.innerHTML.indexOf("Продажа",0)!=-1 || pagetitle.innerHTML.indexOf("Покупка",0)!=-1 || pagetitle.innerHTML.indexOf("Новостройки",0)!=-1){
+			if (pagetitle.innerHTML.indexOf("Продажа: ",0)!=-1 || pagetitle.innerHTML.indexOf("Покупка: ",0)!=-1 || pagetitle.innerHTML.indexOf("Новостройки: ",0)!=-1){
 				if (!arTabLoading[tab_id] && self.oTabsMeta[tab_id].name.toLowerCase().indexOf('встречные') !== -1) { 
 					var innerTab = BX('inner_tab_'+tab_id), 
 							dealId = 0, matches = null, 
@@ -61,6 +61,9 @@ $APPLICATION->SetTitle(GetMessage("CRM_TITLE"));
 					if (matches = window.location.href.match(/\/crm\/deal\/show\/([\d]+)\//i)) { 
 						var dealId = parseInt(matches[1]); 
 					}
+					if (pagetitle.innerHTML.indexOf("Продажа: ",0)!=-1){ var categoryId = 0;}
+					if (pagetitle.innerHTML.indexOf("Покупка: ",0)!=-1){ var categoryId = 2;}
+					if (pagetitle.innerHTML.indexOf("Новостройки: ",0)!=-1){ var categoryId = 4;}
 					if (dealId > 0) { 
 						//чтобы не грузить повторно 
 						arTabLoading[tab_id] = true; 
@@ -69,7 +72,8 @@ $APPLICATION->SetTitle(GetMessage("CRM_TITLE"));
 							method: 'POST', 
 							dataType: 'html', 
 							data: { 
-								id: dealId
+								id: dealId,
+								category: categoryId
 							}, 
 							onsuccess: function(data) 
 							{ 
