@@ -8,99 +8,80 @@ $APPLICATION->SetTitle(GetMessage("CRM_TITLE"));
   http://blog.d-it.ru/crm/add-the-tab-to-the-box-bitrix24-crm/
 -->
 <script type="text/javascript">
+	$(document).ready(function() {
+		if (pagetitle.innerHTML.indexOf("Продажа",0)==-1 && pagetitle.innerHTML.indexOf("Новостройки",0)==-1){
+			CRM_DEAL_SHOW_V12_tab_tab_208445.remove();
+		}
+		if (pagetitle.innerHTML.indexOf("Продажа",0)==-1 && pagetitle.innerHTML.indexOf("Покупка",0)==-1 && pagetitle.innerHTML.indexOf("Новостройки",0)==-1){
+			CRM_DEAL_SHOW_V12_tab_tab_583919.remove();
+		}
+	});
 	var arTabLoading = []; 
 	BX.ready(function(){
 		//обработка открытия вкладки 
 		BX.addCustomEvent('BX_CRM_INTERFACE_FORM_TAB_SELECTED', BX.delegate(function(self, name, tab_id){
-			//вкладка "Лог авито"
-			if (!arTabLoading[tab_id] && self.oTabsMeta[tab_id].name.toLowerCase().indexOf('авито') !== -1) { 
-				var innerTab = BX('inner_tab_'+tab_id), 
-						dealId = 0, matches = null, 
-						waiter = BX.showWait(innerTab); 
-				if (matches = window.location.href.match(/\/crm\/deal\/show\/([\d]+)\//i)) { 
-					var dealId = parseInt(matches[1]); 
-				} 
-				if (dealId > 0) { 
-					//чтобы не грузить повторно 
-					arTabLoading[tab_id] = true; 
-					BX.ajax({ 
-						url: '/ajax/upload_avito_log.php', 
-						method: 'POST', 
-						dataType: 'html', 
-						data: { 
-							id: dealId 
-						}, 
-						onsuccess: function(data) 
-						{ 
-							innerTab.innerHTML = data; 
-							BX.closeWait(innerTab, waiter); //$this <-> innerTab. в противном случае вызывал ошибку дебагера Битрикс
-						}, 
-						onfailure: function(data) 
-						{ 
-							BX.closeWait(innerTab, waiter); 
-						} 
-					}); 
-				} 
-			}
-			//Вкладка "Просмотры на сайтах"
-			if (!arTabLoading[tab_id] && self.oTabsMeta[tab_id].name.toLowerCase().indexOf('просмотры') !== -1) { 
-				var innerTab = BX('inner_tab_'+tab_id), 
-						dealId = 0, matches = null, 
-						waiter = BX.showWait(innerTab); 
-				if (matches = window.location.href.match(/\/crm\/deal\/show\/([\d]+)\//i)) { 
-					var dealId = parseInt(matches[1]); 
-				}
-				if (dealId > 0) { 
-					//чтобы не грузить повторно 
-					arTabLoading[tab_id] = true; 
-					BX.ajax({ 
-						url: '/ajax/views.php', 
-						method: 'POST', 
-						dataType: 'html', 
-						data: { 
-							id: dealId,
-							step: 0
-						}, 
-						onsuccess: function(data) 
-						{ 
-							innerTab.innerHTML = data; 
-							BX.closeWait(innerTab, waiter); //$this <-> innerTab. в противном случае вызывал ошибку дебагера Битрикс
-						}, 
-						onfailure: function(data) 
-						{ 
-							BX.closeWait(innerTab, waiter); 
-						} 
-					}); 
+			if (pagetitle.innerHTML.indexOf("Продажа",0)!=-1 || pagetitle.innerHTML.indexOf("Новостройки",0)!=-1){
+				//вкладка "Лог авито"
+				if (!arTabLoading[tab_id] && self.oTabsMeta[tab_id].name.toLowerCase().indexOf('авито') !== -1) { 
+					var innerTab = BX('inner_tab_'+tab_id), 
+							dealId = 0, matches = null, 
+							waiter = BX.showWait(innerTab); 
+					if (matches = window.location.href.match(/\/crm\/deal\/show\/([\d]+)\//i)) { 
+						var dealId = parseInt(matches[1]); 
+					} 
+					if (dealId > 0) { 
+						//чтобы не грузить повторно 
+						arTabLoading[tab_id] = true; 
+						BX.ajax({ 
+							url: '/ajax/upload_avito_log.php', 
+							method: 'POST', 
+							dataType: 'html', 
+							data: { 
+								id: dealId 
+							}, 
+							onsuccess: function(data) 
+							{ 
+								innerTab.innerHTML = data; 
+								BX.closeWait(innerTab, waiter); //$this <-> innerTab. в противном случае вызывал ошибку дебагера Битрикс
+							}, 
+							onfailure: function(data) 
+							{ 
+								BX.closeWait(innerTab, waiter); 
+							} 
+						}); 
+					} 
 				}
 			}
 			//Вкладка "Встречные заявки"
-			if (!arTabLoading[tab_id] && self.oTabsMeta[tab_id].name.toLowerCase().indexOf('встречные') !== -1) { 
-				var innerTab = BX('inner_tab_'+tab_id), 
-						dealId = 0, matches = null, 
-						waiter = BX.showWait(innerTab); 
-				if (matches = window.location.href.match(/\/crm\/deal\/show\/([\d]+)\//i)) { 
-					var dealId = parseInt(matches[1]); 
-				}
-				if (dealId > 0) { 
-					//чтобы не грузить повторно 
-					arTabLoading[tab_id] = true; 
-					BX.ajax({ 
-						url: '/ajax/selection.php', 
-						method: 'POST', 
-						dataType: 'html', 
-						data: { 
-							id: dealId
-						}, 
-						onsuccess: function(data) 
-						{ 
-							innerTab.innerHTML = data; 
-							BX.closeWait(innerTab, waiter); //$this <-> innerTab. в противном случае вызывал ошибку дебагера Битрикс
-						}, 
-						onfailure: function(data) 
-						{ 
-							BX.closeWait(innerTab, waiter); 
-						} 
-					}); 
+			if (pagetitle.innerHTML.indexOf("Продажа",0)!=-1 || pagetitle.innerHTML.indexOf("Покупка",0)!=-1 || pagetitle.innerHTML.indexOf("Новостройки",0)!=-1){
+				if (!arTabLoading[tab_id] && self.oTabsMeta[tab_id].name.toLowerCase().indexOf('встречные') !== -1) { 
+					var innerTab = BX('inner_tab_'+tab_id), 
+							dealId = 0, matches = null, 
+							waiter = BX.showWait(innerTab); 
+					if (matches = window.location.href.match(/\/crm\/deal\/show\/([\d]+)\//i)) { 
+						var dealId = parseInt(matches[1]); 
+					}
+					if (dealId > 0) { 
+						//чтобы не грузить повторно 
+						arTabLoading[tab_id] = true; 
+						BX.ajax({ 
+							url: '/ajax/selection.php', 
+							method: 'POST', 
+							dataType: 'html', 
+							data: { 
+								id: dealId
+							}, 
+							onsuccess: function(data) 
+							{ 
+								innerTab.innerHTML = data; 
+								BX.closeWait(innerTab, waiter); //$this <-> innerTab. в противном случае вызывал ошибку дебагера Битрикс
+							}, 
+							onfailure: function(data) 
+							{ 
+								BX.closeWait(innerTab, waiter); 
+							} 
+						}); 
+					}
 				}
 			}
 		})); 
