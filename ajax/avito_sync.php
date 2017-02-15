@@ -30,13 +30,13 @@ if (isset($_POST['lead_id']) && !empty($_POST['lead_id']) && isset($_POST['avito
     $pic = curl_exec($curl);
     curl_close($curl);
     $pic_dump = json_decode($pic, true);
-    //echo "<img src='".$pic_dump['image64']."' height='25' width='auto'/>";
     $ifp = fopen("temp_".$_POST['avito_id'].".png", "wb");
     $data = explode(',', $pic_dump['image64']);
     fwrite($ifp, base64_decode($data[1])); 
     fclose($ifp);
     $phoneImage = new crackCapcha("temp_".$_POST['avito_id'].".png"); 
     $phoneNumber = $phoneImage->resolve;
+    unlink("temp_".$_POST['avito_id'].".png");
   }
   
   $dom = new DomDocument();
