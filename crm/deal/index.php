@@ -20,7 +20,6 @@ $APPLICATION->SetTitle(GetMessage("CRM_TITLE"));
 	BX.ready(function(){
 		//обработка открытия вкладки 
 		BX.addCustomEvent('BX_CRM_INTERFACE_FORM_TAB_SELECTED', BX.delegate(function(self, name, tab_id){
-			if (pagetitle.innerHTML.indexOf("Продажа: ",0)!=-1 || pagetitle.innerHTML.indexOf("Новостройки: ",0)!=-1){
 				//вкладка "Лог авито"
 				if (!arTabLoading[tab_id] && self.oTabsMeta[tab_id].name.toLowerCase().indexOf('авито') !== -1) { 
 					var innerTab = BX('inner_tab_'+tab_id), 
@@ -51,9 +50,7 @@ $APPLICATION->SetTitle(GetMessage("CRM_TITLE"));
 						}); 
 					} 
 				}
-			}
 			//Вкладка "Встречные заявки"
-			if (pagetitle.innerHTML.indexOf("Продажа: ",0)!=-1 || pagetitle.innerHTML.indexOf("Покупка: ",0)!=-1 || pagetitle.innerHTML.indexOf("Новостройки: ",0)!=-1){
 				if (!arTabLoading[tab_id] && self.oTabsMeta[tab_id].name.toLowerCase().indexOf('встречные') !== -1) { 
 					var innerTab = BX('inner_tab_'+tab_id), 
 							dealId = 0, matches = null, 
@@ -68,7 +65,7 @@ $APPLICATION->SetTitle(GetMessage("CRM_TITLE"));
 						//чтобы не грузить повторно 
 						arTabLoading[tab_id] = true; 
 						BX.ajax({ 
-							url: '/ajax/selection.php', 
+							url: '/ajax/selection.php?id='+dealId+'&category='+categoryId, 
 							method: 'POST', 
 							dataType: 'html', 
 							data: { 
@@ -87,14 +84,13 @@ $APPLICATION->SetTitle(GetMessage("CRM_TITLE"));
 						}); 
 					}
 				}
-			}
 		})); 
 	});
 </script>
 <?$APPLICATION->IncludeComponent(
 	"bitrix:crm.deal",
 	"",
-	Array(
+	array(
 		"SEF_MODE" => "Y",
 		"PATH_TO_CONTACT_SHOW" => "/crm/contact/show/#contact_id#/",
 		"PATH_TO_CONTACT_EDIT" => "/crm/contact/edit/#contact_id#/",

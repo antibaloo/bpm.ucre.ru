@@ -1,5 +1,6 @@
 <?php
 if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED!==true)die();
+if ($arParams['CATEGORY'] == 2){
 ?>
 <table style="width:100%!important;border-collapse:collapse!important; text-align:center!important; margin-top: 10px;!important;margin-bottom: 10px;!important">
   <tr style="border-bottom: 1px solid black!important;"><td colspan="8" ><b>Параметры поиска</b></td></tr>
@@ -17,6 +18,23 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED!==true)die();
     <td><?=$arResult['SELECT_PARAMS']['MAXPRICE']?></td>
   </tr>
 </table>
+<?}else{?>
+<table style="width:100%!important;border-collapse:collapse!important; text-align:center!important; margin-top: 10px;!important;margin-bottom: 10px;!important">
+  <tr style="border-bottom: 1px solid black!important;"><td colspan="7" ><b>Параметры поиска</b></td></tr>
+  <tr style="border-bottom: 1px solid black!important; font-weight:bold!important">
+    <td>Рынок</td><td>Тип объекта</td><td>N<sub>комнат</sub></td><td>S<sub>общая</sub></td><td>S<sub>кухни</sub></td><td>Этажность</td><td>Цена</td>
+  </tr>
+  <tr>
+    <td><?=$arResult['SELECT_PARAMS']['MARKET']?></td>
+    <td><?=$arResult['SELECT_PARAMS']['TYPE']?></td>
+    <td><?=$arResult['SELECT_PARAMS']['ROOMS']?></td>
+    <td><?=$arResult['SELECT_PARAMS']['TOTAL_AREA']?></td>
+    <td><?=$arResult['SELECT_PARAMS']['KITCHEN_AREA']?></td>
+    <td><?=$arResult['SELECT_PARAMS']['FLOORS']?></td>
+    <td><?=$arResult['SELECT_PARAMS']['PRICE']?></td>
+  </tr>
+</table>
+<?}?>
 <?
 $APPLICATION->IncludeComponent(
   'bitrix:main.interface.grid',
@@ -31,10 +49,12 @@ $APPLICATION->IncludeComponent(
         'EDITABLE'=>false,
         'NAV_OBJECT'=>$arResult['NAV_OBJECT'],
         'AJAX_MODE'=>"Y",
-        'AJAX_OPTION_JUMP'=>"Y",
+        'AJAX_OPTION_JUMP'=>"N",
         'AJAX_OPTION_STYLE'=>"Y",
-        'SHOW_FORM_TAG'=>false,
        ),
   $component
 );
+/*echo "<pre>";
+print_r($arResult);
+echo "</pre>";*/
 ?>
