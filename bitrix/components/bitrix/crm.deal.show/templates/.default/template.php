@@ -268,9 +268,13 @@ if ($mainDeal["CATEGORY_ID"] == 0 || $mainDeal["CATEGORY_ID"] == 4){
  			<td class="crm-offer-info-right">		
 				<div class="crm-offer-info-label-wrap">
 					<span class="crm-offer-info-label">
-						<a href="<?=($objectFields['PROPERTIES']['LINK']['VALUE'])?$objectFields['PROPERTIES']['LINK']['VALUE']:"#"?>" target="_blank">
-							<?=($objectFields['PROPERTIES']['LINK']['VALUE'])?$objectFields['PROPERTIES']['LINK']['VALUE']:"нет данных"?>
+						<?if ($objectFields['PROPERTIES']['LINK']['VALUE']){?>
+						<a href="<?=$objectFields['PROPERTIES']['LINK']['VALUE']?>" target="_blank">
+							<?=$objectFields['PROPERTIES']['LINK']['VALUE']?>
 						</a>
+						<?} else {?>
+						нет данных
+						<?}?>
 					</span>
 				</div>		
  			</td>		
