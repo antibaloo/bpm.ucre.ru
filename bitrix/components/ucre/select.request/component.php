@@ -174,36 +174,36 @@ if ($arParams['CATEGORY'] == '2'){ //Поиск встречных заявок 
   if ($mainDeal['PROPERTY_221'] == $mainDeal['PROPERTY_222']){
     $nLast = " AND LOCATE('755',b_uts_crm_deal.UF_CRM_58958B51B667E)=0";
   }
-  $arResult['SELECT_PARAMS']['FLOORS'] = $mainDeal['PROPERTY_221']."/".$mainDeal['PROPERTY_222'];
+  $arResult['SELECT_PARAMS']['FLOORS'] = (($mainDeal['PROPERTY_221'])?$mainDeal['PROPERTY_221']:"нет данных")."/".(($mainDeal['PROPERTY_222'])?$mainDeal['PROPERTY_222']:"нет данных");
   //Фильтр по типу недвижимости
   switch ($mainDeal['PROPERTY_210']){
     case 381:
       $arResult['SELECT_PARAMS']['TYPE'] = "комната";
-      $type = "AND b_uts_crm_deal.UF_CRM_58958B5724514=813";
+      $type = " AND b_uts_crm_deal.UF_CRM_58958B5724514=813";
       break;
     case 382:
       $arResult['SELECT_PARAMS']['TYPE'] = "квартира";
-      $type = "AND (b_uts_crm_deal.UF_CRM_58958B5724514=814 OR b_uts_crm_deal.UF_CRM_58958B5724514=816)";
+      $type = " AND (b_uts_crm_deal.UF_CRM_58958B5724514=814 OR b_uts_crm_deal.UF_CRM_58958B5724514=816)";
       break;
     case 383:
       $arResult['SELECT_PARAMS']['TYPE'] = "дом";
-      $type = "AND b_uts_crm_deal.UF_CRM_58958B5724514=815";
+      $type = " AND b_uts_crm_deal.UF_CRM_58958B5724514=815";
       break;
     case 384:
       $arResult['SELECT_PARAMS']['TYPE'] = "таунхаус";
-      $type = "AND (b_uts_crm_deal.UF_CRM_58958B5724514=816 OR b_uts_crm_deal.UF_CRM_58958B5724514=814)";
+      $type = " AND (b_uts_crm_deal.UF_CRM_58958B5724514=816 OR b_uts_crm_deal.UF_CRM_58958B5724514=814)";
       break;
     case 385:
       $arResult['SELECT_PARAMS']['TYPE'] = "дача";
-      $type = "AND b_uts_crm_deal.UF_CRM_58958B5724514=817";
+      $type = " AND b_uts_crm_deal.UF_CRM_58958B5724514=817";
       break;
     case 386:
       $arResult['SELECT_PARAMS']['TYPE'] = "участок";
-      $type = "AND b_uts_crm_deal.UF_CRM_58958B5724514=818";
+      $type = " AND b_uts_crm_deal.UF_CRM_58958B5724514=818";
       break;
     case 387:
       $arResult['SELECT_PARAMS']['TYPE'] = "коммерческий";
-      $type = "AND b_uts_crm_deal.UF_CRM_58958B5724514=819";
+      $type = " AND b_uts_crm_deal.UF_CRM_58958B5724514=819";
       break;
   }
   if(intval($mainDeal['PROPERTY_229'])){
