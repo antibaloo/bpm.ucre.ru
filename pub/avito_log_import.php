@@ -12,7 +12,7 @@ curl_setopt($ch, CURLOPT_REFERER, "http://avito.ru/profile");
 curl_setopt($ch, CURLOPT_POSTFIELDS, "login=".$avito->login."&password=".$avito->password."&submit=logon");
 $result = curl_exec($ch);
 
-curl_setopt($ch, CURLOPT_URL,"https://www.avito.ru/profile/upload/api/2/reports/?page=1&offset=0&limit=1000&order=-1&order_by=created&created_start=2015-10-01")/*.date("Y-m-d", strtotime("-1 days")))*/;
+curl_setopt($ch, CURLOPT_URL,"https://www.avito.ru/profile/upload/api/2/reports/?page=1&offset=0&limit=1000&order=-1&order_by=created&created_start=".date("Y-m-d", strtotime("-1 days")));
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
 curl_setopt($ch, CURLOPT_COOKIEJAR, $_SERVER['DOCUMENT_ROOT'].'/cookie.txt');
@@ -115,10 +115,6 @@ foreach ($logs['data'] as $log){
       } else $DB->Rollback();
       
       echo $num_logs.". Обработан лог с ID ".$log['log_id'].", всего объявлений - ".$uf_processed.", из них успешно опубликовано - ".$uf_success.", опубликовано с проблемами - ".$uf_problems.", не удалось опубликовать - ".$uf_errors.", удалены из файла выгрузки - ".$uf_deleted."<br>";
-      if ($num_logs == 20) {
-        echo "Загружено логов - ".$num_logs.", пропущено ранее загруженных - ".$ignore_logs;
-        break;
-      }
     }
   } else {
     $log_message = utf8_decode($_error->item(0)->nodeValue);
