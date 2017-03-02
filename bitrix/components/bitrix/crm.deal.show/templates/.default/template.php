@@ -200,15 +200,66 @@ $APPLICATION->IncludeComponent(
 	$component,
 	array('HIDE_ICONS' => 'Y')
 );
-/*---------Блок информации о связанном объекте----------*/		 +
-$rsDeal = CCrmDeal::GetListEx(		
-	array(), 		
-	array("ID" => $element['ID']), 		
-	false, 		
-	false, 		
-	array("CATEGORY_ID", "UF_CRM_1469534140"),		
-	array()		
-);		
+/*Блок информации об объявлении на Авито, если заявка создана по лиду с парсера Авито*/
+$rsDeal = CCrmDeal::GetListEx(
+	array(),
+	array("ID" => $element['ID']),
+	false,
+	false,
+	array('UF_CRM_1469534140', 'UF_CRM_589C63CD96E82','UF_CRM_589C63CE03874','UF_CRM_58A2B07090172','UF_CRM_58A2B9F26548F'),
+	array()
+);
+$mainDeal = $rsDeal->Fetch();
+if ($mainDeal['UF_CRM_589C63CD96E82'] && !$mainDeal["UF_CRM_1469534140"]=""){
+?>
+<table class="crm-offer-info-table crm-offer-main-info-text">
+	<tbody>
+		<tr><td colspan="5"><div class="crm-offer-title">Заявка содана из лида по данным парсера Авито-Недвижимость</div></td></tr>
+		<tr class="crm-offer-row">
+			<td class="crm-offer-info-drg-btn"></td>
+			<td class="crm-offer-info-left">
+				<div class="crm-offer-info-label-wrap"><span class="crm-offer-info-label">Ссылка на объявление:</span></div>
+			</td>
+			<td class="crm-offer-info-right">
+				<div class="crm-offer-info-label-wrap"><span class="crm-offer-info-label"><a href='<?=$mainDeal['UF_CRM_589C63CE03874']?>' target='_blank'>Перейти в объявление</a></span></div>
+			</td>
+			<td class="crm-offer-info-left">
+				<div class="crm-offer-info-label-wrap"><span class="crm-offer-info-label">Профиль Авито:</span></div>
+			</td>
+			<td class="crm-offer-info-right">
+				<div class="crm-offer-info-label-wrap"><span class="crm-offer-info-label"><a href='<?=$mainDeal['UF_CRM_58A2B07090172']?>' target='_blank'>Перейти в профиль</a></span></div>
+			</td>
+		</tr>
+		<tr class="crm-offer-row">
+			<td class="crm-offer-info-drg-btn"></td>
+			<td class="crm-offer-info-left">
+				<div class="crm-offer-info-label-wrap"><span class="crm-offer-info-label">Фотографии с Авито:</span></div>
+			</td>
+			<td class="crm-offer-info-right" colspan="3">
+				<div class="crm-offer-info-label-wrap" style="text-align: center;">
+					<?
+	foreach (unserialize($mainDeal['UF_CRM_58A2B9F26548F']) as $avitolink){
+		echo "<a class='fancybox' rel='image_gallery' href='".$avitolink."'><img style='margin-right: 10px; border:1px solid #cccccc;' src='".$avitolink."' width = 'auto' height ='50'/></a>";
+	}
+					?>
+				</div>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<?	
+}
+/*-----------------------------------------------------------------------------------*/
+/*---------Блок информации о связанном объекте----------*/
+$rsDeal = CCrmDeal::GetListEx(
+	array(),
+	array("ID" => $element['ID']),
+	false,
+	false,
+	array("CATEGORY_ID", "UF_CRM_1469534140"),
+	array()
+);
 $mainDeal = $rsDeal->Fetch();		
 if ($mainDeal["CATEGORY_ID"] == 0 || $mainDeal["CATEGORY_ID"] == 4){		
 	if ($mainDeal["UF_CRM_1469534140"]){		
