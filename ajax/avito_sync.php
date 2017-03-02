@@ -69,8 +69,14 @@ if (isset($_POST['lead_id']) && !empty($_POST['lead_id']) && isset($_POST['avito
       case "Тип дома":
         $params['wallstype'] = trim($temp_param[1]);
         break;
-      case "Площадь":
+      case "Общая площадь":
         $params['square'] = floatval(trim($temp_param[1]));
+        break;
+      case "Жилая площадь":
+        $params['l_square'] = floatval(trim($temp_param[1]));
+        break;
+      case "Площадь кухни":
+        $params['k_square'] = floatval(trim($temp_param[1]));
         break;
     }
   }
@@ -118,6 +124,8 @@ if (isset($_POST['lead_id']) && !empty($_POST['lead_id']) && isset($_POST['avito
     'UF_CRM_1486119588' =>  $params['floor'],
     'UF_CRM_1486191523' =>  $params['rooms'],
     'UF_CRM_1486189899' =>  $params['square'],
+    'UF_CRM_1486190922' =>  $params['l_square'],
+    'UF_CRM_1486191334' =>  $params['k_square'],
     'COMMENTS'          =>  $description,
     'UF_CRM_1487058104' =>  serialize($photos),
     'UF_CRM_1486723225' =>  $pic_dump['image64'],  // картинка с номером
