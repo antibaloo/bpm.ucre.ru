@@ -1,4 +1,4 @@
-<link href="custom.css" rel="stylesheet">
+<link href="custom.css?<?=time(); ?>" rel="stylesheet">
 <?
 require($_SERVER["DOCUMENT_ROOT"]."/bitrix/header.php");
 use \Bitrix\Crm\Category\DealCategory;
