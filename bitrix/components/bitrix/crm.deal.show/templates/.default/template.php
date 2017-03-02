@@ -206,7 +206,22 @@ $rsDeal = CCrmDeal::GetListEx(
 	array("ID" => $element['ID']),
 	false,
 	false,
-	array('UF_CRM_1469534140', 'UF_CRM_589C63CD96E82','UF_CRM_589C63CE03874','UF_CRM_58A2B07090172','UF_CRM_58A2B9F26548F'),
+	array(
+		'STAGE_ID', 						//статус заявки
+		'UF_CRM_1469534140',		//связанный объект
+		'UF_CRM_589C63CD96E82',	//id авито
+		'UF_CRM_589C63CE03874',	//ссылка
+		'UF_CRM_58A2B07090172',	//профиль
+		'UF_CRM_58A2B9F26548F',	//фото авито
+		'UF_CRM_58958B52BA439',	//общая
+		'UF_CRM_58958B52D6C9B',	//жилая
+		'UF_CRM_58958B52F2BAC',	//площадь кухни
+		'UF_CRM_5895994ED0C7B',	//этаж
+		'UF_CRM_58958B51C2F36',	//этажность
+		'UF_CRM_58958B529E628',	//кол-во комнат
+		'UF_CRM_5895994EB2646',	//адрес
+		'UF_CRM_58958B5207D0C'	//тип дома
+	),
 	array()
 );
 $mainDeal = $rsDeal->Fetch();
@@ -214,7 +229,7 @@ if ($mainDeal['UF_CRM_589C63CD96E82'] && !$mainDeal["UF_CRM_1469534140"]=""){
 ?>
 <table class="crm-offer-info-table crm-offer-main-info-text">
 	<tbody>
-		<tr><td colspan="5"><div class="crm-offer-title">Заявка содана из лида по данным парсера Авито-Недвижимость</div></td></tr>
+		<tr><td colspan="5"><div class="crm-offer-title">Заявка создана из лида по данным парсера Авито-Недвижимость</div></td></tr>
 		<tr class="crm-offer-row">
 			<td class="crm-offer-info-drg-btn"></td>
 			<td class="crm-offer-info-left">
@@ -245,6 +260,56 @@ if ($mainDeal['UF_CRM_589C63CD96E82'] && !$mainDeal["UF_CRM_1469534140"]=""){
 				</div>
 			</td>
 		</tr>
+		<tr class="crm-offer-row">
+			<td class="crm-offer-info-drg-btn"></td>
+			<td class="crm-offer-info-left">
+				<div class="crm-offer-info-label-wrap"><span class="crm-offer-info-label">Площади (общ./жил./кух.):</span></div>
+			</td>
+			<td class="crm-offer-info-right">
+				<div class="crm-offer-info-label-wrap">
+					<span class="crm-offer-info-label">
+						<?=($mainDeal['UF_CRM_58958B52BA439'])?$mainDeal['UF_CRM_58958B52BA439']:"-"?>/<?=($mainDeal['UF_CRM_58958B52D6C9B'])?$mainDeal['UF_CRM_58958B52D6C9B']:"-"?>/<?=($mainDeal['UF_CRM_58958B52F2BAC'])?$mainDeal['UF_CRM_58958B52F2BAC']:"-"?>
+					</span>
+				</div>
+			</td>
+			<td class="crm-offer-info-left">
+				<div class="crm-offer-info-label-wrap"><span class="crm-offer-info-label">Этаж/Этажность:</span></div>
+			</td>
+			<td class="crm-offer-info-right">
+				<div class="crm-offer-info-label-wrap">
+					<span class="crm-offer-info-label">
+						<?=($mainDeal['UF_CRM_5895994ED0C7B'])?$mainDeal['UF_CRM_5895994ED0C7B']:"-"?>/<?=($mainDeal['UF_CRM_58958B51C2F36'])?$mainDeal['UF_CRM_58958B51C2F36']:"-"?>
+					</span>
+				</div>
+			</td>
+		</tr>
+		<tr class="crm-offer-row">
+			<td class="crm-offer-info-drg-btn"></td>
+			<td class="crm-offer-info-left">
+				<div class="crm-offer-info-label-wrap"><span class="crm-offer-info-label">Адрес:</span></div>
+			</td>
+			<td class="crm-offer-info-right">
+				<div class="crm-offer-info-label-wrap"><span class="crm-offer-info-label"><?=$mainDeal['UF_CRM_5895994EB2646']?></span></div>
+			</td>
+			<td class="crm-offer-info-left">
+				<div class="crm-offer-info-label-wrap">
+					<span class="crm-offer-info-label">
+						<form id="object">
+							<input type="hidden" name="deal_id" value="<?=$mainDeal['ID']?>">
+							<input type="button" id="create" value="Создать объект" <?=($mainDeal['STAGE_ID']!='NEW')? "disabled":""?>/>
+						</form>
+					</span>
+				</div>
+			</td>
+			<td class="crm-offer-info-right">
+				<div class="crm-offer-info-label-wrap">
+					<span class="crm-offer-info-label">
+						<div id="result"><?=($mainDeal['STAGE_ID']!='NEW')? "Создать объект можно только в предлистинге":""?></div>
+					</span>
+				</div>
+			</td>
+		</tr>
+
 	</tbody>
 </table>
 
