@@ -214,7 +214,7 @@ if ($mainLead['UF_CRM_1486619563']){
 						<form id="avito">
 							<input type="hidden" name="lead_id" value="<?=$mainLead['ID']?>">
 							<input type="hidden" name="avito_id" value="<?=$mainLead['UF_CRM_1486619563']?>">
-							<input type="button" id="sync" value="Синхронизировать" <?=($mainLead['UF_CRM_1486723225'])?"disabled":""?>/>
+							<input type="button" id="sync" value="Синхронизировать" <?=($mainLead['UF_CRM_1486723225'] && $USER->GetId() != 24)?"disabled":""?>/>
 						</form>
 					</span></div>
 			</td>
