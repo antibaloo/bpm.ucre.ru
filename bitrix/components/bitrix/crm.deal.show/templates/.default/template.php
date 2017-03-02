@@ -225,7 +225,7 @@ $rsDeal = CCrmDeal::GetListEx(
 	array()
 );
 $mainDeal = $rsDeal->Fetch();
-if ($mainDeal['UF_CRM_589C63CD96E82'] && !$mainDeal["UF_CRM_1469534140"]=""){
+if ($mainDeal['UF_CRM_589C63CD96E82'] && !$mainDeal["UF_CRM_1469534140"]){
 ?>
 <table class="crm-offer-info-table crm-offer-main-info-text">
 	<tbody>
