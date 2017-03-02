@@ -34,10 +34,24 @@ if (isset($_POST['deal_id']) && !empty($_POST['deal_id'])){
   $PROP[225] = $mainDeal['UF_CRM_58958B52D6C9B'];
   $PROP[226] = $mainDeal['UF_CRM_58958B52F2BAC'];
   
-  if ($mainDeal['UF_CRM_58958B5207D0C'] == 757){
-    $PROP[243] =428;
+  switch ($mainDeal['UF_CRM_58958B5207D0C']){
+    case 756:
+      $PROP[243] =431;
+      break;
+    case 757:
+      $PROP[243] =428;
+      break;
+    case 758:
+      $PROP[243] =430;
+      break;
+    case 759:
+      $PROP[243] =427;
+      break;
+    case 760:
+      $PROP[243] =426;
+      break;
+      
   }
-  
   
   $PROP[266] = "Предлистинг";  // Статус объекта недвижимости
   $PROP[300] = "Продам"; 
