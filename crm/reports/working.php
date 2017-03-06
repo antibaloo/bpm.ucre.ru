@@ -1,12 +1,11 @@
 <?
 require($_SERVER["DOCUMENT_ROOT"]."/bitrix/header.php");
-$APPLICATION->SetTitle("Отчет по истекающим договорам с застройщиками");
+$APPLICATION->SetTitle("Отчет по действующим договорам с застройщиками");
 ?>
 <a href="/crm/reports/report">Назад</a>
 <?
 $arUser = $USER->GetById($USER->GetID())->Fetch();
 $dateFrom = ($_POST['report_date'])?$_POST['report_date']:date("Y-m-d");
-$dateTo = date("Y-m-d",strtotime($dateFrom."+30 days"));
 if (1/*$arUser['WORK_DEPARTMENT']=='АУП'*/){?>
 <form action="" method="POST">
   Дата отчета <input name="report_date" type="date" value="<?=$dateFrom?>">
@@ -15,7 +14,7 @@ if (1/*$arUser['WORK_DEPARTMENT']=='АУП'*/){?>
 <hr>
 <?
   /*">=UF_CRM_1484894007" => $dateFrom." 00:00:00", "<=UF_CRM_1484894007" => $dateTo." 23:59:59"*/
-  $arFilter = array("COMPANY_TYPE" => 3, ">=UF_CRM_1484894007" => ConvertTimeStamp(strtotime($dateFrom),"FULL"),"<=UF_CRM_1484894007" => ConvertTimeStamp(strtotime($dateTo),"FULL"));
+  $arFilter = array("COMPANY_TYPE" => 3, ">=UF_CRM_1484894007" => ConvertTimeStamp(strtotime($dateFrom),"FULL"));
   $arSelect = array("ID","TITLE", "COMPANY_TYPE","UF_CRM_1484893928","UF_CRM_1484893952","UF_CRM_1484893989","UF_CRM_1484894007");
   $arOrder = array('DATE_CREATE' => 'DESC');
   $rsData = CCRmCompany::GetList($arOrder, $arFilter, $arSelect);
