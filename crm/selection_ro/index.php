@@ -74,7 +74,6 @@ $APPLICATION->SetTitle("Подбор заявок");
     <?}?>
   </form>
 </div>
-<?ob_start();?>
 <div id="result_grid">
   <?
   $rows = 20;
@@ -174,6 +173,13 @@ $APPLICATION->SetTitle("Подбор заявок");
     </center>
   </div>
   <a href="toprint.php?sql=<?=htmlspecialchars(serialize($_POST),ENT_QUOTES)?>" target="_blank">Версия для печати</a>
+  <?if ($USER->GetID() == 24){?>
+  <form id="formaddress">
+    <input type="hidden" name="sql" value="<?=htmlspecialchars(serialize($_POST),ENT_QUOTES)?>">
+    <input type="email" name="email" value="admin@ucre.ru"> <input type="button" id="sendmail" value="Отправить">&nbsp;<div style="display: inline" id="sendresult"></div>
+  </form>
+  <?}?>
+  
   <?
 //    echo $count."=".$pages." по ".$rows;
   }
@@ -256,27 +262,16 @@ $APPLICATION->SetTitle("Подбор заявок");
     </center>
   </div>
   <a href="toprint.php?sql=<?=htmlspecialchars(serialize($_POST),ENT_QUOTES)?>" target="_blank">Версия для печати</a>
+  <?if ($USER->GetID() == 24){?>
+  <form id="formaddress">
+    <input type="hidden" name="sql" value="<?=htmlspecialchars(serialize($_POST),ENT_QUOTES)?>">
+    <input type="email" name="email" value="admin@ucre.ru"> <input type="button" id="sendmail" value="Отправить">&nbsp;<div style="display: inline" id="sendresult"></div>
+  </form>
+  <?}?>
   <?
   }
   ?>
 </div>
-<?
-$report = ob_get_contents();
-ob_get_clean();
-file_put_contents('report.html', '<link href="custom.css?'.time().'" rel="stylesheet">'.$report."<script type='text/javascript'>  function set_active(object){
-    if(!object.classList.contains('active')){
-      var el = document.getElementById('page'+object.innerHTML);
-      var a_page = document.getElementsByClassName('page active');
-      var a_pages = document.getElementsByClassName('pages active');
-      a_page[0].classList.remove('active');
-      a_pages[0].classList.remove('active');
-      el.classList.add('active');
-      object.classList.add('active');
-    }
-  }</script>
-");
-echo $report;
-?>
 <div id="search_map" style="display: none;">
   <?
   $APPLICATION->IncludeComponent(
@@ -321,5 +316,21 @@ require($_SERVER["DOCUMENT_ROOT"]."/bitrix/footer.php");
       object.classList.add('active');
     }
   }
-  function reset_form(){}
+$(document).ready(function() {
+  $('#sendmail').on('click', function () {
+    var data = $('#formaddress').serialize();
+    $.ajax({
+      type: "POST",
+      url: "./sendresult.php",
+      dataType: "text",
+      data: data,
+      success: function (html) {
+        $("#sendresult").html(html);
+      },
+      error: function (html) {
+        $("#sendresult").html("Технические неполадки! В ближайшее время все будет исправлено!");
+      },
+    });
+  });
+});
 </script>
