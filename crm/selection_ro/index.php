@@ -172,14 +172,7 @@ $APPLICATION->SetTitle("Подбор заявок");
   ?>
     </center>
   </div>
-  <a href="toprint.php?sql=<?=htmlspecialchars(serialize($_POST),ENT_QUOTES)?>" target="_blank">Версия для печати</a>
-  <?if ($USER->GetID() == 24){?>
-  <form id="formaddress">
-    <input type="hidden" name="sql" value="<?=htmlspecialchars(serialize($_POST),ENT_QUOTES)?>">
-    <input type="email" name="email" value="admin@ucre.ru"> <input type="button" id="sendmail" value="Отправить">&nbsp;<div style="display: inline" id="sendresult"></div>
-  </form>
-  <?}?>
-  
+  <!--<a href="toprint.php?sql=<?=htmlspecialchars(serialize($_POST),ENT_QUOTES)?>" target="_blank">Версия для печати</a>-->
   <?
 //    echo $count."=".$pages." по ".$rows;
   }
@@ -261,16 +254,15 @@ $APPLICATION->SetTitle("Подбор заявок");
   ?>
     </center>
   </div>
-  <a href="toprint.php?sql=<?=htmlspecialchars(serialize($_POST),ENT_QUOTES)?>" target="_blank">Версия для печати</a>
-  <?if ($USER->GetID() == 24){?>
-  <form id="formaddress">
-    <input type="hidden" name="sql" value="<?=htmlspecialchars(serialize($_POST),ENT_QUOTES)?>">
-    <input type="email" name="email" value="admin@ucre.ru"> <input type="button" id="sendmail" value="Отправить">&nbsp;<div style="display: inline" id="sendresult"></div>
-  </form>
-  <?}?>
+  <!--<a href="toprint.php?sql=<?=htmlspecialchars(serialize($_POST),ENT_QUOTES)?>" target="_blank">Версия для печати</a>-->
   <?
   }
+  $arUser =$USER->GetById($USER->GetID())->Fetch();
   ?>
+  <form id="formaddress">
+    <input type="hidden" name="sql" value="<?=htmlspecialchars(serialize($_POST),ENT_QUOTES)?>">
+    <input type="email" name="email" value="<?=$arUser["EMAIL"]?>"> <input type="button" id="sendmail" value="Отправить">&nbsp;<div style="display: inline" id="sendresult"></div>
+  </form>
 </div>
 <div id="search_map" style="display: none;">
   <?
