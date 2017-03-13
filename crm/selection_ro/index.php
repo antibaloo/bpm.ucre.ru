@@ -261,7 +261,7 @@ $APPLICATION->SetTitle("Подбор заявок");
   ?>
   <form id="formaddress">
     <input type="hidden" name="sql" value="<?=htmlspecialchars(serialize($_POST),ENT_QUOTES)?>">
-    <input type="email" name="email" value="<?=$arUser["EMAIL"]?>"> <input type="button" id="sendmail" value="Отправить">&nbsp;<div style="display: inline" id="sendresult"></div>
+    <input type="email" name="email" disabled value="<?=$arUser["EMAIL"]?>"> <input type="button" id="sendmail" value="Отправить">&nbsp;<div style="display: inline" id="sendresult"></div>
   </form>
 </div>
 <div id="search_map" style="display: none;">
