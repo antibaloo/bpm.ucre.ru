@@ -33,6 +33,7 @@ $walls = array();
 while($enum_fields = $property_enums->GetNext()){
   $walls[$enum_fields["ID"]] = $enum_fields["VALUE"];
 }
+$walls[416] = 'Экспериментальные материалы';
 $walls[417] = 'Экспериментальные материалы';
 $walls[413] = 'Пеноблоки';
 $walls[425] = 'Пеноблоки';
