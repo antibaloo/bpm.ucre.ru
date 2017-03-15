@@ -207,20 +207,12 @@ if (CModule::IncludeModule('crm'))
 	if ($USER->GetID() == 24)
 	{
 		$aMenuLinks[] = array(
-			"Эмулятор ВАТС Мегафон",
+			"Запросы к ВАТС Мегафон",
 			"/crm/call/",
 			array(),
 			array(),
 			""
 		);
-		$aMenuLinks[] = array(
-			"Запросы к ВАТС Мегафон",
-			"/crm/call/from_crm_to_vats.php",
-			array(),
-			array(),
-			""
-		);
-
 	}
 }
 
