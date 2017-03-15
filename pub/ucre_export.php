@@ -67,13 +67,13 @@ if(CModule::IncludeModule('iblock') && CModule::IncludeModule("crm")) {
         $name = mb_strtoupper(substr($tmp_type["VALUE"],0,1)).substr($tmp_type["VALUE"],1)." ".number_format($aRes['PROPERTY_228'],2,".","")." кв.м., ".$street.", ".$aRes["PROPERTY_218"];
         break;
       case 382:
-        $name = intval($aRes["PROPERTY_229"])."-к ".$tmp_type["VALUE"]." ".number_format($aRes['PROPERTY_224'],2,".","")." кв.м., ".$street.", ".$aRes["PROPERTY_218"];
+        $name = number_format($aRes["PROPERTY_229"],0)."-к ".$tmp_type["VALUE"]." ".number_format($aRes['PROPERTY_224'],2,".","")." кв.м., ".$street.", ".$aRes["PROPERTY_218"];
         break;
       case 383:
-        $name = intval($aRes["PROPERTY_229"])."-к ".$tmp_type["VALUE"]." ".number_format($aRes['PROPERTY_224'],2,".","")." кв.м., ".$street;
+        $name = number_format($aRes["PROPERTY_229"],0)."-к ".$tmp_type["VALUE"]." ".number_format($aRes['PROPERTY_224'],2,".","")." кв.м., ".$street;
         break;
       case 384:
-        $name = intval($aRes["PROPERTY_229"])."-к ".$tmp_type["VALUE"]." ".number_format($aRes['PROPERTY_224'],2,".","")." кв.м., ".$street;
+        $name = number_format($aRes["PROPERTY_229"],0)."-к ".$tmp_type["VALUE"]." ".number_format($aRes['PROPERTY_224'],2,".","")." кв.м., ".$street;
         break;
       case 385:
         $name = mb_strtoupper(substr($tmp_type["VALUE"],0,1)).substr($tmp_type["VALUE"],1)." ".number_format($aRes['PROPERTY_292'],2,".","")." сот., ".$street;
@@ -99,7 +99,7 @@ if(CModule::IncludeModule('iblock') && CModule::IncludeModule("crm")) {
                        'SQUARE'           => number_format($aRes['PROPERTY_224'],2,".",""),
                        'LIVING'					  => number_format($aRes['PROPERTY_225'],2,".",""),
                        'KITCHEN'				  => number_format($aRes['PROPERTY_226'],2,".",""),
-                       'ROOMS'            => intval($aRes['PROPERTY_229']),
+                       'ROOMS'            => number_format($aRes['PROPERTY_229'],0),
                        'FLOOR'            => $aRes['PROPERTY_221'],
                        'FLOORS'           => $aRes['PROPERTY_222'],
                        'TYPE_HOUSE'       => $housetype[$aRes['PROPERTY_243']],
