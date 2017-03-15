@@ -2,14 +2,15 @@
   margin-bottom: 15px;
 }
 #search_map{
+  border: 1px solid blue;
   position:fixed;
   z-index: 999;
-  width: 500px;
+  width: 99vh;
+  height: 90vh;
   top:10;
-  right:10;
+  right:63;
 }
 #result_grid{
-
 }
 div.page {
   display: none;

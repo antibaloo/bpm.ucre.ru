@@ -300,8 +300,8 @@ $APPLICATION->SetTitle("Подбор заявок");
     array("INIT_MAP_TYPE" => "PUBLIC",
           "DEV_MODE" => "Y",
           "MAP_DATA" => serialize($map_data),
-          "MAP_WIDTH" => "auto",
-          "MAP_HEIGHT" => "500",
+          "MAP_WIDTH" => "100%",
+          "MAP_HEIGHT" => "100%",
           "CONTROLS" => array("ZOOM", "SMALLZOOM", "SCALELINE"),
           "OPTIONS" => array("ENABLE_SCROLL_ZOOM", "ENABLE_DBLCLICK_ZOOM", "ENABLE_DRAGGING"),
           "MAP_ID" => "yam_1"
