@@ -17,6 +17,25 @@ $APPLICATION->SetTitle("Подбор заявок");
       <option value="Первичный" <?=($_POST['market'] =='Первичный'? 'selected':'')?>>Первичный</option>
       <option value="Вторичный" <?=($_POST['market'] =='Вторичный'? 'selected':'')?>>Вторичный</option>
     </select>
+    Ответственный
+    <select name="assigned">
+      <option value="" <?=($_POST['assigned'] ==''? 'selected':'')?>>(выберите ответственного)</option>
+      <?
+              $filter = array("GROUPS_ID"=> array(12));
+              $rsUsers = CUser::GetList(($by="id"), ($order="asc"), $filter); // выбираем пользователей
+              while($arUser = $rsUsers->Fetch()) {
+                if ($arUser['ACTIVE']=="Y"){
+      ?>
+      <option value="<?=$arUser['ID']?>" <?=($_POST['assigned'] == $arUser['ID']? 'selected':'')?>><?=$arUser['LAST_NAME'].' '.$arUser['NAME']?></option>
+      <?
+                }else{
+      ?>
+      <option value="<?=$arUser['ID']?>" <?=($_POST['assigned'] == $arUser['ID']? 'selected':'')?>><?=$arUser['LAST_NAME'].' '.$arUser['NAME']."(уволен)"?></option>
+      <?
+                }
+              }
+      ?>
+    </select>
     <div id="buy" <?=($_POST['goal']!='buy'? 'style="display:none"':'')?>>
       <fieldset>
         <legend>
@@ -60,7 +79,12 @@ $APPLICATION->SetTitle("Подбор заявок");
           <option value="387" <?=($_POST['type_s'] =='387'? 'selected':'')?>>коммерческий</option>
         </select>
         , цена от <input name="price_min" type="number" min="0" step="100000" style="width: 7em;" value="<?=$_POST['price_min']?>"> до <input name="price_max" type="number" min="0" step="100000" style="width: 7em;" value="<?=$_POST['price_max']?>">
-        , комнат от <input type="number" name="rooms_s" min="1" value="<?=$_POST['rooms_s']?>" style="width: 3em;">,
+        , комнат  
+        <select name="rooms_rule">
+          <option value=">=" <?=($_POST['rooms_rule'] =='>='? 'selected':'')?>>от</option>
+          <option value="=" <?=($_POST['rooms_rule'] =='='? 'selected':'')?>>=</option>
+        </select>
+        <input type="number" name="rooms_s" min="1" value="<?=$_POST['rooms_s']?>" style="width: 3em;">,
         S <sub>общ.</sub> от <input type="number" min="10" name="square_s" style="width: 4em;" value="<?=$_POST['square_s']?>">,
         S <sub>кух.</sub> от <input type="number" min="1" name="kitchen_s" style="width: 4em;" value="<?=$_POST['kitchen_s']?>">,
         не 1-й<input type="checkbox" name="nfirst" <?=($_POST['nfirst'])?"checked":""?>>, 
@@ -101,6 +125,8 @@ $APPLICATION->SetTitle("Подбор заявок");
     if ($_POST['floor'] == $_POST['floors']) $rsQuery.=" AND UF_CRM_58958B51B667E NOT LIKE '%755%'";
     //Фильтр по цене
     if ($_POST['price'] > 0) $rsQuery.=" AND UF_CRM_58958B576448C<=".$_POST['price']." AND UF_CRM_58958B5751841>=".$_POST['price'];
+    //Фильтр по ответственному
+    if ($_POST['assigned'] !='') $rsQuery.=" AND ASSIGNED_BY_ID=".$_POST['assigned'] ;
     $rsQuery .= " ORDER BY b_crm_deal.ID DESC";
     $rsData = $DB->Query($rsQuery);
     $count = $rsData->SelectedRowsCount();
@@ -187,7 +213,7 @@ $APPLICATION->SetTitle("Подбор заявок");
     if ($_POST['price_min'] > 0) $rsQuery.=" AND UF_CRM_58958B5734602>=".$_POST['price_min'];
     if ($_POST['price_max'] > 0) $rsQuery.=" AND UF_CRM_58958B5734602<=".$_POST['price_max'];
     //Фильтр по комнатам
-    if ($_POST['rooms_s'] > 0) $rsQuery.=" AND PROPERTY_229>=".$_POST['rooms_s'];
+    if ($_POST['rooms_s'] > 0) $rsQuery.=" AND PROPERTY_229".$_POST['rooms_rule'].$_POST['rooms_s'];
     //Фильтр по общей площади
     if ($_POST['square_s'] > 0) $rsQuery.=" AND PROPERTY_224>=".$_POST['square_s'];
     //Фильтр по площади кухни
@@ -196,6 +222,8 @@ $APPLICATION->SetTitle("Подбор заявок");
     if ($_POST['nfirst']) $rsQuery.=" AND PROPERTY_221<>1";
     //Не последний
     if ($_POST['nlast']) $rsQuery.=" AND PROPERTY_221<>PROPERTY_222";
+    //Фильтр по ответственному
+    if ($_POST['assigned'] !='') $rsQuery.=" AND ASSIGNED_BY_ID=".$_POST['assigned'] ;
     $rsQuery .= " ORDER BY b_crm_deal.ID DESC";
     $rsData = $DB->Query($rsQuery);
     $count = $rsData->SelectedRowsCount();
@@ -261,7 +289,7 @@ $APPLICATION->SetTitle("Подбор заявок");
   ?>
   <form id="formaddress">
     <input type="hidden" name="sql" value="<?=htmlspecialchars(serialize($_POST),ENT_QUOTES)?>">
-    <input type="email" name="email" disabled value="<?=$arUser["EMAIL"]?>"> <input type="button" id="sendmail" value="Отправить">&nbsp;<div style="display: inline" id="sendresult"></div>
+    <input type="email" name="email" readonly="" value="<?=$arUser["EMAIL"]?>"> <input type="button" id="sendmail" value="Отправить">&nbsp;<div style="display: inline" id="sendresult"></div>
   </form>
 </div>
 <div id="search_map" style="display: none;">

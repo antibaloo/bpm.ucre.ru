@@ -41,6 +41,8 @@ $params = unserialize($_POST['sql']);
     if ($params['floor'] == $params['floors']) $rsQuery.=" AND UF_CRM_58958B51B667E NOT LIKE '%755%'";
     //Фильтр по цене
     if ($params['price'] > 0) $rsQuery.=" AND UF_CRM_58958B576448C<=".$params['price']." AND UF_CRM_58958B5751841>=".$params['price'];
+    //Ответственный
+    if ($params['assigned'] !='') $rsQuery.=" AND ASSIGNED_BY_ID=".$params['assigned'] ;
     $rsQuery .= " ORDER BY b_crm_deal.ID DESC";
     $rsData = $DB->Query($rsQuery);
     $count = $rsData->SelectedRowsCount();
@@ -130,7 +132,7 @@ $params = unserialize($_POST['sql']);
     if ($params['price_min'] > 0) $rsQuery.=" AND UF_CRM_58958B5734602>=".$params['price_min'];
     if ($params['price_max'] > 0) $rsQuery.=" AND UF_CRM_58958B5734602<=".$params['price_max'];
     //Фильтр по комнатам
-    if ($params['rooms_s'] > 0) $rsQuery.=" AND PROPERTY_229>=".$params['rooms_s'];
+    if ($params['rooms_s'] > 0) $rsQuery.=" AND PROPERTY_229".$params['rooms_rule'].$params['rooms_s'];
     //Фильтр по общей площади
     if ($params['square_s'] > 0) $rsQuery.=" AND PROPERTY_224>=".$params['square_s'];
     //Фильтр по площади кухни
@@ -139,6 +141,8 @@ $params = unserialize($_POST['sql']);
     if ($params['nfirst']) $rsQuery.=" AND PROPERTY_221<>1";
     //Не последний
     if ($params['nlast']) $rsQuery.=" AND PROPERTY_221<>PROPERTY_222";
+    //Ответственный
+    if ($params['assigned'] !='') $rsQuery.=" AND ASSIGNED_BY_ID=".$params['assigned'] ;
     $rsQuery .= " ORDER BY b_crm_deal.ID DESC";
     $rsData = $DB->Query($rsQuery);
     $count = $rsData->SelectedRowsCount();
