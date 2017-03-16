@@ -8,13 +8,14 @@ if (isset($_POST['id'])){
   $tempob = $tempDeal->GetListEx(array(), array("ID" => $_POST['id']), false, false, array("UF_CRM_1469534140"),array());
   $tempFields = $tempob->Fetch();
   if ($tempFields['UF_CRM_1469534140']){
-    if (intval($tempFields['UF_CRM_1469534140']) > 5560)
+		$res = CIBlockElement::GetByID(intval($tempFields['UF_CRM_1469534140']));
+		$ar_res = $res->GetNext();
+		
+    if ($ar_res['CODE'] !=''){
+			$rsData = $DB->Query('SELECT ucre_avito_log_element.*, ucre_avito_log.UF_TIME FROM ucre_avito_log_element LEFT JOIN ucre_avito_log ON ucre_avito_log_element.UF_AVITO_LOG_ID = ucre_avito_log.UF_AVITO_ID WHERE UF_CRM_ID = '.$ar_res['CODE'].' ORDER BY UF_AVITO_LOG_ID DESC');
+		}else {
       $rsData = $DB->Query('SELECT ucre_avito_log_element.*, ucre_avito_log.UF_TIME FROM ucre_avito_log_element LEFT JOIN ucre_avito_log ON ucre_avito_log_element.UF_AVITO_LOG_ID = ucre_avito_log.UF_AVITO_ID WHERE UF_CRM_ID = '.$tempFields['UF_CRM_1469534140'].' ORDER BY UF_AVITO_LOG_ID DESC');
-    if (intval($tempFields['UF_CRM_1469534140']) <= 5560){
-      $res = CIBlockElement::GetByID(intval($tempFields['UF_CRM_1469534140']));
-      if($ar_res = $res->GetNext())
-        $rsData = $DB->Query('SELECT ucre_avito_log_element.*, ucre_avito_log.UF_TIME FROM ucre_avito_log_element LEFT JOIN ucre_avito_log ON ucre_avito_log_element.UF_AVITO_LOG_ID = ucre_avito_log.UF_AVITO_ID WHERE UF_CRM_ID = '.$ar_res['CODE'].' ORDER BY UF_AVITO_LOG_ID DESC');
-    }
+		}
     $gridId = $_POST['id']."_upload_avito_grid";
     $grid_options = new CGridOptions($gridId);
     //$aNav = $grid_options->GetNavParams(array("nPageSize"=>10));
