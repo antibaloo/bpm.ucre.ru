@@ -209,6 +209,16 @@ while($aRes = $db_res->GetNext()){
       $Ad->appendChild($LandArea);
       break;
   }
+	if ($aRes['PROPERTY_210']==382){
+		if ($aRes['PROPERTY_226'] > 0){
+			$kitchenSpace = $dom->createElement("KitchenSpace",number_format($aRes['PROPERTY_226'],2,".",""));
+			$Ad->appendChild($kitchenSpace);
+		}
+		if ($aRes['PROPERTY_225'] > 0){
+			$livingSpace = $dom->createElement("LivingSpace",number_format($aRes['PROPERTY_225'],2,".",""));
+			$Ad->appendChild($livingSpace);
+		}
+	}
   if ($aRes['PROPERTY_210']==382 || $aRes['PROPERTY_210']==381){
     $HouseType = $dom->createElement("HouseType", $housetype[$aRes['PROPERTY_243']]);
     $Ad->appendChild($HouseType);
