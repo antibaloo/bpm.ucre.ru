@@ -84,11 +84,12 @@ $APPLICATION->SetTitle("Подбор заявок");
           <option value=">=" <?=($_POST['rooms_rule'] =='>='? 'selected':'')?>>от</option>
           <option value="=" <?=($_POST['rooms_rule'] =='='? 'selected':'')?>>=</option>
         </select>
-        <input type="number" name="rooms_s" min="1" value="<?=$_POST['rooms_s']?>" style="width: 3em;">,
+        <input type="number" name="rooms_s" min="1" value="<?=$_POST['rooms_s']?>" style="width: 3em;">,<hr>
         S <sub>общ.</sub> от <input type="number" min="10" name="square_s" style="width: 4em;" value="<?=$_POST['square_s']?>">,
         S <sub>кух.</sub> от <input type="number" min="1" name="kitchen_s" style="width: 4em;" value="<?=$_POST['kitchen_s']?>">,
         не 1-й<input type="checkbox" name="nfirst" <?=($_POST['nfirst'])?"checked":""?>>, 
-        не последний <input type="checkbox" name="nlast" <?=($_POST['nlast'])?"checked":""?>>
+        не последний <input type="checkbox" name="nlast" <?=($_POST['nlast'])?"checked":""?>>,
+        улица <input type="text" name="street" size="40" value="<?=$_POST['street']?>">
       </fieldset>
     </div>
     <br><input type="submit" id="submitButton"  name="submitButton" value="Найти">
@@ -222,6 +223,8 @@ $APPLICATION->SetTitle("Подбор заявок");
     if ($_POST['nfirst']) $rsQuery.=" AND PROPERTY_221<>1";
     //Не последний
     if ($_POST['nlast']) $rsQuery.=" AND PROPERTY_221<>PROPERTY_222";
+    //Фильтр по улице
+    if ($_POST['street']) $rsQuery.=" AND PROPERTY_217 LIKE '%".$_POST['street']."%'";
     //Фильтр по ответственному
     if ($_POST['assigned'] !='') $rsQuery.=" AND ASSIGNED_BY_ID=".$_POST['assigned'] ;
     $rsQuery .= " ORDER BY b_crm_deal.ID DESC";

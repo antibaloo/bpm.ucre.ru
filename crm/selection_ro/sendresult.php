@@ -141,12 +141,13 @@ $params = unserialize($_POST['sql']);
     if ($params['nfirst']) $rsQuery.=" AND PROPERTY_221<>1";
     //Не последний
     if ($params['nlast']) $rsQuery.=" AND PROPERTY_221<>PROPERTY_222";
+    //Фильтр по улице
+    if ($params['street']) $rsQuery.=" AND PROPERTY_217 LIKE '%".$params['street']."%'";
     //Ответственный
     if ($params['assigned'] !='') $rsQuery.=" AND ASSIGNED_BY_ID=".$params['assigned'] ;
     $rsQuery .= " ORDER BY b_crm_deal.ID DESC";
     $rsData = $DB->Query($rsQuery);
     $count = $rsData->SelectedRowsCount();
-
 ?>
     Результаты поиска заявки на продажу с параметрами:<br><br>
     <table style="width:100%;border: 1px solid black;border-collapse: collapse;margin-bottom:15px;font-size: 14px;">
@@ -159,6 +160,7 @@ $params = unserialize($_POST['sql']);
         <th style="border: 1px solid black;background-color: #b0e0e6;">S<sub>общ.</sub>от</th>
         <th style="border: 1px solid black;background-color: #b0e0e6;">S<sub>кух.</sub>от</th>
         <th style="border: 1px solid black;background-color: #b0e0e6;">Искл. этажи</th>
+        <th style="border: 1px solid black;background-color: #b0e0e6;">Улица</th>
       </tr>
       <tr>
         <td style="border: 1px solid black;text-align:center;"><?=$params['market']?></td>
@@ -169,6 +171,7 @@ $params = unserialize($_POST['sql']);
         <td style="border: 1px solid black;text-align:center;"><?=($params['square_s'])?$params['square_s']:"-"?></td>
         <td style="border: 1px solid black;text-align:center;"><?=($params['kitchen_s'])?$params['kitchen_s']:"-"?></td>
         <td style="border: 1px solid black;text-align:center;"><?=($floors_s[0])?"<s>первый</s>":""?><?=($floors_s[0] && $floors_s[1])?"/":""?><?=($floors_s[1])?"<s>последний</s>":""?></td>
+        <td style="border: 1px solid black;text-align:center;"><?=($params['street'])?$params['street']:"-"?></td>
       </tr>
     </table>
     <table style="width:100%;border: 1px solid black;border-collapse: collapse;margin-bottom:15px;font-size: 14px;">
