@@ -18,6 +18,21 @@ function getUserByExt($ext){
     return false;
   }
 }
+function getExtByOperName($name, $pbx_params){
+  $postdata = http_build_query(array('cmd' => 'accounts','token' => $pbx_params->pbx_key));
+  $opts = array('http' =>array('method'  => 'POST','header'  => 'Content-type: application/x-www-form-urlencoded','content' => $postdata));
+  $context  = stream_context_create($opts); 
+  $result = file_get_contents($pbx_params->pbx_url, false, $context);
+  if ($result){
+    $accounts = json_decode($result,true);
+    foreach ($accounts as $account){
+      if ($account['name'] == $name) return $account['ext'];
+    }
+    return false;
+  } else {
+    return false;
+  }
+}
 require ($_SERVER['DOCUMENT_ROOT'] . "/bitrix/modules/main/include/prolog_before.php");
 include('../mts/connector/functions.php');
 CModule::IncludeModule('pull');
@@ -28,7 +43,7 @@ if ($_POST['crm_token'] == $megapbx->crm_key){
   if ($_POST['cmd'] == 'event'){
     $user = getUserByExt($_POST['ext']);
     if ($_POST['type'] == 'INCOMING'){
-      CPullStack::AddByUser(
+      CPullStack::AddByUser(//Выводим карточку звонка
         $user,
         array(
           'module_id' => 'voximplant',
@@ -39,11 +54,31 @@ if ($_POST['crm_token'] == $megapbx->crm_key){
       );
     }
     if ($_POST['type'] == 'ACCEPTED'){
-      
+      CPullStack::AddByUser(//Убираем карточку звонка
+        $user,
+        array(
+          'module_id' => 'voximplant',
+          'command' => 'hideExternalCall',
+          'params' => array('callId' => $_POST['callid']),
+          'push' => ''
+        )
+      );
     }
-
+    if ($_POST['type'] == 'OUTGOING'){
+      $ext_out = getExtByOperName(trim($_POST['user']), $megapbx);
+      $user_out = getUserByExt($ext_out);
+      CPullStack::AddByUser(//Выводим карточку звонка
+        $user_out,
+        array(
+          'module_id' => 'voximplant',
+          'command' => 'showExternalCall',
+          'params' => array('callId' => $_POST['callid'], 'fromUserId' => $user_out,'phoneNumber' => $_POST['phone'], 'crm' => ''), 
+          'push' => ''
+        )
+      );
+    }
     if ($_POST['type'] == 'COMPLETED' || $_POST['type'] == 'CANCELLED'){
-      CPullStack::AddByUser(
+      CPullStack::AddByUser(//Убираем карточку 
         $user,
         array(
           'module_id' => 'voximplant',
@@ -56,7 +91,18 @@ if ($_POST['crm_token'] == $megapbx->crm_key){
   }
   if ($_POST['cmd'] == 'history'){
     if ($_POST['type'] == 'in'){}
-    if ($_POST['type'] == 'out'){}
+    if ($_POST['type'] == 'out'){
+      CPullStack::AddByUser(//Убираем карточку 
+        $user_out,
+        array(
+          'module_id' => 'voximplant',
+          'command' => 'hideExternalCall',
+          'params' => array('callId' => $_POST['callid']),
+          'push' => ''
+        )
+      );
+
+    }
   }
 }else {
   echo "<center><img style='margin: 0 auto;' src='images/away.jpg'></center>";
