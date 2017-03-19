@@ -83,6 +83,7 @@ $APPLICATION->SetTitle("Подбор заявок");
         <select name="rooms_rule">
           <option value=">=" <?=($_POST['rooms_rule'] =='>='? 'selected':'')?>>от</option>
           <option value="=" <?=($_POST['rooms_rule'] =='='? 'selected':'')?>>=</option>
+          <option value="<=" <?=($_POST['rooms_rule'] =='<='? 'selected':'')?>>до</option>
         </select>
         <input type="number" name="rooms_s" min="1" value="<?=$_POST['rooms_s']?>" style="width: 3em;">,<hr>
         S <sub>общ.</sub> от <input type="number" min="10" name="square_s" style="width: 4em;" value="<?=$_POST['square_s']?>">,
