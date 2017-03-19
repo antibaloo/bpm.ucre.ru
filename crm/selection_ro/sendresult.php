@@ -145,7 +145,7 @@ $params = unserialize($_POST['sql']);
     if ($params['street']) $rsQuery.=" AND PROPERTY_217 LIKE '%".$params['street']."%'";
     //Ответственный
     if ($params['assigned'] !='') $rsQuery.=" AND ASSIGNED_BY_ID=".$params['assigned'] ;
-    $rsQuery .= " ORDER BY b_crm_deal.ID DESC";
+    $rsQuery .= " ORDER BY b_uts_crm_deal.UF_CRM_58958B5734602 ASC";
     $rsData = $DB->Query($rsQuery);
     $count = $rsData->SelectedRowsCount();
 ?>

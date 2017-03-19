@@ -228,7 +228,7 @@ $APPLICATION->SetTitle("Подбор заявок");
     if ($_POST['street']) $rsQuery.=" AND PROPERTY_217 LIKE '%".$_POST['street']."%'";
     //Фильтр по ответственному
     if ($_POST['assigned'] !='') $rsQuery.=" AND ASSIGNED_BY_ID=".$_POST['assigned'] ;
-    $rsQuery .= " ORDER BY b_crm_deal.ID DESC";
+    $rsQuery .= " ORDER BY b_uts_crm_deal.UF_CRM_58958B5734602 ASC";
     $rsData = $DB->Query($rsQuery);
     $count = $rsData->SelectedRowsCount();
     $pages = ($count % $rows)?intval($count/$rows)+1:$count/$rows;
