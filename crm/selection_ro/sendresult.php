@@ -1,6 +1,5 @@
 <?
 require ($_SERVER['DOCUMENT_ROOT'] . "/bitrix/modules/main/include/prolog_before.php");
-ob_start();
 $params = unserialize($_POST['sql']);
 ?>
 <html>
@@ -15,20 +14,20 @@ $params = unserialize($_POST['sql']);
   if ($params['goal']=='buy'){
      $type = array(
        ''    =>  "-",
-       '813' =>  "комната",
-       '814' =>  "квартира",
-       '815' =>  "дом",
-       '816' =>  "таунхаус",
-       '817' =>  "дача",
-       '818' =>  "участок",
-       '819' =>  "коммерческий"
+       '1' =>  "комната",
+       '2' =>  "квартира",
+       '3' =>  "дом",
+       '4' =>  "таунхаус",
+       '5' =>  "дача",
+       '6' =>  "участок",
+       '7' =>  "коммерческий"
      );
-    $rsQuery = "SELECT b_crm_deal.ID, b_crm_deal.TITLE, b_crm_deal.ASSIGNED_BY_ID, b_uts_crm_deal.UF_CRM_5895BC940ED3F,b_uts_crm_deal.UF_CRM_58958B5724514,b_uts_crm_deal.UF_CRM_58958B529E628,b_uts_crm_deal.UF_CRM_58958B52BA439,b_uts_crm_deal.UF_CRM_58958B52F2BAC,b_uts_crm_deal.UF_CRM_58958B51B667E, b_uts_crm_deal.UF_CRM_58958B576448C, b_uts_crm_deal.UF_CRM_58958B5751841 FROM b_crm_deal INNER JOIN b_uts_crm_deal ON b_crm_deal.ID=b_uts_crm_deal.VALUE_ID WHERE b_crm_deal.CATEGORY_ID = 2 AND b_crm_deal.STAGE_ID = 'C2:PROPOSAL'";
+    $rsQuery = "SELECT b_crm_deal.ID, b_crm_deal.TITLE, b_crm_deal.ASSIGNED_BY_ID, b_uts_crm_deal.UF_CRM_5895BC940ED3F,b_uts_crm_deal.UF_CRM_58CFC7CDAAB96,b_uts_crm_deal.UF_CRM_58958B529E628,b_uts_crm_deal.UF_CRM_58958B52BA439,b_uts_crm_deal.UF_CRM_58958B52F2BAC,b_uts_crm_deal.UF_CRM_58958B51B667E, b_uts_crm_deal.UF_CRM_58958B576448C, b_uts_crm_deal.UF_CRM_58958B5751841 FROM b_crm_deal INNER JOIN b_uts_crm_deal ON b_crm_deal.ID=b_uts_crm_deal.VALUE_ID WHERE b_crm_deal.CATEGORY_ID = 2 AND b_crm_deal.STAGE_ID = 'C2:PROPOSAL'";
     //Фильтр по рынку
     if ($params['market'] == "Первичный") $rsQuery.=" AND UF_CRM_5895BC940ED3F LIKE '%828%'";
     if ($params['market'] == "Вторичный") $rsQuery.=" AND UF_CRM_5895BC940ED3F LIKE '%827%'";
     //Фильтр по типу недвижимости
-    if ($params['type'] !='') $rsQuery.=" AND UF_CRM_58958B5724514=".$params['type'] ;
+    if ($params['type'] !='') $rsQuery.=" AND UF_CRM_58CFC7CDAAB96=".$params['type'] ;
     //Фильтр по количеству комнат
     if ($params['rooms'] > 0) $rsQuery.=" AND UF_CRM_58958B529E628<=".$params['rooms'];
     //Фильтр по общей площади
@@ -93,7 +92,7 @@ $params = unserialize($_POST['sql']);
       <td style="border: 1px solid black;text-align:center;"><?=$aRes['ID']?></td>
       <td style="border: 1px solid black;text-align: left; padding-left: 10px;"><a href="/crm/deal/show/<?=$aRes['ID']?>/" target="_blank"><?=$aRes['TITLE']?></a></td>
       <td style="border: 1px solid black;text-align:center;"><?=(in_array(828, $market))?"П":"-"?>/<?=(in_array(827, $market))?"В":"-"?></td>
-      <td style="border: 1px solid black;text-align:center;"><?=$type[$aRes['UF_CRM_58958B5724514']]?></td>
+      <td style="border: 1px solid black;text-align:center;"><?=$type[$aRes['UF_CRM_58CFC7CDAAB96']]?></td>
       <td style="border: 1px solid black;text-align:center;"><?=($aRes['UF_CRM_58958B529E628'])?$aRes['UF_CRM_58958B529E628']:"-"?></td>
       <td style="border: 1px solid black;text-align: right; padding-right: 5px;"><?=($aRes['UF_CRM_58958B52BA439'])?$aRes['UF_CRM_58958B52BA439']:"-"?></td>
       <td style="border: 1px solid black;text-align: right; padding-right: 5px;"><?=($aRes['UF_CRM_58958B52F2BAC'])?$aRes['UF_CRM_58958B52F2BAC']:"-"?></td>

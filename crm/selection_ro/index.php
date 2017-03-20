@@ -43,13 +43,13 @@ $APPLICATION->SetTitle("Подбор заявок");
         </legend>
         <select name="type">
           <option value="" <?=($_POST['type'] ==''? 'selected':'')?>>тип объекта</option>
-          <option value="813" <?=($_POST['type'] =='813'? 'selected':'')?>>комната</option>
-          <option value="814" <?=($_POST['type'] =='814'? 'selected':'')?>>квартира</option>
-          <option value="815" <?=($_POST['type'] =='815'? 'selected':'')?>>дом</option>
-          <option value="816" <?=($_POST['type'] =='816'? 'selected':'')?>>таунхаус</option>
-          <option value="817" <?=($_POST['type'] =='817'? 'selected':'')?>>дача</option>
-          <option value="818" <?=($_POST['type'] =='818'? 'selected':'')?>>участок</option>
-          <option value="819" <?=($_POST['type'] =='819'? 'selected':'')?>>коммерческий</option>
+          <option value="1" <?=($_POST['type'] =='1'? 'selected':'')?>>комната</option>
+          <option value="2" <?=($_POST['type'] =='2'? 'selected':'')?>>квартира</option>
+          <option value="3" <?=($_POST['type'] =='3'? 'selected':'')?>>дом</option>
+          <option value="4" <?=($_POST['type'] =='4'? 'selected':'')?>>таунхаус</option>
+          <option value="5" <?=($_POST['type'] =='5'? 'selected':'')?>>дача</option>
+          <option value="6" <?=($_POST['type'] =='6'? 'selected':'')?>>участок</option>
+          <option value="7" <?=($_POST['type'] =='7'? 'selected':'')?>>коммерческий</option>
         </select>
         &nbsp;Комнат:&nbsp;
         <input type="number" name="rooms" min="1" style="width: 4em;" value="<?=$_POST['rooms']?>">
@@ -109,12 +109,12 @@ $APPLICATION->SetTitle("Подбор заявок");
   $map_data['yandex_scale'] = "10";
   
   if ($_POST['goal']=='buy') {
-    $rsQuery = "SELECT b_crm_deal.ID, b_crm_deal.TITLE, b_crm_deal.ASSIGNED_BY_ID, b_uts_crm_deal.UF_CRM_5895BC940ED3F,b_uts_crm_deal.UF_CRM_58958B5724514,b_uts_crm_deal.UF_CRM_58958B529E628,b_uts_crm_deal.UF_CRM_58958B52BA439,b_uts_crm_deal.UF_CRM_58958B52F2BAC,b_uts_crm_deal.UF_CRM_58958B51B667E, b_uts_crm_deal.UF_CRM_58958B576448C, b_uts_crm_deal.UF_CRM_58958B5751841 FROM b_crm_deal INNER JOIN b_uts_crm_deal ON b_crm_deal.ID=b_uts_crm_deal.VALUE_ID WHERE b_crm_deal.CATEGORY_ID = 2 AND b_crm_deal.STAGE_ID = 'C2:PROPOSAL'";
+    $rsQuery = "SELECT b_crm_deal.ID, b_crm_deal.TITLE, b_crm_deal.ASSIGNED_BY_ID, b_uts_crm_deal.UF_CRM_5895BC940ED3F,b_uts_crm_deal.UF_CRM_58CFC7CDAAB96,b_uts_crm_deal.UF_CRM_58958B529E628,b_uts_crm_deal.UF_CRM_58958B52BA439,b_uts_crm_deal.UF_CRM_58958B52F2BAC,b_uts_crm_deal.UF_CRM_58958B51B667E, b_uts_crm_deal.UF_CRM_58958B576448C, b_uts_crm_deal.UF_CRM_58958B5751841 FROM b_crm_deal INNER JOIN b_uts_crm_deal ON b_crm_deal.ID=b_uts_crm_deal.VALUE_ID WHERE b_crm_deal.CATEGORY_ID = 2 AND b_crm_deal.STAGE_ID = 'C2:PROPOSAL'";
     //Фильтр по рынку
     if ($_POST['market'] == "Первичный") $rsQuery.=" AND UF_CRM_5895BC940ED3F LIKE '%828%'";
     if ($_POST['market'] == "Вторичный") $rsQuery.=" AND UF_CRM_5895BC940ED3F LIKE '%827%'";
     //Фильтр по типу недвижимости
-    if ($_POST['type'] !='') $rsQuery.=" AND UF_CRM_58958B5724514=".$_POST['type'] ;
+    if ($_POST['type'] !='') $rsQuery.=" AND UF_CRM_58CFC7CDAAB96=".$_POST['type'] ;
     //Фильтр по количеству комнат
     if ($_POST['rooms'] > 0) $rsQuery.=" AND UF_CRM_58958B529E628<=".$_POST['rooms'];
     //Фильтр по общей площади
@@ -158,13 +158,13 @@ $APPLICATION->SetTitle("Подбор заявок");
           $market = unserialize($aRes['UF_CRM_5895BC940ED3F']);
           $type = array(
             ''    =>  "-",
-            '813' =>  "комната",
-            '814' =>  "квартира",
-            '815' =>  "дом",
-            '816' =>  "таунхаус",
-            '817' =>  "дача",
-            '818' =>  "участок",
-            '819' =>  "коммерческий"
+            '1' =>  "комната",
+            '2' =>  "квартира",
+            '3' =>  "дом",
+            '4' =>  "таунхаус",
+            '5' =>  "дача",
+            '6' =>  "участок",
+            '7' =>  "коммерческий"
           );
           $floors = unserialize($aRes['UF_CRM_58958B51B667E']);
       ?>
@@ -172,7 +172,7 @@ $APPLICATION->SetTitle("Подбор заявок");
         <td><?=$aRes['ID']?></td>
         <td style="text-align: left; padding-left: 10px;"><a href="/crm/deal/show/<?=$aRes['ID']?>/" target="_blank"><?=$aRes['TITLE']?></a></td>
         <td><?=(in_array(828, $market))?"П":"-"?>/<?=(in_array(827, $market))?"В":"-"?></td>
-        <td><?=$type[$aRes['UF_CRM_58958B5724514']]?></td>
+        <td><?=$type[$aRes['UF_CRM_58CFC7CDAAB96']]?></td>
         <td><?=($aRes['UF_CRM_58958B529E628'])?$aRes['UF_CRM_58958B529E628']:"-"?></td>
         <td style="text-align: right; padding-right: 5px;"><?=($aRes['UF_CRM_58958B52BA439'])?$aRes['UF_CRM_58958B52BA439']:"-"?></td>
         <td style="text-align: right; padding-right: 5px;"><?=($aRes['UF_CRM_58958B52F2BAC'])?$aRes['UF_CRM_58958B52F2BAC']:"-"?></td>
