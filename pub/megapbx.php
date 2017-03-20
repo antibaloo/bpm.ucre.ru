@@ -39,7 +39,7 @@ CModule::IncludeModule('pull');
 CModule::IncludeModule('voximplant');
 $megapbx = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT']."/../megapbx_params"));
 if ($_POST['crm_token'] == $megapbx->crm_key){
-  $DB->Query("INSERT INTO b_megapbx_mess VALUES ('', NOW(),'".$_POST['callid']."','".$_POST['cmd']."','".$_POST['phone']."','".$_POST['type']."','".$_POST['user']."','".$_POST['ext']."','".$_POST['telnum']."','".$_POST['diversion']."','".$_POST['duration']."','".$_POST['link']."','".$_POST['status']."')");
+  $DB->Query("INSERT INTO b_megapbx_mess VALUES ('', NOW(),'".trim($_POST['callid'])."','".trim($_POST['cmd'])."','".trim($_POST['phone'])."','".trim($_POST['type'])."','".trim($_POST['user'])."','".trim($_POST['ext'])."','".trim($_POST['telnum'])."','".trim($_POST['diversion'])."','".trim($_POST['duration'])."','".trim($_POST['link'])."','".trim($_POST['status'])."')");
   if ($_POST['cmd'] == 'event'){
     $user = getUserByExt($_POST['ext']);
     if ($_POST['type'] == 'INCOMING'){
