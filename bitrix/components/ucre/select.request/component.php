@@ -10,7 +10,7 @@ if ($arParams['CATEGORY'] == '2'){ //Поиск встречных заявок 
     array("ID" => $arParams['ID']), 
     false, 
     false, 
-    array("TITLE","UF_CRM_5895BC940ED3F","UF_CRM_58958B5724514","UF_CRM_58958B529E628","UF_CRM_58958B52BA439","UF_CRM_58958B52F2BAC","UF_CRM_58958B51B667E","UF_CRM_58958B576448C","UF_CRM_58958B5751841"),
+    array("TITLE","UF_CRM_5895BC940ED3F","UF_CRM_58CFC7CDAAB96","UF_CRM_58958B529E628","UF_CRM_58958B52BA439","UF_CRM_58958B52F2BAC","UF_CRM_58958B51B667E","UF_CRM_58958B576448C","UF_CRM_58958B5751841"),
     array()
   );
   $mainDeal = $rsDeal->Fetch();
@@ -27,32 +27,32 @@ if ($arParams['CATEGORY'] == '2'){ //Поиск встречных заявок 
   }
   //Фильтр по типу обьъекта (комната, квартира и т.д.)
   $arResult['SELECT_PARAMS']['TYPE'] = "нет данных";
-  switch ($mainDeal['UF_CRM_58958B5724514']){
-    case 813:
+  switch ($mainDeal['UF_CRM_58CFC7CDAAB96']){
+    case 1:
       $type = " AND b_iblock_element_prop_s42.PROPERTY_210 = 381";
       $arResult['SELECT_PARAMS']['TYPE'] = "Комната";
       break;
-    case 814:
+    case 2:
       $type = " AND (b_iblock_element_prop_s42.PROPERTY_210 = 382 or b_iblock_element_prop_s42.PROPERTY_210 = 384)"; //Дополнительно ищутся тауны
       $arResult['SELECT_PARAMS']['TYPE'] = "Квартира";
       break;
-    case 815:
+    case 3:
       $type = " AND b_iblock_element_prop_s42.PROPERTY_210 = 383";
       $arResult['SELECT_PARAMS']['TYPE'] = "Дом";
       break;
-    case 816:
+    case 4:
       $type = " AND (b_iblock_element_prop_s42.PROPERTY_210 = 384 or b_iblock_element_prop_s42.PROPERTY_210 = 382)"; //Дополнительно ищутся квартиры
       $arResult['SELECT_PARAMS']['TYPE'] = "Таунхаус";
       break;
-    case 817:
+    case 5:
       $type = " AND b_iblock_element_prop_s42.PROPERTY_210 = 385";
       $arResult['SELECT_PARAMS']['TYPE'] = "Дача";
       break;
-    case 818:
+    case 6:
       $type = " AND b_iblock_element_prop_s42.PROPERTY_210 = 386";
       $arResult['SELECT_PARAMS']['TYPE'] = "Участок";
       break;
-    case 819:
+    case 7:
       $type = " AND b_iblock_element_prop_s42.PROPERTY_210 = 387";
       $arResult['SELECT_PARAMS']['TYPE'] = "Коммерческая";
       break;
@@ -179,31 +179,31 @@ if ($arParams['CATEGORY'] == '2'){ //Поиск встречных заявок 
   switch ($mainDeal['PROPERTY_210']){
     case 381:
       $arResult['SELECT_PARAMS']['TYPE'] = "комната";
-      $type = " AND b_uts_crm_deal.UF_CRM_58958B5724514=813";
+      $type = " AND b_uts_crm_deal.UF_CRM_58CFC7CDAAB96=1";
       break;
     case 382:
       $arResult['SELECT_PARAMS']['TYPE'] = "квартира";
-      $type = " AND (b_uts_crm_deal.UF_CRM_58958B5724514=814 OR b_uts_crm_deal.UF_CRM_58958B5724514=816)";
+      $type = " AND (b_uts_crm_deal.UF_CRM_58CFC7CDAAB96=2 OR b_uts_crm_deal.UF_CRM_58CFC7CDAAB96=4)";
       break;
     case 383:
       $arResult['SELECT_PARAMS']['TYPE'] = "дом";
-      $type = " AND b_uts_crm_deal.UF_CRM_58958B5724514=815";
+      $type = " AND b_uts_crm_deal.UF_CRM_58CFC7CDAAB96=4";
       break;
     case 384:
       $arResult['SELECT_PARAMS']['TYPE'] = "таунхаус";
-      $type = " AND (b_uts_crm_deal.UF_CRM_58958B5724514=816 OR b_uts_crm_deal.UF_CRM_58958B5724514=814)";
+      $type = " AND (b_uts_crm_deal.UF_CRM_58CFC7CDAAB96=4 OR b_uts_crm_deal.UF_CRM_58CFC7CDAAB96=2)";
       break;
     case 385:
       $arResult['SELECT_PARAMS']['TYPE'] = "дача";
-      $type = " AND b_uts_crm_deal.UF_CRM_58958B5724514=817";
+      $type = " AND b_uts_crm_deal.UF_CRM_58CFC7CDAAB96=5";
       break;
     case 386:
       $arResult['SELECT_PARAMS']['TYPE'] = "участок";
-      $type = " AND b_uts_crm_deal.UF_CRM_58958B5724514=818";
+      $type = " AND b_uts_crm_deal.UF_CRM_58CFC7CDAAB96=6";
       break;
     case 387:
       $arResult['SELECT_PARAMS']['TYPE'] = "коммерческий";
-      $type = " AND b_uts_crm_deal.UF_CRM_58958B5724514=819";
+      $type = " AND b_uts_crm_deal.UF_CRM_58CFC7CDAAB96=7";
       break;
   }
   if(intval($mainDeal['PROPERTY_229'])){
@@ -232,7 +232,7 @@ if ($arParams['CATEGORY'] == '2'){ //Поиск встречных заявок 
     $arResult['SELECT_PARAMS']['PRICE'] = "не задана";
   }
 
-  $rsQuery = "SELECT b_crm_deal.ID, b_crm_deal.TITLE, b_crm_deal.ASSIGNED_BY_ID, b_uts_crm_deal.UF_CRM_5895BC940ED3F,b_uts_crm_deal.UF_CRM_58958B5724514,b_uts_crm_deal.UF_CRM_58958B529E628,b_uts_crm_deal.UF_CRM_58958B52BA439,b_uts_crm_deal.UF_CRM_58958B52F2BAC,b_uts_crm_deal.UF_CRM_58958B51B667E, b_uts_crm_deal.UF_CRM_58958B576448C, b_uts_crm_deal.UF_CRM_58958B5751841 FROM b_crm_deal INNER JOIN b_uts_crm_deal ON b_crm_deal.ID=b_uts_crm_deal.VALUE_ID WHERE b_crm_deal.CATEGORY_ID = 2 AND b_crm_deal.STAGE_ID = 'C2:PROPOSAL'";
+  $rsQuery = "SELECT b_crm_deal.ID, b_crm_deal.TITLE, b_crm_deal.ASSIGNED_BY_ID, b_uts_crm_deal.UF_CRM_5895BC940ED3F,b_uts_crm_deal.UF_CRM_58CFC7CDAAB96,b_uts_crm_deal.UF_CRM_58958B529E628,b_uts_crm_deal.UF_CRM_58958B52BA439,b_uts_crm_deal.UF_CRM_58958B52F2BAC,b_uts_crm_deal.UF_CRM_58958B51B667E, b_uts_crm_deal.UF_CRM_58958B576448C, b_uts_crm_deal.UF_CRM_58958B5751841 FROM b_crm_deal INNER JOIN b_uts_crm_deal ON b_crm_deal.ID=b_uts_crm_deal.VALUE_ID WHERE b_crm_deal.CATEGORY_ID = 2 AND b_crm_deal.STAGE_ID = 'C2:PROPOSAL'";
   $rsQuery .= $market;
   $rsQuery .= $nFirst;
   $rsQuery .= $nLast;
@@ -257,7 +257,7 @@ if ($arParams['CATEGORY'] == '2'){ //Поиск встречных заявок 
     array("id"=>"ID", "name"=>"id заявки", "default"=>true, "editable"=>false),
     array("id"=>"TITLE", "name"=>"Название заявки", "default"=>true, "editable"=>false),
     array("id"=>"UF_CRM_5895BC940ED3F", "name"=>"Рынок", "default"=>true, "editable"=>false),
-    array("id"=>"UF_CRM_58958B5724514", "name"=>"Тип  объекта", "default"=>true, "editable"=>false),
+    array("id"=>"UF_CRM_58CFC7CDAAB96", "name"=>"Тип  объекта", "default"=>true, "editable"=>false),
     array("id"=>"UF_CRM_58958B529E628", "name"=>"N<sub>комнат</sub> от", "default"=>true, "editable"=>false),
     array("id"=>"UF_CRM_58958B52BA439", "name"=>"S<sub>общ.</sub> от", "default"=>true, "editable"=>false),
     array("id"=>"UF_CRM_58958B52F2BAC", "name"=>"S<sub>кухни</sub> от", "default"=>true, "editable"=>false),
@@ -296,26 +296,26 @@ if ($arParams['CATEGORY'] == '2'){ //Поиск встречных заявок 
         $floors = "не последний";
         break;
     }
-    switch ($aRes['UF_CRM_58958B5724514']){
-      case 813:
+    switch ($aRes['UF_CRM_58CFC7CDAAB96']){
+      case 1:
         $type = "комната";
         break;
-      case 814:
+      case 2:
         $type = "квартира";
         break;
-      case 815:
+      case 3:
         $type = "дом";
         break;
-      case 816:
+      case 4:
         $type = "таунхаус";
         break;
-      case 817:
+      case 5:
         $type = "дача";
         break;
-      case 818:
+      case 6:
         $type = "участок";
         break;
-      case 819:
+      case 7:
         $type = "коммерческий";
         break;
     }
@@ -323,7 +323,7 @@ if ($arParams['CATEGORY'] == '2'){ //Поиск встречных заявок 
       "TITLE" => "<a href='/crm/deal/show/".$aRes['ID']."/' target='_blank'>".$aRes['TITLE']."</a>",
       "UF_CRM_5895BC940ED3F" => $market,
       "UF_CRM_58958B51B667E" => $floors,
-      "UF_CRM_58958B5724514" => $type,
+      "UF_CRM_58CFC7CDAAB96" => $type,
       "UF_CRM_58958B529E628" => (intval($aRes['UF_CRM_58958B529E628']))?intval($aRes['UF_CRM_58958B529E628']):"нет данных",
       "UF_CRM_58958B52BA439" => (floatval($aRes['UF_CRM_58958B52BA439']))?floatval($aRes['UF_CRM_58958B52BA439']):"нет данных",
       "UF_CRM_58958B52F2BAC" => (floatval($aRes['UF_CRM_58958B52F2BAC']))?floatval($aRes['UF_CRM_58958B52F2BAC']):"нет данных",
