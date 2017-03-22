@@ -59,12 +59,14 @@ $Ads = $dom->createElement("Ads"); // Создаём корневой элеме
 $Ads->setAttribute("formatVersion","3");//Добавляем элементу свойство
 $Ads->setAttribute("target","Avito.ru");//Добавляем элементу свойство
 $dom->appendChild($Ads);//Присоединяем его к документу	
-$arSelect = Array("ID", "IBLOCK_ID", "CODE", "NAME","CREATED_BY","MODIFIED_BY","DATE_CREATE","TIMESTAMP_X", "DATE_ACTIVE_FROM","DETAIL_TEXT","PROPERTY_*");
-$iblock_filter = array ("IBLOCK_ID" => 42,/*"ACTIVE"=>"Y"*/"PROPERTY_266" => array("Активная стадия","Активный","Свободный"),">=PROPERTY_260"=>date("Y-m-d"));
-$db_res = CIBlockElement::GetList(array("ID"=>"ASC"), $iblock_filter, false, false, $arSelect);
-while($aRes = $db_res->GetNext()){
+$db_res = $DB->Query("select b_crm_deal.ID, b_crm_deal.COMMENTS,b_uts_crm_deal.UF_CRM_58958B5734602, b_uts_crm_deal.UF_CRM_1472038962, b_uts_crm_deal.UF_CRM_1476517423,b_iblock_element.ID as ELEMENT_ID, b_iblock_element.CODE, b_iblock_element_prop_s42.PROPERTY_210, b_iblock_element_prop_s42.PROPERTY_300, b_iblock_element_prop_s42.PROPERTY_213, b_iblock_element_prop_s42.PROPERTY_214, b_iblock_element_prop_s42.PROPERTY_215,b_iblock_element_prop_s42.PROPERTY_216,b_iblock_element_prop_s42.PROPERTY_217,b_iblock_element_prop_s42.PROPERTY_218, b_iblock_element_prop_s42.PROPERTY_298, b_iblock_element_prop_s42.PROPERTY_299, b_iblock_element_prop_s42.PROPERTY_229, b_iblock_element_prop_s42.PROPERTY_228, b_iblock_element_prop_s42.PROPERTY_224, b_iblock_element_prop_s42.PROPERTY_292, b_iblock_element_prop_s42.PROPERTY_225, b_iblock_element_prop_s42.PROPERTY_226, b_iblock_element_prop_s42.PROPERTY_221, b_iblock_element_prop_s42.PROPERTY_222, b_iblock_element_prop_s42.PROPERTY_242, b_iblock_element_prop_s42.PROPERTY_243, b_iblock_element_prop_s42.PROPERTY_238, b_iblock_element_prop_s42.PROPERTY_295, b_iblock_element_prop_s42.PROPERTY_374, b_iblock_element_prop_s42.PROPERTY_258, b_iblock_element_prop_s42.PROPERTY_313 from b_crm_deal LEFT JOIN b_uts_crm_deal ON b_crm_deal.ID = b_uts_crm_deal.VALUE_ID LEFT JOIN b_iblock_element ON b_uts_crm_deal.UF_CRM_1469534140 = b_iblock_element.ID LEFT JOIN b_iblock_element_prop_s42 ON b_uts_crm_deal.UF_CRM_1469534140 = b_iblock_element_prop_s42.IBLOCK_ELEMENT_ID where b_crm_deal.CATEGORY_ID = 0 and b_uts_crm_deal.UF_CRM_1469534140 <> '' and b_crm_deal.STAGE_ID = 'PROPOSAL' AND TIMESTAMP(b_iblock_element_prop_s42.PROPERTY_260) >=NOW() AND (PROPERTY_374=1356 OR PROPERTY_374=1357) ORDER BY b_crm_deal.ID DESC");
+//$arSelect = Array("ID", "IBLOCK_ID", "CODE", "NAME","CREATED_BY","MODIFIED_BY","DATE_CREATE","TIMESTAMP_X", "DATE_ACTIVE_FROM","DETAIL_TEXT","PROPERTY_*");
+//$iblock_filter = array ("IBLOCK_ID" => 42,/*"ACTIVE"=>"Y"*/"PROPERTY_266" => array("Активная стадия","Активный","Свободный"),">=PROPERTY_260"=>date("Y-m-d"));
+//$db_res = CIBlockElement::GetList(array("ID"=>"ASC"), $iblock_filter, false, false, $arSelect);
+
+while($aRes = $db_res->Fetch()){
   $Ad = $dom->createElement("Ad");// Создаём узел "Object"
-  $Id = $dom->createElement("Id", (!empty($aRes['CODE']))? $aRes['CODE'] : $aRes['ID']); // Создаём узел "Id" с текстом внутри
+  $Id = $dom->createElement("Id", (!empty($aRes['CODE']))? $aRes['CODE'] : $aRes['ELEMENT_ID']); // Создаём узел "Id" с ID(CODE) элемента инфоблока (объекта недвижимости) внутри
   $Ad->appendChild($Id); // Добавляем в узел "Object" узел "Id"
   switch ($aRes['PROPERTY_210']){
     case 382:
@@ -266,17 +268,9 @@ while($aRes = $db_res->GetNext()){
       $Ad->appendChild($DistanceToCity);
       break;
   }
-  $dealFilter = array("ID" => $aRes['PROPERTY_319'], "CHECK_PERMISSIONS" => "N");//"CHECK_PERMISSIONS" => "N" Обязательный параметр фильтра при вызове из агента, ибо агент выполняется под анонимным пользователем
-  $dealSelect = array("ID","UF_CRM_58958B5734602", "COMMENTS","UF_CRM_1472038962","UF_CRM_1476517423");
-  $deal_res = CCrmDeal::GetList(Array('DATE_CREATE' => 'DESC'), $dealFilter, $dealSelect);
-  $deal = $deal_res->GetNext();
-  $Price = $dom->createElement("Price", $deal['UF_CRM_58958B5734602']);//UF_CRM_58958B5734602 - новая //UF_CRM_579897C010103 - страная цена
+  $Price = $dom->createElement("Price", $aRes['UF_CRM_58958B5734602']);
   $Ad->appendChild($Price);
-  if($aRes['PROPERTY_300']=="Сдам"){
-    $PriceType = $dom->createElement("PriceType", "в месяц за м2");
-    $Ad->appendChild($PriceType);
-  }
-  $Description = $dom->createElement("Description", html_entity_decode($deal['COMMENTS']/*$aRes['DETAIL_TEXT']*/)." Номер в базе: ".$aRes['ID']);//Номер в базе - новый ID
+  $Description = $dom->createElement("Description", html_entity_decode($aRes['COMMENTS'])." Номер заявки в базе ЕЦН: ".$aRes['ID'].". При обращении в компанию назовите этот номер сотруднику, это поможет быстрее обработать Ваш запрос.");//Номер в базе - новый ID
   $Ad->appendChild($Description);
   if ($aRes['PROPERTY_210']==382){
     $MarketType = $dom->createElement("MarketType", ($aRes['PROPERTY_258']=="")? "Вторичка":"Новостройка");
@@ -287,27 +281,37 @@ while($aRes = $db_res->GetNext()){
     $Ad->appendChild($NewDevelopmentId);
   }
   $Images = $dom->createElement("Images");
-  foreach (/*$aRes['PROPERTY_237']*/$deal['UF_CRM_1472038962'] as $imageid){
+  foreach (unserialize($aRes['UF_CRM_1472038962']) as $imageid){
     $Image = $dom->createElement("Image");
-    $Image->setAttribute("url", "http://bpm.ucre.ru/".CFile::GetPath($imageid));
+    $Image->setAttribute("url", "https://bpm.ucre.ru".CFile::GetPath($imageid));
     $Images->appendChild($Image);
   }
-  foreach (/*$aRes['PROPERTY_236']*/$deal['UF_CRM_1476517423'] as $imageid){
+  foreach (unserialize($aRes['UF_CRM_1476517423']) as $imageid){
     $Image = $dom->createElement("Image");
-    $Image->setAttribute("url", "http://bpm.ucre.ru/".CFile::GetPath($imageid));
+    $Image->setAttribute("url", "https://bpm.ucre.ru".CFile::GetPath($imageid));
     $Images->appendChild($Image);
   }
   $Ad->appendChild($Images);
-  $CompanyName = $dom->createElement("CompanyName","Единый центр недвижимости «Этажи»");
+  $CompanyName = $dom->createElement("CompanyName","Единый центр недвижимости");
   $Ad->appendChild($CompanyName);
-  $rsUser = CUser::GetByID($aRes['PROPERTY_313']);
-  $arUser = $rsUser->Fetch();
-  $ManagerName = $dom->createElement("ManagerName",$arUser['LAST_NAME']." ".$arUser['NAME']." ".$arUser['SECOND_NAME']);
-  $Ad->appendChild($ManagerName);
-  $EMail = $dom->createElement("EMail", $arUser['EMAIL']);
-  $Ad->appendChild($EMail);
-  $ContactPhone = $dom->createElement("ContactPhone", $arUser['PERSONAL_PHONE']);
-  $Ad->appendChild($ContactPhone);
+  if ($aRes['PROPERTY_374'] == 1356){
+    $rsUser = CUser::GetByID($aRes['PROPERTY_313']);
+    $arUser = $rsUser->Fetch();
+    $ManagerName = $dom->createElement("ManagerName",$arUser['LAST_NAME']." ".$arUser['NAME']." ".$arUser['SECOND_NAME']);
+    $Ad->appendChild($ManagerName);
+    $EMail = $dom->createElement("EMail", $arUser['EMAIL']);
+    $Ad->appendChild($EMail);
+    $ContactPhone = $dom->createElement("ContactPhone", $arUser['PERSONAL_PHONE']);
+    $Ad->appendChild($ContactPhone);    
+  }
+  if ($aRes['PROPERTY_374'] == 1357){
+    $ManagerName = $dom->createElement("ManagerName", "Менеджер по работе с клиентами");
+    $Ad->appendChild($ManagerName);
+    $EMail = $dom->createElement("EMail", 'info@ucre.ru');
+    $Ad->appendChild($EMail);
+    $ContactPhone = $dom->createElement("ContactPhone", "+7 (932) 536-06-57");
+    $Ad->appendChild($ContactPhone);
+  }
   $Ads->appendChild($Ad); // Добавляем в корневой узел "Ads" узел "Ad"
 	$num++;
 }
