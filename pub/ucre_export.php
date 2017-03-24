@@ -108,7 +108,7 @@ if(CModule::IncludeModule('iblock') && CModule::IncludeModule("crm")) {
                        'PLOT'             => number_format($aRes['PROPERTY_292'],2,".",""),
                        'ASSIGNED_BY'      => $aRes['PROPERTY_313'],
                        'PRICE'            => $deal['UF_CRM_58958B5734602'],//Цену берем из заявки //UF_CRM_58958B5734602 новая цена //UF_CRM_579897C010103
-                       'DESCRIPTION'      => $deal['COMMENTS']." Номер в базе: ".$aRes['ID']/*$aRes['DETAIL_TEXT']*/,
+                       'DESCRIPTION'      => $deal['COMMENTS']." Номер заявки в базе ЕЦН: ".$deal['ID'].". При обращении в компанию назовите этот номер сотруднику, это поможет быстрее обработать Ваш запрос.",
                        'PHOTOS'           => $photos,
                        'PLANS'            => $plans,
                        'MD5'						  => $md5,
