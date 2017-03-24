@@ -2,7 +2,7 @@
 require ($_SERVER['DOCUMENT_ROOT'] . "/bitrix/modules/main/include/prolog_before.php");
 $start = microtime(true);//Засекаем время выполнения скрипта
 $num = 0;
-$f =0;
+$f = 0;
 $r = 0;
 $h = 0;
 $d = 0;
@@ -204,7 +204,7 @@ if(CModule::IncludeModule('iblock') && CModule::IncludeModule("crm")) {
 		$Object->appendChild($Price);
 		$Elite = $dom->createElement("Elite", "0");
 	  $Object->appendChild($Elite);
-	  $Description = $dom->createElement("Description", html_entity_decode($deal['COMMENTS']/*$aRes['DETAIL_TEXT']*/)." Номер в базе: ".$aRes['ID'].", <a href='".$arProps['LINK']['VALUE']."'>ссылка на сайт.</a>");
+	  $Description = $dom->createElement("Description", html_entity_decode($deal['COMMENTS'])." Номер заявки в базе ЕЦН: ".$deal['ID'].". При обращении в компанию назовите этот номер сотруднику, это поможет быстрее обработать Ваш запрос, <a href='".$arProps['LINK']['VALUE']."'>ссылка на сайт.</a>");
 	  $Object->appendChild($Description);
 	  $Reward = $dom->createElement("Reward", "0");
 	  $Object->appendChild($Reward);
