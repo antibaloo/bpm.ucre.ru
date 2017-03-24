@@ -207,7 +207,7 @@ if (CModule::IncludeModule('crm'))
 	if ($USER->GetID() == 24)
 	{
 		$aMenuLinks[] = array(
-			"Запросы к ВАТС Мегафон",
+			"Работа с ВАТС Мегафон",
 			"/crm/call/",
 			array(),
 			array(),
