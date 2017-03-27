@@ -251,8 +251,9 @@ $APPLICATION->SetTitle("Подбор заявок");
    <?
       for ($j=1;$j<=$rows;$j++){//Цикл по строкам
         if ($aRes = $rsData->Fetch()){//Если есть значение
-          $map_data['PLACEMARKS'][] = array('LAT' => $aRes['PROPERTY_298'],'LON' => $aRes['PROPERTY_299'],'TEXT' => '<a href="/crm/deal/show/'.$aRes['ID'].'/" target="_blank" title="'.$aRes['PROPERTY_209'].'">'.$aRes['TITLE']."<br>".number_format($aRes['UF_CRM_58958B5734602'],2,"."," ").' &#8381;<br>'.$aRes['PROPERTY_221'].'/'.$aRes['PROPERTY_222'].' эт.</a>',);
           $assigned_user = CUser::GetByID($aRes['ASSIGNED_BY_ID'])->Fetch();
+          $map_data['PLACEMARKS'][] = array('LAT' => $aRes['PROPERTY_298'],'LON' => $aRes['PROPERTY_299'],'TEXT' => '<a href="/crm/deal/show/'.$aRes['ID'].'/" target="_blank" title="'.$aRes['PROPERTY_209'].'">'.$aRes['TITLE']."<br>".number_format($aRes['UF_CRM_58958B5734602'],2,"."," ").' &#8381;<br>'.$aRes['PROPERTY_221'].'/'.$aRes['PROPERTY_222'].' эт.<br>'.$assigned_user['LAST_NAME'].' '.$assigned_user['NAME'].'</a>',);
+          
           if ($aRes['PROPERTY_210'] == 386) $square = $aRes['PROPERTY_292'];
           else $square = $aRes['PROPERTY_224'];
       ?>
