@@ -174,7 +174,7 @@ if( $curl = curl_init() ) {
       $leadFields = array(
         'TITLE' => $avitoAd['name'],
         'STATUS_ID' => 'NEW',
-        'ASSIGNED_BY_ID' => 98,
+        'ASSIGNED_BY_ID' => 206,
         'SOURCE_ID' => 10,
         'SOURCE_DESCRIPTION' => "Размещено: ".$avitoAd['date'],
         'UF_CRM_1486022615' => 590, //Направление лида - продажа
@@ -191,7 +191,7 @@ if( $curl = curl_init() ) {
       );
       $newLead = new CCrmLead;
       if($leadId = $newLead->Add($leadFields)){
-        echo "Для объявления ".$avitoAd['id']." лида нет. Создан лид <a href='https://bpm.ucre.ru/crm/lead/show/".$curLead['ID']."/'>".$leadId."</a>!<br>";
+        echo "Для объявления ".$avitoAd['id']." лида нет. Создан лид <a href='https://bpm.ucre.ru/crm/lead/show/".$leadId."/'>".$leadId."</a>!<br>";
       } else {
         echo "Для объявления ".$avitoAd['id']." лида нет. При создании лида произошла ошибка: ".$newLead->LAST_ERROR."<br>";
       }
