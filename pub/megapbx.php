@@ -46,7 +46,7 @@ if ($_POST['crm_token'] == $megapbx->crm_key){
       //Задаем параметры лида
       $oLead = new CCrmLead;
       $arFields = array(
-        "TITLE" => "Лид по звонку ВАТС Мегафон",
+        "TITLE" => "Входящий звонок с номера +7(".substr($_POST['phone'],1,3).")".substr($_POST['phone'],4,3)."-".substr($_POST['phone'],7,2)."-".substr($_POST['phone'],9)." на ВАТС Мегафон",
         "NAME" => "неизвестно",
         "COMMENTS" => "",
         "SOURCE_ID" => "CALL",
@@ -79,7 +79,7 @@ if ($_POST['crm_token'] == $megapbx->crm_key){
         // символьный тэг для группировки (будет выведено только одно сообщение), если это не требуется - не задаем параметр
         "NOTIFY_TAG" => "CRM|LEAD|NEW|MEGAPBX",
         // текст уведомления на сайте (доступен html и бб-коды)
-        "NOTIFY_MESSAGE" => "[b]Создан новый лид по входящему звонку[/b] на ВАТС Мегафон, перед передпринятием в работу необходимо перевести его на себя. <a href='/crm/lead/show/".$LeadId."/' target='_blank'>Перейти к лиду</a>",
+        "NOTIFY_MESSAGE" => "[b]Создан новый лид по входящему звонку[/b] с номера +7(".substr($_POST['phone'],1,3).")".substr($_POST['phone'],4,3)."-".substr($_POST['phone'],7,2)."-".substr($_POST['phone'],9)." на ВАТС Мегафон, перед передпринятием в работу необходимо перевести его на себя. <a href='/crm/lead/show/".$LeadId."/' target='_blank'>Перейти к лиду</a>",
       );
       CIMNotify::Add($arMessageFields);
       $arMessageFields = array(
@@ -94,7 +94,7 @@ if ($_POST['crm_token'] == $megapbx->crm_key){
         // символьный тэг для группировки (будет выведено только одно сообщение), если это не требуется - не задаем параметр
         "NOTIFY_TAG" => "CRM|LEAD|NEW|MEGAPBX",
         // текст уведомления на сайте (доступен html и бб-коды)
-        "NOTIFY_MESSAGE" => "[b]Создан новый лид по входящему звонку[/b] на ВАТС Мегафон, перед передпринятием в работу необходимо перевести его на себя. <a href='/crm/lead/show/".$LeadId."/' target='_blank'>Перейти к лиду</a>",
+        "NOTIFY_MESSAGE" => "[b]Создан новый лид по входящему звонку[/b] с номера +7(".substr($_POST['phone'],1,3).")".substr($_POST['phone'],4,3)."-".substr($_POST['phone'],7,2)."-".substr($_POST['phone'],9)." на ВАТС Мегафон, перед передпринятием в работу необходимо перевести его на себя. <a href='/crm/lead/show/".$LeadId."/' target='_blank'>Перейти к лиду</a>",
       );
       CIMNotify::Add($arMessageFields);
       $arMessageFields = array(
@@ -109,7 +109,7 @@ if ($_POST['crm_token'] == $megapbx->crm_key){
         // символьный тэг для группировки (будет выведено только одно сообщение), если это не требуется - не задаем параметр
         "NOTIFY_TAG" => "CRM|LEAD|NEW|MEGAPBX",
         // текст уведомления на сайте (доступен html и бб-коды)
-        "NOTIFY_MESSAGE" => "[b]Создан новый лид по входящему звонку[/b] на ВАТС Мегафон, перед передпринятием в работу необходимо перевести его на себя. <a href='/crm/lead/show/".$LeadId."/' target='_blank'>Перейти к лиду</a>",
+        "NOTIFY_MESSAGE" => "[b]Создан новый лид по входящему звонку[/b] с номера +7(".substr($_POST['phone'],1,3).")".substr($_POST['phone'],4,3)."-".substr($_POST['phone'],7,2)."-".substr($_POST['phone'],9)." на ВАТС Мегафон, перед передпринятием в работу необходимо перевести его на себя. <a href='/crm/lead/show/".$LeadId."/' target='_blank'>Перейти к лиду</a>",
       );
       CIMNotify::Add($arMessageFields);
     }
