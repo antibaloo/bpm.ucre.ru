@@ -117,7 +117,29 @@ if ($_POST['crm_token'] == $megapbx->crm_key){
   if ($_POST['cmd'] == 'history' && $_POST['type'] == 'in'){
     $phone_res = findByPhoneNumber(trim($_POST['phone']));
     if ($phone_res['Y'] && $phone_res['LEAD']['ID']>0){
-      
+      $entity_type = 'LEAD';
+      $entity_id = $phone_res['LEAD']['ID'];
+      $arBindings[] = array('OWNER_TYPE_ID' => CCrmOwnerType::ResolveID($entity_type),
+                            'OWNER_ID' => $entity_id
+                           );
+      $arFields = array(
+        'OWNER_ID' => $entity_id,
+        'OWNER_TYPE_ID' => CCrmOwnerType::ResolveID($entity_type),
+        'TYPE_ID' =>  CCrmActivityType::Call,
+        'SUBJECT' => 'Входящий звонок с номера +7('.substr($_POST['phone'],1,3).")".substr($_POST['phone'],4,3)."-".substr($_POST['phone'],7,2)."-".substr($_POST['phone'],9),
+        'START_TIME' => 'время создания лида',
+        'END_TIME' => 'время создания лида + длительность',
+        'COMPLETED' => ($_POST['status'] == 'Success')?'Y':'N',
+        'RESPONSIBLE_ID' => 206,
+        'PRIORITY' => CCrmActivityPriority::Medium,
+        'DESCRIPTION' => ($_POST['link']?"Запись входящего звонка прилагается":"Необходимо заполнить!!!"),
+        'DESCRIPTION_TYPE' => CCrmContentType::Html,
+        'DIRECTION' => CCrmActivityDirection::Incoming,
+        'LOCATION' => '',
+        'PROVIDER_DATA' => ($_POST['link']?$_POST['link']:""), 
+        'NOTIFY_TYPE' => CCrmActivityNotifyType::None,
+        'BINDINGS' => array_values($arBindings)
+      );
     }
   }
 }else {
