@@ -77,7 +77,7 @@ if ($_POST['crm_token'] == $megapbx->crm_key){
         // модуль запросивший отправку уведомления
         "NOTIFY_MODULE" => "crm",
         // символьный тэг для группировки (будет выведено только одно сообщение), если это не требуется - не задаем параметр
-        "NOTIFY_TAG" => "CRM|LEAD|NEW|MEGAPBX",
+        //"NOTIFY_TAG" => "CRM|LEAD|NEW|MEGAPBX",
         // текст уведомления на сайте (доступен html и бб-коды)
         "NOTIFY_MESSAGE" => "[b]Создан новый лид по входящему звонку[/b] с номера +7(".substr($_POST['phone'],1,3).")".substr($_POST['phone'],4,3)."-".substr($_POST['phone'],7,2)."-".substr($_POST['phone'],9)." на ВАТС Мегафон, перед принятием в работу необходимо перевести его на себя. <a href='/crm/lead/show/".$LeadId."/' target='_blank'>Перейти к лиду</a>",
       );
@@ -92,7 +92,7 @@ if ($_POST['crm_token'] == $megapbx->crm_key){
         // модуль запросивший отправку уведомления
         "NOTIFY_MODULE" => "crm",
         // символьный тэг для группировки (будет выведено только одно сообщение), если это не требуется - не задаем параметр
-        "NOTIFY_TAG" => "CRM|LEAD|NEW|MEGAPBX",
+        //"NOTIFY_TAG" => "CRM|LEAD|NEW|MEGAPBX",
         // текст уведомления на сайте (доступен html и бб-коды)
         "NOTIFY_MESSAGE" => "[b]Создан новый лид по входящему звонку[/b] с номера +7(".substr($_POST['phone'],1,3).")".substr($_POST['phone'],4,3)."-".substr($_POST['phone'],7,2)."-".substr($_POST['phone'],9)." на ВАТС Мегафон, перед принятием в работу необходимо перевести его на себя. <a href='/crm/lead/show/".$LeadId."/' target='_blank'>Перейти к лиду</a>",
       );
@@ -107,7 +107,7 @@ if ($_POST['crm_token'] == $megapbx->crm_key){
         // модуль запросивший отправку уведомления
         "NOTIFY_MODULE" => "crm",
         // символьный тэг для группировки (будет выведено только одно сообщение), если это не требуется - не задаем параметр
-        "NOTIFY_TAG" => "CRM|LEAD|NEW|MEGAPBX",
+        //"NOTIFY_TAG" => "CRM|LEAD|NEW|MEGAPBX",
         // текст уведомления на сайте (доступен html и бб-коды)
         "NOTIFY_MESSAGE" => "[b]Создан новый лид по входящему звонку[/b] с номера +7(".substr($_POST['phone'],1,3).")".substr($_POST['phone'],4,3)."-".substr($_POST['phone'],7,2)."-".substr($_POST['phone'],9)." на ВАТС Мегафон, перед принятием в работу необходимо перевести его на себя. <a href='/crm/lead/show/".$LeadId."/' target='_blank'>Перейти к лиду</a>",
       );
