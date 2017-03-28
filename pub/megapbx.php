@@ -118,6 +118,7 @@ if ($_POST['crm_token'] == $megapbx->crm_key){
     $phone_res = findByPhoneNumber(trim($_POST['phone']));
     if ($phone_res['Y'] && $phone_res['LEAD']['ID']>0){
       $entity_type = 'LEAD';
+      $begintime = beginTimeIncoming($_POST['callid']);
       $entity_id = $phone_res['LEAD']['ID'];
       $arBindings[] = array('OWNER_TYPE_ID' => CCrmOwnerType::ResolveID($entity_type),
                             'OWNER_ID' => $entity_id
@@ -127,8 +128,8 @@ if ($_POST['crm_token'] == $megapbx->crm_key){
         'OWNER_TYPE_ID' => CCrmOwnerType::ResolveID($entity_type),
         'TYPE_ID' =>  CCrmActivityType::Call,
         'SUBJECT' => 'Входящий звонок с номера +7('.substr($_POST['phone'],1,3).")".substr($_POST['phone'],4,3)."-".substr($_POST['phone'],7,2)."-".substr($_POST['phone'],9),
-        'START_TIME' => 'время создания лида',
-        'END_TIME' => 'время создания лида + длительность',
+        'START_TIME' => date("d.m.Y H:i:s",strtotime($begintime['TIME'])),
+        'END_TIME' => date("d.m.Y H:i:s",strtotime($begintime['TIME'])+$_POST['duration']),
         'COMPLETED' => ($_POST['status'] == 'Success')?'Y':'N',
         'RESPONSIBLE_ID' => 206,
         'PRIORITY' => CCrmActivityPriority::Medium,
@@ -140,6 +141,7 @@ if ($_POST['crm_token'] == $megapbx->crm_key){
         'NOTIFY_TYPE' => CCrmActivityNotifyType::None,
         'BINDINGS' => array_values($arBindings)
       );
+      CCrmActivity::Add($arFields, false, false, array('REGISTER_SONET_EVENT' => true));
     }
   }
 }else {
