@@ -58,7 +58,7 @@ if ($_POST['crm_token'] == $megapbx->crm_key){
         "SECOND_NAME" => "",
         "COMPANY_TITLE" => "",
         "POST" => "",
-        "SOURCE_DESCRIPTION" =>"Создан модулем сопряжения ВАТС Мегофон",
+        "SOURCE_DESCRIPTION" =>"Создан модулем сопряжения ВАТС Мегафон",
         "STATUS_ID" => "NEW",
         "UF_CRM_1486022615" => 1317,
         "ASSIGNED_BY_ID" => 206,
@@ -127,20 +127,29 @@ if ($_POST['crm_token'] == $megapbx->crm_key){
         'OWNER_ID' => $entity_id,
         'OWNER_TYPE_ID' => CCrmOwnerType::ResolveID($entity_type),
         'TYPE_ID' =>  CCrmActivityType::Call,
-        'SUBJECT' => 'Входящий звонок с номера +7('.substr($_POST['phone'],1,3).")".substr($_POST['phone'],4,3)."-".substr($_POST['phone'],7,2)."-".substr($_POST['phone'],9),
+        'SUBJECT' => 'Входящий звонок '.(($_POST['ext'] == 705)?'от соискателя':'').' с номера +7('.substr($_POST['phone'],1,3).")".substr($_POST['phone'],4,3)."-".substr($_POST['phone'],7,2)."-".substr($_POST['phone'],9),
         'START_TIME' => date("d.m.Y H:i:s",strtotime($begintime['TIME'])),
         'END_TIME' => date("d.m.Y H:i:s",strtotime($begintime['TIME'])+$_POST['duration']),
         'COMPLETED' => ($_POST['status'] == 'Success')?'Y':'N',
-        'RESPONSIBLE_ID' => 206,
+        'RESPONSIBLE_ID' => ($_POST['ext'] == 705)?218:206,//Звонки распределенные на вн. 705 привязываются к HR
         'PRIORITY' => CCrmActivityPriority::Medium,
         'DESCRIPTION' => ($_POST['link']?"Запись входящего звонка прилагается":"Необходимо заполнить!!!"),
         'DESCRIPTION_TYPE' => CCrmContentType::Html,
         'DIRECTION' => CCrmActivityDirection::Incoming,
-        'LOCATION' => '',
         'PROVIDER_DATA' => ($_POST['link']?$_POST['link']:""), 
         'NOTIFY_TYPE' => CCrmActivityNotifyType::None,
         'BINDINGS' => array_values($arBindings)
       );
+      if ($_POST['ext'] == 705){//Если звонок на HR
+        $oLead = new CCrmLead;
+        $arFields = array(
+          "TITLE" => "Соискатель с номера +7(".substr($_POST['phone'],1,3).")".substr($_POST['phone'],4,3)."-".substr($_POST['phone'],7,2)."-".substr($_POST['phone'],9)." на ВАТС Мегафон",
+          "UF_CRM_1486022615" => 1386,
+          "ASSIGNED_BY_ID" => 218,
+        );
+        //Обновляем лид лид
+        $LeadId = $oLead->Update($phone_res['LEAD']['ID'],$arFields, true, array('CURRENT_USER' => 24));
+      }
       $oActivity = new CCrmActivity;
       $activityId = $oActivity->Add($arFields, false, true, array('REGISTER_SONET_EVENT' => true));
       if ($activityId){
@@ -160,6 +169,7 @@ if ($_POST['crm_token'] == $megapbx->crm_key){
           "DESCRIPTION" => $oActivity->LAST_ERROR,
           ));         
       }
+      
     }
   }
 }else {
