@@ -46,7 +46,7 @@ if ($_POST['crm_token'] == $megapbx->crm_key){
       //Задаем параметры лида
       $oLead = new CCrmLead;
       $arFields = array(
-        "TITLE" => "Входящий звонок с номера +7(".substr($_POST['phone'],1,3).")".substr($_POST['phone'],4,3)."-".substr($_POST['phone'],7,2)."-".substr($_POST['phone'],9)." на ВАТС Мегафон",
+        "TITLE" => "Лид по входящему звонку с номера +7(".substr($_POST['phone'],1,3).")".substr($_POST['phone'],4,3)."-".substr($_POST['phone'],7,2)."-".substr($_POST['phone'],9)." на ВАТС Мегафон",
         "NAME" => "неизвестно",
         "COMMENTS" => "",
         "SOURCE_ID" => "CALL",
@@ -116,7 +116,7 @@ if ($_POST['crm_token'] == $megapbx->crm_key){
   }
   if ($_POST['cmd'] == 'history' && $_POST['type'] == 'in'){
     $phone_res = findByPhoneNumber(trim($_POST['phone']));
-    if ($phone_res['Y'] && $phone_res['LEAD']['ID']>0){
+    if ($phone_res['FOUND']['Y'] && $phone_res['LEAD']['ID']>0){
       $entity_type = 'LEAD';
       $begintime = beginTimeIncoming($_POST['callid']);
       $entity_id = $phone_res['LEAD']['ID'];
@@ -141,7 +141,25 @@ if ($_POST['crm_token'] == $megapbx->crm_key){
         'NOTIFY_TYPE' => CCrmActivityNotifyType::None,
         'BINDINGS' => array_values($arBindings)
       );
-      CCrmActivity::Add($arFields, false, false, array('REGISTER_SONET_EVENT' => true));
+      $oActivity = new CCrmActivity;
+      $activityId = $oActivity->Add($arFields, false, true, array('REGISTER_SONET_EVENT' => true));
+      if ($activityId){
+        CEventLog::Add(array(
+          "SEVERITY" => "SECURITY",
+          "AUDIT_TYPE_ID" => "MEGAPBX_CALL_ADD",
+          "MODULE_ID" => "main",
+          "ITEM_ID" => 'Звонок на ВАТС Мегафон',
+          "DESCRIPTION" => "Создан звонок с ID ".$activityId,
+        ));
+      }else{
+        CEventLog::Add(array(
+          "SEVERITY" => "SECURITY",
+          "AUDIT_TYPE_ID" => "MEGAPBX_CALL_ADD",
+          "MODULE_ID" => "main",
+          "ITEM_ID" => 'Ошибка создания звонка на ВАТС Мегафон',
+          "DESCRIPTION" => $oActivity->LAST_ERROR,
+          ));         
+      }
     }
   }
 }else {
