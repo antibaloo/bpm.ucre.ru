@@ -1,5 +1,21 @@
 <?
 CModule::IncludeModule('crm');
+CModule::IncludeModule('timeman');
+function getUserByExt($ext){
+  $rsUsers = CUser::GetList(($by="ID"), ($order="desc"), array('ACTIVE' => 'Y','GROUPS_ID' => array(12), 'UF_MEGAPBX' => $ext));
+  if ($rsUsers->SelectedRowsCount() == 0) return false;
+  if ($rsUsers->SelectedRowsCount() == 1) {
+    $arUser = $rsUsers->Fetch();
+    return $arUser['ID'];
+  }
+  if ($rsUsers->SelectedRowsCount() > 1) {
+    while ($arUser = $rsUsers->Fetch()){
+      $TimemanUser = new CTimeManUser($arUser['ID']);
+      if ($TimemanUser->State() == 'OPENED') return $arUser['ID'];
+    }
+    return false;
+  }
+}
 function beginTimeIncoming($callid){
   global $DB;
   $db_res = $DB->Query("SELECT m_time from b_megapbx_mess WHERE cmd='contact' AND callid='".$callid."'");
