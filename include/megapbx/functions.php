@@ -1,6 +1,21 @@
 <?
 CModule::IncludeModule('crm');
 CModule::IncludeModule('timeman');
+function getExtByOperName($name, $pbx_params){
+  $postdata = http_build_query(array('cmd' => 'accounts','token' => $pbx_params->pbx_key));
+  $opts = array('http' =>array('method'  => 'POST','header'  => 'Content-type: application/x-www-form-urlencoded','content' => $postdata));
+  $context  = stream_context_create($opts);
+  $result = file_get_contents($pbx_params->pbx_url, false, $context);
+  if ($result){
+    $accounts = json_decode($result,true);
+    foreach ($accounts as $account){
+      if ($account['name'] == $name) return $account['ext'];
+    }
+    return false;
+  } else {
+    return false;
+  }
+}
 function getUserByExt($ext){
   $rsUsers = CUser::GetList(($by="ID"), ($order="desc"), array('ACTIVE' => 'Y','GROUPS_ID' => array(12), 'UF_MEGAPBX' => $ext));
   if ($rsUsers->SelectedRowsCount() == 0) return false;
