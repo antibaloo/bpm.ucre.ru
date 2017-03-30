@@ -28,10 +28,12 @@ $rsData->NavStart($aNav["nPageSize"]);
 //в этом цикле построчно заполняем данные для грида
 $aRows = array();
 while($arItem = $rsData->Fetch()){
+	//$arItem['UF_TIME'] = strtotime($arItem['UF_TIME'])->modify('+1 hour');
   $aCols = array(
     'UF_AVITO_ID' =>  '<a href="https://bpm.ucre.ru/crm/avito_log/?AVITO_ID='.$arItem['UF_AVITO_ID'].'" alt="Фильтр объявлений по номеру лога">'.$arItem['UF_AVITO_ID'].'</a>',
     'UF_STATUS' =>  '<a href="'.$arItem['UF_LOG_LINK'].'" target="_blank" alt="Ссылка на лог автозагрузки">'.$arItem['UF_STATUS'].'</a>',
     'UF_PROCESSED' =>  '<a href="'.$arItem['UF_LINK'].'" target="_blank" alt="Ссылка на xml фид автозагрузки">'.$arItem['UF_PROCESSED'].'</a>',
+		//'UF_TIME'	=> date("H:m:s d.m.Y",strtotime($arItem['UF_TIME']."+1 hour")),
   );
   //это определения для меню действий над строкой
    $aActions = array();
