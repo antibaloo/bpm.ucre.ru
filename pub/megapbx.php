@@ -7,21 +7,6 @@ CModule::IncludeModule("im");
 CModule::IncludeModule("timeman");
 CModule::IncludeModule('crm');
 CModule::IncludeModule('search');
-function getExtByOperName($name, $pbx_params){
-  $postdata = http_build_query(array('cmd' => 'accounts','token' => $pbx_params->pbx_key));
-  $opts = array('http' =>array('method'  => 'POST','header'  => 'Content-type: application/x-www-form-urlencoded','content' => $postdata));
-  $context  = stream_context_create($opts);
-  $result = file_get_contents($pbx_params->pbx_url, false, $context);
-  if ($result){
-    $accounts = json_decode($result,true);
-    foreach ($accounts as $account){
-      if ($account['name'] == $name) return $account['ext'];
-    }
-    return false;
-  } else {
-    return false;
-  }
-}
 $megapbx = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT']."/../megapbx_params"));
 if ($_POST['crm_token'] == $megapbx->crm_key){
   $DB->Query("INSERT INTO b_megapbx_mess VALUES ('', NOW(),'".trim($_POST['callid'])."','".trim($_POST['cmd'])."','".trim($_POST['phone'])."','".trim($_POST['type'])."','".trim($_POST['user'])."','".trim($_POST['ext'])."','".trim($_POST['telnum'])."','".trim($_POST['diversion'])."','".trim($_POST['duration'])."','".trim($_POST['link'])."','".trim($_POST['status'])."')");
@@ -99,6 +84,11 @@ if ($_POST['crm_token'] == $megapbx->crm_key){
       );
       CIMNotify::Add($arMessageFields);
     }
+  }
+  if ($_POST['cmd'] == 'event' && $_POST['type'] == 'OUTGOING'){
+    $phone_res = findByPhoneNumber(trim($_POST['phone']));
+    $assignedById = (getUserByExt(getExtByOperName(trim($_POST['phone']), $megapbx)))?getUserByExt(getExtByOperName(trim($_POST['phone']), $megapbx)):206;
+    
   }
   if ($_POST['cmd'] == 'history' && $_POST['type'] == 'in'){
     $phone_res = findByPhoneNumber(trim($_POST['phone']));
