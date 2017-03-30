@@ -208,12 +208,7 @@ $communicationsData = htmlspecialcharsbx(\Bitrix\Main\Web\Json::encode($arResult
 				<? foreach ($provider::getFieldsForEdit($activity) as $field):
 					switch ($field['TYPE'])
 					{
-						case 'SUBJECT':?>
-							<div class="crm-activity-popup-info-location-container">
-								<span class="crm-activity-popup-info-location-text"><b>Цель :</b></span>
-								<input type="text" name="<?=strtolower($field['TYPE'])?>" value="<?=htmlspecialcharsbx($field['VALUE'])?>" class="crm-activity-popup-info-location" data-role="focus-on-show">
-							</div><?
-							break;
+						case 'SUBJECT':
 						case 'LOCATION':
 						case 'TEXT':?>
 							<div class="crm-activity-popup-info-location-container">
@@ -264,7 +259,7 @@ $communicationsData = htmlspecialcharsbx(\Bitrix\Main\Web\Json::encode($arResult
 
 					<div class="crm-activity-popup-info-person-detail-container <?if ($arResult['ADDITIONAL_MODE']):?>crm-activity-person-detail-open<?endif;?>" data-role="additional-container">
 						<div class="crm-activity-popup-info-person-detail-description">
-							<label class="crm-activity-popup-info-person-detail-description-name"><b>Результат :</b></label>
+							<label class="crm-activity-popup-info-person-detail-description-name"><?=GetMessage('CRM_ACTIVITY_PLANNER_DESCRIPTION')?>:</label>
 							<textarea name="description" class="crm-activity-popup-info-person-detail-description-input"><?=htmlspecialcharsbx($activity['DESCRIPTION'])?></textarea>
 						</div><!--crm-activity-popup-timeline-detail-info-date-->
 						<? $directions = $provider::getTypeDirections($activity['PROVIDER_TYPE_ID']);
