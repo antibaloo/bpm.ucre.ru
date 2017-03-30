@@ -83,7 +83,8 @@ function findByPhoneNumber($number, $params = array()){
 
   if (count($entityByType)){
     if (isset($entityByType['CONTACT'])) return array('FOUND' => 'Y', 'CONTACT' => end($entityByType['CONTACT']));//Выдаем в результат полений по ID контакт, если найдено несколько
-    if (isset($entityByType['LEAD'])) return array('FOUND' => 'Y', 'LEAD' => end($entityByType['LEAD']));//Выдаем в результат полений по ID лид, если найдено несколько не закрытых
+    if (isset($entityByType['LEAD']) && count($entityByType['LEAD'])) return array('FOUND' => 'Y', 'LEAD' => end($entityByType['LEAD']));//Выдаем в результат полений по ID лид, если найдено несколько не закрытых
+    else return array('FOUND' => 'N');
   }else {//Если результат нулевой, ищем среди сотрудников, во измежании создания лида с номером сотрудника
     global $DB;
     $temp_phone = substr($number,1);
