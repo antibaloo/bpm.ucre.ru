@@ -276,7 +276,22 @@ while($aRes = $db_res->Fetch()){
     $NewDevelopmentId = $dom->createElement("NewDevelopmentId",substr($aRes['PROPERTY_258'],0,strpos($aRes['PROPERTY_258']," ")));
     $Ad->appendChild($NewDevelopmentId);
   }
+	
+	$imageLink = array();
+	foreach (unserialize($aRes['UF_CRM_1472038962']) as $imageid){
+		if (CFile::GetPath($imageid))	$imageLink[] = "https://bpm.ucre.ru".CFile::GetPath($imageid);
+	}
+	foreach (unserialize($aRes['UF_CRM_1476517423']) as $imageid){
+		if (CFile::GetPath($imageid)) $imageLink[] = "https://bpm.ucre.ru".CFile::GetPath($imageid);
+	}
+	$max = (count($imageLink) > 20)?20:count($imageLink);
   $Images = $dom->createElement("Images");
+	for ($i=0;$i<$max;$i++){
+		$Image = $dom->createElement("Image");
+		$Image->setAttribute("url", $imageLink[$i]);
+		$Images->appendChild($Image);		
+	}
+	/*
   foreach (unserialize($aRes['UF_CRM_1472038962']) as $imageid){
 		if (CFile::GetPath($imageid)){
 			$Image = $dom->createElement("Image");
@@ -290,8 +305,9 @@ while($aRes = $db_res->Fetch()){
 			$Image->setAttribute("url", "https://bpm.ucre.ru".CFile::GetPath($imageid));
 			$Images->appendChild($Image);
 		}
-  }
+  }*/
   $Ad->appendChild($Images);
+		
   $CompanyName = $dom->createElement("CompanyName","Единый центр недвижимости");
   $Ad->appendChild($CompanyName);
   if ($aRes['PROPERTY_374'] == 1356){
