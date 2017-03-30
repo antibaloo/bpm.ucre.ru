@@ -82,7 +82,7 @@
           echo "Имя продавца: ".$name."<br>";
           
           //Профиль на Авито
-          $profile_query = $xpath->query("//*[contains(@class, 'seller-info-avatar-image js-public-profile-link')]");
+          $profile_query = $xpath->query("//*[contains(@class, 'seller-info-avatar-image  js-public-profile-link')]");
           $profile = "https://www.avito.ru".$profile_query->item(0)->getAttribute('href');
 
           echo "Ссылка на профиль Авито: ".$profile."<br>";
