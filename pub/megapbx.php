@@ -87,7 +87,7 @@ if ($_POST['crm_token'] == $megapbx->crm_key){
   }
   if ($_POST['cmd'] == 'event' && $_POST['type'] == 'OUTGOING'){
     $phone_res = findByPhoneNumber(trim($_POST['phone']));
-    $assignedById = (getUserByExt(getExtByOperName(trim($_POST['phone']), $megapbx)))?getUserByExt(getExtByOperName(trim($_POST['phone']), $megapbx)):206;
+    $assignedById = (getUserByExt(getExtByOperName(trim($_POST['user']), $megapbx)))?getUserByExt(getExtByOperName(trim($_POST['user']), $megapbx)):206;
     
   }
   if ($_POST['cmd'] == 'history' && $_POST['type'] == 'in'){
