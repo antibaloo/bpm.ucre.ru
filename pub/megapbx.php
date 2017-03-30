@@ -65,7 +65,7 @@ if ($_POST['crm_token'] == $megapbx->crm_key){
         // символьный тэг для группировки (будет выведено только одно сообщение), если это не требуется - не задаем параметр
         //"NOTIFY_TAG" => "CRM|LEAD|NEW|MEGAPBX",
         // текст уведомления на сайте (доступен html и бб-коды)
-        "NOTIFY_MESSAGE" => "[b]Создан новый лид по входящему звонку[/b] с номера +7(".substr($_POST['phone'],1,3).")".substr($_POST['phone'],4,3)."-".substr($_POST['phone'],7,2)."-".substr($_POST['phone'],9)." на ВАТС Мегафон, перед принятием в работу необходимо перевести его на себя. <a href='/crm/lead/show/".$LeadId."/' target='_blank'>Перейти к лиду</a>",
+        "NOTIFY_MESSAGE" => "[b]Создан новый лид по входящему звонку[/b] с номера +7(".substr($_POST['phone'],1,3).")".substr($_POST['phone'],4,3)."-".substr($_POST['phone'],7,2)."-".substr($_POST['phone'],9)." на ВАТС Мегафон. <a href='/crm/lead/show/".$LeadId."/' target='_blank'>Перейти к лиду</a>",
       );
       CIMNotify::Add($arMessageFields);
       $arMessageFields = array(
@@ -80,7 +80,7 @@ if ($_POST['crm_token'] == $megapbx->crm_key){
         // символьный тэг для группировки (будет выведено только одно сообщение), если это не требуется - не задаем параметр
         //"NOTIFY_TAG" => "CRM|LEAD|NEW|MEGAPBX",
         // текст уведомления на сайте (доступен html и бб-коды)
-        "NOTIFY_MESSAGE" => "[b]Создан новый лид по входящему звонку[/b] с номера +7(".substr($_POST['phone'],1,3).")".substr($_POST['phone'],4,3)."-".substr($_POST['phone'],7,2)."-".substr($_POST['phone'],9)." на ВАТС Мегафон, перед принятием в работу необходимо перевести его на себя. <a href='/crm/lead/show/".$LeadId."/' target='_blank'>Перейти к лиду</a>",
+        "NOTIFY_MESSAGE" => "[b]Создан новый лид по входящему звонку[/b] с номера +7(".substr($_POST['phone'],1,3).")".substr($_POST['phone'],4,3)."-".substr($_POST['phone'],7,2)."-".substr($_POST['phone'],9)." на ВАТС Мегафон. <a href='/crm/lead/show/".$LeadId."/' target='_blank'>Перейти к лиду</a>",
       );
       CIMNotify::Add($arMessageFields);
       $arMessageFields = array(
@@ -95,7 +95,7 @@ if ($_POST['crm_token'] == $megapbx->crm_key){
         // символьный тэг для группировки (будет выведено только одно сообщение), если это не требуется - не задаем параметр
         //"NOTIFY_TAG" => "CRM|LEAD|NEW|MEGAPBX",
         // текст уведомления на сайте (доступен html и бб-коды)
-        "NOTIFY_MESSAGE" => "[b]Создан новый лид по входящему звонку[/b] с номера +7(".substr($_POST['phone'],1,3).")".substr($_POST['phone'],4,3)."-".substr($_POST['phone'],7,2)."-".substr($_POST['phone'],9)." на ВАТС Мегафон, перед принятием в работу необходимо перевести его на себя. <a href='/crm/lead/show/".$LeadId."/' target='_blank'>Перейти к лиду</a>",
+        "NOTIFY_MESSAGE" => "[b]Создан новый лид по входящему звонку[/b] с номера +7(".substr($_POST['phone'],1,3).")".substr($_POST['phone'],4,3)."-".substr($_POST['phone'],7,2)."-".substr($_POST['phone'],9)." на ВАТС Мегафон. <a href='/crm/lead/show/".$LeadId."/' target='_blank'>Перейти к лиду</a>",
       );
       CIMNotify::Add($arMessageFields);
     }
@@ -137,6 +137,37 @@ if ($_POST['crm_token'] == $megapbx->crm_key){
           "ITEM_ID" => 'Звонок на ВАТС Мегафон',
           "DESCRIPTION" => "Создан звонок с ID ".$activityId." для лида ".$entity_id,
         ));
+        $arMessageFields = array(
+          // получатель
+          "TO_USER_ID" => 24,
+          // отправитель
+          "FROM_USER_ID" => 0, 
+          // тип уведомления
+          "NOTIFY_TYPE" => IM_NOTIFY_SYSTEM,
+          // модуль запросивший отправку уведомления
+          "NOTIFY_MODULE" => "crm",
+          // символьный тэг для группировки (будет выведено только одно сообщение), если это не требуется - не задаем параметр
+          //"NOTIFY_TAG" => "CRM|LEAD|NEW|MEGAPBX",
+          // текст уведомления на сайте (доступен html и бб-коды)
+          "NOTIFY_MESSAGE" => "Добавлен звонок к лиду № ".$entity_id.", <a href='/crm/lead/show/".$entity_id."/' target='_blank'>Перейти к лиду</a>",
+        );
+        CIMNotify::Add($arMessageFields);
+         $arMessageFields = array(
+          // получатель
+          "TO_USER_ID" => $assignedById,
+          // отправитель
+          "FROM_USER_ID" => 0, 
+          // тип уведомления
+          "NOTIFY_TYPE" => IM_NOTIFY_SYSTEM,
+          // модуль запросивший отправку уведомления
+          "NOTIFY_MODULE" => "crm",
+          // символьный тэг для группировки (будет выведено только одно сообщение), если это не требуется - не задаем параметр
+          //"NOTIFY_TAG" => "CRM|LEAD|NEW|MEGAPBX",
+          // текст уведомления на сайте (доступен html и бб-коды)
+          "NOTIFY_MESSAGE" => "Добавлен звонок к лиду № ".$entity_id.", <a href='/crm/lead/show/".$entity_id."/' target='_blank'>Перейти к лиду</a>",
+        );
+        CIMNotify::Add($arMessageFields);
+       
       }else{
         CEventLog::Add(array(
           "SEVERITY" => "SECURITY",
