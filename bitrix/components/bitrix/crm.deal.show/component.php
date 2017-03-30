@@ -1098,7 +1098,7 @@ if (CCrmInvoice::CheckReadPermission(0, $userPermissions))
 	);
 }
 
-if (IsModuleInstalled('bizproc') && CModule::IncludeModule('bizproc'))
+if (IsModuleInstalled('bizproc') && CModule::IncludeModule('bizproc') && CBPRuntime::isFeatureEnabled())
 {
 	//HACK: main.interface.grid may override current tab
 	if($_SERVER['REQUEST_METHOD'] === 'GET' && $currentFormTabID !== '')
@@ -1272,6 +1272,31 @@ if (IsModuleInstalled('bizproc') && CModule::IncludeModule('bizproc'))
 	}
 }
 
+if (\Bitrix\Crm\Automation\Factory::isAutomationAvailable(CCrmOwnerType::Deal))
+{
+	$arResult['FIELDS']['tab_automation'][] = array(
+		'id'            => 'DEAL_AUTOMATION',
+		'name'          => GetMessage('CRM_SECTION_BIZPROC_MAIN'),
+		'colspan'       => true,
+		'type'          => 'crm_automation',
+		'componentData' => array(
+			'template'       => '',
+			'enableLazyLoad' => true,
+			'params'         => array(
+				'ENTITY_TYPE_ID'     => \CCrmOwnerType::Deal,
+				'ENTITY_ID'          => $arResult['ELEMENT']['ID'],
+				'ENTITY_CATEGORY_ID' => $arResult['CATEGORY_ID'],
+				'back_url'           => CHTTP::urlAddParams(CComponentEngine::MakePathFromTemplate($arParams['PATH_TO_DEAL_SHOW'],
+					array(
+						'deal_id' => $arResult['ELEMENT']['ID']
+					)),
+					array($formTabKey => 'tab_automation')
+				),
+			)
+		)
+	);
+}
+
 if ($arResult['ELEMENT']['LEAD_ID'] > 0 && CCrmLead::CheckReadPermission(0, $userPermissions))
 {
 	ob_start();
@@ -1300,6 +1325,15 @@ if ($arResult['ELEMENT']['LEAD_ID'] > 0 && CCrmLead::CheckReadPermission(0, $use
 		'value' => $sVal
 	);
 }
+$arResult['TREE_CONTAINER_ID'] = $arResult['FORM_ID'].'_tree_wrapper';
+$arResult['TAB_TREE_OPEN'] = isset($_REQUEST['active_tab']) && $_REQUEST['active_tab'] == 'tab_tree';
+$arResult['FIELDS']['tab_tree'] = array(array(
+	'id' => 'ENTITY_TREE',
+	'name' => GetMessage('CRM_FIELD_ENTITY_TREE'),
+	'colspan' => true,
+	'type' => 'custom',
+	'value' => '<div id="'.htmlspecialcharsbx($arResult['TREE_CONTAINER_ID']).'"></div>'
+));
 
 $arResult['FIELDS']['tab_event'][] = array(
 	'id' => 'section_event_grid',
