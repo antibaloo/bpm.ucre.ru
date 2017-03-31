@@ -88,8 +88,7 @@ if ($_POST['crm_token'] == $megapbx->crm_key){
   if ($_POST['cmd'] == 'event' && $_POST['type'] == 'OUTGOING'){
     $phone_res = findByPhoneNumber(trim($_POST['phone']));
     $assignedById = (getUserByExt(getExtByOperName(trim($_POST['user']), $megapbx)))?getUserByExt(getExtByOperName(trim($_POST['user']), $megapbx)):206;
-    if ($phone_res['FOUND'] == 'N'){
-      
+    if ($phone_res['FOUND'] == 'N'){      
     }
   }
   if ($_POST['cmd'] == 'history' && $_POST['type'] == 'in'){
@@ -142,7 +141,6 @@ if ($_POST['crm_token'] == $megapbx->crm_key){
         ));
         if ($_POST['status'] == 'Success') $notifyMess = "Добавлен входящий звонок к ".$messageText." № ".$entity_id.", <a href='/crm/".strtolower($entity_type)."/show/".$entity_id."/' target='_blank'>Перейти к ".$messageText."</a>";
         else $notifyMess = "Добавлен [b]пропущенный[/b] вызов к ".$messageText." № ".$entity_id.", <a href='/crm/".strtolower($entity_type)."/show/".$entity_id."/' target='_blank'>Перейти к ".$messageText."</a>";
-        }
         $arMessageFields = array(
           // получатель
           "TO_USER_ID" => 24,
