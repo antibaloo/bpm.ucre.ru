@@ -31,6 +31,20 @@ function getUserByExt($ext){
     return false;
   }
 }
+function beginTimeOutgoing($callid){
+  global $DB;
+  $db_res = $DB->Query("SELECT m_time from b_megapbx_mess WHERE cmd='event' AND type='OUTGOING' AND callid='".$callid."'");
+  if ($db_res->SelectedRowsCount()>0){
+    if ($db_res->SelectedRowsCount()>1) return array("RESULT" => "ERROR", "MESSAGE" => "CALLID IS DUPLICATED");
+    if ($aRes = $db_res->Fetch()){
+      return array("RESULT" => "SUCCESS", "TIME" => $aRes['m_time']);
+    }else {
+      return array("RESULT" => "ERROR", "MESSAGE" => "DB ERROR");
+    }
+  }else{
+    return array("RESULT" => "ERROR", "MESSAGE" => "CALLID IS NOT FOUND");
+  }
+}
 function beginTimeIncoming($callid){
   global $DB;
   $db_res = $DB->Query("SELECT m_time from b_megapbx_mess WHERE cmd='contact' AND callid='".$callid."'");
