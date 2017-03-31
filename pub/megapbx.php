@@ -140,9 +140,8 @@ if ($_POST['crm_token'] == $megapbx->crm_key){
           "ITEM_ID" => 'Звонок на ВАТС Мегафон',
           "DESCRIPTION" => "Создан звонок с ID ".$activityId." для ".$messageLog.$entity_id,
         ));
-        if ($_POST['status'] == 'Success') $notifyMess = "Добавлен звонок к ".$messageText." № ".$entity_id.", <a href='/crm/".strtolower($entity_type)."/show/".$entity_id."/' target='_blank'>Перейти к ".$messageText."</a>";
-        else $notifyMess = "Добавлен [b]пропущенный[/b] вызов к ".$messageText." № ".$entity_id.", <a href='/crm/".strtolower($entity_type)."/show/".$entity_id."/' target='_blank'>Перейти к ".$messageText."</a>"
-          
+        if ($_POST['status'] == 'Success') $notifyMess = "Добавлен входящий звонок к ".$messageText." № ".$entity_id.", <a href='/crm/".strtolower($entity_type)."/show/".$entity_id."/' target='_blank'>Перейти к ".$messageText."</a>";
+        else $notifyMess = "Добавлен [b]пропущенный[/b] вызов к ".$messageText." № ".$entity_id.", <a href='/crm/".strtolower($entity_type)."/show/".$entity_id."/' target='_blank'>Перейти к ".$messageText."</a>";
         }
         $arMessageFields = array(
           // получатель
