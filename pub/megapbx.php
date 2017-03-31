@@ -42,7 +42,7 @@ if ($_POST['crm_token'] == $megapbx->crm_key){
         // получатель
         "TO_USER_ID" => 98,
         // отправитель
-        "FROM_USER_ID" => 0, 
+        "FROM_USER_ID" => 206, 
         // тип уведомления
         "NOTIFY_TYPE" => IM_NOTIFY_SYSTEM,
         // модуль запросивший отправку уведомления
@@ -57,7 +57,7 @@ if ($_POST['crm_token'] == $megapbx->crm_key){
         // получатель
         "TO_USER_ID" => 202,
         // отправитель
-        "FROM_USER_ID" => 0, 
+        "FROM_USER_ID" => 206, 
         // тип уведомления
         "NOTIFY_TYPE" => IM_NOTIFY_SYSTEM,
         // модуль запросивший отправку уведомления
@@ -72,7 +72,7 @@ if ($_POST['crm_token'] == $megapbx->crm_key){
         // получатель
         "TO_USER_ID" => 24,
         // отправитель
-        "FROM_USER_ID" => 0, 
+        "FROM_USER_ID" => 206, 
         // тип уведомления
         "NOTIFY_TYPE" => IM_NOTIFY_SYSTEM,
         // модуль запросивший отправку уведомления
@@ -116,7 +116,7 @@ if ($_POST['crm_token'] == $megapbx->crm_key){
         // получатель
         "TO_USER_ID" => $assignedById,
         // отправитель
-        "FROM_USER_ID" => 0, 
+        "FROM_USER_ID" => 206, 
         // тип уведомления
         "NOTIFY_TYPE" => IM_NOTIFY_SYSTEM,
         // модуль запросивший отправку уведомления
@@ -131,7 +131,7 @@ if ($_POST['crm_token'] == $megapbx->crm_key){
         // получатель
         "TO_USER_ID" => 24,
         // отправитель
-        "FROM_USER_ID" => 0, 
+        "FROM_USER_ID" =>206, 
         // тип уведомления
         "NOTIFY_TYPE" => IM_NOTIFY_SYSTEM,
         // модуль запросивший отправку уведомления
@@ -198,7 +198,7 @@ if ($_POST['crm_token'] == $megapbx->crm_key){
           // получатель
           "TO_USER_ID" => 24,
           // отправитель
-          "FROM_USER_ID" => 0, 
+          "FROM_USER_ID" => 206, 
           // тип уведомления
           "NOTIFY_TYPE" => IM_NOTIFY_SYSTEM,
           // модуль запросивший отправку уведомления
@@ -213,7 +213,7 @@ if ($_POST['crm_token'] == $megapbx->crm_key){
           // получатель
           "TO_USER_ID" => $assignedById,
           // отправитель
-          "FROM_USER_ID" => 0, 
+          "FROM_USER_ID" => 206, 
           // тип уведомления
           "NOTIFY_TYPE" => IM_NOTIFY_SYSTEM,
           // модуль запросивший отправку уведомления
@@ -281,7 +281,7 @@ if ($_POST['crm_token'] == $megapbx->crm_key){
         'PRIORITY' => CCrmActivityPriority::Medium,
         'DESCRIPTION' => ($_POST['link']?"Запись исходящего звонка прилагается":"Необходимо заполнить!!!"),
         'DESCRIPTION_TYPE' => CCrmContentType::Html,
-        'DIRECTION' => CCrmActivityDirection::Incoming,
+        'DIRECTION' => CCrmActivityDirection::Outgoing,
         'PROVIDER_DATA' => ($_POST['link']?$_POST['link']:""), 
         'NOTIFY_TYPE' => CCrmActivityNotifyType::None,
         'BINDINGS' => array_values($arBindings)
@@ -304,7 +304,7 @@ if ($_POST['crm_token'] == $megapbx->crm_key){
           // получатель
           "TO_USER_ID" => 24,
           // отправитель
-          "FROM_USER_ID" => 0, 
+          "FROM_USER_ID" => 206, 
           // тип уведомления
           "NOTIFY_TYPE" => IM_NOTIFY_SYSTEM,
           // модуль запросивший отправку уведомления
@@ -319,7 +319,7 @@ if ($_POST['crm_token'] == $megapbx->crm_key){
           // получатель
           "TO_USER_ID" => $assignedById,
           // отправитель
-          "FROM_USER_ID" => 0, 
+          "FROM_USER_ID" => 206, 
           // тип уведомления
           "NOTIFY_TYPE" => IM_NOTIFY_SYSTEM,
           // модуль запросивший отправку уведомления
