@@ -321,7 +321,7 @@ if ($_POST['crm_token'] == $megapbx->crm_key){
         'DESCRIPTION' => "Необходимо перезвонить!!!",
         'DESCRIPTION_TYPE' => CCrmContentType::Html,
         'DIRECTION' => CCrmActivityDirection::Incoming,
-        'PROVIDER_DATA' => "", 
+        'PROVIDER_DATA' => ($_POST['link']?$_POST['link']:""), 
         'NOTIFY_TYPE' => CCrmActivityNotifyType::None,
         'BINDINGS' => array_values($arBindings)
       );
