@@ -10,8 +10,8 @@ CModule::IncludeModule('search');
 $megapbx = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT']."/../megapbx_params"));
 if ($_POST['crm_token'] == $megapbx->crm_key){
   $DB->Query("INSERT INTO b_megapbx_mess VALUES ('', NOW(),'".trim($_POST['callid'])."','".trim($_POST['cmd'])."','".trim($_POST['phone'])."','".trim($_POST['type'])."','".trim($_POST['user'])."','".trim($_POST['ext'])."','".trim($_POST['telnum'])."','".trim($_POST['diversion'])."','".trim($_POST['duration'])."','".trim($_POST['link'])."','".trim($_POST['status'])."')");
+  $phone_res = findByPhoneNumber(trim($_POST['phone']));
   if ($_POST['cmd'] == 'event' && $_POST['type'] == 'INCOMING'){
-    $phone_res = findByPhoneNumber(trim($_POST['phone']));
     $assignedById = (getUserByExt(trim($_POST['ext'])))?getUserByExt(trim($_POST['ext'])):206;
     if ($phone_res['FOUND'] == 'N'){
       //Задаем параметры лида
@@ -86,7 +86,6 @@ if ($_POST['crm_token'] == $megapbx->crm_key){
     }
   }
   if ($_POST['cmd'] == 'event' && $_POST['type'] == 'OUTGOING'){
-    $phone_res = findByPhoneNumber(trim($_POST['phone']));
     $assignedById = (getUserByExt(getExtByOperName(trim($_POST['user']), $megapbx)))?getUserByExt(getExtByOperName(trim($_POST['user']), $megapbx)):206;
     if ($phone_res['FOUND'] == 'N'){
       $oLead = new CCrmLead;
@@ -145,7 +144,6 @@ if ($_POST['crm_token'] == $megapbx->crm_key){
     }
   }
   if ($_POST['cmd'] == 'history' && $_POST['type'] == 'in'){
-    $phone_res = findByPhoneNumber(trim($_POST['phone']));
     if ($phone_res['FOUND']['Y'] && ($phone_res['LEAD']['ID']>0 || $phone_res['CONTACT']['ID']>0)){
       if ($phone_res['LEAD']['ID']>0){
         $entity_type = 'LEAD';
@@ -235,8 +233,8 @@ if ($_POST['crm_token'] == $megapbx->crm_key){
           ));         
       }
     }
-    if ($phone_res['FOUND']['N']){
-            //Задаем параметры лида
+    /*if ($phone_res['FOUND']['N']){
+      //Задаем параметры лида
       $oLead = new CCrmLead;
       $arFields = array(
         "TITLE" => "Лид по неотвеченному звонку с номера +7(".substr($_POST['phone'],1,3).")".substr($_POST['phone'],4,3)."-".substr($_POST['phone'],7,2)."-".substr($_POST['phone'],9)." на ВАТС Мегафон",
@@ -312,7 +310,7 @@ if ($_POST['crm_token'] == $megapbx->crm_key){
         'OWNER_ID' => $entity_id,
         'OWNER_TYPE_ID' => CCrmOwnerType::ResolveID($entity_type),
         'TYPE_ID' =>  CCrmActivityType::Call,
-        'SUBJECT' => 'Неотвеченныйвызов с номера +7('.substr($_POST['phone'],1,3).")".substr($_POST['phone'],4,3)."-".substr($_POST['phone'],7,2)."-".substr($_POST['phone'],9),
+        'SUBJECT' => 'Неотвеченный вызов с номера +7('.substr($_POST['phone'],1,3).")".substr($_POST['phone'],4,3)."-".substr($_POST['phone'],7,2)."-".substr($_POST['phone'],9),
         'START_TIME' => date("d.m.Y H:i:s"),
         'END_TIME' => date("d.m.Y H:i:s"),
         'COMPLETED' => 'N',
@@ -328,10 +326,9 @@ if ($_POST['crm_token'] == $megapbx->crm_key){
       $oActivity = new CCrmActivity;
       $activityId = $oActivity->Add($arFields, false, true, array('REGISTER_SONET_EVENT' => true));
 
-    }
+    }*/
   }
   if ($_POST['cmd'] == 'history' && $_POST['type'] == 'out'){
-    $phone_res = findByPhoneNumber(trim($_POST['phone']));
     $assignedById = (getUserByExt(trim($_POST['ext'])))?getUserByExt(trim($_POST['ext'])):206;
     if ($phone_res['FOUND']['Y'] && ($phone_res['LEAD']['ID']>0 || $phone_res['CONTACT']['ID']>0)){
       if ($phone_res['LEAD']['ID']>0){
