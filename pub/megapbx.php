@@ -235,6 +235,100 @@ if ($_POST['crm_token'] == $megapbx->crm_key){
           ));         
       }
     }
+    if ($phone_res['FOUND']['N']){
+            //Задаем параметры лида
+      $oLead = new CCrmLead;
+      $arFields = array(
+        "TITLE" => "Лид по неотвеченному звонку с номера +7(".substr($_POST['phone'],1,3).")".substr($_POST['phone'],4,3)."-".substr($_POST['phone'],7,2)."-".substr($_POST['phone'],9)." на ВАТС Мегафон",
+        "NAME" => "неизвестно",
+        "COMMENTS" => "Звонок поступил на номер ".trim($_POST['user']),
+        "SOURCE_ID" => "CALL",
+        "OPPORTUNITY" =>0,
+        "CURRENCY_ID" => "RUB",
+        "OPPORTUNITY_ACCOUNT" => 0,
+        "ACCOUNT_CURRENCY_ID" => "RUB",
+        "LAST_NAME" => "",
+        "SECOND_NAME" => "",
+        "COMPANY_TITLE" => "",
+        "POST" => "",
+        "SOURCE_DESCRIPTION" =>"Создан модулем сопряжения ВАТС Мегафон",
+        "STATUS_ID" => "NEW",
+        "UF_CRM_1486022615" => 1317,
+        "ASSIGNED_BY_ID" => 206,
+        "FM" => array("PHONE" => array("n0" => array("VALUE" => "+7(".substr($_POST['phone'],1,3).")".substr($_POST['phone'],4,3)."-".substr($_POST['phone'],7,2)."-".substr($_POST['phone'],9),"VALUE_TYPE" => "OTHER"))),
+      );
+      //Создаем лид
+      $LeadId = $oLead->Add($arFields, true, array('CURRENT_USER' => 24));
+      //Сообщение ответственным лицам
+      $arMessageFields = array(
+        // получатель
+        "TO_USER_ID" => 98,
+        // отправитель
+        "FROM_USER_ID" => 206, 
+        // тип уведомления
+        "NOTIFY_TYPE" => IM_NOTIFY_SYSTEM,
+        // модуль запросивший отправку уведомления
+        "NOTIFY_MODULE" => "crm",
+        // символьный тэг для группировки (будет выведено только одно сообщение), если это не требуется - не задаем параметр
+        //"NOTIFY_TAG" => "CRM|LEAD|NEW|MEGAPBX",
+        // текст уведомления на сайте (доступен html и бб-коды)
+        "NOTIFY_MESSAGE" => "[b]Создан новый лид по неотвеченному вызову[/b] с номера +7(".substr($_POST['phone'],1,3).")".substr($_POST['phone'],4,3)."-".substr($_POST['phone'],7,2)."-".substr($_POST['phone'],9)." на ВАТС Мегафон. <a href='/crm/lead/show/".$LeadId."/' target='_blank'>Перейти к лиду</a>",
+      );
+      CIMNotify::Add($arMessageFields);
+      $arMessageFields = array(
+        // получатель
+        "TO_USER_ID" => 202,
+        // отправитель
+        "FROM_USER_ID" => 206, 
+        // тип уведомления
+        "NOTIFY_TYPE" => IM_NOTIFY_SYSTEM,
+        // модуль запросивший отправку уведомления
+        "NOTIFY_MODULE" => "crm",
+        // символьный тэг для группировки (будет выведено только одно сообщение), если это не требуется - не задаем параметр
+        //"NOTIFY_TAG" => "CRM|LEAD|NEW|MEGAPBX",
+        // текст уведомления на сайте (доступен html и бб-коды)
+        "NOTIFY_MESSAGE" => "[b]Создан новый лид по неотвеченному вызову[/b] с номера +7(".substr($_POST['phone'],1,3).")".substr($_POST['phone'],4,3)."-".substr($_POST['phone'],7,2)."-".substr($_POST['phone'],9)." на ВАТС Мегафон. <a href='/crm/lead/show/".$LeadId."/' target='_blank'>Перейти к лиду</a>",
+      );
+      CIMNotify::Add($arMessageFields);
+      $arMessageFields = array(
+        // получатель
+        "TO_USER_ID" => 24,
+        // отправитель
+        "FROM_USER_ID" => 206, 
+        // тип уведомления
+        "NOTIFY_TYPE" => IM_NOTIFY_SYSTEM,
+        // модуль запросивший отправку уведомления
+        "NOTIFY_MODULE" => "crm",
+        // символьный тэг для группировки (будет выведено только одно сообщение), если это не требуется - не задаем параметр
+        //"NOTIFY_TAG" => "CRM|LEAD|NEW|MEGAPBX",
+        // текст уведомления на сайте (доступен html и бб-коды)
+        "NOTIFY_MESSAGE" => "[b]Создан новый лид по неотвеченному вызову[/b] с номера +7(".substr($_POST['phone'],1,3).")".substr($_POST['phone'],4,3)."-".substr($_POST['phone'],7,2)."-".substr($_POST['phone'],9)." на ВАТС Мегафон. <a href='/crm/lead/show/".$LeadId."/' target='_blank'>Перейти к лиду</a>",
+      );
+      CIMNotify::Add($arMessageFields);
+      $entity_type = 'LEAD';
+      $entity_id = $LeadId;
+
+      $arFields = array(
+        'OWNER_ID' => $entity_id,
+        'OWNER_TYPE_ID' => CCrmOwnerType::ResolveID($entity_type),
+        'TYPE_ID' =>  CCrmActivityType::Call,
+        'SUBJECT' => 'Неотвеченныйвызов с номера +7('.substr($_POST['phone'],1,3).")".substr($_POST['phone'],4,3)."-".substr($_POST['phone'],7,2)."-".substr($_POST['phone'],9),
+        'START_TIME' => date("d.m.Y H:i:s"),
+        'END_TIME' => date("d.m.Y H:i:s"),
+        'COMPLETED' => 'N',
+        'RESPONSIBLE_ID' => $assignedById,
+        'PRIORITY' => CCrmActivityPriority::Medium,
+        'DESCRIPTION' => "Необходимо перезвонить!!!",
+        'DESCRIPTION_TYPE' => CCrmContentType::Html,
+        'DIRECTION' => CCrmActivityDirection::Incoming,
+        'PROVIDER_DATA' => "", 
+        'NOTIFY_TYPE' => CCrmActivityNotifyType::None,
+        'BINDINGS' => array_values($arBindings)
+      );
+      $oActivity = new CCrmActivity;
+      $activityId = $oActivity->Add($arFields, false, true, array('REGISTER_SONET_EVENT' => true));
+
+    }
   }
   if ($_POST['cmd'] == 'history' && $_POST['type'] == 'out'){
     $phone_res = findByPhoneNumber(trim($_POST['phone']));
