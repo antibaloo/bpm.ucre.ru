@@ -3,6 +3,11 @@
 require($_SERVER["DOCUMENT_ROOT"]."/bitrix/header.php");
 use \Bitrix\Crm\Category\DealCategory;
 $APPLICATION->SetTitle("Подбор заявок");
+//-Список сотрудников, включая уволеных-//
+$rsUsers = CUser::GetList(($by="id"), ($order="asc"), array("GROUPS_ID"=> array(12))); // выбираем пользователей
+//--------------------------------------//
+
+
 ?>
 <div id="search_form">
   <form id="formid" action="" title="" method="post">
@@ -18,24 +23,30 @@ $APPLICATION->SetTitle("Подбор заявок");
       <option value="Вторичный" <?=($_POST['market'] =='Вторичный'? 'selected':'')?>>Вторичный</option>
     </select>
     Ответственный
-    <select name="assigned">
+    <select id ="assigned" name="assigned">
       <option value="" <?=($_POST['assigned'] ==''? 'selected':'')?>>(выберите ответственного)</option>
       <?
-              $filter = array("GROUPS_ID"=> array(12));
-              $rsUsers = CUser::GetList(($by="id"), ($order="asc"), $filter); // выбираем пользователей
               while($arUser = $rsUsers->Fetch()) {
                 if ($arUser['ACTIVE']=="Y"){
       ?>
       <option value="<?=$arUser['ID']?>" <?=($_POST['assigned'] == $arUser['ID']? 'selected':'')?>><?=$arUser['LAST_NAME'].' '.$arUser['NAME']?></option>
       <?
                 }else{
+                  if ($_POST['withfired']){
       ?>
       <option value="<?=$arUser['ID']?>" <?=($_POST['assigned'] == $arUser['ID']? 'selected':'')?>><?=$arUser['LAST_NAME'].' '.$arUser['NAME']."(уволен)"?></option>
       <?
+                  }else {
+      ?>
+      <option style ="display:none;" value="<?=$arUser['ID']?>" <?=($_POST['assigned'] == $arUser['ID']? 'selected':'')?>><?=$arUser['LAST_NAME'].' '.$arUser['NAME']."(уволен)"?></option>
+      <?
+                    
+                  }
                 }
               }
       ?>
     </select>
+    <input name="withfired" type="checkbox" <?=($_POST['withfired'])?"checked":""?> onchange="toggle_fired(this)"> с уволенными
     <div id="buy" <?=($_POST['goal']!='buy'? 'style="display:none"':'')?>>
       <fieldset>
         <legend>
@@ -339,6 +350,19 @@ require($_SERVER["DOCUMENT_ROOT"]."/bitrix/footer.php");
       a_pages[0].classList.remove('active');
       el.classList.add('active');
       object.classList.add('active');
+    }
+  }
+  function toggle_fired(object){
+    if (object.checked){
+      $('#assigned option').filter(function () { 
+        var str = $(this).html();
+        return !(str.indexOf("уволен") == -1); 
+      }).show();
+    }else{
+      $('#assigned option').filter(function () { 
+        var str = $(this).html();
+        return !(str.indexOf("уволен") == -1); 
+      }).hide();     
     }
   }
 $(document).ready(function() {
