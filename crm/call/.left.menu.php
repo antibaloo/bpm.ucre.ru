@@ -11,6 +11,12 @@ $aMenuLinks = array(
 		"emulation.php", 
 		array(), 
 		array(), 
+	),
+	array(
+		"Статистика вызовов ВАТС Мегафон", 
+		"history.php", 
+		array(), 
+		array(), 
 	)
 );
 ?>

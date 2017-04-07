@@ -33,6 +33,15 @@ if (count($_POST)){
   ?>
   </pre>
 </div>
+<script language="javascript" type="text/javascript">
+  var source = new EventSource("/pub/sse/sse_server.php?id=<?=$USER->GetID()?>");
+
+      source.onmessage = function(event) {
+				console.log(event.id);
+        console.log(event.data);
+        //document.getElementById("sse_result").innerHTML = event.data;
+      };
+</script>
 <?
 require_once($_SERVER['DOCUMENT_ROOT']."/bitrix/footer.php");
 ?>
