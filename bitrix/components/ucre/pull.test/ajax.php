@@ -34,11 +34,11 @@ if (check_bitrix_sessid())
 				'params' => Array("TIME" => time())
 			)
 		);
-		echo CUtil::PhpToJsObject(Array('ERROR' => ''));
+		echo CUtil::PhpToJsObject(array('ERROR' => ''));
 	}
 	else
 	{
-		echo CUtil::PhpToJsObject(Array('ERROR' => 'UNKNOWN_ERROR'));
+		echo CUtil::PhpToJsObject(array('ERROR' => 'UNKNOWN_ERROR'));
 	}
 }
 else
