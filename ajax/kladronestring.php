@@ -16,6 +16,7 @@ $arResult = $api->QueryToJson($query,true);
 
 //print_r($arResult);
 //echo "</pre>";
+echo "Широта: ".$_POST['coords'][0]." Долгота: ".$_POST['coords'][1];
 ?>
 <table>
   <tr>
