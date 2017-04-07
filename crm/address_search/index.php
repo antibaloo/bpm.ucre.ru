@@ -1,0 +1,60 @@
+<?
+require($_SERVER["DOCUMENT_ROOT"]."/bitrix/header.php");
+$APPLICATION->SetTitle("Поиск адреса по КЛАДР");
+?>
+<link href="css/jquery.kladr.min.css" rel="stylesheet">
+<link href="css/form_with_map.css" rel="stylesheet">
+<script src="js/lib/jquery-1.11.1.min.js" type="text/javascript"></script>
+<script src="js/jquery.kladr.min.js" type="text/javascript"></script>
+<script src="js/form_with_map.js" type="text/javascript"></script>
+<script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
+<div class="address">
+  <div class="col-1">
+    <form class="js-form-address">
+      <div class="field">
+        <label>Регион</label>
+        <input name="region" type="text">
+      </div>
+      <div class="field">
+        <label>Район</label>
+        <input name="district" type="text">
+      </div>
+      <div class="field">
+        <label>Город</label>
+        <input name="city" type="text">
+      </div>
+      <div class="field">
+        <label>Улица</label>
+        <input name="street" type="text">
+      </div>
+      <div class="field">
+        <label>Номер дома</label>
+        <input name="building" type="text">
+      </div>
+    </form>
+    <div class="addition">
+      <div class="block">
+        <p class="title">Текстовое представление адреса</p>
+        <p id="address" class="value"></p>                    
+      </div>
+      <div class="block">
+        <p class="title">Выбранный объект</p>
+        <ul class="js-log">
+          <li id="id" style="display: none;"><span class="name">Код:</span> <span class="value"></span></li>
+          <li id="zip" style="display: none;"><span class="name">Почтовый индекс:</span> <span class="value"></span></li>
+          <li id="name" style="display: none;"><span class="name">Название:</span> <span class="value"></span></li>                        
+          <li id="type" style="display: none;"><span class="name">Подпись:</span> <span class="value"></span></li>
+          <li id="typeShort" style="display: none;"><span class="name">Подпись коротко:</span> <span class="value"></span></li>
+          <li id="contentType" style="display: none;"><span class="name">Тип объекта:</span> <span class="value"></span>
+          <li id="okato" style="display: none;"><span class="name">ОКАТО:</span> <span class="value"></span>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="col-2">
+    <div id="map" class="panel-map"></div>
+  </div>
+</div>
+<?
+require($_SERVER["DOCUMENT_ROOT"]."/bitrix/footer.php");
+?>
