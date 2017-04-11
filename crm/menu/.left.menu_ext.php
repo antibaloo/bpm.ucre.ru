@@ -42,7 +42,7 @@ if (CModule::IncludeModule('crm'))
 		""
 	);
 	$arMenuCrm[] = Array(
-		"Поиск заявок",
+		"Подбор заявок",
 		SITE_DIR."crm/selection_ro/",
 		Array(),
 		Array(),
