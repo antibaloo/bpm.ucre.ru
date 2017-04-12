@@ -11,7 +11,7 @@ $(document).ready(function() {
       data: data,
       success: function (html) {
         $("#result").html(html);
-        location.reload(true);
+				if (html.indexOf("Ошибка:") ==-1) location.reload(true);
       },
       error: function (html) {
         $("#result").html("Что-то пошло не так!");
