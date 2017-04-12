@@ -38,6 +38,16 @@
           $price = substr($adOut, $price1quote+1, $price2quote - $price1quote-1);
           echo "price : ".$price."<br>";
           
+          $latitude1quote = strpos($adOut,'"',strpos($adOut,"data-map-lat"));
+          $latitude2quote = strpos($adOut,'"',$latitude1quote+1);
+          $latitude = substr($adOut,$latitude1quote+1,$latitude2quote - $latitude1quote-1);
+          echo "Широта: ".$latitude."<br>";
+          
+          $longitude1quote = strpos($adOut,'"',strpos($adOut,"data-map-lon"));
+          $longitude2quote = strpos($adOut,'"',$longitude1quote+1);
+          $longitude = substr($adOut,$longitude1quote+1,$longitude2quote - $longitude1quote-1);
+          echo "Долгота: ".$longitude."<br>";
+          
           $phonekey1quote = strpos($adOut,"'",strpos($adOut,"avito.item.phone"));
           $phonekey2quote = strpos($adOut,"'",$phonekey1quote+1);
           $phonekey = substr($adOut,$phonekey1quote+1,$phonekey2quote - $phonekey1quote-1);
@@ -82,7 +92,10 @@
           echo "Имя продавца: ".$name."<br>";
           
           //Профиль на Авито
-          $profile_query = $xpath->query("//*[contains(@class, 'seller-info-avatar-image  js-public-profile-link')]");
+          //seller-info-avatar-image seller-info-avatar-image-company js-public-profile-link
+          //$profile_query = $xpath->query("//*[contains(@class, 'seller-info-avatar-image  js-public-profile-link')]");
+          //$profile_query = $xpath->query("//*[contains(@class, 'seller-info-avatar-image seller-info-avatar-image-company js-public-profile-link')]");
+          $profile_query = $xpath->query("//*[contains(@class, 'js-public-profile-link')]");
           $profile = "https://www.avito.ru".$profile_query->item(0)->getAttribute('href');
 
           echo "Ссылка на профиль Авито: ".$profile."<br>";
