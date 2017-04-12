@@ -22,7 +22,9 @@
         if(get_headers($_POST['url'], 1)){
           echo "Ведется поиск информации по ссылке: ".$_POST['url']."<br>";
           $adOut = file_get_contents($_POST['url']);
-          
+          if($http_response_header[0] != 'HTTP/1.1 200 OK'){
+            die("$http_response_header[0]");
+          }
           $url1quote = strpos($adOut,"'",strpos($adOut,"avito.item.url"));
           $url2quote = strpos($adOut,"'",$url1quote+1);
           $url = "https://www.avito.ru".substr($adOut, $url1quote+1, $url2quote - $url1quote-1);

@@ -4,6 +4,11 @@ CModule::IncludeModule('crm');
 require($_SERVER["DOCUMENT_ROOT"]."/include/ocr/ocr.php");
 if (isset($_POST['lead_id']) && !empty($_POST['lead_id']) && isset($_POST['avito_id']) && !empty($_POST['avito_id'])){
   $adOut = file_get_contents("https://www.avito.ru/items/".$_POST['avito_id']);
+  if($http_response_header[0] != 'HTTP/1.1 200 OK'){
+    if($http_response_header[0] == 'HTTP/1.1 301 Moved Permanently') die ("Ошибка: объявление снято.");
+    elseif ($http_response_header[0] == 'HTTP/1.1 404 Not found') die ("Ошибка: страница объявления не найдена.");
+    else die("Ошбика: ".$http_response_header[0]);
+  }
   $url1quote = strpos($adOut,"'",strpos($adOut,"avito.item.url"));
   $url2quote = strpos($adOut,"'",$url1quote+1);
   $url = "https://www.avito.ru".substr($adOut, $url1quote+1, $url2quote - $url1quote-1); //Высисляем прямой url
@@ -140,10 +145,10 @@ if (isset($_POST['lead_id']) && !empty($_POST['lead_id']) && isset($_POST['avito
   if($Lead->Update($_POST['lead_id'],$leadFields)){
     echo "Лид ".$_POST['lead_id']." обновлен!";
   } else {
-    echo "При обновлении лида ".$_POST['lead_id']." произошла ошибка: ".$Lead->LAST_ERROR;
+    echo "Ошибка: При обновлении лида ".$_POST['lead_id']." произошла ошибка: ".$Lead->LAST_ERROR;
   }
   
 } else {
-  echo "Не все необходимые данные переданы!";
+  echo "Ошибка: Не все необходимые данные переданы!";
 }
 ?>
