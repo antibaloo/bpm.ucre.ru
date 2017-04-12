@@ -49,7 +49,9 @@ if (isset($_POST['lead_id']) && !empty($_POST['lead_id']) && isset($_POST['avito
   
   
   //Профиль на Авито
-  $profile_query = $xpath->query("//*[contains(@class, 'seller-info-avatar-image  js-public-profile-link')]");
+  //$profile_query = $xpath->query("//*[contains(@class, 'seller-info-avatar-image  js-public-profile-link')]"); //Физик
+  //$profile_query = $xpath->query("//*[contains(@class, 'seller-info-avatar-image seller-info-avatar-image-company js-public-profile-link')]"); //Юрик
+  $profile_query = $xpath->query("//*[contains(@class, 'js-public-profile-link')]");//Универсальный вариант
   $profile = "https://www.avito.ru".$profile_query->item(0)->getAttribute('href');
   
   //Параметры объявления
