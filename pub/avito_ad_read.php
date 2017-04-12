@@ -21,10 +21,12 @@
       if (isset($_POST['url']) && !empty($_POST['url'])) {
         if(get_headers($_POST['url'], 1)){
           echo "Ведется поиск информации по ссылке: ".$_POST['url']."<br>";
+          //print_r($http_response_header);
           $adOut = file_get_contents($_POST['url']);
-          if($http_response_header[0] != 'HTTP/1.1 200 OK'){
+          if($http_response_header[0] == 'HTTP/1.1 404 Not found'){
             die("$http_response_header[0]");
           }
+          if (strpos($adOut,"avito.item.url") === false ) die ("Объявление не найдено!");
           $url1quote = strpos($adOut,"'",strpos($adOut,"avito.item.url"));
           $url2quote = strpos($adOut,"'",$url1quote+1);
           $url = "https://www.avito.ru".substr($adOut, $url1quote+1, $url2quote - $url1quote-1);
@@ -94,13 +96,16 @@
           echo "Имя продавца: ".$name."<br>";
           
           //Профиль на Авито
+          $profile = "https://www.avito.ru".$name_query->item(0)->childNodes->item(1)->getAttribute('href');
+          echo "Ссылка на профиль Авито: ".$profile."<br>";
+          /*
           //seller-info-avatar-image seller-info-avatar-image-company js-public-profile-link
           //$profile_query = $xpath->query("//*[contains(@class, 'seller-info-avatar-image  js-public-profile-link')]");
           //$profile_query = $xpath->query("//*[contains(@class, 'seller-info-avatar-image seller-info-avatar-image-company js-public-profile-link')]");
           $profile_query = $xpath->query("//*[contains(@class, 'js-public-profile-link')]");
           $profile = "https://www.avito.ru".$profile_query->item(0)->getAttribute('href');
 
-          echo "Ссылка на профиль Авито: ".$profile."<br>";
+          echo "Ссылка на профиль Авито: ".$profile."<br>";*/
           
           //Параметры объявления
           $params_query = $xpath->query("//*[contains(@class, 'item-params-list')]");
