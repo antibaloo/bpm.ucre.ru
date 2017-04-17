@@ -19,7 +19,7 @@ if ($_POST['crm_token'] == $megapbx->crm_key){
       //79325360157 - ИРР - 13
       //79325360657 - Авито - 14
       //79228299057 - Веб-сайт - WEB
-      switch (trim($_POST['ext'])){
+      switch ($_POST['diversion']){
         case '79325360157':
           $SOURCE_ID = '13';
           break;
