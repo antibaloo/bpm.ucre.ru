@@ -16,11 +16,25 @@ if ($_POST['crm_token'] == $megapbx->crm_key){
     if ($phone_res['FOUND'] == 'N'){
       //Задаем параметры лида
       $oLead = new CCrmLead;
+      //79325360157 - ИРР - 13
+      //79325360657 - Авито - 14
+      //79228299057 - Веб-сайт - WEB
+      switch (trim($_POST['ext'])){
+        case '79325360157':
+          $SOURCE_ID = '13';
+          break;
+        case '79325360657':
+          $SOURCE_ID = '14';
+          break;
+        case '79228299057':
+          $SOURCE_ID = 'WEB';
+          break;
+      }
       $arFields = array(
         "TITLE" => "Лид по входящему звонку с номера +7(".substr($_POST['phone'],1,3).")".substr($_POST['phone'],4,3)."-".substr($_POST['phone'],7,2)."-".substr($_POST['phone'],9)." на ВАТС Мегафон",
         "NAME" => "неизвестно",
         "COMMENTS" => "",
-        "SOURCE_ID" => "CALL",
+        "SOURCE_ID" => $SOURCE_ID,
         "OPPORTUNITY" =>0,
         "CURRENCY_ID" => "RUB",
         "OPPORTUNITY_ACCOUNT" => 0,
