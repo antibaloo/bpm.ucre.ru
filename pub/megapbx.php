@@ -10,6 +10,10 @@ CModule::IncludeModule('search');
 $megapbx = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT']."/../megapbx_params"));
 if ($_POST['crm_token'] == $megapbx->crm_key){
   $DB->Query("INSERT INTO b_megapbx_mess VALUES ('', NOW(),'".trim($_POST['callid'])."','".trim($_POST['cmd'])."','".trim($_POST['phone'])."','".trim($_POST['type'])."','".trim($_POST['user'])."','".trim($_POST['ext'])."','".trim($_POST['telnum'])."','".trim($_POST['diversion'])."','".trim($_POST['duration'])."','".trim($_POST['link'])."','".trim($_POST['status'])."')");
+  CPullWatch::AddToStack(
+    'PULL_MEGAPBX',
+    array('module_id' => 'megapbx','command' => 'check','params' =>$_POST)
+  );
   $phone_res = findByPhoneNumber(trim($_POST['phone']));
   $prefix = (substr($_POST['phone'],0,1)=="8")?"":"+";
   if ($_POST['cmd'] == 'event' && $_POST['type'] == 'INCOMING'){
