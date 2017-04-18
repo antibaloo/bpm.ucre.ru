@@ -11,6 +11,7 @@ $megapbx = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT']."/../megapbx_
 if ($_POST['crm_token'] == $megapbx->crm_key){
   $DB->Query("INSERT INTO b_megapbx_mess VALUES ('', NOW(),'".trim($_POST['callid'])."','".trim($_POST['cmd'])."','".trim($_POST['phone'])."','".trim($_POST['type'])."','".trim($_POST['user'])."','".trim($_POST['ext'])."','".trim($_POST['telnum'])."','".trim($_POST['diversion'])."','".trim($_POST['duration'])."','".trim($_POST['link'])."','".trim($_POST['status'])."')");
   $phone_res = findByPhoneNumber(trim($_POST['phone']));
+  $prefix = (substr($_POST['phone'],0,1)=="8")?"":"+";
   if ($_POST['cmd'] == 'event' && $_POST['type'] == 'INCOMING'){
     $assignedById = (getUserByExt(trim($_POST['ext'])))?getUserByExt(trim($_POST['ext'])):206;
     if ($phone_res['FOUND'] == 'N'){
@@ -31,7 +32,7 @@ if ($_POST['crm_token'] == $megapbx->crm_key){
           break;
       }
       $arFields = array(
-        "TITLE" => "Лид по входящему звонку с номера +".substr($_POST['phone'],0,1)."(".substr($_POST['phone'],1,3).")".substr($_POST['phone'],4,3)."-".substr($_POST['phone'],7,2)."-".substr($_POST['phone'],9)." на ВАТС Мегафон",
+        "TITLE" => "Лид по входящему звонку с номера ".$prefix.substr($_POST['phone'],0,1)."(".substr($_POST['phone'],1,3).")".substr($_POST['phone'],4,3)."-".substr($_POST['phone'],7,2)."-".substr($_POST['phone'],9)." на ВАТС Мегафон",
         "NAME" => "неизвестно",
         "COMMENTS" => "",
         "SOURCE_ID" => $SOURCE_ID,
@@ -47,7 +48,7 @@ if ($_POST['crm_token'] == $megapbx->crm_key){
         "STATUS_ID" => "NEW",
         "UF_CRM_1486022615" => 1317,
         "ASSIGNED_BY_ID" => $assignedById,
-        "FM" => array("PHONE" => array("n0" => array("VALUE" => "+".substr($_POST['phone'],0,1)."(".substr($_POST['phone'],1,3).")".substr($_POST['phone'],4,3)."-".substr($_POST['phone'],7,2)."-".substr($_POST['phone'],9),"VALUE_TYPE" => "OTHER"))),
+        "FM" => array("PHONE" => array("n0" => array("VALUE" => $prefix.substr($_POST['phone'],0,1)."(".substr($_POST['phone'],1,3).")".substr($_POST['phone'],4,3)."-".substr($_POST['phone'],7,2)."-".substr($_POST['phone'],9),"VALUE_TYPE" => "OTHER"))),
       );
       //Создаем лид
       $LeadId = $oLead->Add($arFields, true, array('CURRENT_USER' => 24));
@@ -64,7 +65,7 @@ if ($_POST['crm_token'] == $megapbx->crm_key){
         // символьный тэг для группировки (будет выведено только одно сообщение), если это не требуется - не задаем параметр
         //"NOTIFY_TAG" => "CRM|LEAD|NEW|MEGAPBX",
         // текст уведомления на сайте (доступен html и бб-коды)
-        "NOTIFY_MESSAGE" => "[b]Создан новый лид по входящему звонку[/b] с номера +".substr($_POST['phone'],0,1)."(".substr($_POST['phone'],1,3).")".substr($_POST['phone'],4,3)."-".substr($_POST['phone'],7,2)."-".substr($_POST['phone'],9)." на ВАТС Мегафон. <a href='/crm/lead/show/".$LeadId."/' target='_blank'>Перейти к лиду</a>",
+        "NOTIFY_MESSAGE" => "[b]Создан новый лид по входящему звонку[/b] с номера ".$prefix.substr($_POST['phone'],0,1)."(".substr($_POST['phone'],1,3).")".substr($_POST['phone'],4,3)."-".substr($_POST['phone'],7,2)."-".substr($_POST['phone'],9)." на ВАТС Мегафон. <a href='/crm/lead/show/".$LeadId."/' target='_blank'>Перейти к лиду</a>",
       );
       CIMNotify::Add($arMessageFields);
       $arMessageFields = array(
@@ -79,7 +80,7 @@ if ($_POST['crm_token'] == $megapbx->crm_key){
         // символьный тэг для группировки (будет выведено только одно сообщение), если это не требуется - не задаем параметр
         //"NOTIFY_TAG" => "CRM|LEAD|NEW|MEGAPBX",
         // текст уведомления на сайте (доступен html и бб-коды)
-        "NOTIFY_MESSAGE" => "[b]Создан новый лид по входящему звонку[/b] с номера +".substr($_POST['phone'],0,1)."(".substr($_POST['phone'],1,3).")".substr($_POST['phone'],4,3)."-".substr($_POST['phone'],7,2)."-".substr($_POST['phone'],9)." на ВАТС Мегафон. <a href='/crm/lead/show/".$LeadId."/' target='_blank'>Перейти к лиду</a>",
+        "NOTIFY_MESSAGE" => "[b]Создан новый лид по входящему звонку[/b] с номера ".$prefix.substr($_POST['phone'],0,1)."(".substr($_POST['phone'],1,3).")".substr($_POST['phone'],4,3)."-".substr($_POST['phone'],7,2)."-".substr($_POST['phone'],9)." на ВАТС Мегафон. <a href='/crm/lead/show/".$LeadId."/' target='_blank'>Перейти к лиду</a>",
       );
       CIMNotify::Add($arMessageFields);
       $arMessageFields = array(
@@ -94,7 +95,7 @@ if ($_POST['crm_token'] == $megapbx->crm_key){
         // символьный тэг для группировки (будет выведено только одно сообщение), если это не требуется - не задаем параметр
         //"NOTIFY_TAG" => "CRM|LEAD|NEW|MEGAPBX",
         // текст уведомления на сайте (доступен html и бб-коды)
-        "NOTIFY_MESSAGE" => "[b]Создан новый лид по входящему звонку[/b] с номера +".substr($_POST['phone'],0,1)."(".substr($_POST['phone'],1,3).")".substr($_POST['phone'],4,3)."-".substr($_POST['phone'],7,2)."-".substr($_POST['phone'],9)." на ВАТС Мегафон. <a href='/crm/lead/show/".$LeadId."/' target='_blank'>Перейти к лиду</a>",
+        "NOTIFY_MESSAGE" => "[b]Создан новый лид по входящему звонку[/b] с номера ".$prefix.substr($_POST['phone'],0,1)."(".substr($_POST['phone'],1,3).")".substr($_POST['phone'],4,3)."-".substr($_POST['phone'],7,2)."-".substr($_POST['phone'],9)." на ВАТС Мегафон. <a href='/crm/lead/show/".$LeadId."/' target='_blank'>Перейти к лиду</a>",
       );
       CIMNotify::Add($arMessageFields);
     }
@@ -104,7 +105,7 @@ if ($_POST['crm_token'] == $megapbx->crm_key){
     if ($phone_res['FOUND'] == 'N'){
       $oLead = new CCrmLead;
       $arFields = array(
-        "TITLE" => "Лид по исходящему звонку на  номер +".substr($_POST['phone'],0,1)."(".substr($_POST['phone'],1,3).")".substr($_POST['phone'],4,3)."-".substr($_POST['phone'],7,2)."-".substr($_POST['phone'],9)." на ВАТС Мегафон",
+        "TITLE" => "Лид по исходящему звонку на  номер ".$prefix.substr($_POST['phone'],0,1)."(".substr($_POST['phone'],1,3).")".substr($_POST['phone'],4,3)."-".substr($_POST['phone'],7,2)."-".substr($_POST['phone'],9)." на ВАТС Мегафон",
         "NAME" => "неизвестно",
         "COMMENTS" => "",
         "SOURCE_ID" => "CALL",
@@ -120,7 +121,7 @@ if ($_POST['crm_token'] == $megapbx->crm_key){
         "STATUS_ID" => "NEW",
         "UF_CRM_1486022615" => 1317,
         "ASSIGNED_BY_ID" => $assignedById,
-        "FM" => array("PHONE" => array("n0" => array("VALUE" => "+".substr($_POST['phone'],0,1)."(".substr($_POST['phone'],1,3).")".substr($_POST['phone'],4,3)."-".substr($_POST['phone'],7,2)."-".substr($_POST['phone'],9),"VALUE_TYPE" => "OTHER"))),
+        "FM" => array("PHONE" => array("n0" => array("VALUE" => $prefix.substr($_POST['phone'],0,1)."(".substr($_POST['phone'],1,3).")".substr($_POST['phone'],4,3)."-".substr($_POST['phone'],7,2)."-".substr($_POST['phone'],9),"VALUE_TYPE" => "OTHER"))),
       );
       //Создаем лид
       $LeadId = $oLead->Add($arFields, true, array('CURRENT_USER' => 24));
@@ -137,7 +138,7 @@ if ($_POST['crm_token'] == $megapbx->crm_key){
         // символьный тэг для группировки (будет выведено только одно сообщение), если это не требуется - не задаем параметр
         //"NOTIFY_TAG" => "CRM|LEAD|NEW|MEGAPBX",
         // текст уведомления на сайте (доступен html и бб-коды)
-        "NOTIFY_MESSAGE" => "[b]Создан новый лид по исходящему звонку[/b] на номер +".substr($_POST['phone'],0,1)."(".substr($_POST['phone'],1,3).")".substr($_POST['phone'],4,3)."-".substr($_POST['phone'],7,2)."-".substr($_POST['phone'],9)." на ВАТС Мегафон. <a href='/crm/lead/show/".$LeadId."/' target='_blank'>Перейти к лиду</a>",
+        "NOTIFY_MESSAGE" => "[b]Создан новый лид по исходящему звонку[/b] на номер ".$prefix.substr($_POST['phone'],0,1)."(".substr($_POST['phone'],1,3).")".substr($_POST['phone'],4,3)."-".substr($_POST['phone'],7,2)."-".substr($_POST['phone'],9)." на ВАТС Мегафон. <a href='/crm/lead/show/".$LeadId."/' target='_blank'>Перейти к лиду</a>",
       );
       CIMNotify::Add($arMessageFields);
       $arMessageFields = array(
@@ -152,7 +153,7 @@ if ($_POST['crm_token'] == $megapbx->crm_key){
         // символьный тэг для группировки (будет выведено только одно сообщение), если это не требуется - не задаем параметр
         //"NOTIFY_TAG" => "CRM|LEAD|NEW|MEGAPBX",
         // текст уведомления на сайте (доступен html и бб-коды)
-        "NOTIFY_MESSAGE" => "[b]Создан новый лид по исходящему звонку[/b] на номер +".substr($_POST['phone'],0,1)."(".substr($_POST['phone'],1,3).")".substr($_POST['phone'],4,3)."-".substr($_POST['phone'],7,2)."-".substr($_POST['phone'],9)." на ВАТС Мегафон. <a href='/crm/lead/show/".$LeadId."/' target='_blank'>Перейти к лиду</a>",
+        "NOTIFY_MESSAGE" => "[b]Создан новый лид по исходящему звонку[/b] на номер ".$prefix.substr($_POST['phone'],0,1)."(".substr($_POST['phone'],1,3).")".substr($_POST['phone'],4,3)."-".substr($_POST['phone'],7,2)."-".substr($_POST['phone'],9)." на ВАТС Мегафон. <a href='/crm/lead/show/".$LeadId."/' target='_blank'>Перейти к лиду</a>",
       );
       CIMNotify::Add($arMessageFields);
     }
@@ -181,7 +182,7 @@ if ($_POST['crm_token'] == $megapbx->crm_key){
         'OWNER_ID' => $entity_id,
         'OWNER_TYPE_ID' => CCrmOwnerType::ResolveID($entity_type),
         'TYPE_ID' =>  CCrmActivityType::Call,
-        'SUBJECT' => 'Входящий звонок с номера +'.substr($_POST['phone'],0,1).'('.substr($_POST['phone'],1,3).")".substr($_POST['phone'],4,3)."-".substr($_POST['phone'],7,2)."-".substr($_POST['phone'],9),
+        'SUBJECT' => 'Входящий звонок с номера '.$prefix.substr($_POST['phone'],0,1).'('.substr($_POST['phone'],1,3).")".substr($_POST['phone'],4,3)."-".substr($_POST['phone'],7,2)."-".substr($_POST['phone'],9),
         'START_TIME' => date("d.m.Y H:i:s",strtotime($begintime['TIME'])),
         'END_TIME' => date("d.m.Y H:i:s",strtotime($begintime['TIME'])+$_POST['duration']),
         'COMPLETED' => ($_POST['status'] == 'Success')?'Y':'N',
@@ -378,7 +379,7 @@ if ($_POST['crm_token'] == $megapbx->crm_key){
         'OWNER_ID' => $entity_id,
         'OWNER_TYPE_ID' => CCrmOwnerType::ResolveID($entity_type),
         'TYPE_ID' =>  CCrmActivityType::Call,
-        'SUBJECT' => 'Исходящий '.$outRes.' звонок на номер +'.substr($_POST['phone'],0,1).'('.substr($_POST['phone'],1,3).")".substr($_POST['phone'],4,3)."-".substr($_POST['phone'],7,2)."-".substr($_POST['phone'],9),
+        'SUBJECT' => 'Исходящий '.$outRes.' звонок на номер '.$prefix.substr($_POST['phone'],0,1).'('.substr($_POST['phone'],1,3).")".substr($_POST['phone'],4,3)."-".substr($_POST['phone'],7,2)."-".substr($_POST['phone'],9),
         'START_TIME' => date("d.m.Y H:i:s",strtotime($begintime['TIME'])),
         'END_TIME' => date("d.m.Y H:i:s",strtotime($begintime['TIME'])+$_POST['duration']),
         'COMPLETED' => ($_POST['status'] == 'Success')?'Y':'N',
