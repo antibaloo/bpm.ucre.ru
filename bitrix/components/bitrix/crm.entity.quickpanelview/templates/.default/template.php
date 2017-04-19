@@ -1,5 +1,4 @@
 <?php
-use \Bitrix\Crm\Category\DealCategory;
 if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) die();
 global $APPLICATION;
 $APPLICATION->SetAdditionalCSS('/bitrix/js/crm/css/crm.css');
@@ -406,7 +405,7 @@ if(!function_exists('__CrmQuickPanelViewRenderSection'))
 					elseif($entityTypeID === CCrmOwnerType::Deal || $entityTypeID === CCrmOwnerType::Lead || $entityTypeID === CCrmOwnerType::Quote || $entityTypeID === CCrmOwnerType::Invoice):
 						$title = $arResult['HEAD_TITLE'];
 						$headerConfig['TITLE'] = array('fieldId' => $arResult['HEAD_TITLE_FIELD_ID']);
-						?><div id="<?="{$guid}_title"?>" class="crm-lead-header-title"> <?if ($entityTypeID === CCrmOwnerType::Deal) echo "<span style='color: blue; font-size: 18px; vertical-align: middle;'>".DealCategory::getName($entityFields['CATEGORY_ID']).": </span>";?>
+						?><div id="<?="{$guid}_title"?>" class="crm-lead-header-title">
 							<span class="crm-lead-header-title-text"><?=$title?></span>
 						<span class="crm-lead-header-title-edit-wrapper" style="display: none;"></span>
 							<div class="crm-lead-header-title-edit"></div>
@@ -414,14 +413,17 @@ if(!function_exists('__CrmQuickPanelViewRenderSection'))
 					endif;
 					?></div></div>
 					<div class="crm-lead-header-header-right"><div class="crm-lead-header-right-inner"><?
-						if($entityTypeID === CCrmOwnerType::Deal || $entityTypeID === CCrmOwnerType::Lead || $entityTypeID === CCrmOwnerType::Quote || $entityTypeID === CCrmOwnerType::Invoice):
-							$headerConfig['SUM'] = array('fieldId' => $arResult['HEAD_SUM_FIELD_ID']);
-							?><div id="<?="{$guid}_progress"?>" class="crm-lead-header-status">
-								<span id="<?=htmlspecialcharsbx($arResult['HEAD_PROGRESS_LEGEND_CONTAINER_ID'])?>" class="crm-lead-header-status-title"><?=htmlspecialcharsbx($arResult['HEAD_PROGRESS_LEGEND'])?></span>
-									<div class="crm-detail-stage"><?=$arResult['HEAD_PROGRESS_BAR']?></div>
-									<span id="<?="{$guid}_sum"?>" class="crm-lead-header-status-sum"><?=GetMessage('CRM_ENTITY_QPV_SUM_HEADER')?>: <span class="crm-lead-header-status-sum-num"><?=$arResult['HEAD_FORMATTED_SUM']?></span></span>
-							</div><?
-						endif;
+						if ($arParams['SHOW_STATUS_ACTION'] !== 'N')
+						{
+							if($entityTypeID === CCrmOwnerType::Deal || $entityTypeID === CCrmOwnerType::Lead || $entityTypeID === CCrmOwnerType::Quote || $entityTypeID === CCrmOwnerType::Invoice):
+								$headerConfig['SUM'] = array('fieldId' => $arResult['HEAD_SUM_FIELD_ID']);
+								?><div id="<?="{$guid}_progress"?>" class="crm-lead-header-status">
+									<span id="<?=htmlspecialcharsbx($arResult['HEAD_PROGRESS_LEGEND_CONTAINER_ID'])?>" class="crm-lead-header-status-title"><?=htmlspecialcharsbx($arResult['HEAD_PROGRESS_LEGEND'])?></span>
+										<div class="crm-detail-stage"><?=$arResult['HEAD_PROGRESS_BAR']?></div>
+										<span id="<?="{$guid}_sum"?>" class="crm-lead-header-status-sum"><?=GetMessage('CRM_ENTITY_QPV_SUM_HEADER')?>: <span class="crm-lead-header-status-sum-num"><?=$arResult['HEAD_FORMATTED_SUM']?></span></span>
+								</div><?
+							endif;
+						}
 						?><div class="crm-lead-header-contact-btns">
 							<span id="<?="{$guid}_menu_btn"?>" class="crm-lead-header-contact-btn crm-lead-header-contact-btn-menu"></span>
 							<span id="<?="{$guid}_pin_btn"?>" class="crm-lead-header-contact-btn <?=$isFixed ? 'crm-lead-header-contact-btn-pin' : 'crm-lead-header-contact-btn-unpin'?>"></span>
