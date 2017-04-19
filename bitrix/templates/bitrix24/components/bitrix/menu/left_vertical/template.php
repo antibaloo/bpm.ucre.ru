@@ -28,7 +28,6 @@ $groupPopupExists = false;
 	</div>
 	<ul class="menu-items" id="left-menu-list">
 		<li class="menu-items-empty-li" id="left-menu-empty-item" style="height: 3px;"></li>
-		
 		<li id="bx_left_menu_quick_link">
 			<input style="margin-left: 34px;" id="ucre_entity_id" type="text" size="5">
 			<span class="menu-item-link-text ucre" data-role="item-text" onclick="location.href=ucre_entity_id.value != ''?'https://bpm.ucre.ru/crm/lead/show/'+ucre_entity_id.value+'/':'#'">Лид</span>&nbsp;
@@ -59,13 +58,7 @@ $groupPopupExists = false;
 					if (array_key_exists("counter_id", $item["PARAMS"]) && strlen($item["PARAMS"]["counter_id"]) > 0)
 					{
 						$counterId = $item["PARAMS"]["counter_id"] == "live-feed" ? "**" : $item["PARAMS"]["counter_id"];
-						$counter = isset($GLOBALS["LEFT_MENU_COUNTERS"]) && array_key_exists($counterId, $GLOBALS["LEFT_MENU_COUNTERS"]) ? $GLOBALS["LEFT_MENU_COUNTERS"][$counterId] : 0;
-						if ($counterId == "crm_cur_act")
-						{
-							$counterCrm = (isset($GLOBALS["LEFT_MENU_COUNTERS"]) && array_key_exists("CRM_**", $GLOBALS["LEFT_MENU_COUNTERS"]) ? intval($GLOBALS["LEFT_MENU_COUNTERS"]["CRM_**"]) : 0);
-							$counterAct = $counter;
-							$counter += $counterCrm;
-						}
+						$counter = array_key_exists($counterId, $arResult["COUNTERS"]) ? $arResult["COUNTERS"][$counterId] : 0;
 					}
 
 					if ($counterId)
@@ -156,10 +149,9 @@ $groupPopupExists = false;
 								if ($isCompositeMode === false)
 								{
 									$itemCounter = ($item["PARAMS"]["counter_id"] == "mail_unseen" ? ($counter > 99 ? "99+" : $counter) : ($counter > 50 ? "50+" : $counter));
-									$crmAttrs = ($item["PARAMS"]["counter_id"] == "crm_cur_act" ? ' data-counter-crmstream="'.intval($counterCrm).'" data-counter-crmact="'.intval($counterAct).'"' : "");
 								}
 								?><span class="menu-item-index-wrap"><?
-									?><span class="menu-item-index" <?=$crmAttrs?>
+									?><span class="menu-item-index"
 											id="menu-counter-<?=strtolower($item["PARAMS"]["counter_id"])?>"><?=$itemCounter?></span>
 								</span>
 								<? if (!empty($item["PARAMS"]["warning_link"])):?>
