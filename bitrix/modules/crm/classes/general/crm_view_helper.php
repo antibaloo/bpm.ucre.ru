@@ -1715,9 +1715,14 @@ class CCrmViewHelper
 			array('HIDE_ICONS' => 'Y')
 		);
 	}
-	public static function RenderUserSearch($ID, $searchInputID, $dataInputID, $componentName, $siteID = '', $nameFormat = '', $delay = 0)
+	public static function RenderUserSearch($ID, $searchInputID, $dataInputID, $componentName, $siteID = '', $nameFormat = '', $delay = 0, array $options = null)
 	{
 		CCrmComponentHelper::RegisterScriptLink('/bitrix/js/crm/common.js');
+
+		if(!is_array($options))
+		{
+			$options = array();
+		}
 
 		$ID = strval($ID);
 		$searchInputID = strval($searchInputID);
@@ -1742,8 +1747,15 @@ class CCrmViewHelper
 			$delay = 0;
 		}
 
-		echo '<input type="text" id="', htmlspecialcharsbx($searchInputID) ,'" style="width:200px;"   >',
-		'<input type="hidden" id="', htmlspecialcharsbx($dataInputID),'" name="', htmlspecialcharsbx($dataInputID),'" value="">';
+		if(!isset($options['RENDER_SEARCH_INPUT']) || $options['RENDER_SEARCH_INPUT'])
+		{
+			echo '<input type="text" id="', htmlspecialcharsbx($searchInputID) ,'" style="width:200px;">';
+		}
+
+		if(!isset($options['RENDER_DATA_INPUT']) || $options['RENDER_DATA_INPUT'])
+		{
+			echo '<input type="hidden" id="', htmlspecialcharsbx($dataInputID),'" name="', htmlspecialcharsbx($dataInputID),'">';
+		}
 
 		echo '<script type="text/javascript">',
 			'BX.ready(function(){',
@@ -1797,8 +1809,7 @@ class CCrmViewHelper
 
 			if($processed > 0)
 			{
-				echo '<span class="bx-br-separator">&nbsp;</span>';
-				//echo '<span class="bx-br-separator"><br/></span>';
+				echo '<span class="bx-br-separator"><br/></span>';
 			}
 
 			echo '<span class="fields files">';
@@ -1807,10 +1818,7 @@ class CCrmViewHelper
 
 			if ($file->IsImage($fileInfo['ORIGINAL_NAME'], $fileInfo['CONTENT_TYPE']))
 			{
-				echo '<a class="fancybox" rel="image_gallery" href="https://bpm.ucre.ru'.$fileInfo['SRC'].'" title="">
-								<img src="https://bpm.ucre.ru'.$fileInfo['SRC'].'" width = "auto" height ="50" alt="" />
-							</a>';
-				//echo $file->ShowImage($fileInfo, $fileMaxWidth, $fileMaxHeight, '', '', true, false, 0, 0, $fileUrlTemplate);
+				echo $file->ShowImage($fileInfo, $fileMaxWidth, $fileMaxHeight, '', '', true, false, 0, 0, $fileUrlTemplate);
 			}
 			else
 			{
