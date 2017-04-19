@@ -26,7 +26,33 @@ $optionsJson = \Bitrix\Main\Web\Json::encode($options);
 			</div>
 		</div><!--crm-task-list-header-->
 		<div class="crm-task-list-inner">
-			<?=$provider::renderView($activity)?>
+			<?if ($activity['TYPE_ID'] == 2){?>
+ 			<div class="crm-task-list-call">
+ 				<div class="crm-task-list-call-info">
+ 					<?if ($activity['PROVIDER_DATA']){?><audio controls src="<?=$activity['PROVIDER_DATA']?>"></audio><?}?>
+ 					<div class="crm-task-list-call-info-container">
+ 						<span class="crm-task-list-call-info-name">Тип звонка:</span>
+ 						<? if ($activity['DIRECTION'] == 1){?>
+ 						<span class="crm-task-list-call-info-item">Входящий звонок</span>
+ 						<?}elseif ($activity['DIRECTION'] == 2){?>
+ 						<span class="crm-task-list-call-info-item">Исходящий звонок</span>
+ 						<?}?>
+ 						<br>
+ 						<span class="crm-task-list-call-info-name">Результат:</span>
+ 						<span class="crm-task-list-call-info-item">
+ 							<?=($activity['COMPLETED']== 'Y')?"Звонок завершен":"Звонок не состоялся"?>
+ 						</span>
+ 						<br>
+ 						<span class="crm-task-list-call-info-name">Описание:</span>
+ 						<span>
+ 							<?=$activity['DESCRIPTION']?>
+ 						</span>
+ 					</div>
+ 				</div>
+ 			</div>
+ 			<?}else{?>
+ 			<?=$provider::renderView($activity)?>
+ 			<?}?>
 		</div><!--crm-task-list-inner-->
 		<?if ($arResult['DOC_BINDINGS']):?>
 		<div class="crm-task-list-docs">
