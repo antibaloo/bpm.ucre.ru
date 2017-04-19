@@ -9,16 +9,16 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) die();
 $provider = $arResult['PROVIDER'];
 /** @var array $activity */
 $activity = $arResult['ACTIVITY'];
-//if($USER->GetID()==24){var_dump($activity);}
 $options = array(
 	'title' => $provider::getTypeName($activity['PROVIDER_TYPE_ID'], $activity['DIRECTION']),
-	'important' => $activity['PRIORITY'] == CCrmActivityPriority::High
+	'important' => $activity['PRIORITY'] == CCrmActivityPriority::High,
+	'isEditable' => !empty($arResult['IS_EDITABLE'])
 );
 $optionsJson = \Bitrix\Main\Web\Json::encode($options);
 ?>
 <div class="crm-task-list-wrapper" data-role="options" data-options="<?=htmlspecialcharsbx($optionsJson)?>">
 	<div class="crm-task-list-container">
-		<div class="crm-task-list-header <?=$arResult['TYPE_ICON']?>">
+		<div class="crm-task-list-header crm-task-list-header-image <?=$arResult['TYPE_ICON']?>">
 			<div class="crm-task-list-header-item"><?=htmlspecialcharsbx($activity['SUBJECT'] ? $activity['SUBJECT'] : $provider::getTypeName($activity['PROVIDER_TYPE_ID'], $activity['DIRECTION']))?></div>
 			<div class="crm-task-list-header-description">
 				<span class="crm-task-list-header-description-item"><?=GetMessage('CRM_ACTIVITY_PLANNER_VIEW_DATE_AND_TIME')?>:</span>
@@ -26,33 +26,7 @@ $optionsJson = \Bitrix\Main\Web\Json::encode($options);
 			</div>
 		</div><!--crm-task-list-header-->
 		<div class="crm-task-list-inner">
-			<?if ($activity['TYPE_ID'] == 2){?>
-			<div class="crm-task-list-call">
-				<div class="crm-task-list-call-info">
-					<?if ($activity['PROVIDER_DATA']){?><audio controls src="<?=$activity['PROVIDER_DATA']?>"></audio><?}?>
-					<div class="crm-task-list-call-info-container">
-						<span class="crm-task-list-call-info-name">Тип звонка:</span>
-						<? if ($activity['DIRECTION'] == 1){?>
-						<span class="crm-task-list-call-info-item">Входящий звонок</span>
-						<?}elseif ($activity['DIRECTION'] == 2){?>
-						<span class="crm-task-list-call-info-item">Исходящий звонок</span>
-						<?}?>
-						<br>
-						<span class="crm-task-list-call-info-name">Результат:</span>
-						<span class="crm-task-list-call-info-item">
-							<?=($activity['COMPLETED']== 'Y')?"Звонок завершен":"Звонок не состоялся"?>
-						</span>
-						<br>
-						<span class="crm-task-list-call-info-name">Описание:</span>
-						<span>
-							<?=$activity['DESCRIPTION']?>
-						</span>
-					</div>
-				</div>
-			</div>
-			<?}else{?>
 			<?=$provider::renderView($activity)?>
-			<?}?>
 		</div><!--crm-task-list-inner-->
 		<?if ($arResult['DOC_BINDINGS']):?>
 		<div class="crm-task-list-docs">
