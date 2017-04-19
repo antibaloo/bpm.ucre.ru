@@ -91,6 +91,8 @@ if($arResult['CATEGORY_ID'] < 0)
 }
 //endregion
 
+$arResult['CALL_LIST_ID'] = (int)$_REQUEST['call_list_id'];
+$arResult['CALL_LIST_ELEMENT'] = (int)$_REQUEST['call_list_element'];
 $arResult['PERMISSION_ENTITY_TYPE'] = Bitrix\Crm\Category\DealCategory::convertToPermissionEntityType($arResult['CATEGORY_ID']);
 
 $CCrmBizProc->AddParam('DealCategoryId', $arResult['CATEGORY_ID']);
@@ -271,7 +273,7 @@ else
 	$beginDate -= $time['tm_sec'];
 
 	$arFields['BEGINDATE'] = ConvertTimeStamp($beginDate, 'FULL', SITE_ID);
-	$arFields['CLOSEDATE'] = ConvertTimeStamp($beginDate + 182/*7*/ * 86400, 'FULL', SITE_ID);
+	$arFields['CLOSEDATE'] = ConvertTimeStamp($beginDate + 7 * 86400, 'FULL', SITE_ID);
 
 	$extVals =  isset($arParams['~VALUES']) && is_array($arParams['~VALUES']) ? $arParams['~VALUES'] : array();
 	if (count($extVals) > 0)
@@ -828,6 +830,14 @@ else
 			//end automation
 
 			$ID = isset($arResult['ELEMENT']['ID']) ? $arResult['ELEMENT']['ID'] : 0;
+			if($arResult['CALL_LIST_ID'] > 0 && $arResult['CALL_LIST_ELEMENT'] > 0)
+			{
+				$callList = \Bitrix\Crm\CallList\CallList::createWithId($arResult['CALL_LIST_ID']);
+				if($callList && $ID > 0)
+				{
+					$callList->addCreatedEntity($arResult['CALL_LIST_ELEMENT'], CCrmOwnerType::DealName, $ID);
+				}
+			}
 
 			if (!empty($arResult['ERROR_MESSAGE']))
 			{
@@ -919,6 +929,15 @@ else
 							'entityInfo' => $info
 						)
 					);
+					if(CModule::IncludeModule('pull'))
+					{
+						CPullStack::AddByUser($USER->GetID(), array(
+							'module_id' => 'crm',
+							'command' => 'external_event',
+							'params' =>  $arResult['EXTERNAL_EVENT']
+						));
+					}
+
 					$this->IncludeComponentTemplate('event');
 					return;
 				}
@@ -1203,7 +1222,7 @@ $arResult['FIELDS']['tab_1'][] = array(
 
 //Fix for issue #36848
 $beginDate = isset($arResult['ELEMENT']['BEGINDATE']) ? $arResult['ELEMENT']['BEGINDATE'] : '';
-$closeDate = isset($arResult['ELEMENT']['CLOSEDATE']) ? $arResult['ELEMENT']['CLOSEDATE'] : /*$beginDate*/ConvertTimeStamp(MakeTimeStamp($beginDate) + 182/*7*/ * 86400, 'FULL', SITE_ID);
+$closeDate = isset($arResult['ELEMENT']['CLOSEDATE']) ? $arResult['ELEMENT']['CLOSEDATE'] : $beginDate;
 
 $arResult['FIELDS']['tab_1'][] = array(
 	'id' => 'BEGINDATE',
@@ -1359,7 +1378,7 @@ if ($bTaxMode)
 			GetMessage('CRM_DEAL_FIELD_LOCATION_ID_DESCRIPTION').
 			'</span>'.
 			'</div>',
-		'required' => true
+		'persistent' => true
 	);
 	$arResult['FIELDS']['tab_1'][] = $locationField;
 	$arResult['FORM_FIELDS_TO_ADD']['LOCATION_ID'] = $locationField;
