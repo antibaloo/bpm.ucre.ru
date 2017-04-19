@@ -5,7 +5,10 @@ use \Bitrix\Crm\Integration\StorageType;
 use \Bitrix\Crm\Conversion\LeadConversionScheme;
 use \Bitrix\Crm\Category\DealCategory;
 use \Bitrix\Crm\Conversion\EntityConverter;
-
+?>
+<link rel="stylesheet" href="/bitrix/js/baloo/fancyapps/source/jquery.fancybox.css" type="text/css" media="screen" />
+<script type="text/javascript" src="/bitrix/js/baloo/fancyapps/source/jquery.fancybox.pack.js"></script>
+<?
 global $APPLICATION;
 $APPLICATION->AddHeadScript('/bitrix/js/crm/instant_editor.js');
 $APPLICATION->SetAdditionalCSS('/bitrix/js/crm/css/crm.css');
@@ -193,7 +196,83 @@ $APPLICATION->IncludeComponent(
 	$component,
 	array('HIDE_ICONS' => 'Y')
 );
-
+/*---------------Дополнительный блок об объявлении Авито, если лид был сформирован из объявления-----------------*/
+//
+/*----------------------------------------------------------------------------------------------------------------*/
+$rsLead = CCrmLead::GetListEx(
+	array(),
+	array('ID' => $element['ID']),
+	false,
+	false,
+	array('ID', 'UF_CRM_1486619563','UF_CRM_1486619533','UF_CRM_1486723225','UF_CRM_1487055132','UF_CRM_1487058104'),
+	array()
+);
+$mainLead = $rsLead->Fetch();//UF_CRM_1486723225
+if ($mainLead['UF_CRM_1486619563']){
+?>
+<table class="crm-offer-info-table crm-offer-main-info-text">
+	<tbody>
+		<tr><td colspan="5"><div class="crm-offer-title">Лид был создан автоматически парсером Авито-Недвижимость</div></td></tr>
+		<tr class="crm-offer-row">
+			<td class="crm-offer-info-drg-btn"></td>
+			<td class="crm-offer-info-left">
+				<div class="crm-offer-info-label-wrap"><span class="crm-offer-info-label">Ссылка на объявление:</span></div>
+			</td>
+			<td class="crm-offer-info-right">
+				<div class="crm-offer-info-label-wrap"><span class="crm-offer-info-label"><a href='<?=$mainLead['UF_CRM_1486619533']?>' target='_blank'>Перейти в объявление</a></span></div>
+			</td>
+			<td class="crm-offer-info-left">
+				<div class="crm-offer-info-label-wrap">
+					<span class="crm-offer-info-label">
+						<form id="avito">
+							<input type="hidden" name="lead_id" value="<?=$mainLead['ID']?>">
+							<input type="hidden" name="avito_id" value="<?=$mainLead['UF_CRM_1486619563']?>">
+							<input type="button" id="sync" value="Синхронизировать" <?=($mainLead['UF_CRM_1486723225'] && $USER->GetId() != 24)?"disabled":""?>/>
+						</form>
+					</span></div>
+			</td>
+			<td class="crm-offer-info-right">		
+				<div class="crm-offer-info-label-wrap">
+					<span class="crm-offer-info-label">
+						<div id="result"><?=($mainLead['UF_CRM_1486723225'])?"Синхронизирован":""?></div>
+					</span>
+				</div>
+			</td>
+		</tr>
+		<tr class="crm-offer-row">
+			<td class="crm-offer-info-drg-btn"></td>
+			<td class="crm-offer-info-left">
+				<div class="crm-offer-info-label-wrap"><span class="crm-offer-info-label">Профиль Авито:</span></div>
+			</td>
+			<td class="crm-offer-info-right">
+				<div class="crm-offer-info-label-wrap"><span class="crm-offer-info-label"><a href='<?=$mainLead['UF_CRM_1487055132']?>' target='_blank'>Перейти в профиль</a></span></div>
+			</td>
+			<td class="crm-offer-info-left">
+				<div class="crm-offer-info-label-wrap"><span class="crm-offer-info-label">Телефон из объявления:<br>(картинка для проверки)</span></div>
+			</td>	
+			<td class="crm-offer-info-right">
+				<div class="crm-offer-info-label-wrap"><span class="crm-offer-info-label"><img src='<?=$mainLead['UF_CRM_1486723225']?>' height="25" width ="auto"></span></div>
+			</td>	
+		</tr>
+		<tr class="crm-offer-row">
+			<td class="crm-offer-info-drg-btn"></td>
+			<td class="crm-offer-info-left">
+				<div class="crm-offer-info-label-wrap"><span class="crm-offer-info-label">Фотографии с Авито:</span></div>
+			</td>
+			<td class="crm-offer-info-right" colspan="3">
+				<div class="crm-offer-info-label-wrap" style="text-align: center;">
+					<!--<?=$mainLead['UF_CRM_1487058104']?>-->
+<?foreach (unserialize($mainLead['UF_CRM_1487058104']) as $avitolink){
+	echo "<a class='fancybox' rel='image_gallery' href='".$avitolink."'><img style='margin-right: 10px; border:1px solid #cccccc;' src='".$avitolink."' width = 'auto' height ='50'/></a>";
+}?>
+				</div>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<?
+}
+/*--------------------------------------Конец дополнительного блока------------------------------------------------*/
 $APPLICATION->IncludeComponent(
 	'bitrix:crm.interface.form',
 	'show',
