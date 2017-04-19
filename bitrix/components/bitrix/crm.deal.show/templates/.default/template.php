@@ -23,8 +23,8 @@ if(CCrmActivity::GetDefaultStorageTypeID() === StorageType::Disk)
 {
 	CJSCore::Init(array('uploader', 'file_dialog'));
 }
-
-$arResult['CRM_CUSTOM_PAGE_TITLE'] = GetMessage(
+//Добавим направление в заголовок
+$arResult['CRM_CUSTOM_PAGE_TITLE'] = DealCategory::getName($arResult['CATEGORY_ID']).": ".GetMessage(
 	'CRM_DEAL_SHOW_TITLE',
 	array(
 		'#ID#' => $arResult['ELEMENT']['ID'],
