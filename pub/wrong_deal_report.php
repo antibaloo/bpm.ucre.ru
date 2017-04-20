@@ -12,7 +12,7 @@ ob_start();
 if (isset($_GET['assigned'])){    
   $rsDeal = CCrmDeal::GetListEx(
     array(), 
-    array("CATEGORY_ID" => array(0,4), "STAGE_ID" => array("PROPOSAL","C4:1", "C4:PROPOSAL"),"UF_CRM_1469534140" => "", "ASSIGNED_BY_ID" => $_GET['assigned'], "CHECK_PERMISSIONS" => "N"), 
+    array("CATEGORY_ID" => array(0,4), "STAGE_ID" => array("PROPOSAL","C4:1", "C4:PROPOSAL"),"UF_CRM_1469534140" => NULL, "ASSIGNED_BY_ID" => $_GET['assigned'], "CHECK_PERMISSIONS" => "N"), 
     false, 
     false, 
     array("ID","TITLE","UF_CRM_1469534140", "ASSIGNED_BY_ID"),
@@ -21,7 +21,7 @@ if (isset($_GET['assigned'])){
 } else {
   $rsDeal = CCrmDeal::GetListEx(
     array(), 
-    array("CATEGORY_ID" => array(0,4), "STAGE_ID" => array("PROPOSAL","C4:1", "C4:PROPOSAL"),"UF_CRM_1469534140" => "", "CHECK_PERMISSIONS" => "N"), 
+    array("CATEGORY_ID" => array(0,4), "STAGE_ID" => array("PROPOSAL","C4:1", "C4:PROPOSAL"),"UF_CRM_1469534140" => NULL, "CHECK_PERMISSIONS" => "N"), 
     false, 
     false, 
     array("ID","TITLE","UF_CRM_1469534140", "ASSIGNED_BY_ID"),
@@ -37,7 +37,7 @@ $noobject = $rsDeal->SelectedRowsCount();
 if (isset($_GET['assigned'])){
   $rsDeal = CCrmDeal::GetListEx(
     array(), 
-    array("CATEGORY_ID" => array(0,2,4), "STAGE_ID" => array("PROPOSAL","C4:1", "C4:PROPOSAL", "C2:PROPOSAL"),"CONTACT_ID" => "", "COMPANY_ID" => "", "ASSIGNED_BY_ID" => $_GET['assigned'], "CHECK_PERMISSIONS" => "N"), 
+    array("CATEGORY_ID" => array(0,2,4), "STAGE_ID" => array("PROPOSAL","C4:1", "C4:PROPOSAL", "C2:PROPOSAL"),"CONTACT_ID" => array(0, NULL), "COMPANY_ID" => array(0, NULL), "ASSIGNED_BY_ID" => $_GET['assigned'], "CHECK_PERMISSIONS" => "N"), 
     false, 
     false, 
     array("ID","TITLE","CONTACT_ID", "COMPANY_ID", "ASSIGNED_BY_ID"),//Тип, кол-во комнат, цена от, цена до, цена строго
@@ -46,7 +46,7 @@ if (isset($_GET['assigned'])){
 } else {
   $rsDeal = CCrmDeal::GetListEx(
     array(), 
-    array("CATEGORY_ID" => array(0,2,4), "STAGE_ID" => array("PROPOSAL","C4:1", "C4:PROPOSAL", "C2:PROPOSAL"),"CONTACT_ID" => "", "COMPANY_ID" => "" ,"CHECK_PERMISSIONS" => "N"), 
+    array("CATEGORY_ID" => array(0,2,4), "STAGE_ID" => array("PROPOSAL","C4:1", "C4:PROPOSAL", "C2:PROPOSAL"),"CONTACT_ID" => array(0, NULL), "COMPANY_ID" => array(0, NULL),"CHECK_PERMISSIONS" => "N"), 
     false, 
     false, 
     array("ID","TITLE","CONTACT_ID", "COMPANY_ID", "ASSIGNED_BY_ID"),//Тип, кол-во комнат, цена от, цена до, цена строго
