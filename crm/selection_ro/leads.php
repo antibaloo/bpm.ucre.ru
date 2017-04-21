@@ -1,6 +1,14 @@
 <?
 require($_SERVER["DOCUMENT_ROOT"]."/bitrix/header.php");
 $APPLICATION->SetTitle("Поиск объектов на Авито");
+global $APPLICATION;
+$APPLICATION->SetAdditionalCSS('/bitrix/js/crm/css/crm.css');
+$APPLICATION->SetAdditionalCSS("/bitrix/themes/.default/crm-entity-show.css");
+if(SITE_TEMPLATE_ID === 'bitrix24')
+{
+	$APPLICATION->SetAdditionalCSS("/bitrix/themes/.default/bitrix24/crm-entity-show.css");
+}
+
 if (in_array($USER->GetID(), array(1,24))){
 ?>
 <form id="avito" name="avito">
@@ -92,5 +100,5 @@ require($_SERVER["DOCUMENT_ROOT"]."/bitrix/footer.php");
       }
       send_form();
     };
-  } 
- </script>
+  }
+</script>
