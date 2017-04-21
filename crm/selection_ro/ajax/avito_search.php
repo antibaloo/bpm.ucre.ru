@@ -147,7 +147,7 @@ foreach ($avitoAds as $avitoAd){
   $params = array();
   foreach ($params_query as $param){
     $temp_param = explode(":",trim(utf8_decode ($param->nodeValue)));
-    $params["'".$temp_param[0]."'"] = trim($temp_param[1]);
+    $params[$temp_param[0]] = trim($temp_param[1]);
   }
   $avitoAd['Параметры'] = $params;
 ?>
@@ -161,8 +161,8 @@ foreach ($avitoAds as $avitoAd){
   <input name="profileAd" type="hidden" value="<?=$avitoAd['Ссылка на профиль']?>">
   <input name="addressAd" type="hidden" value="<?=$avitoAd['Адрес объекта']?>">
   <input name="descriptionAd" type="hidden" value="<?=$avitoAd['Описание']?>">
-  <input name="photoAd" type="hidden" value="<?=serialize($avitoAd['Фото'])?>">
-  <input name="paramsAd" type="hidden" value="<?=serialize($avitoAd['Параметры'])?>">
+  <input name="photoAd" type="hidden" value='<?=serialize($avitoAd['Фото'])?>'>
+  <input name="paramsAd" type="hidden" value='<?=serialize($avitoAd['Параметры'])?>'>
   <input name="userId" type="hidden" value="<?=$USER->GetID()?>">
   <table class="crm-offer-info-table crm-offer-main-info-text">
     <tbody>
@@ -228,7 +228,7 @@ foreach ($avitoAds as $avitoAd){
             <table>
             <?foreach($avitoAd['Параметры'] as $key=>$parameter){?>
               <tr>
-                <td style="text-align: left;"><?=str_replace("'","",$key).":"?></td><td><?=$parameter?></td>
+                <td style="text-align: left;"><?=$key.":"?></td><td><?=$parameter?></td>
               </tr>
             <?}?>
             </table>
