@@ -29,7 +29,12 @@ $optionsJson = \Bitrix\Main\Web\Json::encode($options);
 			<?if ($activity['TYPE_ID'] == 2){?>
  			<div class="crm-task-list-call">
  				<div class="crm-task-list-call-info">
- 					<?if ($activity['PROVIDER_DATA']){?><audio controls src="<?=$activity['PROVIDER_DATA']?>"></audio><?}?>
+ 					<?if ($activity['PROVIDER_DATA']){?>
+					<audio controls>
+						<source src="<?=$activity['PROVIDER_DATA']?>" type="audio/mpeg">
+						Your browser does not support the audio element.
+					</audio>
+					<?}?>
  					<div class="crm-task-list-call-info-container">
  						<span class="crm-task-list-call-info-name">Тип звонка:</span>
  						<? if ($activity['DIRECTION'] == 1){?>
