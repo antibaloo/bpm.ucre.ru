@@ -126,14 +126,24 @@ $APPLICATION->IncludeComponent(
 			
 			
 			//блоки файлов в блоке фото делаем draggable
-			$("[id='main_UF_CRM_1472038962[]']").find("[class = 'fields files']").each(function(){
-				$(this).attr('draggable', true);
+			var len = $("[id='main_UF_CRM_1472038962[]']").find("[class = 'fields files']").length;
+			$("[id='main_UF_CRM_1472038962[]']").find("[class = 'fields files']").each(function(index){
+				if (index < len-1)	{
+					$(this).attr('draggable', true);
+					$(this).css('border','1px dotted black');
+					$(this).css('cursor','move');
+				}
 			});
 			//на блоки файлов в блоке фото вешаем обработчик событий
 			$("[id='main_UF_CRM_1472038962[]']").find("[class = 'fields files']").bind('dragstart', function(){
 				this.style.opacity = '0.4';  // this / e.target is the source node.
 			});
-
+			
+			//Размер картинок в форме
+			$("[class = 'fields files']").find("img").each(function(){
+				$(this).attr('width', 'auto');
+				$(this).attr('height', '200');
+			});
 			
 			var formID = 'form_' + '<?= $arResult['FORM_ID'] ?>';
 			var form = BX(formID);
