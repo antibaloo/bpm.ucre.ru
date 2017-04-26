@@ -104,6 +104,7 @@ $APPLICATION->IncludeComponent(
 	)
 );
 ?>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script type="text/javascript">
 
 	window.CrmProductRowSetLocation = function(){ BX.onCustomEvent('CrmProductRowSetLocation', ['LOC_CITY']); };
@@ -129,21 +130,47 @@ $APPLICATION->IncludeComponent(
 			var len = $("[id='main_UF_CRM_1472038962[]']").find("[class = 'fields files']").length;
 			$("[id='main_UF_CRM_1472038962[]']").find("[class = 'fields files']").each(function(index){
 				if (index < len-1)	{
-					$(this).attr('draggable', true);
 					$(this).css('border','1px dotted black');
 					$(this).css('cursor','move');
+					$(this).addClass('ui-state-default');
 				}
 			});
-			//на блоки файлов в блоке фото вешаем обработчик событий
-			$("[id='main_UF_CRM_1472038962[]']").find("[class = 'fields files']").bind('dragstart', function(){
-				this.style.opacity = '0.4';  // this / e.target is the source node.
+			//блоки файлов в блоке планировок делаем draggable
+			var len = $("[id='main_UF_CRM_1476517423[]']").find("[class = 'fields files']").length;
+			$("[id='main_UF_CRM_1476517423[]']").find("[class = 'fields files']").each(function(index){
+				if (index < len-1)	{
+					$(this).css('border','1px dotted black');
+					$(this).css('cursor','move');
+					$(this).addClass('ui-state-default');
+				}
+			});
+			
+			//блоки файлов в блоке документов делаем draggable
+			var len = $("[id='main_UF_CRM_1472704376[]']").find("[class = 'fields files']").length;
+			$("[id='main_UF_CRM_1472704376[]']").find("[class = 'fields files']").each(function(index){
+				if (index < len-1)	{
+					$(this).css('border','1px dotted black');
+					$(this).css('cursor','move');
+					$(this).addClass('ui-state-default');
+				}
 			});
 			
 			//Размер картинок в форме
-			$("[class = 'fields files']").find("img").each(function(){
+			$("[class = 'fields files ui-state-default']").find("img").each(function(){
 				$(this).attr('width', 'auto');
 				$(this).attr('height', '200');
 			});
+			
+			$( function() {
+				$( "[id='main_UF_CRM_1472038962[]']" ).sortable();
+				$( "[id='main_UF_CRM_1472038962[]']" ).disableSelection();
+				
+				$( "[id='main_UF_CRM_1476517423[]']" ).sortable();
+				$( "[id='main_UF_CRM_1476517423[]']" ).disableSelection();
+				
+				$( "[id='main_UF_CRM_1472704376[]']" ).sortable();
+				$( "[id='main_UF_CRM_1472704376[]']" ).disableSelection();
+			} );
 			
 			var formID = 'form_' + '<?= $arResult['FORM_ID'] ?>';
 			var form = BX(formID);
