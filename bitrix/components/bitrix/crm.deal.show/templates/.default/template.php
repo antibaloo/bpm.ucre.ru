@@ -23,7 +23,6 @@ if(CCrmActivity::GetDefaultStorageTypeID() === StorageType::Disk)
 {
 	CJSCore::Init(array('uploader', 'file_dialog'));
 }
-//Добавим направление в заголовок
 $arResult['CRM_CUSTOM_PAGE_TITLE'] = DealCategory::getName($arResult['CATEGORY_ID']).": ".GetMessage(
 	'CRM_DEAL_SHOW_TITLE',
 	array(
@@ -419,7 +418,18 @@ if ($mainDeal["CATEGORY_ID"] == 0 || $mainDeal["CATEGORY_ID"] == 4){
  <?				
  	}		
  }		
- /*------Конец блока информации о связанном объекте----------*/
+/*------Конец блока информации о связанном объекте----------*/
+
+/*Общий компонент для отображения данных связанного объекта*/
+if ($USER->GetID() == 24) {
+	$APPLICATION->IncludeComponent(
+		'ucre:crm.deal.ro',
+		'',
+		array('DEAL_ID' => $element['ID'])
+	);
+}
+/*----------------------------------------------------------*/
+
 $APPLICATION->IncludeComponent(
 	'bitrix:crm.interface.form',
 	'show',
