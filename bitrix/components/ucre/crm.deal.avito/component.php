@@ -25,22 +25,24 @@ $rsDeal = CCrmDeal::GetListEx(
 	array()
 );
 $mainDeal = $rsDeal->Fetch();
-$arResult['LINK'] = '<a href="'.$mainDeal['UF_CRM_589C63CE03874'].'" target="_blank">'.$mainDeal['UF_CRM_589C63CE03874'].'</a>';
-$arResult['PROFILE'] = '<a href="'.$mainDeal['UF_CRM_58A2B07090172'].'" target="_blank">'.$mainDeal['UF_CRM_58A2B07090172'].'</a>';
-$arResult['PHOTO'] = "";
-foreach (unserialize($mainDeal['UF_CRM_58A2B9F26548F']) as $avitolink){
-  $arResult['PHOTO'] .= "<a class='fancybox' rel='image_gallery' href='".$avitolink."'><img style='margin-right: 10px; border:1px solid #cccccc;' src='".$avitolink."' width = 'auto' height ='50'/></a>";
-}
-$total = ($mainDeal['UF_CRM_58958B52BA439'])?$mainDeal['UF_CRM_58958B52BA439']:"-";
-$live = ($mainDeal['UF_CRM_58958B52D6C9B'])?$mainDeal['UF_CRM_58958B52D6C9B']:"-";
-$kitchen = ($mainDeal['UF_CRM_58958B52F2BAC'])?$mainDeal['UF_CRM_58958B52F2BAC']:"-";
-$arResult['SQUARE'] = $total."/".$live."/".$kitchen;
-$floor = ($mainDeal['UF_CRM_5895994ED0C7B'])?$mainDeal['UF_CRM_5895994ED0C7B']:"-";
-$floorall = ($mainDeal['UF_CRM_58958B51C2F36'])?$mainDeal['UF_CRM_58958B51C2F36']:"-";
-$arResult['FLOORS'] = $floor."/".$floorall;
-$arResult['ADDRESS'] = $mainDeal['UF_CRM_5895994EB2646'];
-$arResult['ID'] = $mainDeal['ID'];
 if ($mainDeal['UF_CRM_589C63CD96E82'] && !$mainDeal["UF_CRM_1469534140"]){
+  $arResult['LINK'] = '<a href="'.$mainDeal['UF_CRM_589C63CE03874'].'" target="_blank">'.$mainDeal['UF_CRM_589C63CE03874'].'</a>';
+  $arResult['PROFILE'] = '<a href="'.$mainDeal['UF_CRM_58A2B07090172'].'" target="_blank">'.$mainDeal['UF_CRM_58A2B07090172'].'</a>';
+  $arResult['PHOTO'] = "";
+  foreach (unserialize($mainDeal['UF_CRM_58A2B9F26548F']) as $avitolink){
+    $arResult['PHOTO'] .= "<a class='fancybox' rel='image_gallery' href='".$avitolink."'><img style='margin-right: 10px; border:1px solid #cccccc;' src='".$avitolink."' width = 'auto' height ='50'/></a>";
+  }
+  $total = ($mainDeal['UF_CRM_58958B52BA439'])?$mainDeal['UF_CRM_58958B52BA439']:"-";
+  $live = ($mainDeal['UF_CRM_58958B52D6C9B'])?$mainDeal['UF_CRM_58958B52D6C9B']:"-";
+  $kitchen = ($mainDeal['UF_CRM_58958B52F2BAC'])?$mainDeal['UF_CRM_58958B52F2BAC']:"-";
+  $arResult['SQUARE'] = $total."/".$live."/".$kitchen;
+  $floor = ($mainDeal['UF_CRM_5895994ED0C7B'])?$mainDeal['UF_CRM_5895994ED0C7B']:"-";
+  $floorall = ($mainDeal['UF_CRM_58958B51C2F36'])?$mainDeal['UF_CRM_58958B51C2F36']:"-";
+  $arResult['FLOORS'] = $floor."/".$floorall;
+  $arResult['ADDRESS'] = $mainDeal['UF_CRM_5895994EB2646'];
+  $arResult['ID'] = $mainDeal['ID'];
+  $arResult['BUTTON'] = ($mainDeal['STAGE_ID']!='NEW')? "disabled":"";
+  $arResult['RESULT'] = ($mainDeal['STAGE_ID']!='NEW')? "Создать объект можно только в предлистинге":"";
   $this->IncludeComponentTemplate();
 }
 ?>
