@@ -328,14 +328,19 @@ if ($mainDeal['UF_CRM_589C63CD96E82'] && !$mainDeal["UF_CRM_1469534140"]){
 <?	
 }
 /*-----------------------------------------------------------------------------------*/
-/*Общий компонент для отображения данных связанного объекта*/
 if ($USER->GetID() == 24) {
 	$APPLICATION->IncludeComponent(
-		'ucre:crm.deal.ro',
+		'ucre:crm.deal.avito',
 		'',
 		array('DEAL_ID' => $element['ID'])
 	);
 }
+/*Общий компонент для отображения данных связанного объекта*/
+$APPLICATION->IncludeComponent(
+	'ucre:crm.deal.ro',
+	'',
+	array('DEAL_ID' => $element['ID'])
+);
 /*----------------------------------------------------------*/
 $APPLICATION->IncludeComponent(
 	'bitrix:crm.interface.form',
