@@ -26,7 +26,7 @@ if ($mainDeal["CATEGORY_ID"] == 0 || $mainDeal["CATEGORY_ID"] == 4){
 					$rooms = ($objectProperties['ROOMS']['VALUE'])?$objectProperties['ROOMS']['VALUE']."-к ":'<span style="color: red">?-к </span>';
 					$arResult['TYPE'] = $objectProperties['TYPE']['VALUE']." в ".$rooms." квартире";
 				}else {
-					$arResult['TYPE'] = $objectProperties['TYPE']['VALUE']." неизвестно где";
+					$arResult['TYPE'] = $objectProperties['TYPE']['VALUE'].'<span style="color: red"> неизвестно где</span>';
 				}
 				$arResult['ROOM_AREA'] = ($objectProperties['ROOM_AREA']['VALUE'])?$objectProperties['ROOM_AREA']['VALUE']." м<sup>2</sup>":'<span style="color: red">нет данных</span>';
 				$arResult['HOUSE_TYPE'] = ($objectProperties['HOUSE_TYPE']['VALUE'])?$objectProperties['HOUSE_TYPE']['VALUE']:'<span style="color: red">нет данных</span>';
