@@ -21,29 +21,15 @@ if(!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED!==true) die();
     <tr class="crm-offer-row">
       <td class="crm-offer-info-drg-btn"></td>
       <td class="crm-offer-info-left">
-        <div class="crm-offer-info-label-wrap"><span class="crm-offer-info-label">Общая площадь:</span></div>
+        <div class="crm-offer-info-label-wrap"><span class="crm-offer-info-label">Назначение:</span></div>
       </td>
       <td class="crm-offer-info-right">
-        <div class="crm-offer-info-label-wrap"><span class="crm-offer-info-label"><?=$arResult['TOTAL_AREA']?></span></div>
+        <div class="crm-offer-info-label-wrap"><span class="crm-offer-info-label"><?=$arResult['APPOINTMENT']?></span></div>
       </td>
       <td class="crm-offer-info-left">
-        <div class="crm-offer-info-label-wrap"><span class="crm-offer-info-label">Площадь участка:</span></div>
+        <div class="crm-offer-info-label-wrap"><span class="crm-offer-info-label">Парковка/Охрана:</span></div>
       </td><td class="crm-offer-info-right">
-      <div class="crm-offer-info-label-wrap"><span class="crm-offer-info-label"><?=$arResult['PLOT_AREA']?></span></div>
-      </td>
-    </tr>
-    <tr class="crm-offer-row">
-      <td class="crm-offer-info-drg-btn"></td>
-      <td class="crm-offer-info-left">
-        <div class="crm-offer-info-label-wrap"><span class="crm-offer-info-label">Этажность:</span></div>
-      </td>
-      <td class="crm-offer-info-right">
-        <div class="crm-offer-info-label-wrap"><span class="crm-offer-info-label"><?=$arResult['FLOORALL']?></span></div>
-      </td>
-      <td class="crm-offer-info-left">
-        <div class="crm-offer-info-label-wrap"><span class="crm-offer-info-label">Материал стен:</span></div>
-      </td><td class="crm-offer-info-right">
-      <div class="crm-offer-info-label-wrap"><span class="crm-offer-info-label"><?=$arResult['WALLS']?></span></div>
+      <div class="crm-offer-info-label-wrap"><span class="crm-offer-info-label"><?=$arResult['PARKING']?>/<?=$arResult['PARKING']?></span></div>
       </td>
     </tr>
   </tbody>

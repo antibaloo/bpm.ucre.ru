@@ -46,23 +46,26 @@ if ($mainDeal["CATEGORY_ID"] == 0 || $mainDeal["CATEGORY_ID"] == 4){
         $componentPage = 'flat';
         break;
       case 'дом':
+			case 'таунхаус':
+			case 'дача':
         $arResult['TYPE'] = $objectProperties['TYPE']['VALUE'];
+				$arResult['TOTAL_AREA'] = ($objectProperties['TOTAL_AREA']['VALUE'])?$objectProperties['TOTAL_AREA']['VALUE']." м<sup>2</sup>":'<span style="color: red">нет данных</span>';
+				$arResult['PLOT_AREA'] = ($objectProperties['PLOT_AREA']['VALUE'])?$objectProperties['PLOT_AREA']['VALUE']." соток":'<span style="color: red">нет данных</span>';
+				$arResult['FLOORALL'] = ($objectProperties['FLOORALL']['VALUE'])?$objectProperties['FLOORALL']['VALUE']:'<span style="color: red">нет данных</span>';
+				$arResult['WALLS'] = ($objectProperties['WALLS']['VALUE'])?$objectProperties['WALLS']['VALUE']:'<span style="color: red">нет данных</span>';
         $componentPage = 'house';
         break;
-      case 'таунхаус':
+       case 'участок':
         $arResult['TYPE'] = $objectProperties['TYPE']['VALUE'];
-        $componentPage = 'townhouse';
-        break;
-      case 'дача':
-        $arResult['TYPE'] = $objectProperties['TYPE']['VALUE'];
-        $componentPage = 'dacha';
-        break;
-      case 'участок':
-        $arResult['TYPE'] = $objectProperties['TYPE']['VALUE'];
+				$arResult['PLOT_AREA'] = ($objectProperties['PLOT_AREA']['VALUE'])?$objectProperties['PLOT_AREA']['VALUE']." соток":'<span style="color: red">нет данных</span>';
+				$arResult['PLOT_CAT'] = ($objectProperties['PLOT_CAT']['VALUE'])?$objectProperties['PLOT_CAT']['VALUE']:'<span style="color: red">нет данных</span>';
         $componentPage = 'plot';
         break;
       case 'коммерческий':
         $arResult['TYPE'] = $objectProperties['TYPE']['VALUE'];
+				$arResult['APPOINTMENT'] = ($objectProperties['APPOINTMENT']['VALUE'])?$objectProperties['APPOINTMENT']['VALUE']:'<span style="color: red">нет данных</span>';
+				$arResult['GUARD'] = ($objectProperties['GUARD']['VALUE'])?$objectProperties['GUARD']['VALUE']:'<span style="color: red">нет данных</span>';
+				$arResult['PARKING'] = ($objectProperties['PARKING']['VALUE'])?$objectProperties['PARKING']['VALUE']:'<span style="color: red">нет данных</span>';
         $componentPage = 'comm';
         break;
     }
