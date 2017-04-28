@@ -11,10 +11,10 @@ if (isset($_POST['id'])){
 		$res = CIBlockElement::GetByID(intval($tempFields['UF_CRM_1469534140']));
 		$ar_res = $res->GetNext();
 		
-    if ($ar_res['CODE'] !=''){
-			$rsData = $DB->Query('SELECT ucre_avito_log_element.*, ucre_avito_log.UF_TIME FROM ucre_avito_log_element LEFT JOIN ucre_avito_log ON ucre_avito_log_element.UF_AVITO_LOG_ID = ucre_avito_log.UF_AVITO_ID WHERE UF_CRM_ID = '.$ar_res['CODE'].' ORDER BY UF_AVITO_LOG_ID DESC');
+    if (intval($ar_res['CODE']) > 0){
+			$rsData = $DB->Query('SELECT ucre_avito_log_element.*, ucre_avito_log.UF_TIME FROM ucre_avito_log_element LEFT JOIN ucre_avito_log ON ucre_avito_log_element.UF_AVITO_LOG_ID = ucre_avito_log.UF_AVITO_ID WHERE UF_CRM_ID = '.intval($ar_res['CODE']).' ORDER BY UF_TIME DESC');
 		}else {
-      $rsData = $DB->Query('SELECT ucre_avito_log_element.*, ucre_avito_log.UF_TIME FROM ucre_avito_log_element LEFT JOIN ucre_avito_log ON ucre_avito_log_element.UF_AVITO_LOG_ID = ucre_avito_log.UF_AVITO_ID WHERE UF_CRM_ID = '.$tempFields['UF_CRM_1469534140'].' ORDER BY UF_AVITO_LOG_ID DESC');
+      $rsData = $DB->Query('SELECT ucre_avito_log_element.*, ucre_avito_log.UF_TIME FROM ucre_avito_log_element LEFT JOIN ucre_avito_log ON ucre_avito_log_element.UF_AVITO_LOG_ID = ucre_avito_log.UF_AVITO_ID WHERE UF_CRM_ID = '.$tempFields['UF_CRM_1469534140'].' ORDER BY UF_TIME DESC');
 		}
     $gridId = $_POST['id']."_upload_avito_grid";
     $grid_options = new CGridOptions($gridId);
