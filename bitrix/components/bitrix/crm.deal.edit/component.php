@@ -273,7 +273,7 @@ else
 	$beginDate -= $time['tm_sec'];
 
 	$arFields['BEGINDATE'] = ConvertTimeStamp($beginDate, 'FULL', SITE_ID);
-	$arFields['CLOSEDATE'] = ConvertTimeStamp($beginDate + 182 * 86400, 'FULL', SITE_ID);
+	$arFields['CLOSEDATE'] = ConvertTimeStamp($beginDate + 7 * 86400, 'FULL', SITE_ID);
 
 	$extVals =  isset($arParams['~VALUES']) && is_array($arParams['~VALUES']) ? $arParams['~VALUES'] : array();
 	if (count($extVals) > 0)
@@ -468,6 +468,8 @@ else
 					//Crutch for for Chrome line break behaviour in HTML editor.
 					$sanitizer->AddTags(array('div' => array()));
 					$sanitizer->AddTags(array('a' => array('href', 'title', 'name', 'style', 'alt', 'target')));
+					$sanitizer->AddTags(array('p' => array()));
+					$sanitizer->AddTags(array('span' => array('style')));
 					$comments = $sanitizer->SanitizeHtml($comments);
 				}
 				$arFields['COMMENTS'] = $comments;
@@ -1222,7 +1224,7 @@ $arResult['FIELDS']['tab_1'][] = array(
 
 //Fix for issue #36848
 $beginDate = isset($arResult['ELEMENT']['BEGINDATE']) ? $arResult['ELEMENT']['BEGINDATE'] : '';
-$closeDate = isset($arResult['ELEMENT']['CLOSEDATE']) ? $arResult['ELEMENT']['CLOSEDATE'] : ConvertTimeStamp(MakeTimeStamp($beginDate) + 182 * 86400, 'FULL', SITE_ID);
+$closeDate = isset($arResult['ELEMENT']['CLOSEDATE']) ? $arResult['ELEMENT']['CLOSEDATE'] : $beginDate;
 
 $arResult['FIELDS']['tab_1'][] = array(
 	'id' => 'BEGINDATE',
@@ -1332,7 +1334,10 @@ if(CCrmCompany::CheckReadPermission(0, $userPermissions) || CCrmContact::CheckRe
 			'SERVICE_URL' => '/bitrix/components/bitrix/crm.deal.edit/ajax.php?'.bitrix_sessid_get(),
 			'REQUISITE_SERVICE_URL' => '/bitrix/components/bitrix/crm.requisite.edit/settings.php?'.bitrix_sessid_get(),
 			'FORM_NAME' => $arResult['FORM_ID'],
-			'NAME_TEMPLATE' => \Bitrix\Crm\Format\PersonNameFormatter::getFormat()
+			'NAME_TEMPLATE' => \Bitrix\Crm\Format\PersonNameFormatter::getFormat(),
+			'ENTITY_SELECTOR_SEARCH_OPTIONS' => array(
+				'NOT_MY_COMPANIES' => 'Y'
+			)
 		)
 	);
 }
