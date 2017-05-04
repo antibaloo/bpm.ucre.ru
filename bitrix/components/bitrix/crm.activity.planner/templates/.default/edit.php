@@ -158,7 +158,10 @@ $communicationsData = htmlspecialcharsbx(\Bitrix\Main\Web\Json::encode($arResult
 				<div class="crm-activity-popup-calendar-planner-wrap" id="calendar-planner-outer<?=htmlspecialcharsbx($arResult['PLANNER_ID'])?>" style="min-height: 104px">
 					<?
 					CCalendarPlanner::Init(array(
-						'id' => 'calendar_planner_'.htmlspecialcharsbx($arResult['PLANNER_ID'])
+						'id' => 'calendar_planner_'.htmlspecialcharsbx($arResult['PLANNER_ID']),
+						'scaleLimitOffsetLeft' => 2,
+						'scaleLimitOffsetRight' => 2,
+						'maxTimelineSize' => 30
 					));
 					?>
 				</div>
@@ -206,6 +209,11 @@ $communicationsData = htmlspecialcharsbx(\Bitrix\Main\Web\Json::encode($arResult
 			</div><!--crm-activity-popup-timeline-container-->
 			<div class="crm-activity-popup-info">
 				<? foreach ($provider::getFieldsForEdit($activity) as $field):
+					$name = isset($field['NAME']) ? $field['NAME'] : '';
+					if($name === '')
+					{
+						$name = $field['TYPE'];
+					}
 					switch ($field['TYPE'])
 					{
 						case 'SUBJECT':
@@ -213,24 +221,27 @@ $communicationsData = htmlspecialcharsbx(\Bitrix\Main\Web\Json::encode($arResult
 						case 'TEXT':?>
 							<div class="crm-activity-popup-info-location-container">
 								<span class="crm-activity-popup-info-location-text"><?=htmlspecialcharsbx($field['LABEL'])?>:</span>
-								<input type="text" name="<?=strtolower($field['TYPE'])?>" value="<?=htmlspecialcharsbx($field['VALUE'])?>" class="crm-activity-popup-info-location" data-role="focus-on-show">
+								<input type="text" name="<?=strtolower($name)?>" value="<?=htmlspecialcharsbx($field['VALUE'])?>" class="crm-activity-popup-info-location" <?if($field['PLACEHOLDER'] != ''):?>placeholder="<?=htmlspecialcharsbx($field['PLACEHOLDER'])?>"<?endif?> data-role="focus-on-show">
 							</div><?
 							break;
 						case 'TEXTAREA':?>
-						<div class="crm-activity-popup-info-person-detail-description">
-							<label class="crm-activity-popup-info-person-detail-description-name"><?=htmlspecialcharsbx($field['LABEL'])?>:</label>
-							<textarea name="<?=strtolower($field['NAME'])?>" class="crm-activity-popup-info-person-detail-description-input"><?=htmlspecialcharsbx($field['VALUE'])?></textarea>
-						</div><?
+							<div class="crm-activity-popup-info-person-detail-description">
+								<label class="crm-activity-popup-info-person-detail-description-name"><?=htmlspecialcharsbx($field['LABEL'])?>:</label>
+								<textarea name="<?=strtolower($name)?>" class="crm-activity-popup-info-person-detail-description-input" <?if($field['PLACEHOLDER'] != ''):?>placeholder="<?=htmlspecialcharsbx($field['PLACEHOLDER'])?>"<?endif?>><?=htmlspecialcharsbx($field['VALUE'])?></textarea>
+							</div><?
 						break;
+						case 'COMMUNICATIONS': ?>
+							<div class="crm-activity-popup-info-person-container">
+								<span class="crm-activity-popup-info-person-text"><?=htmlspecialcharsbx($field['LABEL'])?>:</span>
+								<div class="crm-activity-popup-info-person-block" data-role="communications-container" data-communication-type="<?=$provider::getCommunicationType($activity['PROVIDER_TYPE_ID'])?>"></div><!--crm-activity-popup-info-person-block-->
+							</div><?
 						default:
 							if (isset($field['HTML']))
 								echo $field['HTML'];
 					}
 					endforeach;
 				?>
-				<div class="crm-activity-popup-info-person-container">
-					<span class="crm-activity-popup-info-person-text"><?=GetMessage('CRM_ACTIVITY_PLANNER_RECEIVER')?>:</span>
-					<div class="crm-activity-popup-info-person-block" data-role="communications-container" data-communication-type="<?=$provider::getCommunicationType($activity['PROVIDER_TYPE_ID'])?>"></div><!--crm-activity-popup-info-person-block-->
+				<div class="crm-activity-popup-info-additional-container">
 					<div class="crm-activity-popup-info-person-link-container">
 						<span class="crm-activity-popup-info-person-link-triangle <?if ($arResult['ADDITIONAL_MODE']):?>crm-activity-popup-info-person-link-triangle-up<?endif;?>" data-role="additional-mode-switcher">
 							<?=GetMessage('CRM_ACTIVITY_PLANNER_ADDITIONAL')?>
@@ -256,77 +267,97 @@ $communicationsData = htmlspecialcharsbx(\Bitrix\Main\Web\Json::encode($arResult
 							</label>
 						</div><!--crm-activity-popup-timeline-checkbox-container-->
 					</div><!--crm-activity-popup-info-person-link-container-->
-
 					<div class="crm-activity-popup-info-person-detail-container <?if ($arResult['ADDITIONAL_MODE']):?>crm-activity-person-detail-open<?endif;?>" data-role="additional-container">
-						<div class="crm-activity-popup-info-person-detail-description">
-							<label class="crm-activity-popup-info-person-detail-description-name"><?=GetMessage('CRM_ACTIVITY_PLANNER_DESCRIPTION')?>:</label>
-							<textarea name="description" class="crm-activity-popup-info-person-detail-description-input"><?=htmlspecialcharsbx($activity['DESCRIPTION'])?></textarea>
-						</div><!--crm-activity-popup-timeline-detail-info-date-->
-						<? $directions = $provider::getTypeDirections($activity['PROVIDER_TYPE_ID']);
-						if ($directions):?>
-							<div class="crm-activity-popup-info-person-detail-calendar">
-								<label class="crm-activity-popup-info-person-detail-calendar-name"><?=GetMessage('CRM_ACTIVITY_PLANNER_DIRECTIONS')?>:</label>
-								<select name="direction" class="crm-activity-popup-info-person-detail-calendar-input" data-role="field-direction">
-									<?foreach ($directions as $dir => $label):?>
-										<option value="<?=htmlspecialcharsbx($dir)?>" <?if($activity['DIRECTION'] == $dir):?>selected<?endif;?>><?=htmlspecialcharsbx($label)?></option>
-									<?endforeach;?>
-								</select>
-							</div><!--crm-activity-popup-timeline-detail-info-date-->
-						<?endif?>
-						<div class="crm-activity-popup-info-person-detail-file">
-							<div class="crm-activity-popup-info-person-detail-file-name" data-role="storage-switcher" data-storage-type="3" data-values="<?=$storageValues?>" data-props="<?=$storageProps?>"><?=GetMessage('CRM_ACTIVITY_PLANNER_FILES')?>:</div>
-							<div data-role="storage-container"></div>
-						</div><!--crm-activity-popup-info-person-detail-file-->
-						<span class="crm-activity-popup-info-person-text"><?=GetMessage('CRM_ACTIVITY_PLANNER_DEAL')?>:</span>
-						<div class="crm-activity-popup-info-person-detail-deal" data-role="deal-container"></div><!--crm-activity-popup-info-person-detail-deal-->
+						<? foreach ($provider::getAdditionalFieldsForEdit($activity) as $field):
+							switch ($field['TYPE'])
+							{
+								case 'DESCRIPTION': ?>
+									<div class="crm-activity-popup-info-person-detail-description">
+										<label class="crm-activity-popup-info-person-detail-description-name"><?=GetMessage('CRM_ACTIVITY_PLANNER_DESCRIPTION')?>:</label>
+										<textarea name="description" class="crm-activity-popup-info-person-detail-description-input"><?=htmlspecialcharsbx($activity['DESCRIPTION'])?></textarea>
+									</div><?
+									break;
+								case 'PROVIDER_TYPE':
+									$directions = $provider::getTypeDirections($activity['PROVIDER_TYPE_ID']);
+									if ($directions)
+									{ ?>
+										<div class="crm-activity-popup-info-person-detail-calendar">
+										<label class="crm-activity-popup-info-person-detail-calendar-name"><?=GetMessage('CRM_ACTIVITY_PLANNER_DIRECTIONS')?>:</label>
+										<select name="direction" class="crm-activity-popup-info-person-detail-calendar-input" data-role="field-direction">
+											<?foreach ($directions as $dir => $label):?>
+												<option value="<?=htmlspecialcharsbx($dir)?>" <?if($activity['DIRECTION'] == $dir):?>selected<?endif;?>><?=htmlspecialcharsbx($label)?></option>
+											<?endforeach;?>
+										</select>
+										</div><?
+									}
+									break;
+								case 'FILE': ?>
+									<div class="crm-activity-popup-info-person-detail-file">
+										<div class="crm-activity-popup-info-person-detail-file-name" data-role="storage-switcher" data-storage-type="3" data-values="<?=$storageValues?>" data-props="<?=$storageProps?>"><?=GetMessage('CRM_ACTIVITY_PLANNER_FILES')?>:</div>
+										<div data-role="storage-container"></div>
+									</div> <?
+									break;
+								case 'DEAL': ?>
+									<div class="crm-activity-popup-info-person-detail-deal-container">
+										<span class="crm-activity-popup-info-person-text"><?=GetMessage('CRM_ACTIVITY_PLANNER_DEAL')?>:</span>
+										<div class="crm-activity-popup-info-person-detail-deal" data-role="deal-container"></div><!--crm-activity-popup-info-person-detail-deal-->
+									</div><?
+									break;
+								case 'RESPONSIBLE': ?>
+									<div class="crm-activity-popup-info-person-detail-responsible">
+										<label class="crm-activity-popup-info-person-detail-responsible-name"><?=GetMessage('CRM_ACTIVITY_PLANNER_RESPONSIBLE_USER')?>:</label>
+										<div class="crm-activity-popup-info-person-detail-responsible-person-container" data-role="responsible-container" style="margin-bottom: 20px"></div><!--crm-activity-popup-info-person-detail-responsible-->
+									</div><?
+									break;
+								default:
+									if (isset($field['HTML']))
+										echo $field['HTML'];
+							}
+						endforeach; ?>
 
-						<div class="crm-activity-popup-info-person-detail-responsible">
-							<label class="crm-activity-popup-info-person-detail-responsible-name"><?=GetMessage('CRM_ACTIVITY_PLANNER_RESPONSIBLE_USER')?>:</label>
-							<div class="crm-activity-popup-info-person-detail-responsible-person-container" data-role="responsible-container" style="margin-bottom: 20px"></div><!--crm-activity-popup-info-person-detail-responsible-->
-							<?/* TODO: add repeat activity support
-							<div class="crm-activity-popup-info-person-detail-repeat-checkbox-container">
-								<label class="crm-activity-popup-info-person-detail-repeat-checkbox-name">
-									<input type="checkbox" class="crm-activity-popup-info-person-detail-repeat-checkbox" data-role="repeat-mode-switcher">
-									<?=GetMessage('CRM_ACTIVITY_PLANNER_REPEAT')?>
-								</label>
-							</div><!--crm-activity-popup-info-person-detail-repeat-checkbox-container-->
-							<div class="crm-activity-popup-info-person-detail-repeat-container" data-role="repeat-container">
-								<div class="crm-activity-popup-info-person-detail-repeat-calendar">
-									<span class="crm-activity-popup-info-person-detail-repeat-date-week-container">
-										<select name="" class="crm-activity-popup-info-person-detail-repeat-date-week">
-											<option value="D"><?=GetMessage('CRM_ACTIVITY_PLANNER_EVERY_DAY')?></option>
-											<option value="W"><?=GetMessage('CRM_ACTIVITY_PLANNER_EVERY_WEEK')?></option>
-											<option value="M"><?=GetMessage('CRM_ACTIVITY_PLANNER_EVERY_MONTH')?></option>
-										</select>
-									</span>
-									<span class="crm-activity-popup-info-person-detail-repeat-date-week-number-container">
-										<label class="crm-activity-popup-info-person-detail-repeat-name">every</label>
-										<select name="" class="crm-activity-popup-info-person-detail-repeat-date-week-number">
-											<option value="1">1</option>
-											<option value="2">2</option>
-											<option value="3">3</option>
-											<option value="4">4</option>
-										</select>
-										<label class="crm-activity-popup-info-person-detail-repeat-name">week</label>
-									</span>
-									<label class="crm-activity-popup-info-person-detail-repeat-name">until</label>
-									<span class="crm-activity-popup-info-person-detail-repeat-date-calendar-container">
-										<input type="text" placeholder="<?=GetMessage('CRM_ACTIVITY_PLANNER_NOT_LIMIT_LABEL')?>" class="crm-activity-popup-info-person-detail-repeat-date-calendar" data-role="field-repeat-until" readonly>
-									</span>
-								</div>
-								<div class="crm-activity-popup-info-person-detail-repeat-week-container">
-									<?foreach (array('MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU') as $day):?>
-									<span class="crm-activity-popup-info-person-detail-repeat-week">
-										<label class="crm-activity-popup-info-person-detail-repeat-week-name">
-											<input type="checkbox" class="crm-activity-popup-info-person-detail-repeat-week-checkbox">
-											<?=GetMessage('CRM_ACTIVITY_PLANNER_DAY_'.$day)?>
-										</label>
-									</span>
-									<?endforeach;?>
-								</div><!--crm-activity-popup-info-person-detail-repeat-week-container-->
-							</div><!--crm-activity-popup-info-person-detail-repeat-container-->
-							*/?>
-						</div><!--crm-activity-popup-timeline-detail-info-date-->
+						<?/* TODO: add repeat activity support
+						<div class="crm-activity-popup-info-person-detail-repeat-checkbox-container">
+							<label class="crm-activity-popup-info-person-detail-repeat-checkbox-name">
+								<input type="checkbox" class="crm-activity-popup-info-person-detail-repeat-checkbox" data-role="repeat-mode-switcher">
+								<?=GetMessage('CRM_ACTIVITY_PLANNER_REPEAT')?>
+							</label>
+						</div><!--crm-activity-popup-info-person-detail-repeat-checkbox-container-->
+						<div class="crm-activity-popup-info-person-detail-repeat-container" data-role="repeat-container">
+							<div class="crm-activity-popup-info-person-detail-repeat-calendar">
+								<span class="crm-activity-popup-info-person-detail-repeat-date-week-container">
+									<select name="" class="crm-activity-popup-info-person-detail-repeat-date-week">
+										<option value="D"><?=GetMessage('CRM_ACTIVITY_PLANNER_EVERY_DAY')?></option>
+										<option value="W"><?=GetMessage('CRM_ACTIVITY_PLANNER_EVERY_WEEK')?></option>
+										<option value="M"><?=GetMessage('CRM_ACTIVITY_PLANNER_EVERY_MONTH')?></option>
+									</select>
+								</span>
+								<span class="crm-activity-popup-info-person-detail-repeat-date-week-number-container">
+									<label class="crm-activity-popup-info-person-detail-repeat-name">every</label>
+									<select name="" class="crm-activity-popup-info-person-detail-repeat-date-week-number">
+										<option value="1">1</option>
+										<option value="2">2</option>
+										<option value="3">3</option>
+										<option value="4">4</option>
+									</select>
+									<label class="crm-activity-popup-info-person-detail-repeat-name">week</label>
+								</span>
+								<label class="crm-activity-popup-info-person-detail-repeat-name">until</label>
+								<span class="crm-activity-popup-info-person-detail-repeat-date-calendar-container">
+									<input type="text" placeholder="<?=GetMessage('CRM_ACTIVITY_PLANNER_NOT_LIMIT_LABEL')?>" class="crm-activity-popup-info-person-detail-repeat-date-calendar" data-role="field-repeat-until" readonly>
+								</span>
+							</div>
+							<div class="crm-activity-popup-info-person-detail-repeat-week-container">
+								<?foreach (array('MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU') as $day):?>
+								<span class="crm-activity-popup-info-person-detail-repeat-week">
+									<label class="crm-activity-popup-info-person-detail-repeat-week-name">
+										<input type="checkbox" class="crm-activity-popup-info-person-detail-repeat-week-checkbox">
+										<?=GetMessage('CRM_ACTIVITY_PLANNER_DAY_'.$day)?>
+									</label>
+								</span>
+								<?endforeach;?>
+							</div><!--crm-activity-popup-info-person-detail-repeat-week-container-->
+						</div><!--crm-activity-popup-info-person-detail-repeat-container-->
+						*/?>
 					</div><!--crm-activity-popup-info-person-detail-container-->
 				</div><!--crm-activity-popup-info-person-container-->
 			</div><!--crm-activity-popup-info-->
