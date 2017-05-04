@@ -8,7 +8,7 @@ if (isset($_POST['lead_id']) && !empty($_POST['lead_id']) && isset($_POST['avito
   if (strpos($adOut,"avito.item.url") === false ) die ("Ошибка: объявление не найдено!");
   $url1quote = strpos($adOut,"'",strpos($adOut,"avito.item.url"));
   $url2quote = strpos($adOut,"'",$url1quote+1);
-  $url = "https://www.avito.ru".substr($adOut, $url1quote+1, $url2quote - $url1quote-1); //Высисляем прямой url
+  $url = "https://www.avito.ru".substr($adOut, $url1quote+1, $url2quote - $url1quote-1); //Вычисляем прямой url
   
   $price1quote = strpos($adOut,"'",strpos($adOut,"avito.item.price"));
   $price2quote = strpos($adOut,"'",$price1quote+1);
