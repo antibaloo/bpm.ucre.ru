@@ -99,12 +99,13 @@ $APPLICATION->SetTitle(GetMessage("CRM_TITLE"));
 						//чтобы не грузить повторно 
 						arTabLoading[tab_id] = true; 
 						BX.ajax({ 
-							url: '/ajax/potentials.php?id='+dealId+'&category='+categoryId, 
+							url: '/ajax/potentials.php', 
 							method: 'POST', 
 							dataType: 'html', 
 							data: { 
 								id: dealId,
-								category: categoryId
+								category: categoryId,
+								tabid: 'inner_tab_'+tab_id
 							}, 
 							onsuccess: function(data) 
 							{ 

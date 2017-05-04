@@ -1,5 +1,5 @@
 <?if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)die();
-CJSCore::Init(array("jquery"));
+
 if (isset($_GET["RELOAD"]) && $_GET["RELOAD"] == "Y")
 {
 	return; //Live Feed Ajax
@@ -86,7 +86,7 @@ function getJsTitle()
 <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/images/iphone/144x144.png" />
 <?endif;
 
-$APPLICATION->ShowHead();
+$APPLICATION->ShowHead(false);
 $APPLICATION->SetAdditionalCSS(SITE_TEMPLATE_PATH."/interface.css", true);
 $APPLICATION->AddHeadScript(SITE_TEMPLATE_PATH."/bitrix24.js", true);
 ?>
@@ -270,8 +270,10 @@ if(\Bitrix\Main\ModuleManager::isModuleInstalled('bitrix24'))
 						else:
 							$logoID = COption::GetOptionString("main", "wizard_site_logo", "", SITE_ID);
 							?><a id="logo_24_a" href="<?=SITE_DIR?>" title="<?=GetMessage("BITRIX24_LOGO_TOOLTIP")?>" class="logo">
-								<?if ($logoID):
-									$APPLICATION->IncludeComponent("bitrix:main.include", "", array("AREA_FILE_SHOW" => "file", "PATH" => SITE_DIR."include/company_name.php"), false);?>
+								<?if ($logoID):?>
+									<span class="logo-img-span">
+										<?$APPLICATION->IncludeComponent("bitrix:main.include", "", array("AREA_FILE_SHOW" => "file", "PATH" => SITE_DIR."include/company_name.php"), false);?>
+									</span>
 								<?else:
 									?><span id="logo_24_text"><?
 										?><span class="logo-text"><?=htmlspecialcharsbx(COption::GetOptionString("main", "site_name", ""));?></span><?
@@ -324,8 +326,8 @@ if(\Bitrix\Main\ModuleManager::isModuleInstalled('bitrix24'))
 						array(
 							"PATH_TO_SONET_PROFILE" => $profileLink."/user/#user_id#/",
 							"PATH_TO_SONET_PROFILE_EDIT" => $profileLink."/user/#user_id#/edit/",
-							"PATH_TO_SONET_EXTMAIL_SETUP" => $profileLink."/mail/?page=home",
-							"PATH_TO_SONET_EXTMAIL_MANAGE" => $profileLink."/mail/?page=manage"
+							"PATH_TO_SONET_EXTMAIL_SETUP" => $profileLink."/mail/?config",
+							"PATH_TO_SONET_EXTMAIL_MANAGE" => $profileLink."/mail/manage/"
 						),
 						false
 					);?>
@@ -393,7 +395,6 @@ if(\Bitrix\Main\ModuleManager::isModuleInstalled('bitrix24'))
 								array("HIDE_ICONS" => "Y")
 							);
 						}
-
 						?>
 
 						<div id="feed-up-btn-wrap" class="feed-up-btn-wrap" title="<?=GetMessage("BITRIX24_UP")?>" onclick="B24.goUp();">

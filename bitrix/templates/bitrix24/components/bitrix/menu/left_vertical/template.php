@@ -11,15 +11,6 @@ $arHiddenItemsCounters = array();
 $arAllItemsCounters = array();
 $groupPopupExists = false;
 ?>
-<style>
-	.ucre{
-		border: 1px solid #eeeeee;
-	}
-	.ucre:hover {
-		cursor: pointer;
-		color: #379ce5;
-	}
-</style>
 <div class="menu-items-block" id="bx-left-menu">
 	<div class="menu-resize-container" id="left-menu-resizer">
 		<div class="menu-resize-item" id="left-menu-resizer-button">
@@ -28,11 +19,6 @@ $groupPopupExists = false;
 	</div>
 	<ul class="menu-items" id="left-menu-list">
 		<li class="menu-items-empty-li" id="left-menu-empty-item" style="height: 3px;"></li>
-		<li id="bx_left_menu_quick_link">
-			<input style="margin-left: 34px;" id="ucre_entity_id" type="text" size="5">
-			<span class="menu-item-link-text ucre" data-role="item-text" onclick="location.href=ucre_entity_id.value != ''?'https://bpm.ucre.ru/crm/lead/show/'+ucre_entity_id.value+'/':'#'">Лид</span>&nbsp;
-			<span class="menu-item-link-text ucre" data-role="item-text" onclick="location.href=ucre_entity_id.value != ''?'https://bpm.ucre.ru/crm/deal/show/'+ucre_entity_id.value+'/':'#'">Заявка</span>
-		</li>
 	<?
 	foreach(array("show", "hide") as $status)
 	{
@@ -223,7 +209,8 @@ $arJSParams = array(
 	"isExtranet" => $arResult["IS_EXTRANET"] ? "Y" : "N",
 	"isCompositeMode" => $isCompositeMode,
 	"isCollapsedMode" => CUserOptions::GetOption("intranet", "left_menu_collapsed") === "Y",
-	"showPresetPopup" => $arResult["SHOW_PRESET_POPUP"] ? "Y" : "N"
+	"showPresetPopup" => $arResult["SHOW_PRESET_POPUP"] ? "Y" : "N",
+	"isPublicConverted" => $arResult["IS_PUBLIC_CONVERTED"] ? "Y" : "N"
 );
 ?>
 
