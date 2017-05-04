@@ -588,7 +588,10 @@ if(CCrmCompany::CheckReadPermission(0, $userPermissions) || CCrmContact::CheckRe
 			'REQUISITE_ID' => $requisiteIdLinked,
 			'BANK_DETAIL_ID' => $bankDetailIdLinked,
 			'FORM_NAME' => $arResult['FORM_ID'],
-			'NAME_TEMPLATE' => \Bitrix\Crm\Format\PersonNameFormatter::getFormat()
+			'NAME_TEMPLATE' => \Bitrix\Crm\Format\PersonNameFormatter::getFormat(),
+			'ENTITY_SELECTOR_SEARCH_OPTIONS' => array(
+				'NOT_MY_COMPANIES' => 'Y'
+			)
 		),
 		'isTactile' => true
 	);
@@ -948,7 +951,8 @@ $arResult['FIELDS']['tab_activity'][] = array(
 			'FORM_TYPE' => 'show',
 			'FORM_ID' => $arResult['FORM_ID'],
 			'TAB_ID' => 'tab_activity',
-			'USE_QUICK_FILTER' => 'Y'
+			'USE_QUICK_FILTER' => 'Y',
+			'PRESERVE_HISTORY' => true
 		)
 	)
 );
@@ -973,7 +977,8 @@ if (!empty($arResult['ELEMENT']['CONTACT_IDS']))
 				'INTERNAL_FILTER' => array('ASSOCIATED_DEAL_ID' => $arResult['ELEMENT']['ID']),
 				'GRID_ID_SUFFIX' => 'DEAL_SHOW',
 				'FORM_ID' => $arResult['FORM_ID'],
-				'TAB_ID' => 'tab_contact'
+				'TAB_ID' => 'tab_contact',
+				'PRESERVE_HISTORY' => true
 			)
 		)
 	);
@@ -999,6 +1004,7 @@ if ($companyID > 0 && CCrmCompany::CheckReadPermission($companyID, $currentUserP
 				'GRID_ID_SUFFIX' => 'DEAL_SHOW',
 				'FORM_ID' => $arResult['FORM_ID'],
 				'TAB_ID' => 'tab_company',
+				'PRESERVE_HISTORY' => true,
 				'NAME_TEMPLATE' => $arParams['NAME_TEMPLATE']
 			)
 		)
@@ -1059,6 +1065,7 @@ if (CCrmQuote::CheckReadPermission($quoteID, $userPermissions))
 					'TAB_ID' => 'tab_quote',
 					'NAME_TEMPLATE' => $arParams['NAME_TEMPLATE'],
 					'ENABLE_TOOLBAR' => true,
+					'PRESERVE_HISTORY' => true,
 					'ADD_EVENT_NAME' => 'CrmCreateQuoteFromDeal'
 				)
 			)
@@ -1091,11 +1098,38 @@ if (CCrmInvoice::CheckReadPermission(0, $userPermissions))
 				'TAB_ID' => 'tab_invoice',
 				'NAME_TEMPLATE' => $arParams['NAME_TEMPLATE'],
 				'ENABLE_TOOLBAR' => 'Y',
+				'PRESERVE_HISTORY' => true,
 				'ADD_EVENT_NAME' => 'CrmCreateInvoiceFromDeal',
 				'INTERNAL_ADD_BTN_TITLE' => GetMessage('CRM_DEAL_ADD_INVOICE_TITLE')
 			)
 		)
 	);
+}
+
+if(CModule::IncludeModule('lists'))
+{
+	$arResult['LIST_IBLOCK'] = CLists::getIblockAttachedCrm('DEAL');
+	foreach($arResult['LIST_IBLOCK'] as $iblockId => $iblockName)
+	{
+		$arResult['LISTS'] = true;
+		$arResult['FIELDS']['tab_lists_'.$iblockId][] = array(
+			'id' => 'DEAL_LISTS_'.$iblockId,
+			'name' => $iblockName,
+			'colspan' => true,
+			'type' => 'crm_lists_element',
+			'componentData' => array(
+				'template' => '',
+				'enableLazyLoad' => true,
+				'params' => array(
+					'ENTITY_ID' => $arResult['ELEMENT']['ID'],
+					'ENTITY_TYPE' => CCrmOwnerType::Deal,
+					'FORM_ID' => $arResult['FORM_ID'],
+					'TAB_ID' => 'tab_lists_'.$iblockId,
+					'IBLOCK_ID' => $iblockId
+				)
+			)
+		);
+	}
 }
 
 if (IsModuleInstalled('bizproc') && CModule::IncludeModule('bizproc') && CBPRuntime::isFeatureEnabled())
@@ -1297,34 +1331,6 @@ if (\Bitrix\Crm\Automation\Factory::isAutomationAvailable(CCrmOwnerType::Deal))
 	);
 }
 
-if ($arResult['ELEMENT']['LEAD_ID'] > 0 && CCrmLead::CheckReadPermission(0, $userPermissions))
-{
-	ob_start();
-	$arResult['LEAD_COUNT'] = $APPLICATION->IncludeComponent(
-		'bitrix:crm.lead.list',
-		'',
-		array(
-			'LEAD_COUNT' => '20',
-			'PATH_TO_LEAD_SHOW' => $arParams['PATH_TO_LEAD_SHOW'],
-			'PATH_TO_LEAD_EDIT' => $arParams['PATH_TO_LEAD_EDIT'],
-			'PATH_TO_LEAD_CONVERT' => $arParams['PATH_TO_LEAD_CONVERT'],
-			'INTERNAL_FILTER' => array('ID' => $arResult['ELEMENT']['LEAD_ID']),
-			'GRID_ID_SUFFIX' => 'DEAL_SHOW',
-			'FORM_ID' => $arResult['FORM_ID'],
-			'TAB_ID' => 'tab_lead'
-		),
-		false
-	);
-	$sVal = ob_get_contents();
-	ob_end_clean();
-	$arResult['FIELDS']['tab_lead'][] = array(
-		'id' => 'DEAL_LEAD',
-		'name' => GetMessage('CRM_FIELD_DEAL_LEAD'),
-		'colspan' => true,
-		'type' => 'custom',
-		'value' => $sVal
-	);
-}
 $arResult['TREE_CONTAINER_ID'] = $arResult['FORM_ID'].'_tree_wrapper';
 $arResult['TAB_TREE_OPEN'] = isset($_REQUEST['active_tab']) && $_REQUEST['active_tab'] == 'tab_tree';
 $arResult['FIELDS']['tab_tree'] = array(array(
@@ -1359,6 +1365,7 @@ $arResult['FIELDS']['tab_event'][] = array(
 			'TAB_ID' => 'tab_event',
 			'INTERNAL' => 'Y',
 			'SHOW_INTERNAL_FILTER' => 'Y',
+			'PRESERVE_HISTORY' => true,
 			'NAME_TEMPLATE' => $arParams['NAME_TEMPLATE']
 		)
 	)
