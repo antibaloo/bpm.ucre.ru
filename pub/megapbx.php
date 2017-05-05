@@ -12,7 +12,7 @@ if ($_POST['crm_token'] == $megapbx->crm_key){
   $DB->Query("INSERT INTO b_megapbx_mess VALUES ('', NOW(),'".trim($_POST['callid'])."','".trim($_POST['cmd'])."','".trim($_POST['phone'])."','".trim($_POST['type'])."','".trim($_POST['user'])."','".trim($_POST['ext'])."','".trim($_POST['telnum'])."','".trim($_POST['diversion'])."','".trim($_POST['duration'])."','".trim($_POST['link'])."','".trim($_POST['status'])."')");
   CPullWatch::AddToStack(
     'PULL_MEGAPBX',
-    array('module_id' => 'megapbx','command' => 'check','params' =>$_POST)
+    array('module_id' => 'megapbx','command' => $_POST['cmd'],'params' =>$_POST)
   );
   $phone_res = findByPhoneNumber(trim($_POST['phone']));
   $prefix = (substr($_POST['phone'],0,1)=="8")?"":"+";
@@ -182,11 +182,12 @@ if ($_POST['crm_token'] == $megapbx->crm_key){
                             'OWNER_ID' => $entity_id
                            );
       $assignedById = (getUserByExt(trim($_POST['ext'])))?getUserByExt(trim($_POST['ext'])):206;
+      $ismissed = ($_POST['status'] == 'Success')?'':'(пропущенный) ';
       $arFields = array(
         'OWNER_ID' => $entity_id,
         'OWNER_TYPE_ID' => CCrmOwnerType::ResolveID($entity_type),
         'TYPE_ID' =>  CCrmActivityType::Call,
-        'SUBJECT' => 'Входящий звонок с номера '.$prefix.substr($_POST['phone'],0,1).'('.substr($_POST['phone'],1,3).")".substr($_POST['phone'],4,3)."-".substr($_POST['phone'],7,2)."-".substr($_POST['phone'],9),
+        'SUBJECT' => 'Входящий '.$ismissed.'звонок с номера '.$prefix.substr($_POST['phone'],0,1).'('.substr($_POST['phone'],1,3).")".substr($_POST['phone'],4,3)."-".substr($_POST['phone'],7,2)."-".substr($_POST['phone'],9),
         'START_TIME' => date("d.m.Y H:i:s",strtotime($begintime['TIME'])),
         'END_TIME' => date("d.m.Y H:i:s",strtotime($begintime['TIME'])+$_POST['duration']),
         'COMPLETED' => ($_POST['status'] == 'Success')?'Y':'N',
