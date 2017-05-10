@@ -90,7 +90,7 @@ require($_SERVER["DOCUMENT_ROOT"]."/bitrix/footer.php");
     });
   }
   var rad = document.avito.type;
-  var prev = null;
+	var prev = rad[0]; //Вкладка квартир включена по-умолчанию
   for(var i = 0; i < rad.length; i++) {
     rad[i].onclick = function() {
       if(this !== prev) {
