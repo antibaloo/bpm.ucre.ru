@@ -42,6 +42,16 @@ $params = unserialize($_POST['sql']);
     if ($params['price'] > 0) $rsQuery.=" AND UF_CRM_58958B576448C<=".$params['price']." AND UF_CRM_58958B5751841>=".$params['price'];
     //Ответственный
     if ($params['assigned'] !='') $rsQuery.=" AND ASSIGNED_BY_ID=".$params['assigned'] ;
+    //Фильтр по тэгам
+    if ($params['tags']){
+      $tags = explode(",",$params["tags"]);
+      $rsQuery.= " AND (";
+      foreach ($tags as $key=>$tag){
+        $rsQuery.= "UF_CRM_1494396942 LIKE '%".trim($tag)."%'";
+        if ($key != count($tags)-1) $rsQuery.= " OR ";
+      }
+      $rsQuery.= ")";
+    }
     $rsQuery .= " ORDER BY b_crm_deal.ID DESC";
     $rsData = $DB->Query($rsQuery);
     $count = $rsData->SelectedRowsCount();
@@ -56,6 +66,7 @@ $params = unserialize($_POST['sql']);
         <th style="border: 1px solid black;background-color: #b0e0e6;">S<sub>кух.</sub></th>
         <th style="border: 1px solid black;background-color: #b0e0e6;">Этаж/Этажей</th>
         <th style="border: 1px solid black;background-color: #b0e0e6;">Цена</th>
+        <th style="border: 1px solid black;background-color: #b0e0e6;">Тэги</th>
       </tr>
       <tr>
         <td style="border: 1px solid black;text-align:center;"><?=$params['market']?></td>
@@ -65,6 +76,14 @@ $params = unserialize($_POST['sql']);
         <td style="border: 1px solid black;text-align:center;"><?=($params['kitchen'])?$params['kitchen']:"-"?></td>
         <td style="border: 1px solid black;text-align:center;"><?=($params['floor'])?$params['floor']:"-"?>/<?=($params['floors'])?$params['floors']:"-"?></td>
         <td style="border: 1px solid black;text-align:center;"><?=($params['price'])?$params['price']:"-"?></td>
+        <td style="border: 1px solid black;text-align:center;">
+          <?
+      foreach ($tags as $key=>$tag){
+        echo trim($tag);
+        if ($key != count($tags)-1) echo "<br>";
+      }
+          ?>
+        </td>
       </tr>
     </table>
     <br>
@@ -153,6 +172,17 @@ $params = unserialize($_POST['sql']);
     if ($params['street']) $rsQuery.=" AND PROPERTY_217 LIKE '%".$params['street']."%'";
     //Ответственный
     if ($params['assigned'] !='') $rsQuery.=" AND ASSIGNED_BY_ID=".$params['assigned'] ;
+    //Фильтр по тэгам
+    if ($params['tags']){
+      $tags = explode(",",$params["tags"]);
+      $rsQuery.= " AND (";
+      foreach ($tags as $key=>$tag){
+        $rsQuery.= "UF_CRM_1494396942 LIKE '%".trim($tag)."%'";
+        if ($key != count($tags)-1) $rsQuery.= " OR ";
+      }
+      $rsQuery.= ")";
+    }
+
     $rsQuery .= " ORDER BY b_uts_crm_deal.UF_CRM_58958B5734602 ASC";
     $rsData = $DB->Query($rsQuery);
     $count = $rsData->SelectedRowsCount();
@@ -169,7 +199,9 @@ $params = unserialize($_POST['sql']);
         <th style="border: 1px solid black;background-color: #b0e0e6;">S<sub>общ.</sub>от</th>
         <th style="border: 1px solid black;background-color: #b0e0e6;">S<sub>кух.</sub>от</th>
         <th style="border: 1px solid black;background-color: #b0e0e6;">Искл. этажи</th>
+        <th style="border: 1px solid black;background-color: #b0e0e6;">Район</th>
         <th style="border: 1px solid black;background-color: #b0e0e6;">Улица</th>
+        <th style="border: 1px solid black;background-color: #b0e0e6;">Тэги</th>
       </tr>
       <tr>
         <td style="border: 1px solid black;text-align:center;"><?=$params['stage_id']?></td>
@@ -181,7 +213,16 @@ $params = unserialize($_POST['sql']);
         <td style="border: 1px solid black;text-align:center;"><?=($params['square_s'])?$params['square_s']:"-"?></td>
         <td style="border: 1px solid black;text-align:center;"><?=($params['kitchen_s'])?$params['kitchen_s']:"-"?></td>
         <td style="border: 1px solid black;text-align:center;"><?=($floors_s[0])?"<s>первый</s>":""?><?=($floors_s[0] && $floors_s[1])?"/":""?><?=($floors_s[1])?"<s>последний</s>":""?></td>
+        <td style="border: 1px solid black;text-align:center;"><?=($params['locality']!=".")?$params['locality']:"-"?></td>
         <td style="border: 1px solid black;text-align:center;"><?=($params['street'])?$params['street']:"-"?></td>
+        <td style="border: 1px solid black;text-align:center;">
+          <?
+      foreach ($tags as $key=>$tag){
+        echo trim($tag);
+        if ($key != count($tags)-1) echo "<br>";
+      }
+          ?>
+        </td>
       </tr>
     </table>
     <table style="width:100%;border: 1px solid black;border-collapse: collapse;margin-bottom:15px;font-size: 14px;">
