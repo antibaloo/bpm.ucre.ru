@@ -108,7 +108,7 @@ while($aRes = $db_res->Fetch()){
 		$street = $aRes['PROPERTY_217'];
 	}
 	/*--------------------------------------------------------------------*/
-  //Формирование адреса объекта в зхависимости от типа объекта и наличия населенного пункта в справочнике Авито
+  //Формирование адреса объекта в зависимости от типа объекта и наличия населенного пункта в справочнике Авито
   if ($aRes['PROPERTY_215'] == 'Оренбург г'){//Если объект в Оренбурге
     $City = $dom->createElement("City",'Оренбург');
     $Ad->appendChild($City);
@@ -157,7 +157,26 @@ while($aRes = $db_res->Fetch()){
         }
       }
     }else{//Если населенного пункта нет в справочнике Авито
-      $City = $dom->createElement("City",'Оренбург');
+      switch ($aRes['PROPERTY_214']){
+				case "Саракташский р-н":
+					$City = $dom->createElement("City",'Саракташ');
+					break;
+				case "Беляевский р-н":
+					$City = $dom->createElement("City",'Беляевка');
+					break;
+				case "Сакмарский р-н":
+					$City = $dom->createElement("City",'Сакмара');
+					break;
+				case "Оренбургский р-н":
+					$City = $dom->createElement("City",'Оренбург');
+					break;
+				case "Октябрьский р-н":
+					$City = $dom->createElement("City",'Октябрьское');
+					break;
+				default:
+					$City = $dom->createElement("City",'Оренбург');
+					break;
+			}
       $Ad->appendChild($City);
       if ($aRes['PROPERTY_210']==382 || $aRes['PROPERTY_210']==381) {
         if ($aRes['PROPERTY_258']==""){
