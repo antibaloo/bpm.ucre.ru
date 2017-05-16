@@ -199,207 +199,6 @@ class CCrmViewHelper
 		$user = $dbUser ? $dbUser->Fetch() : null;
 		return is_array($user) ? CUser::FormatName($format, $user, true, $htmlEncode) : '';
 	}
-	publ<?php
-IncludeModuleLangFile(__FILE__);
-
-use Bitrix\Crm\Category\DealCategory;
-use Bitrix\Crm\Integration\OpenLineManager;
-use Bitrix\Crm\Color\PhaseColorScheme;
-
-class CCrmViewHelper
-{
-	private static $DEAL_STAGES = null;
-	private static $LEAD_STATUSES = null;
-	private static $QUOTE_STATUSES = null;
-	private static $INVOICE_STATUSES = null;
-
-	private static $ENABLE_DEAL_STAGE_COLORS = array();
-	private static $ENABLE_LEAD_STATUS_COLORS = false;
-	private static $ENABLE_QUOTE_STATUS_COLORS = false;
-	private static $ENABLE_INVOICE_STATUS_COLORS = false;
-
-	private static $USER_INFO_PROVIDER_MESSAGES_REGISTRED = false;
-
-	const PROCESS_COLOR = PhaseColorScheme::PROCESS_COLOR; //former: #4C99DA
-	const SUCCESS_COLOR = PhaseColorScheme::SUCCESS_COLOR; //former: #96B833
-	const FAILURE_COLOR = PhaseColorScheme::FAILURE_COLOR; //former: #F54819
-
-	public static function PrepareClientBaloonHtml($arParams)
-	{
-		return self::PrepareEntityBaloonHtml($arParams);
-	}
-	public static function PrepareEntityBaloonHtml($arParams)
-	{
-		if(!is_array($arParams))
-		{
-			return '';
-		}
-
-		$entityTypeID = isset($arParams['ENTITY_TYPE_ID']) ? intval($arParams['ENTITY_TYPE_ID']) : 0;
-		$entityID = isset($arParams['ENTITY_ID']) ? intval($arParams['ENTITY_ID']) : 0;
-		$prefix = isset($arParams['PREFIX']) ? $arParams['PREFIX'] : '';
-		$className = isset($arParams['CLASS_NAME']) ? $arParams['CLASS_NAME'] : '';
-
-		if($entityTypeID <= 0 || $entityID <= 0)
-		{
-			return '';
-		}
-
-		$showPath = isset($arParams['SHOW_URL']) ? $arParams['SHOW_URL'] : '';
-
-		if($entityTypeID === CCrmOwnerType::Company)
-		{
-			if($showPath === '')
-			{
-				$showPath = CComponentEngine::MakePathFromTemplate(
-					COption::GetOptionString('crm', 'path_to_company_show'),
-					array('company_id' => $entityID)
-				);
-			}
-
-			$title = isset($arParams['TITLE']) ? $arParams['TITLE'] : '';
-			if($title === '')
-			{
-				$title = CCrmOwnerType::GetCaption(CCrmOwnerType::Company, $entityID, (isset($arParams['CHECK_PERMISSIONS']) && $arParams['CHECK_PERMISSIONS'] == 'N' ? false : true));
-			}
-
-			$baloonID = $prefix !== '' ? "BALLOON_{$prefix}_CO_{$entityID}" : "BALLOON_CO_{$entityID}";
-			return '<a href="'.htmlspecialcharsbx($showPath).'" id="'.$baloonID.'"'.($className !== '' ? ' class="'.htmlspecialcharsbx($className).'"' : '').'>'.htmlspecialcharsbx($title).'</a>'.
-				'<script type="text/javascript">BX.tooltip("COMPANY_'.$entityID.'", "'.$baloonID.'", "/bitrix/components/bitrix/crm.company.show/card.ajax.php", "crm_balloon_company", true);</script>';
-		}
-		elseif($entityTypeID === CCrmOwnerType::Contact)
-		{
-			if($showPath === '')
-			{
-				$showPath = CComponentEngine::MakePathFromTemplate(
-					COption::GetOptionString('crm', 'path_to_contact_show'),
-					array('contact_id' => $entityID)
-				);
-			}
-
-			$title = isset($arParams['TITLE']) ? $arParams['TITLE'] : '';
-			if($title === '')
-			{
-				$title = CCrmOwnerType::GetCaption(CCrmOwnerType::Contact, $entityID, (isset($arParams['CHECK_PERMISSIONS']) && $arParams['CHECK_PERMISSIONS'] == 'N' ? false : true));
-			}
-
-			$baloonID = $prefix !== '' ? "BALLOON_{$prefix}_C_{$entityID}" : "BALLOON_C_{$entityID}";
-			return '<a href="'.htmlspecialcharsbx($showPath).'" id="'.$baloonID.'"'.($className !== '' ? ' class="'.htmlspecialcharsbx($className).'"' : '').'>'.htmlspecialcharsbx($title).'</a>'.
-			'<script type="text/javascript">BX.tooltip("CONTACT_'.$entityID.'", "'.$baloonID.'", "/bitrix/components/bitrix/crm.contact.show/card.ajax.php", "crm_balloon_contact", true);</script>';
-		}
-		elseif($entityTypeID === CCrmOwnerType::Lead)
-		{
-			if($showPath === '')
-			{
-				$showPath = CComponentEngine::MakePathFromTemplate(
-					COption::GetOptionString('crm', 'path_to_lead_show'),
-					array('lead_id' => $entityID)
-				);
-			}
-
-			$title = isset($arParams['TITLE']) ? $arParams['TITLE'] : '';
-			if($title === '')
-			{
-				$title = CCrmOwnerType::GetCaption(CCrmOwnerType::Lead, $entityID, (isset($arParams['CHECK_PERMISSIONS']) && $arParams['CHECK_PERMISSIONS'] == 'N' ? false : true));
-			}
-
-			$baloonID = $prefix !== '' ? "BALLOON_{$prefix}_L_{$entityID}" : "BALLOON_L_{$entityID}";
-			return '<a href="'.htmlspecialcharsbx($showPath).'" id="'.$baloonID.'"'.($className !== '' ? ' class="'.htmlspecialcharsbx($className).'"' : '').'>'.htmlspecialcharsbx($title).'</a>'.
-				'<script type="text/javascript">BX.tooltip("LEAD_'.$entityID.'", "'.$baloonID.'", "/bitrix/components/bitrix/crm.lead.show/card.ajax.php", "crm_balloon_no_photo", true);</script>';
-		}
-		elseif($entityTypeID === CCrmOwnerType::Deal)
-		{
-			if($showPath === '')
-			{
-				$showPath = CComponentEngine::MakePathFromTemplate(
-					COption::GetOptionString('crm', 'path_to_deal_show'),
-					array('deal_id' => $entityID)
-				);
-			}
-
-			$title = isset($arParams['TITLE']) ? $arParams['TITLE'] : '';
-			if($title === '')
-			{
-				$title = CCrmOwnerType::GetCaption(CCrmOwnerType::Deal, $entityID, (isset($arParams['CHECK_PERMISSIONS']) && $arParams['CHECK_PERMISSIONS'] == 'N' ? false : true));
-			}
-
-			$baloonID = $prefix !== '' ? "BALLOON_{$prefix}_D_{$entityID}" : "BALLOON_D_{$entityID}";
-			return '<a href="'.htmlspecialcharsbx($showPath).'" id="'.$baloonID.'"'.($className !== '' ? ' class="'.htmlspecialcharsbx($className).'"' : '').'>'.htmlspecialcharsbx($title).'</a>'.
-				'<script type="text/javascript">BX.tooltip("DEAL_'.$entityID.'", "'.$baloonID.'", "/bitrix/components/bitrix/crm.deal.show/card.ajax.php", "crm_balloon_no_photo", true);</script>';
-
-		}
-		elseif($entityTypeID === CCrmOwnerType::Quote)
-		{
-			if($showPath === '')
-			{
-				$showPath = CComponentEngine::MakePathFromTemplate(
-					COption::GetOptionString('crm', 'path_to_quote_show'),
-					array('quote_id' => $entityID)
-				);
-			}
-
-			$title = isset($arParams['TITLE']) ? $arParams['TITLE'] : '';
-			if($title === '')
-			{
-				$title = CCrmOwnerType::GetCaption(CCrmOwnerType::Quote, $entityID, (isset($arParams['CHECK_PERMISSIONS']) && $arParams['CHECK_PERMISSIONS'] == 'N' ? false : true));
-			}
-
-			$baloonID = $prefix !== '' ? "BALLOON_{$prefix}_".CCrmQuote::OWNER_TYPE."_{$entityID}" : "BALLOON_".CCrmQuote::OWNER_TYPE."_{$entityID}";
-			return '<a href="'.htmlspecialcharsbx($showPath).'" id="'.$baloonID.'"'.($className !== '' ? ' class="'.htmlspecialcharsbx($className).'"' : '').'>'.htmlspecialcharsbx($title).'</a>'.
-				'<script type="text/javascript">BX.tooltip("QUOTE_'.$entityID.'", "'.$baloonID.'", "/bitrix/components/bitrix/crm.quote.show/card.ajax.php", "crm_balloon_no_photo", true);</script>';
-
-		}
-		return '';
-	}
-	public static function PrepareUserBaloonHtml($arParams)
-	{
-		if(!is_array($arParams))
-		{
-			return '';
-		}
-
-		$prefix = isset($arParams['PREFIX']) ? $arParams['PREFIX'] : '';
-		$userID = isset($arParams['USER_ID']) ? (int)$arParams['USER_ID'] : 0;
-		$userName = isset($arParams['USER_NAME']) ? $arParams['USER_NAME'] : "[{$userID}]";
-		if(isset($arParams['ENCODE_USER_NAME']) && $arParams['ENCODE_USER_NAME'])
-		{
-			$userName = htmlspecialcharsbx($userName);
-		}
-		$profilePath = isset($arParams['USER_PROFILE_URL']) ? $arParams['USER_PROFILE_URL'] : '';
-		$baloonID = $prefix !== '' ? "BALLOON_{$prefix}_U_{$userID}" : "BALLOON_U_{$userID}";
-		return '<a href="'.htmlspecialcharsbx($profilePath).'" id="'.$baloonID.'">'.$userName.'</a>'.
-		'<script type="text/javascript">BX.tooltip('.$userID.', "'.$baloonID.'", "");</script>';
-	}
-	public static function GetFormattedUserName($userID, $format = '', $htmlEncode = false)
-	{
-		$userID = intval($userID);
-		if($userID <= 0)
-		{
-			return '';
-		}
-
-		$format = strval($format);
-		if($format === '')
-		{
-			$format = CSite::GetNameFormat(false);
-		}
-
-		$dbUser = CUser::GetList(
-			($by = 'id'),
-			($order = 'asc'),
-			array('ID'=> $userID),
-			array(
-				'FIELDS' => array(
-					'ID',
-					'NAME', 'SECOND_NAME', 'LAST_NAME',
-					'LOGIN', 'TITLE', 'EMAIL'
-				)
-			)
-		);
-
-		$user = $dbUser ? $dbUser->Fetch() : null;
-		return is_array($user) ? CUser::FormatName($format, $user, true, $htmlEncode) : '';
-	}
 	public static function RenderInfo($url, $titleHtml, $descriptionHtml, $target = '_blank', $onclick = '')
 	{
 		$url = strval($url);
@@ -2010,7 +1809,7 @@ class CCrmViewHelper
 
 			if($processed > 0)
 			{
-				echo '<span class="bx-br-separator">&nbsp;</span>';
+				echo '<span class="bx-br-separator"><br/></span>';
 			}
 
 			echo '<span class="fields files">';
@@ -2019,7 +1818,7 @@ class CCrmViewHelper
 
 			if ($file->IsImage($fileInfo['ORIGINAL_NAME'], $fileInfo['CONTENT_TYPE']))
 			{
-				'<a class="fancybox" rel="image_gallery" href="https://bpm.ucre.ru'.$fileInfo['SRC'].'" title=""><img src="https://bpm.ucre.ru'.$fileInfo['SRC'].'" width = "auto" height ="50" alt="" /></a>';
+				echo $file->ShowImage($fileInfo, $fileMaxWidth, $fileMaxHeight, '', '', true, false, 0, 0, $fileUrlTemplate);
 			}
 			else
 			{
