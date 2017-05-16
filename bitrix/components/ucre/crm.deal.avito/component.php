@@ -20,7 +20,8 @@ $rsDeal = CCrmDeal::GetListEx(
 		'UF_CRM_58958B51C2F36',	//этажность
 		'UF_CRM_58958B529E628',	//кол-во комнат
 		'UF_CRM_5895994EB2646',	//адрес
-		'UF_CRM_58958B5207D0C'	//тип дома
+		'UF_CRM_58958B5207D0C',	//тип дома
+		'UF_CRM_1472038962'			//фотографии в заявке
 	),
 	array()
 );
@@ -44,5 +45,10 @@ if ($mainDeal['UF_CRM_589C63CD96E82'] && !$mainDeal["UF_CRM_1469534140"]){
   $arResult['BUTTON'] = ($mainDeal['STAGE_ID']!='NEW')? "disabled":"";
   $arResult['RESULT'] = ($mainDeal['STAGE_ID']!='NEW')? "Создать объект можно только в предлистинге":"";
   $this->IncludeComponentTemplate();
+}elseif($mainDeal['UF_CRM_589C63CD96E82'] && $mainDeal["UF_CRM_1469534140"] && !$mainDeal["UF_CRM_1472038962"]){
+	foreach (unserialize($mainDeal['UF_CRM_58A2B9F26548F']) as $avitolink){
+    $arResult['PHOTO'] .= "<a class='fancybox' rel='image_gallery' href='".$avitolink."'><img style='margin-right: 10px; border:1px solid #cccccc;' src='".$avitolink."' width = 'auto' height ='50'/></a>";
+  }
+	$this->IncludeComponentTemplate('no_photo');
 }
 ?>
