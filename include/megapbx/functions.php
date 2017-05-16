@@ -103,6 +103,7 @@ function findByPhoneNumber($number, $params = array()){
   }
   unset($dup);
   if (isset($entityByType['CONTACT'])) unset($entityByType['LEAD']);//Если есть контакт, то лиды игнорируем
+  if (isset($entityByType['COMPANY'])) unset($entityByType['LEAD']);//Если есть компания, то лиды игнорируем
   if (isset($entityByType['LEAD'])){//Если есть лид (значит контакта нет)
     foreach($entityByType['LEAD'] as $key=>$lead){//удаляем инфу о закрытых лидах (способ закрытия неважен)
       $curLead = CCrmLead::GetByID($lead['ID'],false);
@@ -112,6 +113,7 @@ function findByPhoneNumber($number, $params = array()){
 
   if (count($entityByType)){
     if (isset($entityByType['CONTACT'])) return array('FOUND' => 'Y', 'CONTACT' => end($entityByType['CONTACT']));//Выдаем в результат полений по ID контакт, если найдено несколько
+    if (isset($entityByType['COMPANY'])) return array('FOUND' => 'Y', 'COMPANY' => end($entityByType['COMPANY']));//Выдаем в результат полений по ID компании, если найдено несколько
     if (isset($entityByType['LEAD']) && count($entityByType['LEAD'])) return array('FOUND' => 'Y', 'LEAD' => end($entityByType['LEAD']));//Выдаем в результат полений по ID лид, если найдено несколько не закрытых
     else return array('FOUND' => 'N');
   }else {//Если результат нулевой, ищем среди сотрудников, во измежании создания лида с номером сотрудника
