@@ -967,7 +967,7 @@ class CCrmViewHelper
 		$entityType = is_array($params) && isset($params['ENTITY_TYPE']) ? $params['ENTITY_TYPE'] : '';
 		$entityID = is_array($params) && isset($params['ENTITY_ID']) ? intval($params['ENTITY_ID']) : 0;
 		$activityID = is_array($params) && isset($params['SRC_ACTIVITY_ID']) ? intval($params['SRC_ACTIVITY_ID']) : 0;
-		return '<span class="crm-client-contacts-block-text-tel-icon" onclick="if(typeof(window[\'BXIM\']) === \'undefined\') { window.alert(\''.GetMessageJS('CRM_SIP_NO_SUPPORTED').'\'); return; } BX.CrmSipManager.startCall({ number:\''.CUtil::JSEscape($phone).'\', enableInfoLoading: true }, { ENTITY_TYPE: \''.CUtil::JSEscape($entityType).'\', ENTITY_ID: \''.CUtil::JSEscape($entityID).'\', SRC_ACTIVITY_ID: \''.CUtil::JSEscape($activityID).'\' }, true, this);"></span>';
+		return '<span class="crm-client-contacts-block-text-tel-icon" onclick="if(typeof(top.BXIM) === \'undefined\') { window.alert(\''.GetMessageJS('CRM_SIP_NO_SUPPORTED').'\'); return; } BX.CrmSipManager.startCall({ number:\''.CUtil::JSEscape($phone).'\', enableInfoLoading: true }, { ENTITY_TYPE: \''.CUtil::JSEscape($entityType).'\', ENTITY_ID: \''.CUtil::JSEscape($entityID).'\', SRC_ACTIVITY_ID: \''.CUtil::JSEscape($activityID).'\' }, true, this);"></span>';
 	}
 	private static function RenderListMultiFieldValues($ID, &$arValues, $typeName, &$arValueTypes, $arOptions = null)
 	{
@@ -1809,7 +1809,7 @@ class CCrmViewHelper
 
 			if($processed > 0)
 			{
-				echo '<span class="bx-br-separator">&nbsp;</span>';
+				echo '<span class="bx-br-separator"><br/></span>';
 			}
 
 			echo '<span class="fields files">';
@@ -1818,7 +1818,7 @@ class CCrmViewHelper
 
 			if ($file->IsImage($fileInfo['ORIGINAL_NAME'], $fileInfo['CONTENT_TYPE']))
 			{
-				echo '<a class="fancybox" rel="image_gallery" href="https://bpm.ucre.ru'.$fileInfo['SRC'].'" title=""><img src="https://bpm.ucre.ru'.$fileInfo['SRC'].'" width = "auto" height ="50" alt="" /></a>';
+				echo $file->ShowImage($fileInfo, $fileMaxWidth, $fileMaxHeight, '', '', true, false, 0, 0, $fileUrlTemplate);
 			}
 			else
 			{
