@@ -34,6 +34,9 @@ if ($_POST['crm_token'] == $megapbx->crm_key){
         case '79228299057':
           $SOURCE_ID = 'WEB';
           break;
+        default:
+          $SOURCE_ID = "SELF";
+          break;
       }
       $arFields = array(
         "TITLE" => "Лид по входящему звонку с номера ".$prefix.substr($_POST['phone'],0,1)."(".substr($_POST['phone'],1,3).")".substr($_POST['phone'],4,3)."-".substr($_POST['phone'],7,2)."-".substr($_POST['phone'],9)." на ВАТС Мегафон",
@@ -174,6 +177,11 @@ if ($_POST['crm_token'] == $megapbx->crm_key){
         $entity_id = $phone_res['CONTACT']['ID'];
         $messageText = 'контакту';
         $messageLog = 'контакта ';
+      }elseif($phone_res['COMPANY']['ID']>0){
+        $entity_type = 'COMPANY';
+        $entity_id = $phone_res['COMPANY']['ID'];
+        $messageText = 'компании';
+        $messageLog = 'компании ';
       }
       
       $begintime = beginTimeIncoming($_POST['callid']);
