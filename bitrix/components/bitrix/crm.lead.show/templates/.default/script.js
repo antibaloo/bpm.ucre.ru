@@ -1,7 +1,5 @@
 $(document).ready(function() {
-		$("a.fancybox").fancybox();
-	});
-$(document).ready(function() {
+	$("a.fancybox").fancybox();
   $('#sync').on('click', function () {
     var data = $('#avito').serialize();
     $.ajax({
