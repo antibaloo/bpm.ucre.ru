@@ -139,7 +139,7 @@ if ($_POST['crm_token'] == $megapbx->crm_key){
         "TITLE" => "Лид по исходящему звонку на  номер ".$prefix.substr($_POST['phone'],0,1)."(".substr($_POST['phone'],1,3).")".substr($_POST['phone'],4,3)."-".substr($_POST['phone'],7,2)."-".substr($_POST['phone'],9)." на ВАТС Мегафон",
         "NAME" => "неизвестно",
         "COMMENTS" => "",
-        "SOURCE_ID" => "CALL",
+        "SOURCE_ID" => "3",
         "OPPORTUNITY" =>0,
         "CURRENCY_ID" => "RUB",
         "OPPORTUNITY_ACCOUNT" => 0,
