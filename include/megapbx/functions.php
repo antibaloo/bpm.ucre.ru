@@ -1,6 +1,24 @@
 <?
 CModule::IncludeModule('crm');
 CModule::IncludeModule('timeman');
+function linkCallIds($megapbxCallId,$bitrixCallId){
+  global $DB;
+  $DB->Query("INSERT INTO b_megapbx_bitrix VALUES ('".$megapbxCallId."','".$bitrixCallId."')");
+}
+function getBitrixByMegapbx($megapbxCallId){
+  global $DB;
+  $db_res = $DB->Query("SELECT bitrix_callid from b_megapbx_bitrix WHERE megapbx_callid='".$megapbxCallId."'");
+  if ($aRes = $db_res->Fetch()){
+    return $aRes['bitrix_callid'];
+  }else return false;
+}
+function getMegapbxByBitrix($bitrixCallId){
+  global $DB;
+  $db_res = $DB->Query("SELECT megapbx_callid from b_megapbx_bitrix WHERE bitrix_callid='".$bitrixCallId."'");
+  if ($aRes = $db_res->Fetch()){
+    return $aRes['megapbx_callid'];
+  }else return false;
+}
 function getExtByOperName($name, $pbx_params){
   $postdata = http_build_query(array('cmd' => 'accounts','token' => $pbx_params->pbx_key));
   $opts = array('http' =>array('method'  => 'POST','header'  => 'Content-type: application/x-www-form-urlencoded','content' => $postdata));
