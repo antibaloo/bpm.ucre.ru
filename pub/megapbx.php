@@ -10,10 +10,34 @@ CModule::IncludeModule('search');
 $megapbx = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT']."/../megapbx_params"));
 if ($_POST['crm_token'] == $megapbx->crm_key){
   $DB->Query("INSERT INTO b_megapbx_mess VALUES ('', NOW(),'".trim($_POST['callid'])."','".trim($_POST['cmd'])."','".trim($_POST['phone'])."','".trim($_POST['type'])."','".trim($_POST['user'])."','".trim($_POST['ext'])."','".trim($_POST['telnum'])."','".trim($_POST['diversion'])."','".trim($_POST['duration'])."','".trim($_POST['link'])."','".trim($_POST['status'])."')");
-  CPullWatch::AddToStack(
-    'PULL_MEGAPBX',
-    array('module_id' => 'megapbx','command' => $_POST['cmd'],'params' =>$_POST)
-  );
+  if (getBitrixByMegapbx(trim($_POST['callid']))){
+    //Если найдено соответствие, то ничего не делаем
+  }else{
+    $restHelper = new \Bitrix\Voximplant\Rest\Helper;
+    $assignedById = (getUserByExt(trim($_POST['ext'])))?getUserByExt(trim($_POST['ext'])):206;
+    switch (trim($_POST['type'])){
+      case "":
+      case "ACCEPTED":
+      case "COMPLETED":
+      case "INCOMING":
+      case "in":
+        $callDirection = 2;
+        break;
+      case "out":
+      case "OUTGOING":
+        $callDirection = 1;
+        break;
+    }
+    $callParams = array(
+      'USER_ID' =>$assignedById,
+      'PHONE_NUMBER'   => trim($_POST['phone']),
+      'CRM_CREATE' => false,
+      'TYPE' => $callDirection,
+    );
+    $registerResults = $restHelper-> registerExternalCall($callParams);
+    $registerData = $registerResults->getData();
+    if($registerData['CALL_ID']) linkCallIds(trim($_POST['callid']),$registerData['CALL_ID']);
+  }
   $phone_res = findByPhoneNumber(trim($_POST['phone']));
   $prefix = (substr($_POST['phone'],0,1)=="8")?"":"+";
   if ($_POST['cmd'] == 'event' && $_POST['type'] == 'INCOMING'){
@@ -166,6 +190,17 @@ if ($_POST['crm_token'] == $megapbx->crm_key){
     }
   }
   if ($_POST['cmd'] == 'history' && $_POST['type'] == 'in'){
+    $restHelper = new \Bitrix\Voximplant\Rest\Helper;
+    $assignedById = (getUserByExt(trim($_POST['ext'])))?getUserByExt(trim($_POST['ext'])):206;
+    $callParams = array(
+      'CALL_ID' => getBitrixByMegapbx($_POST['callid']),
+      'USER_ID' => $assignedById,
+      'DURATION' => $_POST['duration'],
+      'ADD_TO_CHAT' => true,
+      'RECORD_URL' => $_POST['link']
+    );
+    $restHelper->finishExternalCall($callParams);
+    
     if ($phone_res['FOUND']['Y'] && ($phone_res['LEAD']['ID']>0 || $phone_res['CONTACT']['ID']>0)){
       if ($phone_res['LEAD']['ID']>0){
         $entity_type = 'LEAD';
@@ -189,7 +224,6 @@ if ($_POST['crm_token'] == $megapbx->crm_key){
       $arBindings[] = array('OWNER_TYPE_ID' => CCrmOwnerType::ResolveID($entity_type),
                             'OWNER_ID' => $entity_id
                            );
-      $assignedById = (getUserByExt(trim($_POST['ext'])))?getUserByExt(trim($_POST['ext'])):206;
       $ismissed = ($_POST['status'] == 'Success')?'':'(пропущенный) ';
       $arFields = array(
         'OWNER_ID' => $entity_id,
@@ -358,6 +392,15 @@ if ($_POST['crm_token'] == $megapbx->crm_key){
   }
   if ($_POST['cmd'] == 'history' && $_POST['type'] == 'out'){
     $assignedById = (getUserByExt(trim($_POST['ext'])))?getUserByExt(trim($_POST['ext'])):206;
+    $restHelper = new \Bitrix\Voximplant\Rest\Helper;
+    $callParams = array(
+      'CALL_ID' => getBitrixByMegapbx($_POST['callid']),
+      'USER_ID' => $assignedById,
+      'DURATION' => $_POST['duration'],
+      'ADD_TO_CHAT' => true,
+      'RECORD_URL' => $_POST['link']
+    );
+    $restHelper->finishExternalCall($callParams);
     if ($phone_res['FOUND']['Y'] && ($phone_res['LEAD']['ID']>0 || $phone_res['CONTACT']['ID']>0)){
       if ($phone_res['LEAD']['ID']>0){
         $entity_type = 'LEAD';
