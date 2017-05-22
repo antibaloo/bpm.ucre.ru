@@ -1,5 +1,5 @@
 <?if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)die();
-CJSCore::Init(array("jquery"));
+
 if (isset($_GET["RELOAD"]) && $_GET["RELOAD"] == "Y")
 {
 	return; //Live Feed Ajax
@@ -222,52 +222,15 @@ if(\Bitrix\Main\ModuleManager::isModuleInstalled('bitrix24'))
 							}
 						})();
 					</script>
-					<div class="header-logo-block"><?
-						$APPLICATION->ShowViewContent("sitemap");
-						?><span class="header-logo-block-util"></span><?
-						if (CModule::IncludeModule("bitrix24")):
-							?><a id="logo_24_a" href="<?=SITE_DIR?>" title="<?=GetMessage("BITRIX24_LOGO_TOOLTIP")?>" class="logo"><?
-								$clientLogo = COption::GetOptionInt("bitrix24", "client_logo", "");
-								$siteTitle = trim(COption::GetOptionString("bitrix24", "site_title", ""));
-								if(strlen($siteTitle) <= 0)
-								{
-									$siteTitle = GetMessage('BITRIX24_SITE_TITLE_DEFAULT');
-								}
-								?>
-								<span id="logo_24_text" <?if ($clientLogo):?>style="display:none"<?endif?>>
-									<span class="logo-text"><?=htmlspecialcharsbx($siteTitle)?></span><?
-									if(COption::GetOptionString("bitrix24", "logo24show", "Y") !=="N"):?><span class="logo-color">24</span><?endif?>
-								</span>
-								<span class="logo-img-span">
-									<img id="logo_24_img" src="<?if ($clientLogo) echo CFile::GetPath($clientLogo)?>" <?if (!$clientLogo):?>style="display:none;"<?endif?>/>
-								</span>
-<?
-							if(\CBitrix24::IsPortalAdmin($USER->GetID())):
-								if(!\CBitrix24::isDomainChanged()):
-?>
-								<div class="header-logo-block-settings header-logo-block-settings-show">
-									<span id="b24_rename_button" class="header-logo-block-settings-item" onclick="BX.Bitrix24.renamePortal(); return false;" title="<?=GetMessage('BITRIX24_SETTINGS_TITLE')?>"></span>
-								</div>
-<?
-								else:
-?>
-								<div class="header-logo-block-settings">
-									<span id="b24_rename_button" class="header-logo-block-settings-item" onclick="location.href='<?=CBitrix24::PATH_CONFIGS?>'; return false;" title="<?=GetMessage('BITRIX24_SETTINGS_TITLE_RENAMED')?>"></span>
-								</div>
-<?
-								endif;
-								if(isset($_SESSION['B24_SHOW_RENAME_POPUP_HINT']))
-								{
-									unset($_SESSION['B24_SHOW_RENAME_POPUP_HINT']);
-?>
-								<script>BX.ready(function(){if(!!BX.Bitrix24&&!!BX.Bitrix24.renamePortal){BX.Bitrix24.renamePortal.showNotify()}})</script>
-<?
-								}
-							endif;
-?>
-							</a>
+					<div class="header-logo-block">
+						<?$APPLICATION->ShowViewContent("sitemap"); ?>
+						<span class="header-logo-block-util"></span>
 						<?
-						else:
+						$clientLogo = COption::GetOptionInt("bitrix24", "client_logo", "");
+						$siteTitle = trim(COption::GetOptionString("bitrix24", "site_title", ""));
+
+						if (file_exists($_SERVER["DOCUMENT_ROOT"].SITE_DIR."include/company_name.php") && !$clientLogo && !$siteTitle)
+						{
 							$logoID = COption::GetOptionString("main", "wizard_site_logo", "", SITE_ID);
 							?><a id="logo_24_a" href="<?=SITE_DIR?>" title="<?=GetMessage("BITRIX24_LOGO_TOOLTIP")?>" class="logo">
 								<?if ($logoID):?>
@@ -281,7 +244,74 @@ if(\Bitrix\Main\ModuleManager::isModuleInstalled('bitrix24'))
 									?></span>
 								<?endif?>
 							</a>
-						<?endif?>
+						<?
+						}
+						else
+						{
+							?>
+							<a id="logo_24_a" href="<?=SITE_DIR?>" title="<?=GetMessage("BITRIX24_LOGO_TOOLTIP")?>" class="logo"><?
+								if(strlen($siteTitle) <= 0)
+								{
+									$siteTitle = IsModuleInstalled("bitrix24") ? GetMessage('BITRIX24_SITE_TITLE_DEFAULT') : COption::GetOptionString("main", "site_name", "");
+								}
+								?>
+								<span id="logo_24_text" <?if ($clientLogo):?>style="display:none"<?endif?>>
+									<span class="logo-text"><?=htmlspecialcharsbx($siteTitle)?></span><?
+									if(COption::GetOptionString("bitrix24", "logo24show", "Y") !=="N"):?><span class="logo-color">24</span><?endif?>
+								</span>
+								<span class="logo-img-span">
+									<img id="logo_24_img" src="<?if ($clientLogo) echo CFile::GetPath($clientLogo)?>" <?if (!$clientLogo):?>style="display:none;"<?endif?>/>
+								</span>
+								<?
+								if(\Bitrix\Main\Loader::includeModule("bitrix24") && \CBitrix24::IsPortalAdmin($USER->GetID()))
+								{
+									if (!\CBitrix24::isDomainChanged()): ?>
+										<div class="header-logo-block-settings header-logo-block-settings-show">
+												<span id="b24_rename_button" class="header-logo-block-settings-item"
+													  onclick="BX.Bitrix24.renamePortal(); return false;"
+													  title="<?=GetMessage('BITRIX24_SETTINGS_TITLE')?>"></span>
+										</div>
+									<?else:?>
+										<div class="header-logo-block-settings">
+												<span id="b24_rename_button" class="header-logo-block-settings-item"
+													  onclick="location.href='<?=CBitrix24::PATH_CONFIGS?>'; return false;"
+													  title="<?=GetMessage('BITRIX24_SETTINGS_TITLE_RENAMED')?>"></span>
+										</div>
+									<?endif;
+
+									if (isset($_SESSION['B24_SHOW_RENAME_POPUP_HINT'])):
+										unset($_SESSION['B24_SHOW_RENAME_POPUP_HINT']);
+									?>
+										<script>
+											BX.ready(function ()
+											{
+												if (!!BX.Bitrix24 && !!BX.Bitrix24.renamePortal)
+												{
+													BX.Bitrix24.renamePortal.showNotify()
+												}
+											})
+										</script>
+										<?
+									elseif(isset($_GET['b24renameform'])):
+									?>
+										<script>
+											BX.ready(function()
+											{
+												if(!!BX.Bitrix24 && !!BX.Bitrix24.renamePortal)
+												{
+													BX.Bitrix24.renamePortal()
+												}
+											})
+										</script>
+									<?
+									endif;
+
+								}
+								?>
+							</a>
+							<?
+						}
+						?>
 					</div>
 
 					<?$APPLICATION->IncludeComponent("bitrix:search.title", ".default", Array(
@@ -363,7 +393,7 @@ if(\Bitrix\Main\ModuleManager::isModuleInstalled('bitrix24'))
 							"bitrix:menu",
 							"left_vertical",
 							array(
-								"ROOT_MENU_TYPE" => isModuleInstalled("bitrix24") ? "superleft" : "top",
+								"ROOT_MENU_TYPE" => file_exists($_SERVER["DOCUMENT_ROOT"].SITE_DIR.".superleft.menu_ext.php") ? "superleft" : "top",
 								"CHILD_MENU_TYPE" => "left",
 								"MENU_CACHE_TYPE" => "Y",
 								"MENU_CACHE_TIME" => "604800",
@@ -470,7 +500,7 @@ if(\Bitrix\Main\ModuleManager::isModuleInstalled('bitrix24'))
 
 										<div class="pagetitle-wrap">
 											<div class="pagetitle-inner-container">
-												<div class="pagetitle-menu" id="pagetitle-menu"><?
+												<div class="pagetitle-menu pagetitle-container pagetitle-last-item-in-a-row" id="pagetitle-menu"><?
 													if (IsModuleInstalled("bitrix24")):
 														$GLOBALS['INTRANET_TOOLBAR']->Disable();
 													else:
@@ -507,9 +537,11 @@ if(\Bitrix\Main\ModuleManager::isModuleInstalled('bitrix24'))
 											<?$APPLICATION->ShowViewContent("topblock")?>
 											<?if ($isIndexPage):?>
 												<div class="pagetitle-wrap">
-													<div class="pagetitle-menu" id="pagetitle-menu"><?$APPLICATION->ShowViewContent("pagetitle")?></div>
-													<div class="pagetitle" id="pagetitle"><?$APPLICATION->ShowTitle(false);?></div>
-													<?$APPLICATION->ShowViewContent("inside_pagetitle")?>
+													<div class="pagetitle-inner-container">
+														<div class="pagetitle-menu" id="pagetitle-menu"><?$APPLICATION->ShowViewContent("pagetitle")?></div>
+														<div class="pagetitle" id="pagetitle"><?$APPLICATION->ShowTitle(false);?></div>
+														<?$APPLICATION->ShowViewContent("inside_pagetitle")?>
+													</div>
 												</div>
 											<?endif?>
 											<?CPageOption::SetOptionString("main.interface", "use_themes", "N"); //For grids?>
