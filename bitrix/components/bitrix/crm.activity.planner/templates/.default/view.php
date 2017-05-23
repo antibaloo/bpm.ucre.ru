@@ -157,12 +157,13 @@ $optionsJson = \Bitrix\Main\Web\Json::encode($options);
 						<div class="bx-crm-dialog-view-activity-files">
 							<?foreach ($arResult['FILES_LIST'] as $index => $file):?>
 							<div class="bx-crm-dialog-view-activity-file">
-								<!--<span class="bx-crm-dialog-view-activity-file-num"><?=($index + 1)?></span>
-								<a class="bx-crm-dialog-view-activity-file-text" target="_blank" href="<?=htmlspecialcharsbx($file['viewURL'])?>"><?=htmlspecialcharsbx($file['fileName'])?></a>-->
+								<span class="bx-crm-dialog-view-activity-file-num"><?=($index + 1)?></span>
+								<!--<a class="bx-crm-dialog-view-activity-file-text" target="_blank" href="<?=htmlspecialcharsbx($file['viewURL'])?>"><?=htmlspecialcharsbx($file['fileName'])?></a>-->
 								<?
 									preg_match("|fileId=(.+?)&ownerTypeId=|is", $file['viewURL'], $out); 
-									$file = Bitrix\Crm\Integration\DiskManager::makeFileArray($out[1]);
-									echo '<audio controls><source src=https://bpm.ucre.ru'.substr($file['tmp_name'],20).' type="audio/mpeg">Your browser does not support the audio element.</audio>';
+									$fileArray = Bitrix\Crm\Integration\DiskManager::makeFileArray($out[1]);
+									if ($fileArray['type'] == 'audio/mpeg')	echo '<audio controls><source src=https://bpm.ucre.ru'.substr($fileArray['tmp_name'],20).' type="audio/mpeg">Your browser does not support the audio element.</audio>';
+									else echo '<a class="bx-crm-dialog-view-activity-file-text" target="_blank" href="'.htmlspecialcharsbx($file['viewURL']).'">'.htmlspecialcharsbx($file['fileName']).'</a>';
 								?>
 							</div>
 							<?endforeach;?>
