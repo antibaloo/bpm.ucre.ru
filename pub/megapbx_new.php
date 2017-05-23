@@ -55,7 +55,7 @@ if ($_POST['crm_token'] == $megapbx->crm_key){
     $entityType = 'LEAD';
     $oLead = new CCrmLead;
     $arFields = array(
-      "TITLE" => "Лид по".$callDirectionText.$prefix.substr($_POST['phone'],0,1)."(".substr($_POST['phone'],1,3).")".substr($_POST['phone'],4,3)."-".substr($_POST['phone'],7,2)."-".substr($_POST['phone'],9)." на ВАТС Мегафон",
+      "TITLE" => "Лид по ".$callDirectionText.$prefix.substr($_POST['phone'],0,1)."(".substr($_POST['phone'],1,3).")".substr($_POST['phone'],4,3)."-".substr($_POST['phone'],7,2)."-".substr($_POST['phone'],9)." на ВАТС Мегафон",
       "NAME" => "неизвестно",
       "COMMENTS" => "",
       "SOURCE_ID" => $SOURCE_ID,
