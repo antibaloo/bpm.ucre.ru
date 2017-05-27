@@ -1,5 +1,5 @@
 <?php
-if ($_GET['count']>0 && in_array($_SERVER['GEOIP_ADDR'], array('178.21.8.184','188.186.237.57'))){
+if ($_GET['count']>0 && in_array($_SERVER['GEOIP_ADDR'], array('178.21.8.184','188.186.237.57','95.71.157.100'))){
   require ($_SERVER['DOCUMENT_ROOT'] . "/bitrix/modules/main/include/prolog_before.php");
   CModule::IncludeModule('iblock');
   CModule::IncludeModule('crm');
