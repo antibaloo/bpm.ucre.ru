@@ -35,6 +35,7 @@ function getExtByOperName($name, $pbx_params){
   }
 }
 function getUserByExt($ext){
+  if ($ext == '' || !$ext) return false;
   $rsUsers = CUser::GetList(($by="ID"), ($order="desc"), array('ACTIVE' => 'Y','GROUPS_ID' => array(12), 'UF_MEGAPBX' => $ext));
   if ($rsUsers->SelectedRowsCount() == 0) return false;
   if ($rsUsers->SelectedRowsCount() == 1) {
