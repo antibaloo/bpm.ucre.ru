@@ -134,8 +134,43 @@ if ($_POST['crm_token'] == $megapbx->crm_key){
       'STATUS_CODE' => $statusCode,
     );
     $restHelper->finishExternalCall($callParams);
+    if ($assignedById == 206){
+      $notifyMess = "Неотвеченный вызов в нерабочее время в сущности ";
+      if ($entityType = 'LEAD') $notifyMess.='<a href="/crm/lead/show/'.$entityId.'/">Лид №'.$entityId.'</a>';
+      if ($entityType = 'CONTACT') $notifyMess.='<a href="/crm/contact/show/'.$entityId.'/">Лид №'.$entityId.'</a>';
+      if ($entityType = 'COMPANY') $notifyMess.='<a href="/crm/company/show/'.$entityId.'/">Лид №'.$entityId.'</a>';
+      $arMessageFields = array(
+          // получатель
+          "TO_USER_ID" => 98,
+          // отправитель
+          "FROM_USER_ID" => 206, 
+          // тип уведомления
+          "NOTIFY_TYPE" => IM_NOTIFY_SYSTEM,
+          // модуль запросивший отправку уведомления
+          "NOTIFY_MODULE" => "crm",
+          // символьный тэг для группировки (будет выведено только одно сообщение), если это не требуется - не задаем параметр
+          //"NOTIFY_TAG" => "CRM|LEAD|NEW|MEGAPBX",
+          // текст уведомления на сайте (доступен html и бб-коды)
+          "NOTIFY_MESSAGE" => $notifyMess,
+        );
+      CIMNotify::Add($arMessageFields);
+      $arMessageFields = array(
+          // получатель
+          "TO_USER_ID" => 202,
+          // отправитель
+          "FROM_USER_ID" => 206, 
+          // тип уведомления
+          "NOTIFY_TYPE" => IM_NOTIFY_SYSTEM,
+          // модуль запросивший отправку уведомления
+          "NOTIFY_MODULE" => "crm",
+          // символьный тэг для группировки (будет выведено только одно сообщение), если это не требуется - не задаем параметр
+          //"NOTIFY_TAG" => "CRM|LEAD|NEW|MEGAPBX",
+          // текст уведомления на сайте (доступен html и бб-коды)
+          "NOTIFY_MESSAGE" => $notifyMess,
+        );
+      CIMNotify::Add($arMessageFields);
+    }
   }
-  
 }else{
   echo "<center><img style='margin: 0 auto;' src='images/away.jpg'></center>";
 }
