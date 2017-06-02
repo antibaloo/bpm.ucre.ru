@@ -13,7 +13,7 @@ $aMenuLinks = array(
 		array(), 
 	),
 	array(
-		"Отчет по группе", 
+		"Отчет по подразделению", 
 		"group.php", 
 		array(), 
 		array(),
