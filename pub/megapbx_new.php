@@ -73,7 +73,7 @@ if ($_POST['crm_token'] == $megapbx->crm_key){
       "ASSIGNED_BY_ID" => $assignedById,
       "FM" => array("PHONE" => array("n0" => array("VALUE" => $prefix.substr($_POST['phone'],0,1)."(".substr($_POST['phone'],1,3).")".substr($_POST['phone'],4,3)."-".substr($_POST['phone'],7,2)."-".substr($_POST['phone'],9),"VALUE_TYPE" => "OTHER"))),
     );
-    $entityId = $oLead->Add($arFields, true, array('CURRENT_USER' => $assignedById));
+    $entityId = $oLead->Add($arFields, true, array('CURRENT_USER' => 24));
   }else{//А если найдена, запоминаем тип и идентификатор
     if ($phone_res['LEAD']['ID'] > 0) {
       $entityType = 'LEAD';
@@ -101,7 +101,7 @@ if ($_POST['crm_token'] == $megapbx->crm_key){
       'CRM_SOURCE' => $SOURCE_ID,
       'SHOW' => true,
     );
-      $registerResults = $restHelper-> registerExternalCall($callParams);
+    $registerResults = $restHelper-> registerExternalCall($callParams);
     $registerData = $registerResults->getData();
     if($registerData['CALL_ID']) linkCallIds(trim($_POST['callid']),$registerData['CALL_ID']);//Запоминаем соответствие callid
   }
