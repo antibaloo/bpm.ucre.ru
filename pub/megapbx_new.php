@@ -47,7 +47,11 @@ if ($_POST['crm_token'] == $megapbx->crm_key){
       $SOURCE_ID = 'WEB';
       break;
     default:
-      $SOURCE_ID = "3";
+      if ($_POST['diversion'] ==""){
+        $SOURCE_ID = "3";
+      }else{
+        $SOURCE_ID = "CALL";
+      }
       break;
   }
   
