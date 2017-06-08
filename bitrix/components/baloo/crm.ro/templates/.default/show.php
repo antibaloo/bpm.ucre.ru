@@ -2,7 +2,7 @@
 if(!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED!==true) die();
 ?>
 <?
-if (in_array($USER->GetID(), array(24,26,1,11,12,44,98))) {
+if (in_array($USER->GetID(), array(24,26,1,11,12,44,98,203,204))) {
 	$APPLICATION->IncludeComponent(
 		"bitrix:main.interface.toolbar",
 		"",
