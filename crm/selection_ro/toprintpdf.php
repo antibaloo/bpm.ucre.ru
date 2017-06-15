@@ -2,13 +2,8 @@
 <script src="https://code.jquery.com/jquery-1.8.3.js"></script>
 <?
 require_once($_SERVER['DOCUMENT_ROOT'] . "/bitrix/modules/main/include/prolog_before.php");
-//require($_SERVER["DOCUMENT_ROOT"]."/bitrix/header.php");
 require_once $_SERVER["DOCUMENT_ROOT"].'/include/dompdf-0.7.0/autoload.inc.php';
 $params = unserialize($_GET['sql']);
-/*echo "<pre>";
-print_r($params);
-echo "</pre>";*/
-//$APPLICATION->SetTitle("PDF версия результатов поиска.");
 $html = "
 <html>
   <head>
@@ -66,7 +61,6 @@ if ($params['goal']=='sell'){
   $rsQuery .= " ORDER BY b_crm_deal.ID DESC";
   $rsData = $DB->Query($rsQuery);
   $count = $rsData->SelectedRowsCount();
-  //ob_start();
   $arUser = $USER->GetById($USER->GetID())->Fetch();
 ?>
 <div class="page active">
@@ -157,24 +151,7 @@ if ($params['goal']=='sell'){
 $html_echo = ob_get_contents();
 $html .= $html_echo;
 $html .="</body></html>";
-/*file_put_contents('ob_get_content.html', $html);
-ob_end_clean();
-echo $html_echo;
-use Dompdf\Dompdf;
-$dompdf = new Dompdf();
-$dompdf->set_option('enable_css_float',true);
-$dompdf->set_option('defaultFont', 'DejaVuSans');
-$dompdf->setPaper('A4', 'landscape');
-$dompdf->load_html($html);
 
-$dompdf->render();
-$output = $dompdf->output();
-$filename = "selection_".$USER->GetID()."_".$USER->GetLastName().".pdf";
-file_put_contents($filename, $output);
-
-echo '<a href="'.$filename.'" target="_blank">Скачать</a>';
-*/
-//require($_SERVER["DOCUMENT_ROOT"]."/bitrix/footer.php");
 ?>
 <script>
   function delete_row(row_id){
