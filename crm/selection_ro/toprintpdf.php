@@ -1,4 +1,5 @@
 <link href="custom.css?<?=time();?>" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-1.8.3.js"></script>
 <?
 require_once($_SERVER['DOCUMENT_ROOT'] . "/bitrix/modules/main/include/prolog_before.php");
 //require($_SERVER["DOCUMENT_ROOT"]."/bitrix/header.php");
@@ -133,7 +134,7 @@ if ($params['goal']=='sell'){
         break;
     }
 ?>
-    <tr>
+    <tr style="page-break-inside: avoid;" class="row" id="<?=$aRes['ID']?>" onclick="delete_row(<?=$aRes['ID']?>);">
       <td><?=$aRes['ID']?></td>
       <td style="text-align: left; padding-right: 5px;"><?=$resume?></td>
       <td style="text-align: right; padding-right: 5px;"><?=($aRes['UF_CRM_58958B5734602'])?number_format($aRes['UF_CRM_58958B5734602'],2,"."," "):"-"?></td>
@@ -148,7 +149,7 @@ if ($params['goal']=='sell'){
  <?    
   }
 ?>
-    <tr><td></td><td colspan="10" style="text-align: left; padding-left: 5px;">Всего: <?=$count?></td></tr>
+    <tr><td></td><td colspan="10" style="text-align: left; padding-left: 5px;">Всего: <span id="count"><?=$count?></span></td></tr>
   </table>
 </div>
 <?  
@@ -175,3 +176,11 @@ echo '<a href="'.$filename.'" target="_blank">Скачать</a>';
 */
 //require($_SERVER["DOCUMENT_ROOT"]."/bitrix/footer.php");
 ?>
+<script>
+  function delete_row(row_id){
+    if(confirm("Вы действительно хотите удалить эту заявку из подбора?")){
+      $('#'+row_id).remove();
+      $('#count').text($('.row').length);
+    }
+  }
+</script>
