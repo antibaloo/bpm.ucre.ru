@@ -3,7 +3,7 @@
 require_once($_SERVER['DOCUMENT_ROOT'] . "/bitrix/modules/main/include/prolog_before.php");
 //require($_SERVER["DOCUMENT_ROOT"]."/bitrix/header.php");
 require_once $_SERVER["DOCUMENT_ROOT"].'/include/dompdf-0.7.0/autoload.inc.php';
-$params = unserialize($_POST['sql']);
+$params = unserialize($_GET['sql']);
 /*echo "<pre>";
 print_r($params);
 echo "</pre>";*/
@@ -21,7 +21,7 @@ $html = "
       div.page > table{font_size:10px}
     </style>
   </head>
-  <body><center><h3>Результаты подбора заявок</h3></center>"
+  <body><center><h3>Результаты поиска заявок</h3></center>"
 ;
 ?>
 
@@ -65,9 +65,31 @@ if ($params['goal']=='sell'){
   $rsQuery .= " ORDER BY b_crm_deal.ID DESC";
   $rsData = $DB->Query($rsQuery);
   $count = $rsData->SelectedRowsCount();
-  ob_start();
+  //ob_start();
+  $arUser = $USER->GetById($USER->GetID())->Fetch();
 ?>
 <div class="page active">
+  <div>
+    <div style="float:left">
+      <img src="/include/ucre_g.png">
+    </div>
+    <div style="float:left; padding-left: 25px;">
+      ООО "Единый центр недвижимости"<br>г. Оренбург, ул. Советская, 46, 3 эт.<br>+7(922) 829-90-57, 8 (3532) 90-90-57<br>без выходных, 9:00 - 21:00</div>
+    <div style="float:right">
+      <ul style="margin-top:0px">
+        <li>подбор создан в <?=date("H:i:s")?></li>
+        <li>ФИО: <?=$arUser['LAST_NAME']." ".$arUser['NAME']." ".$arUser['SECOND_NAME']?></li>
+        <li>отдел: <?=$arUser['WORK_DEPARTMENT']?></li>
+        <li>должность: <?=$arUser['WORK_POSITION']?></li>
+        <li>телефон: <?=$arUser['WORK_PHONE']?></li>
+        <li>эл. почта: <?=$arUser['EMAIL']?></li>
+      </ul>
+    </div>
+  </div>
+  <div style="clear:both">
+    <center><h2>Результат подбора заявок от <?=date("d.m.Y")?> : </h2></center>
+  </div>
+  
   <table>
     <tr>
       <th rowspan="2">id</th>
@@ -134,9 +156,9 @@ if ($params['goal']=='sell'){
 $html_echo = ob_get_contents();
 $html .= $html_echo;
 $html .="</body></html>";
-file_put_contents('ob_get_content.html', $html);
+/*file_put_contents('ob_get_content.html', $html);
 ob_end_clean();
-//echo $html_echo;
+echo $html_echo;
 use Dompdf\Dompdf;
 $dompdf = new Dompdf();
 $dompdf->set_option('enable_css_float',true);
@@ -150,6 +172,6 @@ $filename = "selection_".$USER->GetID()."_".$USER->GetLastName().".pdf";
 file_put_contents($filename, $output);
 
 echo '<a href="'.$filename.'" target="_blank">Скачать</a>';
-
+*/
 //require($_SERVER["DOCUMENT_ROOT"]."/bitrix/footer.php");
 ?>

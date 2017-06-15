@@ -168,6 +168,8 @@ $params = unserialize($_POST['sql']);
     if ($params['nfirst']) $rsQuery.=" AND PROPERTY_221<>1";
     //Не последний
     if ($params['nlast']) $rsQuery.=" AND PROPERTY_221<>PROPERTY_222";
+    //Фильтр по району
+    if ($params['locality']) $rsQuery.=" AND PROPERTY_216 LIKE '%".$params['locality']."%'";
     //Фильтр по улице
     if ($params['street']) $rsQuery.=" AND PROPERTY_217 LIKE '%".$params['street']."%'";
     //Ответственный

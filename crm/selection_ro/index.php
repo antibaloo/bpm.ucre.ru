@@ -342,6 +342,15 @@ $rsUsers = CUser::GetList(($by="id"), ($order="asc"), array("GROUPS_ID"=> array(
   <form id="formaddress">
     <input type="hidden" name="sql" value="<?=htmlspecialchars(serialize($_POST),ENT_QUOTES)?>">
     <input type="email" name="email" readonly="" value="<?=$arUser["EMAIL"]?>"> <input type="button" id="sendmail" value="Отправить">&nbsp;<div style="display: inline" id="sendresult"></div>
+    <?if($_POST['goal']=='sell'){?>
+    <br>
+    <br>
+    <a target="_blank" href="toprintpdf.php?sql=<?=htmlspecialchars(serialize($_POST),ENT_QUOTES)?>">Печатная форма</a>
+    <!--<br>
+    <input type="button" id="printform" value="Печатная форма">&nbsp;<div style="display: inline" id="printresult"></div>
+    <br>
+    <input type="button" id="printformnew" value="Печатная форма (в новом окне)">-->
+    <?}?>
   </form>
 </div>
 <div id="search_map" style="display: none;">
@@ -401,21 +410,43 @@ require($_SERVER["DOCUMENT_ROOT"]."/bitrix/footer.php");
       }).hide();     
     }
   }
-$(document).ready(function() {
-  $('#sendmail').on('click', function () {
-    var data = $('#formaddress').serialize();
-    $.ajax({
-      type: "POST",
-      url: "./sendresult.php",
-      dataType: "text",
-      data: data,
-      success: function (html) {
-        $("#sendresult").html(html);
-      },
-      error: function (html) {
-        $("#sendresult").html("Технические неполадки! В ближайшее время все будет исправлено!");
-      },
+  $(document).ready(function() {
+    $('#sendmail').on('click', function () {
+      var data = $('#formaddress').serialize();
+      $.ajax({
+        type: "POST",
+        url: "./sendresult.php",
+        dataType: "text",
+        data: data,
+        success: function (html) {
+          $("#sendresult").html(html);
+        },
+        error: function (html) {
+          $("#sendresult").html("Технические неполадки! В ближайшее время все будет исправлено!");
+        },
+      });
     });
   });
-});
+  $(document).ready(function() {
+    $('#printform').on('click', function () {
+      var data = $('#formaddress').serialize();
+      $.ajax({
+        type: "POST",
+        url: "./toprint.php",
+        dataType: "text",
+        data: data,
+        success: function (html) {
+          $("#printresult").html(html);
+        },
+        error: function (html) {
+          $("#printresult").html("Технические неполадки! В ближайшее время все будет исправлено!");
+        },
+      });
+    });
+  })
+  $(document).ready(function() {
+    $('#printformnew').on('click', function () {
+      var a = window.open('toprintpdf.php?sql=<?=serialize($_POST)?>', "_blank", ""); a.blur();
+    });
+  })
 </script>
