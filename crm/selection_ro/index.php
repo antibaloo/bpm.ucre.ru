@@ -345,7 +345,7 @@ $rsUsers = CUser::GetList(($by="id"), ($order="asc"), array("GROUPS_ID"=> array(
     <?if($_POST['goal']=='sell'){?>
     <br>
     <br>
-    <a target="_blank" href="toprintpdf.php?sql=<?=htmlspecialchars(serialize($_POST),ENT_QUOTES)?>">Печатная форма</a>
+    <a target="_blank" href="toprintpdf.php?sql=<?=htmlspecialchars(serialize($_POST),ENT_QUOTES)?>">Печатная форма подбора</a>
     <!--<br>
     <input type="button" id="printform" value="Печатная форма">&nbsp;<div style="display: inline" id="printresult"></div>
     <br>

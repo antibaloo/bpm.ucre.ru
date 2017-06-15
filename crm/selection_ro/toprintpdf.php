@@ -136,7 +136,7 @@ if ($params['goal']=='sell'){
     <tr>
       <td><?=$aRes['ID']?></td>
       <td style="text-align: left; padding-right: 5px;"><?=$resume?></td>
-      <td style="text-align: right; padding-right: 5px;"><?=($aRes['UF_CRM_58958B5734602'])?$aRes['UF_CRM_58958B5734602']:"-"?></td>
+      <td style="text-align: right; padding-right: 5px;"><?=($aRes['UF_CRM_58958B5734602'])?number_format($aRes['UF_CRM_58958B5734602'],2,"."," "):"-"?></td>
       <td></td>
       <td></td>
       <td></td>
