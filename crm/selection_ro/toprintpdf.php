@@ -23,7 +23,12 @@ $html = "
 
 <?
 if ($params['goal']=='sell'){
-  $rsQuery = "SELECT b_crm_deal.ID,b_crm_deal.CATEGORY_ID, b_crm_deal.TITLE, b_crm_deal.ASSIGNED_BY_ID, b_uts_crm_deal.UF_CRM_1469534140,b_uts_crm_deal.UF_CRM_58958B5734602, b_iblock_element.NAME, b_iblock_element_prop_s42.PROPERTY_210, b_iblock_element_prop_s42.PROPERTY_209, b_iblock_element_prop_s42.PROPERTY_215, b_iblock_element_prop_s42.PROPERTY_217, b_iblock_element_prop_s42.PROPERTY_218, b_iblock_element_prop_s42.PROPERTY_229, b_iblock_element_prop_s42.PROPERTY_228, b_iblock_element_prop_s42.PROPERTY_243, b_iblock_element_prop_s42.PROPERTY_224, b_iblock_element_prop_s42.PROPERTY_226, b_iblock_element_prop_s42.PROPERTY_221, b_iblock_element_prop_s42.PROPERTY_222, b_iblock_element_prop_s42.PROPERTY_292, b_iblock_element_prop_s42.PROPERTY_298, b_iblock_element_prop_s42.PROPERTY_299 FROM b_crm_deal INNER JOIN b_uts_crm_deal ON b_crm_deal.ID=b_uts_crm_deal.VALUE_ID INNER JOIN b_iblock_element ON b_uts_crm_deal.UF_CRM_1469534140 = b_iblock_element.ID INNER JOIN b_iblock_element_prop_s42 ON b_iblock_element.ID = b_iblock_element_prop_s42.IBLOCK_ELEMENT_ID WHERE (b_crm_deal.STAGE_ID = 'PROPOSAL' or b_crm_deal.STAGE_ID = '8' or b_crm_deal.STAGE_ID = 'C4:1' or b_crm_deal.STAGE_ID = 'C4:PROPOSAL')";
+   $type_s = array(
+      '383' =>  "Дом",
+      '384' =>  "Таунхаус",
+      '385' =>  "Дача",
+    );
+  $rsQuery = "SELECT b_crm_deal.ID,b_crm_deal.CATEGORY_ID, b_crm_deal.TITLE, b_crm_deal.ASSIGNED_BY_ID, b_uts_crm_deal.UF_CRM_1469534140,b_uts_crm_deal.UF_CRM_58958B5734602, b_iblock_element.NAME, b_iblock_element_prop_s42.PROPERTY_210, b_iblock_element_prop_s42.PROPERTY_209, b_iblock_element_prop_s42.PROPERTY_215, b_iblock_element_prop_s42.PROPERTY_217, b_iblock_element_prop_s42.PROPERTY_218, b_iblock_element_prop_s42.PROPERTY_229, b_iblock_element_prop_s42.PROPERTY_228,  b_iblock_element_prop_s42.PROPERTY_238, b_iblock_element_prop_s42.PROPERTY_242, b_iblock_element_prop_s42.PROPERTY_243, b_iblock_element_prop_s42.PROPERTY_224, b_iblock_element_prop_s42.PROPERTY_226, b_iblock_element_prop_s42.PROPERTY_221, b_iblock_element_prop_s42.PROPERTY_222, b_iblock_element_prop_s42.PROPERTY_292, b_iblock_element_prop_s42.PROPERTY_295, b_iblock_element_prop_s42.PROPERTY_298, b_iblock_element_prop_s42.PROPERTY_299 FROM b_crm_deal INNER JOIN b_uts_crm_deal ON b_crm_deal.ID=b_uts_crm_deal.VALUE_ID INNER JOIN b_iblock_element ON b_uts_crm_deal.UF_CRM_1469534140 = b_iblock_element.ID INNER JOIN b_iblock_element_prop_s42 ON b_iblock_element.ID = b_iblock_element_prop_s42.IBLOCK_ELEMENT_ID WHERE (b_crm_deal.STAGE_ID = 'PROPOSAL' or b_crm_deal.STAGE_ID = '8' or b_crm_deal.STAGE_ID = 'C4:1' or b_crm_deal.STAGE_ID = 'C4:PROPOSAL')";
   //Фильтр по рынку
   if ($params['market'] == "Первичный") $rsQuery.=" AND CATEGORY_ID=4";
   if ($params['market'] == "Вторичный") $rsQuery.=" AND CATEGORY_ID=0";
@@ -107,12 +112,24 @@ if ($params['goal']=='sell'){
     if ($aRes['PROPERTY_210'] == 386) $square = $aRes['PROPERTY_292'];
     else $square = $aRes['PROPERTY_224'];
     
+    //Материал стен
+    $rsWallsType = CIBlockPropertyEnum::GetList(array(), array("ID" => (int)$aRes['PROPERTY_242']));
+    if($wallsType = $rsWallsType->GetNext()) $wallsTypeValue = $wallsType["VALUE"];
+    else $wallsTypeValue = "<span style='color:red'>неизвестно из чего </span>";
+    //Тип дома
     $rsHouseType = CIBlockPropertyEnum::GetList(array(), array("ID" => (int)$aRes['PROPERTY_243']));
-    if($houseType = $rsHouseType->GetNext())
-    {
-      $houseTypeValue = $houseType["VALUE"];
-    }
+    if($houseType = $rsHouseType->GetNext()) $houseTypeValue = $houseType["VALUE"];
     else $houseTypeValue = "<span style='color:red'>тип дома неизвестен</span>";
+    //Назначение участка
+    $rsCatType = CIBlockPropertyEnum::GetList(array(), array("ID" => (int)$aRes['PROPERTY_295']));
+    if($catType = $rsCatType->GetNext()) $catTypeValue = $catType["VALUE"];
+    else $catTypeValue ="<span style='color:red'>неизвестного назначения</span>";
+    //Назначение коммерческого объекта
+    $rsAppType = CIBlockPropertyEnum::GetList(array(), array("ID" => (int)$aRes['PROPERTY_238']));
+    if($appType = $rsAppType->GetNext())  $appTypeValue = $appType["VALUE"];
+    else     $appTypeValue = "<span style='color:red'>неизвестно что</span>";
+    
+    
     $city = ($aRes['PROPERTY_215'])?$aRes['PROPERTY_215']:"<span style='color:red'>н.п. не указан</span>";
     $street = ($aRes['PROPERTY_217'])?$aRes['PROPERTY_217']:"<span style='color:red'>улица не указана</span>";
     $house = ($aRes['PROPERTY_218'])?$aRes['PROPERTY_218']:"<span style='color:red'>дом не указан</span>";
@@ -123,6 +140,17 @@ if ($params['goal']=='sell'){
       case 382:
         $resume = number_format($aRes['PROPERTY_229'],0)."-к квартира, ".number_format($aRes['PROPERTY_224'],2)."/".number_format($aRes['PROPERTY_225'],2)."/".number_format($aRes['PROPERTY_226'],2)." (общ/жил/кух), этаж ".number_format($aRes['PROPERTY_221'],0)." из ".number_format($aRes['PROPERTY_222'],0).", ".$houseTypeValue.", ".$city.", ".$street.", ".$house;
         break;
+      case 383:
+      case 384:
+      case 385:
+        $resume = $type_s[$aRes['PROPERTY_210']]." площадью ".number_format($aRes['PROPERTY_224'],2)." м<sup>2</sup> на участке в ".number_format($aRes['PROPERTY_292'],2)." сот, ".$wallsTypeValue.", ".$city.", ".$street;
+        break;
+      case 386:
+        $resume = "Участок площадью ".number_format($aRes['PROPERTY_292'],2)." сот, ".$catTypeValue.", ".$city.", ".$street;
+        break;
+      case 387:
+        $resume = $appTypeValue.", площадь: ".number_format($aRes['PROPERTY_224'],2)." м<sup>2</sup>, ".$city.", ".$street;
+        break;
       default:
         $resume = "непонятная хрень";
         break;
@@ -131,7 +159,7 @@ if ($params['goal']=='sell'){
     <tr style="page-break-inside: avoid;" class="row" id="<?=$aRes['ID']?>" onclick="delete_row(<?=$aRes['ID']?>);">
       <td><?=$aRes['ID']?></td>
       <td style="text-align: left; padding-right: 5px;"><?=$resume?></td>
-      <td style="text-align: right; padding-right: 5px;"><?=($aRes['UF_CRM_58958B5734602'])?number_format($aRes['UF_CRM_58958B5734602'],2,"."," "):"-"?></td>
+      <td style="text-align: right; padding-right: 5px;"><?=($aRes['UF_CRM_58958B5734602'])?number_format($aRes['UF_CRM_58958B5734602'],2,"."," "):"<span style='color:red'>нет</span>"?></td>
       <td></td>
       <td></td>
       <td></td>
