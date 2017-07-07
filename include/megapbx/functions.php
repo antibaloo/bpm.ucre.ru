@@ -20,6 +20,7 @@ function getMegapbxByBitrix($bitrixCallId){
   }else return false;
 }
 function getExtByOperName($name, $pbx_params){
+  $name = stristr($name,"@",true);
   $postdata = http_build_query(array('cmd' => 'accounts','token' => $pbx_params->pbx_key));
   $opts = array('http' =>array('method'  => 'POST','header'  => 'Content-type: application/x-www-form-urlencoded','content' => $postdata));
   $context  = stream_context_create($opts);
