@@ -48,8 +48,7 @@ body {
 	display: inline-block;
 	height: 87px;
 	text-decoration: none;
-	width: 483px;
-	/*width: 226px;*/
+	width: 226px;
 }
 
 .main-logo-ru {background: url("images/logo-ru1.png") no-repeat 0 0;}
@@ -63,9 +62,7 @@ body {
 	height: 100%;
 	overflow: hidden;
 	width: 100%;
-	background: url(images/ucre.jpg) no-repeat center;
-	background-size: contain;
-	/*background: url(images/bg_clouds_3.png) no-repeat center 69px;*/
+	background: url(images/bg_clouds_3.png) no-repeat center 69px;
 }
 
 .log-bottom-cell,
@@ -865,12 +862,13 @@ a.login-create-promo-cod-link {
 	height: 0;
 	width: 0;
 }
+
 .login-btn {
-	background: #2fc6f7;color: #fff;
+	background: #2fc6f7;
+	color: #fff;
 	display: inline-block;
 	outline: none !important;
 	border: none;
-	border-radius: 3px;
 	vertical-align: middle;
 	text-decoration: none;
 	cursor: pointer;
@@ -878,9 +876,9 @@ a.login-create-promo-cod-link {
 	border-radius: 20px;
 	padding: 0 30px;
 	height: 42px;
-	font-size: 14px;
-	line-height:42px;
-	font-size: 21px!important;
+	line-height: 42px;
+	font-size: 21px !important;
+	-webkit-appearance: none;
 }
 
 a.login-btn {
