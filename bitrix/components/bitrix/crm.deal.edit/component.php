@@ -273,7 +273,7 @@ else
 	$beginDate -= $time['tm_sec'];
 
 	$arFields['BEGINDATE'] = ConvertTimeStamp($beginDate, 'FULL', SITE_ID);
-	$arFields['CLOSEDATE'] = ConvertTimeStamp($beginDate + 182 * 86400, 'FULL', SITE_ID);
+	$arFields['CLOSEDATE'] = ConvertTimeStamp($beginDate + 7 * 86400, 'FULL', SITE_ID);
 
 	$extVals =  isset($arParams['~VALUES']) && is_array($arParams['~VALUES']) ? $arParams['~VALUES'] : array();
 	if (count($extVals) > 0)
@@ -462,15 +462,7 @@ else
 				$comments = isset($_POST['COMMENTS']) ? trim($_POST['COMMENTS']) : '';
 				if($comments !== '' && strpos($comments, '<') !== false)
 				{
-					$sanitizer = new CBXSanitizer();
-					$sanitizer->ApplyDoubleEncode(false);
-					$sanitizer->SetLevel(CBXSanitizer::SECURE_LEVEL_MIDDLE);
-					//Crutch for for Chrome line break behaviour in HTML editor.
-					$sanitizer->AddTags(array('div' => array()));
-					$sanitizer->AddTags(array('a' => array('href', 'title', 'name', 'style', 'alt', 'target')));
-					$sanitizer->AddTags(array('p' => array()));
-					$sanitizer->AddTags(array('span' => array('style')));
-					$comments = $sanitizer->SanitizeHtml($comments);
+					$comments = \Bitrix\Crm\Format\TextHelper::sanitizeHtml($comments);
 				}
 				$arFields['COMMENTS'] = $comments;
 			}
@@ -1224,7 +1216,7 @@ $arResult['FIELDS']['tab_1'][] = array(
 
 //Fix for issue #36848
 $beginDate = isset($arResult['ELEMENT']['BEGINDATE']) ? $arResult['ELEMENT']['BEGINDATE'] : '';
-$closeDate = isset($arResult['ELEMENT']['CLOSEDATE']) ? $arResult['ELEMENT']['CLOSEDATE'] : ConvertTimeStamp(MakeTimeStamp($beginDate) + 182 * 86400, 'FULL', SITE_ID);
+$closeDate = isset($arResult['ELEMENT']['CLOSEDATE']) ? $arResult['ELEMENT']['CLOSEDATE'] : $beginDate;
 
 $arResult['FIELDS']['tab_1'][] = array(
 	'id' => 'BEGINDATE',
