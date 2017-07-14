@@ -11,7 +11,7 @@ div.page > table{
 div.page > table > tbody > tr > td{
   border: 1px solid black;
 }
-div.page > table > tbody > tr > td{
+div.page > table > tbody > tr > th{
   text-align:center;
 }
 div.page > table > tbody > tr > th{
