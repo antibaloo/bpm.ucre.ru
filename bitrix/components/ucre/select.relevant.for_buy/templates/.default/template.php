@@ -1,6 +1,7 @@
+<link href="/include/custom_css/custom_paging.css?<?=time();?>" rel="stylesheet">
 <?php
 if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED!==true)die();
-echo $arResult['SQL_STRING'];
+//echo $arResult['SQL_STRING'];
 ?>
 <br>
 <form id="select_relevant_to_buy">
@@ -27,7 +28,7 @@ echo $arResult['SQL_STRING'];
       <td><input name="maxprice" type="text" value="<?=$arResult['SELECT_PARAMS']['MAXPRICE']?>" readonly></td>
     </tr>
   </table>
-  <input type="hidden" name="sql" value="<?=bin2hex($arResult['SQL_STRING'])?>" readonly>
+  <input type="hidden" name="sql" value="<?=bin2hex($arResult['SQL_STRING'])?>">
 </form>
 <input id="submit" type="button" value="Искать">
 <div id="resultGrid">
@@ -36,7 +37,6 @@ echo $arResult['SQL_STRING'];
   $("#submit").click(function () {
     var data = $('#select_relevant_to_buy').serialize();
     $.ajax({
-      //url:"<?=__DIR__?>"+"/../../ajax.php",
       url: "/bitrix/components/ucre/select.relevant.for_buy/ajax.php",
       type: "POST",
       data: data,
@@ -49,4 +49,15 @@ echo $arResult['SQL_STRING'];
       },
     });
   });
+  function set_active(object){
+    if(!object.classList.contains('active')){
+      var el = document.getElementById("page"+object.innerHTML);
+      var a_page = document.getElementsByClassName("page active");
+      var a_pages = document.getElementsByClassName("pages active");
+      a_page[0].classList.remove('active');
+      a_pages[0].classList.remove('active');
+      el.classList.add('active');
+      object.classList.add('active');
+    }
+  }
 </script>
