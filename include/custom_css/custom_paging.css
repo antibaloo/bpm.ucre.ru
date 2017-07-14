@@ -10,13 +10,18 @@ div.page > table{
 }
 div.page > table > tbody > tr > td{
   border: 1px solid black;
-}
-div.page > table > tbody > tr > th{
   text-align:center;
+}
+div.page > table > tbody > tr > td:first-child{
+  width: 3%;
+}
+div.page > table > tbody > tr > th:first-child{
+  width: 3%;
 }
 div.page > table > tbody > tr > th{
   border: 1px solid black;
   background-color: #b0e0e6;
+  text-align:center;
 }
 div.page > table > tbody > tr:hover{
   background-color: #cccccc;
