@@ -1,0 +1,48 @@
+div.page {
+  display: none;
+}
+div.page > table{
+  width:100%;
+  border: 1px solid black;
+  border-collapse: collapse;
+  margin-bottom:15px;
+  font-size: 14px;
+}
+div.page > table > tbody > tr > td{
+  border: 1px solid black;
+}
+div.page > table > tbody > tr > td{
+  text-align:center;
+}
+div.page > table > tbody > tr > th{
+  border: 1px solid black;
+  background-color: #b0e0e6;
+}
+div.page > table > tbody > tr:hover{
+  background-color: #cccccc;
+}
+div.page > table > tbody > tr:first-child:hover{
+  background-color: white;
+}
+div.page > table > tbody > tr:last-child{
+  font-weight: bold;
+}
+div.page > table > tbody > tr:last-child:hover{
+  background-color: white;
+}
+div.page.active {
+  display:block;
+}
+span.pages {
+  margin: 0;
+}
+span.pages.active {
+  color: #18867F;
+}
+span.pages:hover {
+  color: #18867F;
+  cursor: pointer
+}
+span.pages.active:hover {
+cursor: default;
+}
