@@ -29,9 +29,6 @@ div.page > table > tbody > tr:hover{
 div.page > table > tbody > tr:first-child:hover{
   background-color: white;
 }
-div.page > table > tbody > tr:last-child{
-  font-weight: bold;
-}
 div.page > table > tbody > tr:last-child:hover{
   background-color: white;
 }
