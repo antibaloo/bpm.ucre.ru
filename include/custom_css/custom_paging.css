@@ -29,7 +29,10 @@ div.page > table > tbody > tr:hover{
 div.page > table > tbody > tr:first-child:hover{
   background-color: white;
 }
-div.page > table > tbody > tr:last-child:hover{
+div.page > table > tbody > tr.last{
+  font-weight: bold;
+}
+div.page > table > tbody > tr.last:hover{
   background-color: white;
 }
 div.page.active {
