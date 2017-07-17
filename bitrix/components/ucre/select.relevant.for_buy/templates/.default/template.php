@@ -26,12 +26,20 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED!==true)die();
       <td><input name="nlast" type="text" value="<?=$arResult['SELECT_PARAMS']['LAST']?>" readonly></td>
       <td><input name="miprice" type="text" value="<?=$arResult['SELECT_PARAMS']['MINPRICE']?>" readonly></td>
       <td><input name="maxprice" type="text" value="<?=$arResult['SELECT_PARAMS']['MAXPRICE']?>" readonly></td>
+      <td><input id="submit" type="button" value="Искать"></td>
     </tr>
   </table>
   <input type="hidden" name="sql" value="<?=bin2hex($arResult['SQL_STRING'])?>">
+  <input type="hidden" name="deal_id" value="<?=$arResult['ID']?>">
 </form>
-<input id="submit" type="button" value="Искать">
+
 <div id="resultGrid">
+<?
+  $currentUserCount = $DB->Query("select * from b_crm_relevant_search where deal_id=".$arResult['ID']." AND user_id=".$USER->GetID())->SelectedRowsCount();
+  $allUsersCount = $DB->Query("select * from b_crm_relevant_search where deal_id=".$arResult['ID'])->SelectedRowsCount();
+  //Вывод статистики использования инструмента
+  echo "Запрос по встречным заявкам текущий пользователь произвел ".$currentUserCount." раз. Всего запросов по заявке ".$allUsersCount."<hr>";
+?>  
 </div>
 <script>
   $("#submit").click(function () {
