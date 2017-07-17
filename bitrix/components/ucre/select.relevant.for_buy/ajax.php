@@ -30,7 +30,7 @@ if ($_SERVER['SERVER_NAME'] == 'bpm.ucre.ru'){
   $allUsersCount = $DB->Query("select * from b_crm_relevant_search where deal_id=".$_POST['deal_id'])->SelectedRowsCount();
   //Вывод статистики использования инструмента
   echo "Запрос по встречным заявкам текущий пользователь произвел ".$currentUserCount." раз. Всего запросов по заявке ".$allUsersCount."<hr>";
-  
+  echo '<div id="resultAdd"></div>';//Результаты переноса заявки в потенциальные сделки
   $rows = 20;
   $pages = ($count % $rows)?intval($count/$rows)+1:$count/$rows;
   for ($i=1;$i<=$pages;$i++){

@@ -60,6 +60,21 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED!==true)die();
   function addpotential(id){
     $('#R'+id).remove();
     $('#count').text($('.row').length);
+    $.ajax({
+      url: "/bitrix/components/ucre/select.relevant.for_buy/addtopotential.php",
+      type: "POST",
+      datatype: "html",
+      data:{
+        buy_deal_id: <?=$arResult['ID']?>,
+        sell_deal_id:id
+      },
+      success: function (html) {
+        $("#resultAdd").html(html);
+      },
+      error: function (html) {
+        $("#resultAdd").html("Технические неполадки! В ближайшее время все будет исправлено!");
+      },
+    });
   }
   function set_active(object){
     if(!object.classList.contains('active')){
