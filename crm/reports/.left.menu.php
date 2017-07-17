@@ -20,6 +20,13 @@ $aMenuLinks = array(
 		'in_array($USER->GetID(),array(1,24))'
 	),
 	array(
+		"Встречные заявки", 
+		"relevant.php", 
+		array(), 
+		array(),
+		'in_array($USER->GetID(),array(1,24))'
+	),
+	array(
 		"Назад к отчетам", 
 		"/crm/reports/", 
 		array(), 
