@@ -56,8 +56,8 @@ if ($_SERVER['SERVER_NAME'] == 'bpm.ucre.ru'){
         if ($aRes['PROPERTY_210'] == 386) $square = $aRes['PROPERTY_292'];
         else $square = $aRes['PROPERTY_224'];
 ?>
-    <tr id="R<?=$aRes['ID']?>">
-      <td><button>+</button></td>
+    <tr id="R<?=$aRes['ID']?>" class="row">
+      <td><button onclick="addpotential(<?=$aRes['ID']?>)">+</button></td>
       <td><?=$aRes['ID']?></td>
       <td style="text-align: left; padding-left: 5px;"><a href="/crm/deal/show/<?=$aRes['ID']?>/" target="_blank"><?=$aRes['TITLE']?></a></td>
       <td style="text-align: right; padding-right: 5px;"><?=($aRes['UF_CRM_58958B5734602'])?$aRes['UF_CRM_58958B5734602']:"<span style='color:red;'>цена не указана</span>"?></td>
@@ -72,15 +72,17 @@ if ($_SERVER['SERVER_NAME'] == 'bpm.ucre.ru'){
       }
     }
 ?>
-    <tr>
-      <td>Всего:</td>
-      <td colspan="9" style="text-align: left; padding-left: 5px;"><?=$count?></td>
-    </tr>
   </table>
 </div>
 <?
   }
 ?>
+<table style="width:100%;border: 1px solid black;border-collapse: collapse;margin-bottom:15px;font-size: 14px;font-weight: bold;">
+  <tr>
+    <td style="border: 1px solid black;text-align:center;" width="3%"><b>Всего:</b></td>
+    <td style="border: 1px solid black;text-align:left;" colspan="9" style="text-align: left; padding-left: 5px;"><b><span id="count"><?=$count?></span></b></td>
+  </tr>
+</table>
 <div class="pages">
   <center>
 <?

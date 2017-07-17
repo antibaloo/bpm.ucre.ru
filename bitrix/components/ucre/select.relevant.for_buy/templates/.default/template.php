@@ -57,6 +57,10 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED!==true)die();
       },
     });
   });
+  function addpotential(id){
+    $('#R'+id).remove();
+    $('#count').text($('.row').length);
+  }
   function set_active(object){
     if(!object.classList.contains('active')){
       var el = document.getElementById("page"+object.innerHTML);
