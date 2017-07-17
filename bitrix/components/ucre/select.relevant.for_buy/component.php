@@ -102,6 +102,15 @@ if ($mainDeal['UF_CRM_58958B5751841']) {
   $arResult["SQL_STRING"] .= " AND b_uts_crm_deal.UF_CRM_58958B5734602 <=".$mainDeal['UF_CRM_58958B5751841'];
   $arResult['SELECT_PARAMS']['MAXPRICE'] = $mainDeal['UF_CRM_58958B5751841'];
 }
+//Фильтр по уже имеющимся в потенциальных
+$rsPotentials = $DB->Query("select sell_deal_id from b_crm_potential_deals where buy_deal_id=".$arResult['ID']);
+$arrayPotentials = array();
+while ($aPotentials = $rsPotentials->Fetch()){
+  $arrayPotentials[] = $aPotentials['sell_deal_id'];
+}
+if (count($arrayPotentials)){
+  $arResult["SQL_STRING"] .= " AND b_crm_deal.ID NOT IN(".implode(",",$arrayPotentials).")";
+}
 $arResult["SQL_STRING"] .= " ORDER BY b_crm_deal.ID DESC";
 $this->IncludeComponentTemplate();
 ?>
