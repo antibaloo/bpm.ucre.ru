@@ -57,7 +57,7 @@ if ($_SERVER['SERVER_NAME'] == 'bpm.ucre.ru'){
         else $square = $aRes['PROPERTY_224'];
 ?>
     <tr id="R<?=$aRes['ID']?>" class="row">
-      <td><button onclick="addpotential(<?=$aRes['ID']?>)">+</button></td>
+      <td><button onclick="addpotential(<?=$aRes['ID']?>)" <?=($_POST['asiigned_by_id'] == $USER->GetID() || $USER->IsAdmin())?"":"disabled"?>>+</button></td>
       <td><?=$aRes['ID']?></td>
       <td style="text-align: left; padding-left: 5px;"><a href="/crm/deal/show/<?=$aRes['ID']?>/" target="_blank"><?=$aRes['TITLE']?></a></td>
       <td style="text-align: right; padding-right: 5px;"><?=($aRes['UF_CRM_58958B5734602'])?$aRes['UF_CRM_58958B5734602']:"<span style='color:red;'>цена не указана</span>"?></td>

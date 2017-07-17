@@ -31,6 +31,7 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED!==true)die();
   </table>
   <input type="hidden" name="sql" value="<?=bin2hex($arResult['SQL_STRING'])?>">
   <input type="hidden" name="deal_id" value="<?=$arResult['ID']?>">
+  <input type="hidden" name="assigned_by_id" value="<?=$arResult['ASSIGNED_BY_ID']?>">
 </form>
 
 <div id="resultGrid">
