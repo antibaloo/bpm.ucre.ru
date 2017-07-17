@@ -1,6 +1,6 @@
 <?php
 require_once($_SERVER['DOCUMENT_ROOT'] . "/bitrix/modules/main/include/prolog_before.php");
-if ($USER->GetID()!=24){
+if ($USER->GetID()==24 || $USER->GetID()==1){
   $APPLICATION->IncludeComponent(
     "ucre:select.request",
     "",
