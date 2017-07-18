@@ -15,6 +15,9 @@ $APPLICATION->SetTitle(GetMessage("CRM_TITLE"));
 		if (pagetitle.innerHTML.indexOf("Продажа: ",0)==-1 && pagetitle.innerHTML.indexOf("Покупка: ",0)==-1 && pagetitle.innerHTML.indexOf("Новостройки: ",0)==-1){
 			if (document.getElementById("CRM_DEAL_SHOW_V12_tab_tab_583919")) CRM_DEAL_SHOW_V12_tab_tab_583919.remove();
 		}
+		if (pagetitle.innerHTML.indexOf("Продажа: ",0)==-1 && pagetitle.innerHTML.indexOf("Покупка: ",0)==-1 && pagetitle.innerHTML.indexOf("Новостройки: ",0)==-1){
+			if (document.getElementById("CRM_DEAL_SHOW_V12_tab_tab_791211")) CRM_DEAL_SHOW_V12_tab_tab_791211.remove();
+		}
 	});
 	var arTabLoading = []; 
 	BX.ready(function(){
