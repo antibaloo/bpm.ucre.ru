@@ -112,7 +112,7 @@ while($aRes = $db_res->Fetch()){
   if ($aRes['PROPERTY_215'] == 'Оренбург г'){//Если объект в Оренбурге
     $City = $dom->createElement("City",'Оренбург');
     $Ad->appendChild($City);
-    if(in_array($aRes['PROPERTY_216'],$districtspr)){//Если район города есть в справочнике
+    if(in_array(trim($aRes['PROPERTY_216']),$districtspr)){//Если район города есть в справочнике
       if ($aRes['PROPERTY_216']!="отсутствует") {
         $District = $dom->createElement("District",$aRes['PROPERTY_216']);
         $Ad->appendChild($District);
@@ -252,6 +252,8 @@ while($aRes = $db_res->Fetch()){
     $WallsType = $dom->createElement("WallsType", $walls[$aRes['PROPERTY_242']]);
     $Ad->appendChild($WallsType);
   }
+	$PropertyRights = $dom->createElement("PropertyRights","Собственник");
+	$Ad->appendChild($PropertyRights);
   switch($aRes['PROPERTY_210']){
     case 383:
       $ObjectType = $dom->createElement("ObjectType", "Дом");
@@ -329,6 +331,8 @@ while($aRes = $db_res->Fetch()){
 		
   $CompanyName = $dom->createElement("CompanyName","Единый центр недвижимости");
   $Ad->appendChild($CompanyName);
+	$AllowEmail = $dom->createElement("AllowEmail","Нет");
+	$Ad->appendChild($AllowEmail);
   if ($aRes['PROPERTY_374'] == 1356){
     $rsUser = CUser::GetByID($aRes['PROPERTY_313']);
     $arUser = $rsUser->Fetch();
