@@ -483,7 +483,7 @@ if(\Bitrix\Main\ModuleManager::isModuleInstalled('bitrix24'))
 	"top_horizontal", 
 	array(
 		"ROOT_MENU_TYPE" => "left",
-		"MENU_CACHE_TYPE" => "A",
+		"MENU_CACHE_TYPE" => "N",
 		"MENU_CACHE_TIME" => "604800",
 		"MENU_CACHE_USE_GROUPS" => "N",
 		"MENU_CACHE_USE_USERS" => "Y",
