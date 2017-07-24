@@ -160,24 +160,33 @@ while($aRes = $db_res->Fetch()){
       switch ($aRes['PROPERTY_214']){
 				case "Саракташский р-н":
 					$City = $dom->createElement("City",'Саракташ');
+					$Ad->appendChild($City);
 					break;
 				case "Беляевский р-н":
 					$City = $dom->createElement("City",'Беляевка');
+					$Ad->appendChild($City);
 					break;
 				case "Сакмарский р-н":
 					$City = $dom->createElement("City",'Сакмара');
+					$Ad->appendChild($City);
 					break;
 				case "Оренбургский р-н":
 					$City = $dom->createElement("City",'Оренбург');
+					$Ad->appendChild($City);
+					$District = $dom->createElement("District","Ленинский");
+					$Ad->appendChild($District);
 					break;
 				case "Октябрьский р-н":
 					$City = $dom->createElement("City",'Октябрьское');
+					$Ad->appendChild($City);
 					break;
 				default:
 					$City = $dom->createElement("City",'Оренбург');
+					$Ad->appendChild($City);
+					$District = $dom->createElement("District","Ленинский");
+					$Ad->appendChild($District);
 					break;
 			}
-      $Ad->appendChild($City);
       if ($aRes['PROPERTY_210']==382 || $aRes['PROPERTY_210']==381) {
         if ($aRes['PROPERTY_258']==""){
           $Street = $dom->createElement("Street",$aRes['PROPERTY_214'].','.$aRes['PROPERTY_215'].', '.$street.', '.$aRes['PROPERTY_218']);//Район, нас. пункт, улица, дом
