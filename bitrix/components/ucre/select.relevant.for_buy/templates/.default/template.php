@@ -46,7 +46,7 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED!==true)die();
   $("#submit").click(function () {
     var data = $('#select_relevant_to_buy').serialize();
     $.ajax({
-      url: "/bitrix/components/ucre/select.relevant.for_buy/ajax.php",
+      url: "<?=$arResult['COMPONENT_PATH']?>/ajax.php",
       type: "POST",
       data: data,
       dataType: "text",
@@ -62,7 +62,7 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED!==true)die();
     $('#R'+id).remove();
     $('#count').text($('.row').length);
     $.ajax({
-      url: "/bitrix/components/ucre/select.relevant.for_buy/addtopotential.php",
+      url: "<?=$arResult['COMPONENT_PATH']?>/addtopotential.php",
       type: "POST",
       datatype: "html",
       data:{

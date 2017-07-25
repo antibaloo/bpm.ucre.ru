@@ -11,6 +11,7 @@ $rsDeal = CCrmDeal::GetListEx(
   array()
 );
 $arResult['ID'] = $arParams['ID'];
+$arResult['COMPONENT_PATH'] = $this->GetPath(); //Пусть к папке компонента для вызова ajax скриптов
 $mainDeal = $rsDeal->Fetch();
 $arResult['ASSIGNED_BY_ID'] = $mainDeal['ASSIGNED_BY_ID'];
 //Базовая SQL строка
