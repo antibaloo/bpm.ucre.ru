@@ -6,6 +6,7 @@ echo "Потенциальные сделки для заявок на поку�
 <button class="submit" value="new">Новые</button><button class="submit" value="yes">Положительные</button><button class="submit" value="no">Отрицательные</button>
 <div id="potentials">
 </div>
+<div id="grid" style="width: 100%; height: 250px;"></div>
 <script>
   $(function() {//Вызов при начальной загрузке странице с фильтром по-умолчанию
     $.ajax({
