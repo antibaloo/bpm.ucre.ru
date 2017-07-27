@@ -6,6 +6,7 @@ if ($_SERVER['SERVER_NAME'] == 'bpm.ucre.ru'){
   echo "</pre>";
   $rsData = $DB->Query("select * from b_crm_potential_deals where buy_deal_id=".$_POST['id']." AND result='".$_POST['filter']."'");
   $count = $rsData->SelectedRowsCount();
+  echo '<div id="resultOps"></div>';//Результаты удаление, выставления оценки
   $rows = 20;
   $pages = ($count % $rows)?intval($count/$rows)+1:$count/$rows;
 ?>
@@ -60,8 +61,12 @@ if ($_SERVER['SERVER_NAME'] == 'bpm.ucre.ru'){
     for ($j=1;$j<=$rows;$j++){
       if ($aRes = $rsData->Fetch()){
 ?>
-    <tr>
-      <td ><button onclick="addmark(<?=$aRes['ID']?>)" <?=($_POST['asiigned_by_id'] == $USER->GetID() || $USER->IsAdmin())?"":"disabled"?>>Оценить</button></td>
+    <tr id="N<?=$aRes['ID']?>" class="row">
+      <td >
+        <a href="javascript:addplus(<?=$aRes['ID']?>)" <?=($_POST['asiigned_by_id'] == $USER->GetID() || $USER->IsAdmin())?"":"disabled"?>><span style='color:green;font-weight: bold'>+</span></a>&nbsp;
+        <a href="javascript:addminus(<?=$aRes['ID']?>)" <?=($_POST['asiigned_by_id'] == $USER->GetID() || $USER->IsAdmin())?"":"disabled"?>><span style='color:blue;font-weight: bold'>-</span></a>&nbsp;
+        <a href="javascript:deletefrom(<?=$aRes['ID']?>)" <?=($_POST['asiigned_by_id'] == $USER->GetID() || $USER->IsAdmin())?"":"disabled"?>><span style='color:red;font-weight: bold'>x</span></a>
+      </td>
       <td></td>
       <td></td>
       <td></td>

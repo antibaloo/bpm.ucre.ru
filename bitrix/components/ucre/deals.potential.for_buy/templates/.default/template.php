@@ -43,4 +43,24 @@ echo "Потенциальные сделки для заявок на поку�
       },
     });
   });
+  function set_active(object){
+    if(!object.classList.contains('active')){
+      var el = document.getElementById("page"+object.innerHTML);
+      var a_page = document.getElementsByClassName("page active");
+      var a_pages = document.getElementsByClassName("pages active");
+      a_page[0].classList.remove('active');
+      a_pages[0].classList.remove('active');
+      el.classList.add('active');
+      object.classList.add('active');
+    }
+  }
+  function addplus(id){
+    
+  }
+  function addminus(id){
+    
+  }
+  function deletefrom(id){
+    
+  }
 </script>
