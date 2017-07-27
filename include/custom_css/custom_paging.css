@@ -13,10 +13,10 @@ div.page > table > tbody > tr > td{
   text-align:center;
 }
 div.page > table > tbody > tr > td:first-child{
-  width: 3%;
+  width: 4%;
 }
 div.page > table > tbody > tr > th:first-child{
-  width: 3%;
+  width: 4%;
 }
 div.page > table > tbody > tr > th{
   border: 1px solid black;
