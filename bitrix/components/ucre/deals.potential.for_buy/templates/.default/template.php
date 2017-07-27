@@ -15,7 +15,8 @@ echo "Потенциальные сделки для заявок на поку�
       dataType: "html",
       data: {
         id:<?=$arResult['ID']?>,
-        filter:'new'
+        filter:'new',
+        assigned_by_id:<?=$arResult['ASSIGNED_BY_ID']?>
       },
       success: function (html) {
         $("#potentials").html(html);
@@ -33,7 +34,8 @@ echo "Потенциальные сделки для заявок на поку�
       dataType: "html",
       data: {
         id:<?=$arResult['ID']?>,
-        filter:$(this).val() //filter:$(this).html()
+        filter:$(this).val(), //filter:$(this).html()
+        assigned_by_id:<?=$arResult['ASSIGNED_BY_ID']?>
       },
       success: function (html) {
         $("#potentials").html(html);
@@ -61,6 +63,7 @@ echo "Потенциальные сделки для заявок на поку�
     
   }
   function deletefrom(id){
-    
+    $('#P'+id).remove();
+    $('#countP').text($('.rowP').length);
   }
 </script>

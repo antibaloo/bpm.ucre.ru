@@ -61,11 +61,11 @@ if ($_SERVER['SERVER_NAME'] == 'bpm.ucre.ru'){
     for ($j=1;$j<=$rows;$j++){
       if ($aRes = $rsData->Fetch()){
 ?>
-    <tr id="N<?=$aRes['ID']?>" class="row">
+    <tr id="P<?=$aRes['sell_deal_id']?>" class="rowP">
       <td >
-        <a href="javascript:addplus(<?=$aRes['ID']?>)" <?=($_POST['asiigned_by_id'] == $USER->GetID() || $USER->IsAdmin())?"":"disabled"?>><span style='color:green;font-weight: bold'>+</span></a>&nbsp;
-        <a href="javascript:addminus(<?=$aRes['ID']?>)" <?=($_POST['asiigned_by_id'] == $USER->GetID() || $USER->IsAdmin())?"":"disabled"?>><span style='color:blue;font-weight: bold'>-</span></a>&nbsp;
-        <a href="javascript:deletefrom(<?=$aRes['ID']?>)" <?=($_POST['asiigned_by_id'] == $USER->GetID() || $USER->IsAdmin())?"":"disabled"?>><span style='color:red;font-weight: bold'>x</span></a>
+        <a href="<?=($_POST['assigned_by_id'] == $USER->GetID() || $USER->IsAdmin())?'javascript:addplus('.$aRes['sell_deal_id'].')':'javascript:return false;'?>"><span style='color:green;font-weight: bold'>+</span></a>&nbsp;
+        <a href="<?=($_POST['assigned_by_id'] == $USER->GetID() || $USER->IsAdmin())?'javascript:addminus('.$aRes['sell_deal_id'].')':'javascript:return false;'?>"><span style='color:blue;font-weight: bold'>-</span></a>&nbsp;
+        <a href="<?=($_POST['assigned_by_id'] == $USER->GetID() || $USER->IsAdmin())?'javascript:deletefrom('.$aRes['sell_deal_id'].')':'javascript:return false;'?>"><span style='color:red;font-weight: bold'>x</span></a>
       </td>
       <td></td>
       <td></td>
@@ -89,7 +89,7 @@ if ($_SERVER['SERVER_NAME'] == 'bpm.ucre.ru'){
 <table style="width:100%;border: 1px solid black;border-collapse: collapse;margin-bottom:15px;font-size: 14px;font-weight: bold;">
   <tr>
     <td style="border: 1px solid black;text-align:center;" width="4%"><b>Всего:</b></td>
-    <td style="border: 1px solid black;text-align:left;padding-left: 5px;" colspan="9"><b><span id="count"><?=$count?></span></b></td>
+    <td style="border: 1px solid black;text-align:left;padding-left: 5px;" colspan="9"><b><span id="countP"><?=$count?></span></b></td>
   </tr>
 </table>
 <div class="pages">
