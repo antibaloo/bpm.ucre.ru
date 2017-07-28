@@ -10,6 +10,18 @@ $APPLICATION->SetTitle("Автозаполнение формы");
   Район субъекта <input type="text" id="district" list="district_list" oninput="getlist(this)">
   <datalist id="district_list">
   </datalist>
+  <br>
+  Населенный пункт <input type="text" id="city" list="city_list" oninput="getlist(this)">
+  <datalist id="city_list">
+  </datalist>
+  <br>
+  Улица <input type="text" id="street" list="street_list" oninput="getlist(this)">
+  <datalist id="street_list">
+  </datalist>
+  <br>
+  Дом <input type="text" id="building" list="building_list" oninput="getlist(this)">
+  <datalist id="building_list">
+  </datalist>
 </form>
 <div id="result"></div>
 
@@ -18,6 +30,9 @@ $APPLICATION->SetTitle("Автозаполнение формы");
     var parenttype = "";
     if (object.id == 'district') parenttype = 'region';
     else if (object.id == 'city') parenttype = 'district';
+    else if (object.id == 'street') parenttype = 'city';
+    else if (object.id == 'building') parenttype = 'street';
+    
     var parentvalue = ($("#"+parenttype).val())?$("#"+parenttype).val():"";
     
     $.ajax({
