@@ -92,19 +92,19 @@ if ($params['goal']=='sell'){
   
   <table>
     <tr>
-      <th rowspan="2">id</th>
-      <th rowspan="2">Резюме объекта недвижимости</th>
+      <th width="3%" rowspan="2">id</th>
+      <th width="45%" rowspan="2">Резюме объекта недвижимости</th>
       <th rowspan="2">Цена, руб.</th>
       <th colspan="5">Оценки по параметрам (+/-)</th>
-      <th rowspan="2">Итог</th>
-      <th rowspan="2">Комментарий</th>
+      <th width="3%" rowspan="2">Итог</th>
+      <th width="28%" rowspan="2">Комментарий</th>
     </tr>
     <tr>
-      <th>Цена</th>
-      <th>Объект</th>
-      <th>Подъезд</th>
-      <th>Двор</th>
-      <th>Инф-ра</th>
+      <th width="3%">Цена</th>
+      <th width="3%">Объект</th>
+      <th width="3%">Подъезд</th>
+      <th width="3%">Двор</th>
+      <th width="3%">Инф-ра</th>
     </tr>
 <?
   while ($aRes = $rsData->Fetch()){
