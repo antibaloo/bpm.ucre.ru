@@ -96,9 +96,9 @@ if ($_SERVER['SERVER_NAME'] == 'bpm.ucre.ru'){
 ?>
     <tr id="P<?=$aRes['sell_deal_id']?>" class="rowP">
       <td >
-        <a href="<?=($_POST['assigned_by_id'] == $USER->GetID() || $USER->IsAdmin())?'javascript:addplus('.$aRes['sell_deal_id'].')':'javascript:return false;'?>"><span style='color:green;font-weight: bold'>+</span></a>&nbsp;
-        <a href="<?=($_POST['assigned_by_id'] == $USER->GetID() || $USER->IsAdmin())?'javascript:addminus('.$aRes['sell_deal_id'].')':'javascript:return false;'?>"><span style='color:blue;font-weight: bold'>-</span></a>&nbsp;
-        <a href="<?=($_POST['assigned_by_id'] == $USER->GetID() || $USER->IsAdmin())?'javascript:deletefrom('.$aRes['sell_deal_id'].')':'javascript:return false;'?>"><span style='color:red;font-weight: bold'>x</span></a>
+        <?=($_POST['assigned_by_id'] == $USER->GetID() || $USER->IsAdmin())?"<a href='javascript:addplus(".$aRes['sell_deal_id'].")'><span style='color:green;font-weight: bold'>+</span></a>":""?>&nbsp;
+        <?=($_POST['assigned_by_id'] == $USER->GetID() || $USER->IsAdmin())?"<a href='javascript:addminus(".$aRes['sell_deal_id'].")'><span style='color:blue;font-weight: bold'>-</span></a>":""?>&nbsp;
+        <?=($_POST['assigned_by_id'] == $USER->GetID() || $USER->IsAdmin())?"<a href='javascript:deletefrom(".$aRes['sell_deal_id'].")'><span style='color:red;font-weight: bold'>x</span></a>":""?>&nbsp;
       </td>
       <td style="text-align: left; padding-left: 5px;"><a href="/crm/deal/show/<?=$aRes['sell_deal_id']?>/" target="_blank"><?=$resume?></a></td>
       <td><?=$aRes['UF_CRM_58958B5734602']?></td>
