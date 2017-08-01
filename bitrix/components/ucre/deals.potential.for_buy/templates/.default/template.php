@@ -79,23 +79,23 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED!==true)die();
     $("#markdialog").show();
   }
   function delete_deal(id){
-     $.ajax({
-      url:'<?=$arResult['COMPONENT_PATH']?>/action.php',
-      type: "POST",
-      dataType: "html",
-      data:{
-        id: id,
-        type: 'delete',
-      },
-      success: function (html) {
-        $('#P'+id).remove();
-        $('#countP').text($('.rowP').length);
-      },
-      error: function (html) {
-        alert("Технические неполадки! Обратитесь к системному администратору!");
-      },
-    });
+    if (confirm("Удалить эту заявку из потенциальных сделок?")) {
+      $.ajax({
+        url:'<?=$arResult['COMPONENT_PATH']?>/action.php',
+        type: "POST",
+        dataType: "html",
+        data:{
+          id: id,
+          type: 'delete',
+        },
+        success: function (html) {
+          $('#P'+id).remove();
+          $('#countP').text($('.rowP').length);
+        },
+        error: function (html) {
+          alert("Технические неполадки! Обратитесь к системному администратору!");
+        },
+      });
+    }
   }
-
-
 </script>
