@@ -24,7 +24,7 @@ if (isset($_POST['deal_id']) && !empty($_POST['deal_id'])){
   $el = new CIBlockElement;
   $PROP = array();
   $PROP[209] = $mainDeal['UF_CRM_5895994EB2646'];
-  if (strpos($mainDeal['TITLE'], "квартира") !== false){
+  if (strpos($mainDeal['TITLE'], "квартира") !== false || strpos($mainDeal['TITLE'], "Студия") !== false){
     $PROP[210] = 382;
   }
   $PROP[221] = $mainDeal['UF_CRM_5895994ED0C7B'];
