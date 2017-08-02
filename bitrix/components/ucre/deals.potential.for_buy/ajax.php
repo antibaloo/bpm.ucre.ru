@@ -135,6 +135,7 @@ if ($_SERVER['SERVER_NAME'] == 'bpm.ucre.ru'){
   </center>
 </div>
 <?  
+  if ($_POST['filter'] == "new") echo "<a href='/crm/dealViewForm.php?buy_id=".$_POST['id']."' target='_blank'>Бланк осмотра</a>";
 }else{
   echo "<center><img style='margin: 0 auto;' src='https://bpm.ucre.ru/pub/images/away.jpg'></center>";
 }

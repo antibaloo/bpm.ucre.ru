@@ -2,7 +2,7 @@
 <?php
 if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED!==true)die();
 ?>
-<button class="submit" value="new">Новые</button><button class="submit" value="yes">Положительные</button><button class="submit" value="no">Отрицательные</button>
+<a href="javascript:filter('new')"><span style="color:grey;font-weight: bold">Новые</span></a>&nbsp;&nbsp;&nbsp;<a href="javascript:filter('yes')"><span style="color:green;font-weight: bold">Положительные</span></a>&nbsp;&nbsp;&nbsp;<a href="javascript:filter('no')"><span style="color:blue;font-weight: bold">Отрицательные</span></a>
 <div id="potentials">
 </div>
 <div id="grid" style="width: 100%; height: 250px;"></div>
@@ -70,15 +70,14 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED!==true)die();
       },
     });
   });
-  
-  $(".submit").click(function (){//Вызов при нажатии кнопки странице с соответствующим фильтром
+  function filter(filter){
     $.ajax({
       url:'<?=$arResult['COMPONENT_PATH']?>/ajax.php',
       type: "POST",
       dataType: "html",
       data: {
         id:<?=$arResult['ID']?>,
-        filter:$(this).val(), //filter:$(this).html()
+        filter:filter,
         assigned_by_id:<?=$arResult['ASSIGNED_BY_ID']?>
       },
       success: function (html) {
@@ -88,7 +87,7 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED!==true)die();
         $("#potentials").html("Технические неполадки! В ближайшее время все будет исправлено!");
       },
     });
-  });
+  }
   function set_active(object){
     if(!object.classList.contains('active')){
       var el = document.getElementById("page"+object.innerHTML);
