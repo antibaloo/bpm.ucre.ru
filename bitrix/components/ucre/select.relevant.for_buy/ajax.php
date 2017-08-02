@@ -53,15 +53,15 @@ if ($_SERVER['SERVER_NAME'] == 'bpm.ucre.ru'){
   <table>
     <tr>
       <th></th>
-      <th>id</th>
-      <th>Название заявки</th>
+      <th width="4%">id</th>
+      <th width="25%">Название заявки</th>
       <th>Цена, руб.</th>
-      <th>Адрес объекта</th>
+      <th width="25%">Адрес объекта</th>
       <th>N<sub>комнат</sub></th>
       <th>S<sub>общая</sub></th>
       <th>S<sub>кухни</sub></th>
       <th>Этажность</th>
-      <th>Ответственный</th>
+      <th width="15%">Ответственный</th>
     </tr>
 <?
     for ($j=1;$j<=$rows;$j++){
@@ -74,9 +74,9 @@ if ($_SERVER['SERVER_NAME'] == 'bpm.ucre.ru'){
       <td><?=($_POST['assigned_by_id'] == $USER->GetID() || $USER->IsAdmin())?"<a href='javascript:addpotential(".$aRes['ID'].")'><span style='color:green;font-weight: bold'>+</span></a>":""?></td>
       <!--<td><button onclick="addpotential(<?=$aRes['ID']?>)" <?=($_POST['assigned_by_id'] == $USER->GetID() || $USER->IsAdmin())?"":"disabled"?>>+</button></td>-->
       <td><?=$aRes['ID']?></td>
-      <td style="text-align: left; padding-left: 5px;"><a href="/crm/deal/show/<?=$aRes['ID']?>/" target="_blank"><?=$aRes['TITLE']?></a></td>
+      <td style="text-align: left; padding-left: 5px;" title="<?=$aRes['TITLE']?>"><a href="/crm/deal/show/<?=$aRes['ID']?>/" target="_blank"><?=$aRes['TITLE']?></a></td>
       <td style="text-align: right; padding-right: 5px;"><?=($aRes['UF_CRM_58958B5734602'])?$aRes['UF_CRM_58958B5734602']:"<span style='color:red;'>цена не указана</span>"?></td>
-      <td style="text-align: left; padding-left: 5px;"><?=$aRes['PROPERTY_209']?></td>
+      <td style="text-align: left; padding-left: 5px;" title="<?=$aRes['PROPERTY_209']?>"><?=$aRes['PROPERTY_209']?></td>
       <td><?=($aRes['PROPERTY_229'])?intval($aRes['PROPERTY_229']):"-"?></td>
       <td style="text-align: right; padding-right: 5px;"><?=($square)?number_format($square,2):"-"?></td>
       <td style="text-align: right; padding-right: 5px;"><?=($aRes['PROPERTY_226'])?number_format($aRes['PROPERTY_226'],2):"-"?></td>
