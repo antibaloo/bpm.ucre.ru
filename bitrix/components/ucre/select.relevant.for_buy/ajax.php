@@ -5,7 +5,21 @@ if ($_SERVER['SERVER_NAME'] == 'bpm.ucre.ru'){
   //print_r($_POST);
   //echo "</pre>";
   if ($_POST['market'] == "нет данных") die("Не введены параметры рынка поиска");
-  $rsData = $DB->Query(hex2bin($_POST['sql']));
+  $sql_string = hex2bin($_POST['sql']);
+  
+  //Фильтр по уже имеющимся в потенциальных
+  $rsPotentials = $DB->Query("select sell_deal_id from b_crm_potential_deals where buy_deal_id=".$_POST['deal_id']);
+  $arrayPotentials = array();
+  while ($aPotentials = $rsPotentials->Fetch()){
+    $arrayPotentials[] = $aPotentials['sell_deal_id'];
+  }
+  if (count($arrayPotentials)){
+    $sql_string .= " AND b_crm_deal.ID NOT IN(".implode(",",$arrayPotentials).")";
+  }
+  $sql_string .= " ORDER BY b_crm_deal.ID DESC";
+
+  $rsData = $DB->Query($sql_string);
+  
   $count = $rsData->SelectedRowsCount();
   //Запись результатов вызова инструмента в таблицу для отчета
   $DB->PrepareFields("b_crm_relevant_search");
