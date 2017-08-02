@@ -6,7 +6,7 @@ if ($_SERVER['SERVER_NAME'] == 'bpm.ucre.ru'){
       '384' =>  "Таунхаус",
       '385' =>  "Дача",
     );
-  $rsData = $DB->Query("select b_crm_potential_deals.sell_deal_id, b_uts_crm_deal.UF_CRM_58958B5734602, b_iblock_element_prop_s42.PROPERTY_210, b_iblock_element_prop_s42.PROPERTY_215, b_iblock_element_prop_s42.PROPERTY_217, b_iblock_element_prop_s42.PROPERTY_218, b_iblock_element_prop_s42.PROPERTY_221, b_iblock_element_prop_s42.PROPERTY_222, b_iblock_element_prop_s42.PROPERTY_224, b_iblock_element_prop_s42.PROPERTY_225, b_iblock_element_prop_s42.PROPERTY_226, b_iblock_element_prop_s42.PROPERTY_229, b_iblock_element_prop_s42.PROPERTY_243 from b_crm_potential_deals inner join b_uts_crm_deal ON b_crm_potential_deals.sell_deal_id=b_uts_crm_deal.VALUE_ID INNER JOIN b_iblock_element ON b_uts_crm_deal.UF_CRM_1469534140 = b_iblock_element.ID INNER JOIN b_iblock_element_prop_s42 ON b_iblock_element.ID = b_iblock_element_prop_s42.IBLOCK_ELEMENT_ID where buy_deal_id=".$_POST['id']." AND result='".$_POST['filter']."'");
+  $rsData = $DB->Query("select b_crm_potential_deals.sell_deal_id, b_crm_potential_deals.price, b_crm_potential_deals.object, b_crm_potential_deals.access, b_crm_potential_deals.yard, b_crm_potential_deals.infra, b_crm_potential_deals.comment, b_uts_crm_deal.UF_CRM_58958B5734602, b_iblock_element_prop_s42.PROPERTY_210, b_iblock_element_prop_s42.PROPERTY_215, b_iblock_element_prop_s42.PROPERTY_217, b_iblock_element_prop_s42.PROPERTY_218, b_iblock_element_prop_s42.PROPERTY_221, b_iblock_element_prop_s42.PROPERTY_222, b_iblock_element_prop_s42.PROPERTY_224, b_iblock_element_prop_s42.PROPERTY_225, b_iblock_element_prop_s42.PROPERTY_226, b_iblock_element_prop_s42.PROPERTY_229, b_iblock_element_prop_s42.PROPERTY_243 from b_crm_potential_deals inner join b_uts_crm_deal ON b_crm_potential_deals.sell_deal_id=b_uts_crm_deal.VALUE_ID INNER JOIN b_iblock_element ON b_uts_crm_deal.UF_CRM_1469534140 = b_iblock_element.ID INNER JOIN b_iblock_element_prop_s42 ON b_iblock_element.ID = b_iblock_element_prop_s42.IBLOCK_ELEMENT_ID where buy_deal_id=".$_POST['id']." AND result='".$_POST['filter']."'");
   //$rsData = $DB->Query("select * from b_crm_potential_deals where buy_deal_id=".$_POST['id']." AND result='".$_POST['filter']."'");
   $count = $rsData->SelectedRowsCount();
   echo '<div id="resultOps"></div>';//Результаты удаление, выставления оценки
@@ -96,19 +96,19 @@ if ($_SERVER['SERVER_NAME'] == 'bpm.ucre.ru'){
 ?>
     <tr id="P<?=$aRes['sell_deal_id']?>" class="rowP">
       <td >
-        <?=($_POST['assigned_by_id'] == $USER->GetID() || $USER->IsAdmin())?'<a href="javascript:plus_deal('.$aRes['sell_deal_id'].')" title="Оценить положительно."><span style="color:green;font-weight: bold">+</span></a>':''?>&nbsp;
-        <?=($_POST['assigned_by_id'] == $USER->GetID() || $USER->IsAdmin())?'<a href="javascript:minus_deal('.$aRes['sell_deal_id'].')" title="Оценить отрицательно."><span style="color:blue;font-weight: bold">-</span></a>':''?>&nbsp;
-        <?=($_POST['assigned_by_id'] == $USER->GetID() || $USER->IsAdmin())?'<a href="javascript:delete_deal('.$aRes['sell_deal_id'].')" title="Удалить из потенциальных."><span style="color:red;font-weight: bold">x</span></a>':''?>
+        <?=($_POST['assigned_by_id'] == $USER->GetID() || $USER->IsAdmin())?'<a href="javascript:showDialog('.$aRes['sell_deal_id'].',	&#34;plus&#34;)" title="Оценить положительно."><span style="color:green;font-weight: bold">+</span></a>':''?>&nbsp;
+        <?=($_POST['assigned_by_id'] == $USER->GetID() || $USER->IsAdmin())?'<a href="javascript:showDialog('.$aRes['sell_deal_id'].', &#34;minus&#34;)" title="Оценить отрицательно."><span style="color:blue;font-weight: bold">-</span></a>':''?>&nbsp;
+        <?=($_POST['assigned_by_id'] == $USER->GetID() || $USER->IsAdmin())?'<a href="javascript:showDialog('.$aRes['sell_deal_id'].', &#34;delete&#34;)" title="Удалить из потенциальных."><span style="color:red;font-weight: bold">x</span></a>':''?>
       </td>
       <td style="text-align: left; padding-left: 5px;"><a href="/crm/deal/show/<?=$aRes['sell_deal_id']?>/" target="_blank"><?=$resume?></a></td>
       <td><?=$aRes['UF_CRM_58958B5734602']?></td>
+      <td><?=$aRes['price']?></td>
+      <td><?=$aRes['object']?></td>
+      <td><?=$aRes['access']?></td>
+      <td><?=$aRes['yard']?></td>
+      <td><?=$aRes['infra']?></td>
       <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
+      <td><?=$aRes['comment']?></td>
     </tr>
 <?
       }
