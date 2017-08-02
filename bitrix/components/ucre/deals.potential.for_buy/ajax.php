@@ -51,7 +51,7 @@ if ($_SERVER['SERVER_NAME'] == 'bpm.ucre.ru'){
       <th rowspan="2">Цена, руб.</th>
       <th colspan="5">Оценки по параметрам, +/-</th>
       <th width="4%" rowspan="2">Итог</th>
-      <th width="22%" rowspan="2">Комментарий</th>
+      <th max-width="22%" width="22%" rowspan="2">Комментарий</th>
     </tr>
     <tr>
       <th width="4%">Цена</th>
@@ -96,11 +96,11 @@ if ($_SERVER['SERVER_NAME'] == 'bpm.ucre.ru'){
 ?>
     <tr id="P<?=$aRes['sell_deal_id']?>" class="rowP">
       <td >
-        <?=($_POST['assigned_by_id'] == $USER->GetID() || $USER->IsAdmin())?'<a href="javascript:showDialog('.$aRes['sell_deal_id'].',	&#34;plus&#34;)" title="Оценить положительно."><span style="color:green;font-weight: bold">+</span></a>':''?>&nbsp;
-        <?=($_POST['assigned_by_id'] == $USER->GetID() || $USER->IsAdmin())?'<a href="javascript:showDialog('.$aRes['sell_deal_id'].', &#34;minus&#34;)" title="Оценить отрицательно."><span style="color:blue;font-weight: bold">-</span></a>':''?>&nbsp;
-        <?=($_POST['assigned_by_id'] == $USER->GetID() || $USER->IsAdmin())?'<a href="javascript:showDialog('.$aRes['sell_deal_id'].', &#34;delete&#34;)" title="Удалить из потенциальных."><span style="color:red;font-weight: bold">x</span></a>':''?>
+        <?=(($_POST['assigned_by_id'] == $USER->GetID() || $USER->IsAdmin()) && $_POST['filter']!='yes')?'<a href="javascript:showDialog('.$aRes['sell_deal_id'].',	&#34;plus&#34;)" title="Оценить положительно."><span style="color:green;font-weight: bold">+</span></a>':''?>&nbsp;
+        <?=(($_POST['assigned_by_id'] == $USER->GetID() || $USER->IsAdmin()) && $_POST['filter']!='no')?'<a href="javascript:showDialog('.$aRes['sell_deal_id'].', &#34;minus&#34;)" title="Оценить отрицательно."><span style="color:blue;font-weight: bold">-</span></a>':''?>&nbsp;
+        <?=(($_POST['assigned_by_id'] == $USER->GetID() || $USER->IsAdmin()) && $_POST['filter']=='new')?'<a href="javascript:showDialog('.$aRes['sell_deal_id'].', &#34;delete&#34;)" title="Удалить из потенциальных."><span style="color:red;font-weight: bold">x</span></a>':''?>
       </td>
-      <td style="text-align: left; padding-left: 5px;"><a href="/crm/deal/show/<?=$aRes['sell_deal_id']?>/" target="_blank"><?=$resume?></a></td>
+      <td style="text-align: left;" title="<?=$resume?>"><a href="/crm/deal/show/<?=$aRes['sell_deal_id']?>/" target="_blank"><?=$resume?></a></td>
       <td><?=$aRes['UF_CRM_58958B5734602']?></td>
       <td><?=$aRes['price']?></td>
       <td><?=$aRes['object']?></td>
@@ -108,7 +108,7 @@ if ($_SERVER['SERVER_NAME'] == 'bpm.ucre.ru'){
       <td><?=$aRes['yard']?></td>
       <td><?=$aRes['infra']?></td>
       <td></td>
-      <td><?=$aRes['comment']?></td>
+      <td style="text-align: left;" title="<?=$aRes['comment']?>"><?=$aRes['comment']?></td>
     </tr>
 <?
       }
