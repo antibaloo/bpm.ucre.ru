@@ -63,17 +63,30 @@ if ($_SERVER['SERVER_NAME'] == 'bpm.ucre.ru'){
 <?
     for ($j=1;$j<=$rows;$j++){
       if ($aRes = $rsData->Fetch()){
+        //Материал стен
+        $rsWallsType = CIBlockPropertyEnum::GetList(array(), array("ID" => (int)$aRes['PROPERTY_242']));
+        if($wallsType = $rsWallsType->GetNext()) $wallsTypeValue = $wallsType["VALUE"];
+        else $wallsTypeValue = "<span style='color:red'>неизвестно из чего </span>";
         //Тип дома
         $rsHouseType = CIBlockPropertyEnum::GetList(array(), array("ID" => (int)$aRes['PROPERTY_243']));
         if($houseType = $rsHouseType->GetNext()) $houseTypeValue = $houseType["VALUE"];
         else $houseTypeValue = "<span style='color:red'>тип дома неизвестен</span>";
+        //Назначение участка
+        $rsCatType = CIBlockPropertyEnum::GetList(array(), array("ID" => (int)$aRes['PROPERTY_295']));
+        if($catType = $rsCatType->GetNext()) $catTypeValue = $catType["VALUE"];
+        else $catTypeValue ="<span style='color:red'>неизвестного назначения</span>";
+        //Назначение коммерческого объекта
+        $rsAppType = CIBlockPropertyEnum::GetList(array(), array("ID" => (int)$aRes['PROPERTY_238']));
+        if($appType = $rsAppType->GetNext())  $appTypeValue = $appType["VALUE"];
+        else     $appTypeValue = "<span style='color:red'>неизвестно что</span>";
+        
         $city = ($aRes['PROPERTY_215'])?$aRes['PROPERTY_215']:"<span style='color:red'><s>н.п.</s></span>";
         $street = ($aRes['PROPERTY_217'])?$aRes['PROPERTY_217']:"<span style='color:red'><s>улица</s></span>";
         $house = ($aRes['PROPERTY_218'])?$aRes['PROPERTY_218']:"<span style='color:red'><s>дом</s></span>";
         
         switch($aRes['PROPERTY_210']){
           case 381:
-            $resume = "Комната";
+            $resume = "Комната ".number_format($aRes['PROPERTY_228'],0)." м<sup>2</sup>, этаж ".number_format($aRes['PROPERTY_221'],0)." из ".number_format($aRes['PROPERTY_222'],0).", ".$houseTypeValue.", ".$city.", ".$street.", ".$house;
             break;
           case 382:
             $resume = number_format($aRes['PROPERTY_229'],0)."-к квартира ".number_format($aRes['PROPERTY_224'],2)."/".number_format($aRes['PROPERTY_225'],2)."/".number_format($aRes['PROPERTY_226'],2)." (общ/жил/кух), этаж ".number_format($aRes['PROPERTY_221'],0)." из ".number_format($aRes['PROPERTY_222'],0).", ".$houseTypeValue.", ".$city.", ".$street.", ".$house;
@@ -81,13 +94,13 @@ if ($_SERVER['SERVER_NAME'] == 'bpm.ucre.ru'){
           case 383:
           case 384:
           case 385:
-            $resume = $type_s[$aRes['PROPERTY_210']]." площадью ";
+            $resume = $type_s[$aRes['PROPERTY_210']]." площадью ".number_format($aRes['PROPERTY_224'],2)." м<sup>2</sup> на участке в ".number_format($aRes['PROPERTY_292'],2)." сот, ".$wallsTypeValue.", ".$city.", ".$street;
             break;
           case 386:
-            $resume = "Участок";
+            $resume = "Участок площадью ".number_format($aRes['PROPERTY_292'],2)." сот, ".$catTypeValue.", ".$city.", ".$street;
             break;
           case 387:
-            $resume = "Коммерческая недвижимость";
+            $resume = $appTypeValue.", площадь: ".number_format($aRes['PROPERTY_224'],2)." м<sup>2</sup>, ".$city.", ".$street;
             break;
           default:
             $resume = "непонятная хрень";
