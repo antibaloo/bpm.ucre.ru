@@ -135,7 +135,7 @@ if (strripos ($_SERVER['HTTP_REFERER'], 'bpm.ucre.ru')!==false && $_REQUEST['buy
     echo "Учет выдачи бланка произведен!";
   }else {
     $DB->Rollback();
-    echo "Ошибка записи данных в лог!";
+    echo "Ошибка записи данных в лог!";      
   }
 }else{
   echo "<center><img style='margin: 0 auto;' src='https://bpm.ucre.ru/pub/images/away.jpg'></center>";
