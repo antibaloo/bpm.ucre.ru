@@ -5,30 +5,14 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED!==true)die();
 ?>
 <br>
 <form id="select_relevant_to_buy">
-  <table style="width:100%;">
-    <tr align="center">
-      <th>Рынок поиска</th>
-      <th>Тип объекта</th>
-      <th>N<sub>комнат</sub></th>
-      <th>S<sub>общ.</sub></th>
-      <th>S<sub>кух.</sub></th>
-      <th colspan="2">Этажи</th>
-      <th>Цена<sub>от</sub></th>
-      <th>Цена<sub>до</sub></th>
-    </tr>
-    <tr align="center">
-      <td><input name="market" type="text" value="<?=$arResult['SELECT_PARAMS']['MARKET']?>" readonly></td>
-      <td><input name="type" type="text" value="<?=$arResult['SELECT_PARAMS']['TYPE']?>" readonly></td>
-      <td><input name="rooms" type="text" value="<?=$arResult['SELECT_PARAMS']['ROOMS']?>" readonly></td>
-      <td><input name="totalarea" type="text" value="<?=$arResult['SELECT_PARAMS']['TOTAL_AREA']?>" readonly></td>
-      <td><input name="kitchenarea" type="text" value="<?=$arResult['SELECT_PARAMS']['KITCHEN_AREA']?>" readonly></td>
-      <td><input name="nfirsl" type="text" value="<?=$arResult['SELECT_PARAMS']['FIRST']?>" readonly></td>
-      <td><input name="nlast" type="text" value="<?=$arResult['SELECT_PARAMS']['LAST']?>" readonly></td>
-      <td><input name="miprice" type="text" value="<?=$arResult['SELECT_PARAMS']['MINPRICE']?>" readonly></td>
-      <td><input name="maxprice" type="text" value="<?=$arResult['SELECT_PARAMS']['MAXPRICE']?>" readonly></td>
-      <td><input id="submit" type="button" value="Искать"></td>
-    </tr>
-  </table>
+  Рынок поиска: <?=$arResult['SELECT_PARAMS']['MARKET']?>&nbsp;
+  Тип объекта: <?=$arResult['SELECT_PARAMS']['TYPE']?>&nbsp;
+  N<sub>комнат</sub> от <?=$arResult['SELECT_PARAMS']['ROOMS']?>&nbsp;
+  S<sub>общ.</sub> от <?=$arResult['SELECT_PARAMS']['TOTAL_AREA']?>&nbsp;
+  Этажи: <?=($arResult['SELECT_PARAMS']['FIRST'])?$arResult['SELECT_PARAMS']['FIRST']:"можно первый"?>&nbsp;<?=($arResult['SELECT_PARAMS']['LAST'])?$arResult['SELECT_PARAMS']['LAST']:"можно последний"?>&nbsp;
+  Цена от <?=($arResult['SELECT_PARAMS']['MINPRICE'])?$arResult['SELECT_PARAMS']['MINPRICE']:"-"?> до <?=($arResult['SELECT_PARAMS']['MAXPRICE'])?$arResult['SELECT_PARAMS']['MAXPRICE']:"-"?> &nbsp;
+  <input id="submit" type="button" value="Искать">
+  
   <input type="hidden" name="sql" value="<?=bin2hex($arResult['SQL_STRING'])?>">
   <input type="hidden" name="deal_id" value="<?=$arResult['ID']?>">
   <input type="hidden" name="assigned_by_id" value="<?=$arResult['ASSIGNED_BY_ID']?>">

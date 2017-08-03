@@ -6,7 +6,7 @@ div.page > table{
   border: 1px solid black;
   border-collapse: collapse;
   margin-bottom:15px;
-  font-size: 14px;
+  font-size: 13px;
   table-layout:fixed;
 }
 div.page > table > tbody > tr > td{
