@@ -148,7 +148,13 @@ if ($_SERVER['SERVER_NAME'] == 'bpm.ucre.ru'){
   </center>
 </div>
 <?  
-  if ($_POST['filter'] == "new") echo "<a href='/crm/dealViewForm.php?buy_id=".$_POST['id']."' target='_blank'>Бланк осмотра</a>";
+  if ($_POST['filter'] == "new" && ($_POST['assigned_by_id'] == $USER->GetID() || $USER->IsAdmin())) {
+    $rsData = $DB->Query("select deal_id from b_crm_potential_form WHERE deal_id=".$_POST['id']);
+    $countAll = $rsData->SelectedRowsCount();
+    $rsData = $DB->Query("select deal_id from b_crm_potential_form WHERE deal_id=".$_POST['id']." AND user_id=".$USER->GetID());
+    $countCurUser = $rsData->SelectedRowsCount();
+    echo "<a href='/crm/dealViewForm.php?buy_id=".$_POST['id']."' target='_blank'>Бланк осмотра</a><hr> По данной заявке бланк осмотра выдавался ".$countAll." раз(а), в том числе ".$countCurUser." текущему пользователю";
+  }
 }else{
   echo "<center><img style='margin: 0 auto;' src='https://bpm.ucre.ru/pub/images/away.jpg'></center>";
 }
