@@ -60,7 +60,7 @@ if ($_SERVER['SERVER_NAME'] == 'bpm.ucre.ru'){
       <th>N<sub>комнат</sub></th>
       <th>S<sub>общая</sub></th>
       <th>S<sub>кухни</sub></th>
-      <th>Этажность</th>
+      <th title="Этажность">Эт.</th>
       <th width="15%">Ответственный</th>
     </tr>
 <?

@@ -21,17 +21,17 @@ if ($_SERVER['SERVER_NAME'] == 'bpm.ucre.ru'){
     <tr>
       <th rowspan="2"></th>
       <th width="45%" rowspan="2">Резюме заявки</th>
-      <th rowspan="2">Цена, руб.</th>
+      <th rowspan="2" width="8%">Цена, руб.</th>
       <th colspan="5">Оценки по параметрам, +/-</th>
       <th width="4%" rowspan="2">Итог</th>
       <th width="22%" rowspan="2">Комментарий</th>
     </tr>
     <tr>
-      <th width="4%">Цена</th>
-      <th width="4%">Объект</th>
-      <th width="4%">Подъезд</th>
-      <th width="4%">Двор</th>
-      <th width="4%">Инф-ра</th>
+      <th width="4%" title="Цена">Ц</th>
+      <th width="4%" title="Объект">О</th>
+      <th width="4%" title="Подъезд">П</th>
+      <th width="4%" title="Двор">Д</th>
+      <th width="4%" title="Инфраструктура">И</th>
     </tr>
     <tr>
       <td></td>
@@ -48,17 +48,17 @@ if ($_SERVER['SERVER_NAME'] == 'bpm.ucre.ru'){
     <tr>
       <th rowspan="2"></th>
       <th width="45%" rowspan="2">Резюме заявки</th>
-      <th rowspan="2">Цена, руб.</th>
+      <th rowspan="2" width="8%">Цена, руб.</th>
       <th colspan="5">Оценки по параметрам, +/-</th>
       <th width="4%" rowspan="2">Итог</th>
       <th max-width="22%" width="22%" rowspan="2">Комментарий</th>
     </tr>
     <tr>
-      <th width="4%">Цена</th>
-      <th width="4%">Объект</th>
-      <th width="4%">Подъезд</th>
-      <th width="4%">Двор</th>
-      <th width="4%">Инф-ра</th>
+      <th width="4%" title="Цена">Ц</th>
+      <th width="4%" title="Объект">О</th>
+      <th width="4%" title="Подъезд">П</th>
+      <th width="4%" title="Двор">Д</th>
+      <th width="4%" title="Инфраструктура">И</th>
     </tr>  
 <?
     for ($j=1;$j<=$rows;$j++){

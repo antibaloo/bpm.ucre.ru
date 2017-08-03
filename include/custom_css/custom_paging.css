@@ -28,6 +28,7 @@ div.page > table > tbody > tr > th{
   border: 1px solid black;
   background-color: #b0e0e6;
   text-align:center;
+  font-weight: normal;
 }
 div.page > table > tbody > tr:hover{
   background-color: #cccccc;
