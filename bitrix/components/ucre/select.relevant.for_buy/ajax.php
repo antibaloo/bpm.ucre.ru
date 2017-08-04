@@ -16,7 +16,7 @@ if ($_SERVER['SERVER_NAME'] == 'bpm.ucre.ru'){
   if (count($arrayPotentials)){
     $sql_string .= " AND b_crm_deal.ID NOT IN(".implode(",",$arrayPotentials).")";
   }
-  $sql_string .= " ORDER BY b_crm_deal.ID DESC";
+  $sql_string .= " ORDER BY DATE_MODIFY DESC";
 
   $rsData = $DB->Query($sql_string);
   
