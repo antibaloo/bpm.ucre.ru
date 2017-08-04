@@ -1,9 +1,6 @@
 <?php
 require_once($_SERVER['DOCUMENT_ROOT'] . "/bitrix/modules/main/include/prolog_before.php");
-if ($_SERVER['SERVER_NAME'] == 'bpm.ucre.ru'){
-  //echo "<pre>";
-  //print_r($_POST);
-  //echo "</pre>";
+if (strripos ($_SERVER['HTTP_REFERER'], 'bpm.ucre.ru')!==false){
   if ($_POST['market'] == "нет данных") die("Не введены параметры рынка поиска");
   $sql_string = hex2bin($_POST['sql']);
   
@@ -75,7 +72,7 @@ if ($_SERVER['SERVER_NAME'] == 'bpm.ucre.ru'){
       <!--<td><button onclick="addpotential(<?=$aRes['ID']?>)" <?=($_POST['assigned_by_id'] == $USER->GetID() || $USER->IsAdmin())?"":"disabled"?>>+</button></td>-->
       <td><?=$aRes['ID']?></td>
       <td style="text-align: left; padding-left: 5px;" title="<?=$aRes['TITLE']?>"><a href="/crm/deal/show/<?=$aRes['ID']?>/" target="_blank"><?=$aRes['TITLE']?></a></td>
-      <td style="text-align: right; padding-right: 5px;" title="<?=($aRes['UF_CRM_58958B5734602'])?$aRes['UF_CRM_58958B5734602']:"цена не указана"?>"><?=($aRes['UF_CRM_58958B5734602'])?$aRes['UF_CRM_58958B5734602']:"<span style='color:red;'>цена не указана</span>"?></td>
+      <td style="text-align: right; padding-right: 5px;" title="<?=($aRes['UF_CRM_58958B5734602'])?number_format($aRes['UF_CRM_58958B5734602'],0,"."," "):"цена не указана"?>"><?=($aRes['UF_CRM_58958B5734602'])?number_format($aRes['UF_CRM_58958B5734602'],0,"."," "):"<span style='color:red;'>цена не указана</span>"?></td>
       <td style="text-align: left; padding-left: 5px;" title="<?=$aRes['PROPERTY_209']?>"><?=$aRes['PROPERTY_209']?></td>
       <td><?=($aRes['PROPERTY_229'])?intval($aRes['PROPERTY_229']):"-"?></td>
       <td style="text-align: right; padding-right: 5px;"><?=($square)?number_format($square,2):"-"?></td>
