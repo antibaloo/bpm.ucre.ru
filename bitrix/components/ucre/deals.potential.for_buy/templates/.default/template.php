@@ -32,7 +32,7 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED!==true)die();
         <td>Инф-ра</td><td>+ <input name="infra" type="radio" value="+"> <input name="infra" type="radio" value="-"> -</td>
       </tr>
       <tr>
-        <td>Комментарий</td><td><textarea rows="3" cols="45" style="resize: none;" name="comment"></textarea></td>
+        <td>Комментарий</td><td><textarea rows="3" width="100%" style="resize: none;" name="comment"></textarea></td>
       </tr>
     </table>
   </form>
