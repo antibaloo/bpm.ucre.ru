@@ -66,7 +66,7 @@ if (strripos ($_SERVER['HTTP_REFERER'], 'bpm.ucre.ru')!==false){
         //Материал стен
         $rsWallsType = CIBlockPropertyEnum::GetList(array(), array("ID" => (int)$aRes['PROPERTY_242']));
         if($wallsType = $rsWallsType->GetNext()) $wallsTypeValue = $wallsType["VALUE"];
-        else $wallsTypeValue = "<span style='color:red'>неизвестно из чего </span>";
+        else $wallsTypeValue = "<span style='color:red'>неизвестно из чего</span>";
         //Тип дома
         $rsHouseType = CIBlockPropertyEnum::GetList(array(), array("ID" => (int)$aRes['PROPERTY_243']));
         if($houseType = $rsHouseType->GetNext()) $houseTypeValue = $houseType["VALUE"];
