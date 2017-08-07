@@ -2,7 +2,7 @@
 require_once($_SERVER['DOCUMENT_ROOT'] . "/bitrix/modules/main/include/prolog_before.php");
 if (strripos ($_SERVER['HTTP_REFERER'], 'bpm.ucre.ru')!==false){
   $type_s = array(
-      '383' =>  "Дом",
+      '383' =>  "дом",
       '384' =>  "таунхаус",
       '385' =>  "Дача",
     );
