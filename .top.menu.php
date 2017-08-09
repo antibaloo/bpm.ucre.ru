@@ -1,0 +1,61 @@
+<?
+$curUser = $USER->GetID();
+$aMenuLinks = Array(
+	Array(
+		"CRM", 
+		"/crm/", 
+		Array(), 
+		Array(), 
+		"CBXFeatures::IsFeatureEnabled('crm') && CModule::IncludeModule('crm') && CCrmPerms::IsAccessEnabled()" 
+	),
+	Array(
+		"Компания", 
+		"/about/", 
+		Array(), 
+		Array(), 
+		"" 
+	),
+	Array(
+		"Сотрудники", 
+		"/company/", 
+		Array(), 
+		Array(), 
+		"" 
+	),
+	Array(
+		"Диски", 
+		"/docs/", 
+		Array(), 
+		Array(), 
+		"CBXFeatures::IsFeatureEnabled('CommonDocuments')" 
+	),
+	Array(
+		"Сервисы", 
+		"/services/", 
+		Array(), 
+		Array(), 
+		"" 
+	),
+	Array(
+		"Группы", 
+		"/workgroups/", 
+		Array(), 
+		Array(), 
+		"CBXFeatures::IsFeatureEnabled('Workgroups')" 
+	),
+	Array(
+		"Приложения", 
+		"/marketplace/", 
+		Array(), 
+		Array(), 
+		"IsModuleInstalled('rest')" 
+	),
+	Array(
+		"Юрист", 
+		"/jurist/", 
+		Array(), 
+		Array(), 
+		"in_array($curUser,array(11,24))" 
+	)
+);
+?>
