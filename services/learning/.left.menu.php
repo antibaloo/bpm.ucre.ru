@@ -33,7 +33,7 @@ $aMenuLinks = Array(
 		"/services/learning/subordinates.php", 
 		Array(), 
 		Array(), 
-		"" 
+		"\$GLOBALS['USER']->IsAuthorized()" 
 	)
 );
 ?>
