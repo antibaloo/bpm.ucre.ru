@@ -141,7 +141,7 @@ $rsUsers = CUser::GetList(($by="id"), ($order="asc"), array("GROUPS_ID"=> array(
     //Не первый этаж
     if ($_POST['floor'] == 1) $rsQuery.=" AND UF_CRM_58958B51B667E NOT LIKE '%754%'";
     //Не последний этаж
-    if ($_POST['floor'] == $_POST['floors']) $rsQuery.=" AND UF_CRM_58958B51B667E NOT LIKE '%755%'";
+    if ($_POST['floor'] > 0 && $_POST['floors']>0 && $_POST['floor'] == $_POST['floors']) $rsQuery.=" AND UF_CRM_58958B51B667E NOT LIKE '%755%'";
     //Фильтр по цене
     if ($_POST['price'] > 0) $rsQuery.=" AND UF_CRM_58958B576448C<=".$_POST['price']." AND UF_CRM_58958B5751841>=".$_POST['price'];
     //Фильтр по ответственному
