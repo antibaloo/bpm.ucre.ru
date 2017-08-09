@@ -17,5 +17,5 @@ if (count(CIntranetUtils::GetSubordinateDepartments($userID))){
     );
     echo "<hr>";
   }
-}else echo "У вас нет сотрудников в подчинении";
+}else echo "У вас нет сотрудников в подчинении.";
 require($_SERVER["DOCUMENT_ROOT"]."/bitrix/footer.php");?>
