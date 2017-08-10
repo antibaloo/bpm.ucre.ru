@@ -51,9 +51,9 @@ if (strripos ($_SERVER['HTTP_REFERER'], 'bpm.ucre.ru')!==false){
     <tr>
       <th></th>
       <th width="5%">id</th>
-      <th width="25%">Название заявки</th>
+      <th width="30%">Название заявки</th>
       <th width="8%">Цена, руб.</th>
-      <th width="25%">Адрес объекта</th>
+      <th width="20%">Адрес объекта</th>
       <th>N<sub>комнат</sub></th>
       <th>S<sub>общая</sub></th>
       <th>S<sub>кухни</sub></th>
@@ -66,14 +66,14 @@ if (strripos ($_SERVER['HTTP_REFERER'], 'bpm.ucre.ru')!==false){
         $assigned_user = CUser::GetByID($aRes['ASSIGNED_BY_ID'])->Fetch();
         if ($aRes['PROPERTY_210'] == 386) $square = $aRes['PROPERTY_292'];
         else $square = $aRes['PROPERTY_224'];
+        $shortAddress = $aRes['PROPERTY_217'].", ".$aRes['PROPERTY_218']." (".$aRes['PROPERTY_215'].")";
 ?>
     <tr id="R<?=$aRes['ID']?>" class="row">
       <td><?=($_POST['assigned_by_id'] == $USER->GetID() || $USER->IsAdmin())?"<a href='javascript:addpotential(".$aRes['ID'].")'><span style='color:green;font-weight: bold'>+</span></a>":""?></td>
-      <!--<td><button onclick="addpotential(<?=$aRes['ID']?>)" <?=($_POST['assigned_by_id'] == $USER->GetID() || $USER->IsAdmin())?"":"disabled"?>>+</button></td>-->
       <td><?=$aRes['ID']?></td>
       <td style="text-align: left; padding-left: 5px;" title="<?=$aRes['TITLE']?>"><a href="/crm/deal/show/<?=$aRes['ID']?>/" target="_blank"><?=$aRes['TITLE']?></a></td>
       <td style="text-align: right; padding-right: 5px;" title="<?=($aRes['UF_CRM_58958B5734602'])?number_format($aRes['UF_CRM_58958B5734602'],0,"."," "):"цена не указана"?>"><?=($aRes['UF_CRM_58958B5734602'])?number_format($aRes['UF_CRM_58958B5734602'],0,"."," "):"<span style='color:red;'>цена не указана</span>"?></td>
-      <td style="text-align: left; padding-left: 5px;" title="<?=$aRes['PROPERTY_209']?>"><?=$aRes['PROPERTY_209']?></td>
+      <td style="text-align: left; padding-left: 5px;" title="<?=$aRes['PROPERTY_209']?>"><?=$shortAddress?></td>
       <td><?=($aRes['PROPERTY_229'])?intval($aRes['PROPERTY_229']):"-"?></td>
       <td style="text-align: right; padding-right: 5px;"><?=($square)?number_format($square,2):"-"?></td>
       <td style="text-align: right; padding-right: 5px;"><?=($aRes['PROPERTY_226'])?number_format($aRes['PROPERTY_226'],2):"-"?></td>
@@ -89,9 +89,9 @@ if (strripos ($_SERVER['HTTP_REFERER'], 'bpm.ucre.ru')!==false){
 <?
   }
 ?>
-<table style="width:100%;border: 1px solid black;border-collapse: collapse;margin-bottom:15px;font-size: 14px;font-weight: bold;">
+<table style="width:100%;border: 1px solid black;border-collapse: collapse;margin-bottom:15px;font-size: 14px;">
   <tr>
-    <td style="border: 1px solid black;text-align:center;" width="3%"><b>Всего:</b></td>
+    <td style="border: 1px solid black;text-align:center;" width="4%"><b>Всего:</b></td>
     <td style="border: 1px solid black;text-align:left;" colspan="9" style="text-align: left; padding-left: 5px;"><b><span id="count"><?=$count?></span></b></td>
   </tr>
 </table>
