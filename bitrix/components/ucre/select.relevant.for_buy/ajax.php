@@ -92,7 +92,7 @@ if (strripos ($_SERVER['HTTP_REFERER'], 'bpm.ucre.ru')!==false){
 <table style="width:100%;border: 1px solid black;border-collapse: collapse;margin-bottom:15px;font-size: 14px;">
   <tr>
     <td style="border: 1px solid black;text-align:center;" width="4%"><b>Всего:</b></td>
-    <td style="border: 1px solid black;text-align:left;" colspan="9" style="text-align: left; padding-left: 5px;"><b><span id="count"><?=$count?></span></b></td>
+    <td style="border: 1px solid black;text-align:left;" style="text-align: left; padding-left: 5px;"><b><span id="count"><?=$count?></span></b></td>
   </tr>
 </table>
 <div class="pages">
