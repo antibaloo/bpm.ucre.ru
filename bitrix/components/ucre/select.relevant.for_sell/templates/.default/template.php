@@ -1,19 +1,17 @@
 <link href="/include/custom_css/custom_paging.css?<?=time();?>" rel="stylesheet">
 <?php
 if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED!==true)die();
+
 ?>
 <br>
-<form id="select_relevant_to_buy">
-  <table style="width:100%;border-collapse: collapse;margin-bottom:15px;">
-    <tr style="border: 1px solid lightgrey">
-      <td style="text-align:right;width:25%"><b>Рынок предложения:</b></td>
-      <td style="text-align:left;width:25%"><?=$arResult['SELECT_PARAMS']['MARKET']?></td>
-      <td style="text-align:right;width:25%"><b>Тип объекта:</b></td>
-      <td style="text-align:left;width:25%"><?=$arResult['SELECT_PARAMS']['TYPE']?></td>
-    </tr>
-  </table>
-  <center><input id="submit" type="button" value="Искать"></center>
-  <input type="hidden" name="sql" value="<?=bin2hex($arResult['SQL_STRING'])?>">
+<?if ($arResult['NO_OBJECT']){?>
+<h2>
+  Без связанного объекта поиск встречных заявок невозможен
+</h2>
+<?}else{?>
+<form id="select_relevant_to_sell">
+  Параметры поиск заданы связанным объектом недвижимости <input id="submit" type="button" value="Искать">
+  <input type="hidden" name="params" value='<?=serialize($arResult['SELECT_PARAMS'])?>'>
   <input type="hidden" name="deal_id" value="<?=$arResult['ID']?>">
   <input type="hidden" name="assigned_by_id" value="<?=$arResult['ASSIGNED_BY_ID']?>">
 </form>
@@ -26,3 +24,32 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED!==true)die();
   echo "Запрос по встречным заявкам текущий пользователь произвел ".$currentUserCount." раз. Всего запросов по заявке ".$allUsersCount."<br><br>";
 ?>  
 </div>
+<?}?>
+<script>
+  $("#submit").click(function () {
+    var data = $('#select_relevant_to_sell').serialize();
+    $.ajax({
+      url: "<?=$arResult['COMPONENT_PATH']?>/ajax.php",
+      type: "POST",
+      data: data,
+      dataType: "text",
+      success: function (html) {
+        $("#resultGrid").html(html);
+      },
+      error: function (html) {
+        $("#resultGrid").html("Технические неполадки! В ближайшее время все будет исправлено!");
+      },
+    });
+  });
+  function set_active(object){
+    if(!object.classList.contains('active')){
+      var el = document.getElementById("page"+object.innerHTML);
+      var a_page = document.getElementsByClassName("page active");
+      var a_pages = document.getElementsByClassName("pages active");
+      a_page[0].classList.remove('active');
+      a_pages[0].classList.remove('active');
+      el.classList.add('active');
+      object.classList.add('active');
+    }
+  }
+</script>
