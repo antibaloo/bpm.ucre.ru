@@ -7,7 +7,7 @@ $rsDeal = CCrmDeal::GetListEx(
 	array("ID" => $arParams['ID']),
 	false,
 	false,
-	array("CATEGORY_ID", "CATEGORY_ID", "ASSIGNED_BY_ID", "UF_CRM_58958B5734602", "UF_CRM_1469534140"),
+	array("CATEGORY_ID", "ASSIGNED_BY_ID", "UF_CRM_58958B5734602", "UF_CRM_1469534140"),
 	array()
 );
 $mainDeal = $rsDeal->Fetch();
