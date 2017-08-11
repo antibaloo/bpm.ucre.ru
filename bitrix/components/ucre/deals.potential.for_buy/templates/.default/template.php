@@ -2,11 +2,8 @@
 <?php
 if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED!==true)die();
 ?>
-<a href="javascript:filter('new')"><span style="color:grey;font-weight: bold">Новые</span></a>&nbsp;&nbsp;&nbsp;<a href="javascript:filter('yes')"><span style="color:green;font-weight: bold">Положительные</span></a>&nbsp;&nbsp;&nbsp;<a href="javascript:filter('no')"><span style="color:blue;font-weight: bold">Отрицательные</span></a>
 <div id="potentials">
 </div>
-<div id="grid" style="width: 100%; height: 250px;"></div>
-
 <div id="markdialog" style="text-align:center; box-shadow: 0px 0px 100px 0px #000000; width: 400px;height: 250px;	margin: auto;display: none;background: #fff;z-index: 200;	position: fixed;left: 0;right: 0;top: 0;bottom: 0;padding: 10px;">
   <div id="markcaption"></div>
   <hr>
