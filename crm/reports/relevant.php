@@ -1,21 +1,5 @@
 <link href="/include/custom_css/custom_paging.css?<?=time();?>" rel="stylesheet">
 <?
-/*function compare ($v1, $v2) {   
-  if ($v1["COUNT"] == $v2["COUNT"]) return 0;
-  return ($v1["COUNT"] < $v2["COUNT"])? -1: 1;
-}*/
-
-function customMultiSort($array,$field) {
-    $sortArr = array();
-    foreach($array as $key=>$val){
-        $sortArr[$key] = $val[$field];
-    }
-
-    array_multisort($sortArr,$array);
-
-    return $array;
-}
-
 require($_SERVER["DOCUMENT_ROOT"]."/bitrix/header.php");
 CModule::IncludeModule('intranet');
 require($_SERVER["DOCUMENT_ROOT"]."/include/reports/functions.php");
