@@ -3,9 +3,6 @@ require_once($_SERVER['DOCUMENT_ROOT'] . "/bitrix/modules/main/include/prolog_be
 CModule::IncludeModule("crm");
 if (strripos ($_SERVER['HTTP_REFERER'], 'bpm.ucre.ru')!==false){
   $params = unserialize($_POST['params']);
-  echo "<pre>";
-  print_r($params);
-  echo "</pre>";
   $type_s =array(
     "1" =>"комната",
     "2" => "квартира",
