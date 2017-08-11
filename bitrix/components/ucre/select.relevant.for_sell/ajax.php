@@ -52,10 +52,8 @@ if (strripos ($_SERVER['HTTP_REFERER'], 'bpm.ucre.ru')!==false){
       $type = "";
       break;
   }
-  $rsDeal = CCrmDeal::GetListEx(
-    array("DATE_MODIFY" => "DESC"),
-    array(
-      "!ID" => $arrayPotentials, 
+  $arFilter = array(
+    "!ID" => $arrayPotentials, 
       "CATEGORY_ID" => 2, 
       "STAGE_ID" => "C2:PROPOSAL", 
       "UF_CRM_5895BC940ED3F" => $market, 
@@ -63,13 +61,19 @@ if (strripos ($_SERVER['HTTP_REFERER'], 'bpm.ucre.ru')!==false){
       "<=UF_CRM_58958B576448C" =>$params['PRICE'],
       ">=UF_CRM_58958B5751841" =>$params['PRICE'],
       "<=UF_CRM_58958B529E628" =>$params['ROOMS'],
-      "<=UF_CRM_58958B52BA439" =>$params['TOTAL_AREA'],
       "<=UF_CRM_58958B52F2BAC" =>$params['KITCHEN_AREA'],
-    ),
-    false,
-    false,
-    array("ID", "TITLE", "ASSIGNED_BY_ID", "UF_CRM_5895BC940ED3F","UF_CRM_58CFC7CDAAB96","UF_CRM_58958B576448C","UF_CRM_58958B5751841","UF_CRM_58958B529E628","UF_CRM_58958B52BA439","UF_CRM_58958B52F2BAC"),
-    array()
+  );
+  //Фильтр по исключению этажей
+  if ($params['FLOOR'] == 1)  $arFilter['UF_CRM_1502432955'] = 0;//не первый
+  if ($params['FLOOR'] == $params['FLOORS'])  $arFilter['UF_CRM_1502433005'] = 0;//не последний
+  if ($params['TYPE'] == 'комната') $arFilter['<=UF_CRM_58958B52BA439'] = $params['ROOM_AREA'];
+  elseif ($params['TYPE'] == 'участок') $arFilter['<=UF_CRM_58958B52BA439'] = $params['PLOT_AREA'];
+  else $arFilter['<=UF_CRM_58958B52BA439'] = $params['TOTAL_AREA'];
+    
+  $rsDeal = CCrmDeal::GetList(
+    array("DATE_MODIFY" => "DESC"),
+    $arFilter,
+    array("ID", "TITLE", "ASSIGNED_BY_ID", "UF_CRM_5895BC940ED3F","UF_CRM_58CFC7CDAAB96","UF_CRM_58958B576448C","UF_CRM_58958B5751841","UF_CRM_58958B529E628","UF_CRM_58958B52BA439","UF_CRM_58958B52F2BAC","UF_CRM_58958B51B667E","UF_CRM_1502432955","UF_CRM_1502433005")
   );
   $count = $rsDeal->SelectedRowsCount();
   
@@ -112,25 +116,32 @@ if (strripos ($_SERVER['HTTP_REFERER'], 'bpm.ucre.ru')!==false){
       <th>N<sub>комнат</sub> от</th>
       <th>S<sub>общая</sub> от</th>
       <th>S<sub>кухни</sub> от</th>
-      <th title="Требования к этажам">Эт.</th>
+      <th>Не первый</th>
+      <th>Не последний</th>
       <th width="15%">Ответственный</th>
     </tr>
 <?    
     for ($j=1;$j<=$rows;$j++){
       if ($mainDeal = $rsDeal->Fetch()){
         $assigned_user = CUser::GetByID($mainDeal['ASSIGNED_BY_ID'])->Fetch();
+        $marketS = array();
+        foreach ($mainDeal['UF_CRM_5895BC940ED3F'] as $mark){
+          if ($mark == 827) $marketS[] = "В";
+          if ($mark == 828) $marketS[] = "П";
+        }
 ?>
     <tr class="row">
       <td><?=$mainDeal['ID']?></td>
       <td style="text-align: left; padding-left: 5px;"><a href="/crm/deal/show/<?=$mainDeal['ID']?>/" target="_blank"><?=$mainDeal['TITLE']?></a></td>
-      <td><?=$mainDeal['UF_CRM_5895BC940ED3F']?></td>
+      <td><?=implode(",", $marketS)?></td>
       <td><?=$type_s[$mainDeal['UF_CRM_58CFC7CDAAB96']]?></td>
       <td><?=($mainDeal['UF_CRM_58958B576448C'])?$mainDeal['UF_CRM_58958B576448C']:"..."?></td>
       <td><?=($mainDeal['UF_CRM_58958B5751841'])?$mainDeal['UF_CRM_58958B5751841']:"..."?></td>
       <td><?=$mainDeal['UF_CRM_58958B529E628']?></td>
       <td><?=$mainDeal['UF_CRM_58958B52BA439']?></td>
       <td><?=$mainDeal['UF_CRM_58958B52F2BAC']?></td>
-      <td></td>
+      <td><?=($mainDeal["UF_CRM_1502432955"])?"Х":""?></td>
+      <td><?=($mainDeal["UF_CRM_1502433005"])?"Х":""?></td>
       <td><a href="/company/personal/user/<?=$assigned_user['ID']?>/" target="_blank" title="<?=$assigned_user['PERSONAL_PHONE']?>" ><?=$assigned_user['LAST_NAME']." ".$assigned_user['NAME']?></a></td>
     </tr>
 <?
