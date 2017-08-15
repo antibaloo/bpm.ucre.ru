@@ -66,7 +66,7 @@ $rsUsers = CUser::GetList(($by="id"), ($order="asc"), array("GROUPS_ID"=> array(
         &nbsp;S<sub>общ.</sub>:&nbsp;
         <input type="number" name="square" min="10" style="width: 4em;" value="<?=$_POST['square']?>">
         &nbsp;S<sub>кух.</sub>:&nbsp;
-        <input type="number" name="kitchen" min="10" style="width: 4em;" value="<?=$_POST['kitchen']?>">
+        <input type="number" name="kitchen" min="1" style="width: 4em;" value="<?=$_POST['kitchen']?>">
         &nbsp;Этаж/Этажей&nbsp;
         <input type="number" name="floor" min="1" style="width: 4em;" value="<?=$_POST['floor']?>">/<input type="number" name="floors" min="1" style="width: 4em;" value="<?=$_POST['floors']?>">
         &nbsp;Цена:&nbsp;
