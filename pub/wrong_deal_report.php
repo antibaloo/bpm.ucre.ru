@@ -21,7 +21,7 @@ if (isset($_GET['assigned'])){
 } else {
   $rsDeal = CCrmDeal::GetListEx(
     array(), 
-    array("CATEGORY_ID" => array(0,4), "STAGE_ID" => array("PROPOSAL","C4:1", "C4:PROPOSAL"),"UF_CRM_1469534140" => NULL, "CHECK_PERMISSIONS" => "N"), 
+    array("CATEGORY_ID" => array(0,4), "STAGE_ID" => array("8","PROPOSAL","C4:1", "C4:PROPOSAL"),"UF_CRM_1469534140" => NULL, "CHECK_PERMISSIONS" => "N"), 
     false, 
     false, 
     array("ID","TITLE","UF_CRM_1469534140", "ASSIGNED_BY_ID"),
