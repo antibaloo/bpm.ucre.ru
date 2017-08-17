@@ -14,18 +14,8 @@
     myMap.controls                
       .add('zoomControl')               
       .add('typeSelector')                
-      .add('mapTools')
-   /* myMap.events.add('mousemove', function (e) {
-      var coords = e.get('coords');
-      myMap.balloon.open(coords, {
-        contentHeader:'Событие!',
-        contentBody:'<p>Координаты: ' + [
-          coords[0].toPrecision(6),
-          coords[1].toPrecision(6)
-        ].join(', ') + '</p>'
-      });
-    });*/
-    
+      .add('mapTools');
+
     polyline = new ymaps.Polyline([], {}, {
       editorMenuManager: function (items) {
         var items = [];
@@ -33,28 +23,17 @@
           title: "Замкнуть область",
           onClick:  function () {
             polygon = new ymaps.Polygon([polyline.editor.geometry.getCoordinates()], {}, {});
+            console.log(polyline.editor.geometry.getCoordinates());
             myMap.geoObjects.remove(polyline);
             myMap.geoObjects.add(polygon);
-            console.log(polygon.editor.geometry.getCoordinates());
           }
         });
         return items;
       }
     });
-    
-    /*polyline.editor.events.add("vertexadd",function (e){
-      var coords = polyline.geometry.getCoordinates()
-      console.log(coords);
-    });*/
-    /*polyline.editor.events.add("statechange",function (e){
-      var coords = polyline.geometry.getCoordinates()
-      console.log(coords);
-    });*/
     myMap.geoObjects.add(polyline);
     polyline.editor.startEditing();
     polyline.editor.startDrawing();
     $('#addPolyline').attr('disabled', true);
-
-    
   }
 </script>
