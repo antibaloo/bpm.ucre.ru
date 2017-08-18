@@ -137,12 +137,19 @@ if ($_POST['crm_token'] == $megapbx->crm_key){
       'RECORD_URL' => trim($_POST['link']),
       'STATUS_CODE' => $statusCode,
     );
-    $restHelper->finishExternalCall($callParams);
+    $finishResults = $restHelper->finishExternalCall($callParams);
+    $finishData = $finishResults->getData();
+    if ($statusCode != 200){
+      $oActivity = new CCrmActivity;
+      $acFields = array('COMPLETED' => 'N');
+      $acID = 35603;
+      $oActivity->Update($finishData['CRM_ACTIVITY_ID'], $acFields,true, true, array('CURRENT_USER' => 24));
+    }
     if ($assignedById == 206){
       $notifyMess = "Неотвеченный вызов в нерабочее время в сущности ";
       if ($entityType = 'LEAD') $notifyMess.='<a href="/crm/lead/show/'.$entityId.'/">Лид №'.$entityId.'</a>';
-      if ($entityType = 'CONTACT') $notifyMess.='<a href="/crm/contact/show/'.$entityId.'/">Лид №'.$entityId.'</a>';
-      if ($entityType = 'COMPANY') $notifyMess.='<a href="/crm/company/show/'.$entityId.'/">Лид №'.$entityId.'</a>';
+      if ($entityType = 'CONTACT') $notifyMess.='<a href="/crm/contact/show/'.$entityId.'/">Контакт №'.$entityId.'</a>';
+      if ($entityType = 'COMPANY') $notifyMess.='<a href="/crm/company/show/'.$entityId.'/">Компания №'.$entityId.'</a>';
       $arMessageFields = array(
           // получатель
           "TO_USER_ID" => 98,
