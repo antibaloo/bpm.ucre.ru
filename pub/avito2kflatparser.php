@@ -198,5 +198,7 @@ if( $curl = curl_init() ) {
     }
   }
   echo "Итого: ".$adCount;
+}else{
+  echo "Error curl!";
 }
 ?>

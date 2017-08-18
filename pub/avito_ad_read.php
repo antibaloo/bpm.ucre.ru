@@ -108,10 +108,12 @@
           echo "Ссылка на профиль Авито: ".$profile."<br>";*/
           
           //Параметры объявления
-          $params_query = $xpath->query("//*[contains(@class, 'item-params-list')]");
+          $params_query = $xpath->query("//*[contains(@class, 'item-params-list-item')]");//item-params-list-item //item-params-list
           $params = array();
-          foreach ($params_query->item(0)->childNodes as $param){
+          foreach ($params_query/*->item(0)->childNodes*/ as $param){
             $temp_param = explode(":",trim(utf8_decode ($param->nodeValue)));
+            $params["'".$temp_param[0]."'"] = $temp_param[1];
+            /*
             switch ($temp_param[0]){
               case "Количество комнат":
                 $params['rooms'] = trim(substr($temp_param[1],1,strpos($temp_param[1],"-")-1));
@@ -128,7 +130,7 @@
               case "Площадь":
                 $params['square'] = preg_replace("/[^0-9]/", '', $temp_param[1]);
                 break;
-            }
+            }*/
 
           }
           
