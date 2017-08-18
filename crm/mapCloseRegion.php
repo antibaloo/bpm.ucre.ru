@@ -68,7 +68,7 @@
     var res = simplify(line, 5);
     res = convert(res);
     polygon = new ymaps.Polygon([res], {}, {
-      fillColor: '#00FF00',
+      fillColor: '#1092DC',
       strokeColor: '#0000FF',
       opacity: 0.5,
       strokeWidth: 3
