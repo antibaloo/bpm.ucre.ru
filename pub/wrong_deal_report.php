@@ -147,7 +147,7 @@ if (isset($_GET['assigned'])){
   $subject = "Отчет об ошибочных заявках от ".date("d.m.Y").", сотрудник: ".$arUser['LAST_NAME']." ".substr($arUser['NAME'],0,1).". ".substr($arUser['SECOND_NAME'],0,1)."."; 
 } else {
   $filename = "reports/error_report_by_all.html";
-  $to  = "a.s.abalakov@ucre.ru, a.s.cherkasov@ucre.ru, info@ucre.ru, n.a.shemyakina@ucre.ru, a.s.abalakova@ucre.ru";
+  $to  = "a.s.abalakov@ucre.ru, a.s.cherkasov@ucre.ru, info@ucre.ru, n.a.shemyakina@ucre.ru, a.v.abalakova@ucre.ru";
   
   
   $subject = "Отчет об ошибочных заявках от ".date("d.m.Y");
