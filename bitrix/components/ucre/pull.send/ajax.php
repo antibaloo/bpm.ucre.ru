@@ -29,8 +29,8 @@ if (check_bitrix_sessid())
 	{
 		CPullWatch::AddToStack('PULL_TEST',
 			array(
-				'module_id' => 'test',
-				'command' => 'check',
+				'module_id' => 'ucre',
+				'command' => $_POST['command'],
 				'params' => array("TIME" => time(), "USER" => $_POST['user'],"EVENT"=>$_POST['event'])
 			)
 		);
