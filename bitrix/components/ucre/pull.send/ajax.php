@@ -25,7 +25,7 @@ if (intval($USER->GetID()) <= 0)
 }
 if (check_bitrix_sessid())
 {
-	if ($_POST['SEND'] == 'Y')
+	if ($_POST['SEND'] == 'Y' && $_POST['command'] !="")
 	{
 		CPullWatch::AddToStack('PULL_TEST',
 			array(
