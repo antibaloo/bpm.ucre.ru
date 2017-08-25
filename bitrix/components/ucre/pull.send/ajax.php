@@ -27,7 +27,7 @@ if (check_bitrix_sessid())
 {
 	if ($_POST['SEND'] == 'Y' && $_POST['command'] !="")
 	{
-		CPullWatch::AddToStack('PULL_TEST',
+		CPullWatch::AddToStack('UCRE_CALL_CARD',
 			array(
 				'module_id' => 'ucre',
 				'command' => $_POST['command'],
@@ -37,8 +37,9 @@ if (check_bitrix_sessid())
 					"TYPE" => $_POST['type'],
 					"SOURCE" => $_POST['source'],
 					"CALLID" => $_POST['callid'],
-					"CRM_ENTITY_TYPE" => $_POST['crm_enrity_type'],
-					"CRM_ENTITY_ID" => $_POST['crm_entity_id']
+					"CRM_ENTITY_TYPE" => $_POST['crm_entity_type'],
+					"CRM_ENTITY_ID" => $_POST['crm_entity_id'],
+					"CRM_ACTIVITY_ID" => $_POST['crm_activity_id']
 				)
 			)
 		);

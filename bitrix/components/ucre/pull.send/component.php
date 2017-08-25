@@ -24,12 +24,13 @@ if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)die();
 	CallId <input id="callid" value="17e8c92d-9a8a-4485-80ce-05f57c33c601"><br>
 	Тип сущности CRM
 	<select id="crm_entity_type">
-		<option value="">не зарегистрированный номер</option>
+		<option value="none">не зарегистрированный номер</option>
 		<option value="lead">Лид</option>
 		<option value="contact">Контакт</option>
 		<option value="company">Компания</option>
 	</select><br>
-	id сущности <input id="crm_entity_id" value="0">
+	id сущности <input id="crm_entity_id" value="0"><br>
+	id активности <input id="crm_activity_id" value="0">
 </form>
 <button onclick="sendCommand();">It`s work!</button>
 <script type="text/javascript">
