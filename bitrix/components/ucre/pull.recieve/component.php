@@ -10,13 +10,15 @@ CPullWatch::Add($USER->GetId(), 'PULL_TEST');
 		BX.addCustomEvent("onPullEvent", function(module_id,command,params) {
 			console.log(module_id,command,params);
 			if (module_id == 'ucre'  && params.USER == <?=$arParams["USER"]?>){
-					if(command == 'open'){
-						$('#pull_test').show();
-						BX('pull_test').innerHTML += command+' '+params.TIME+' '+params.USER+' '+params.EVENT+'<br>';
+					if(command == 'register'){
+				$('body').append('<div id="'+params.CALLID+'" style="text-align:center; box-shadow: 0px 0px 100px 0px #000000; width: 400px;height: 250px;	margin: auto;background: #fff;z-index: 200;	position: fixed;left: 0;right: 0;top: 0;bottom: 0;padding: 10px;"></div>');
+						//$('#pull_test').show();
+						BX(params.CALLID).innerHTML += command+' '+params.USER+' '+params.CALLID+'<br>';
 					}
-					if(command == 'close'){
-						BX('pull_test').innerHTML += command+' '+params.TIME+' '+params.USER+' '+params.EVENT+'<br>';
-						$('#pull_test').hide();
+					if(command == 'finish'){
+						//BX('pull_test').innerHTML ="";
+						//$('#pull_test').hide();
+						$("#"+params.CALLID).remove()
 					}
 			}
 		});

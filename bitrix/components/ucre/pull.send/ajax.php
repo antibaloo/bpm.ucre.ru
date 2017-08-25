@@ -31,7 +31,15 @@ if (check_bitrix_sessid())
 			array(
 				'module_id' => 'ucre',
 				'command' => $_POST['command'],
-				'params' => array("TIME" => time(), "USER" => $_POST['user'],"EVENT"=>$_POST['event'])
+				'params' => array(
+					"USER" => $_POST['user'],
+					"PHONE" => $_POST['phone'],
+					"TYPE" => $_POST['type'],
+					"SOURCE" => $_POST['source'],
+					"CALLID" => $_POST['callid'],
+					"CRM_ENTITY_TYPE" => $_POST['crm_enrity_type'],
+					"CRM_ENTITY_ID" => $_POST['crm_entity_id']
+				)
 			)
 		);
 		echo CUtil::PhpToJsObject(Array('ERROR' => ''));
