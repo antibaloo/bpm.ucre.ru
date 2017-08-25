@@ -145,7 +145,6 @@ if ($_POST['crm_token'] == $megapbx->crm_key){
     if ($statusCode != 200){
       $oActivity = new CCrmActivity;
       $acFields = array('COMPLETED' => 'N');
-      $acID = 35603;
       $oActivity->Update($finishData['CRM_ACTIVITY_ID'], $acFields,true, true, array('CURRENT_USER' => 24));
     }
     if ($assignedById == 206){
