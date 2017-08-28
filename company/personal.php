@@ -359,7 +359,7 @@ $APPLICATION->SetTitle(GetMessage("COMPANY_TITLE"));
 			 $(this).detach();
 		 });
 		 $(".fields.files").find("img").each(function(){
-			 $(this).attr("width","50%");
+			 $(this).attr("width","25%");
 			 $(this).removeAttr("height");
 		 });
   };
