@@ -169,7 +169,7 @@ if ($_POST['crm_token'] == $megapbx->crm_key){
       CIMNotify::Add($arMessageFields);
       $arMessageFields = array(
           // получатель
-          "TO_USER_ID" => 202,
+          "TO_USER_ID" => 203,
           // отправитель
           "FROM_USER_ID" => 206, 
           // тип уведомления
