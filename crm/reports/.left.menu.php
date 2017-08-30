@@ -1,13 +1,13 @@
 <?
 $aMenuLinks = array(
 	array(
-		"Отчет по истекающим договорам застройщиков", 
+		"Истекающие договора застройщиков", 
 		"expire.php", 
 		array(), 
 		array(), 
 	),
 	array(
-		"Отчет по действующим договорам застройщиков", 
+		"Действующие договора застройщиков", 
 		"working.php", 
 		array(), 
 		array(), 
@@ -25,6 +25,13 @@ $aMenuLinks = array(
 		array(), 
 		array(),
 		'in_array($USER->GetID(),array(1,24))'
+	),
+	array(
+		"Очередь на Авито", 
+		"avito_stack.php", 
+		array(), 
+		array(),
+		''
 	),
 	array(
 		"Назад к отчетам", 
