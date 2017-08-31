@@ -56,6 +56,13 @@ $aMenuLinks = Array(
 		Array(), 
 		Array(), 
 		"in_array($curUser,array(11,24))" 
+	),
+	Array(
+		"HR", 
+		"/hr/", 
+		Array(), 
+		Array(), 
+		"in_array($curUser,array(1,11,24,26,218))" 
 	)
 );
 ?>
