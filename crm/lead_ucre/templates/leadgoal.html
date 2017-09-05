@@ -1,0 +1,14 @@
+<center>Продажа&nbsp;<input class="goal" name="goalTemp" type="radio" value="sell">&nbsp;<input class="goal" name="goalTemp" type="radio" value="buy">&nbsp;Покупка</center>
+<input name="goal" type="hidden">
+<hr>
+<script>
+  $(".goal").click(function(){
+    $("input[name=goal]").val($(this).val());
+    $(".roType").each(function(){
+      $(this).prop( "disabled", false);
+    });
+    $(".goal").each(function(){
+      $(this).prop( "disabled", true);
+    });
+  });
+</script>
