@@ -1,13 +1,13 @@
 <?
 $aMenuLinks = array(
 	array(
-		"Истекающие договора застройщиков", 
+		"Истекающие дог. застр.", 
 		"expire.php", 
 		array(), 
 		array(), 
 	),
 	array(
-		"Действующие договора застройщиков", 
+		"Действующие дог. застр.", 
 		"working.php", 
 		array(), 
 		array(), 
@@ -32,6 +32,12 @@ $aMenuLinks = array(
 		array(), 
 		array(),
 		''
+	),
+	array(
+		"Потенциальные",
+		"potentials.php",
+		array(),
+		array(),
 	),
 	array(
 		"Назад к отчетам", 
