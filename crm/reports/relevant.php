@@ -25,5 +25,24 @@ $APPLICATION->SetTitle("Отчет по встречным заявкам");
       },
     });
   });
+  
+  $("#buyinside").click(function () {
+    $.ajax({
+      url: "./ajax/relevant.php",
+      type: "POST",
+      dataType: "html",
+      data: {
+        report: 'buy',
+        inside: 1
+      },
+     
+      success: function (html) {
+        $("#result").html(html);
+      },
+      error: function (html) {
+        $("#result").html("Технические неполадки! В ближайшее время все будет исправлено!");
+      },
+    });
+  });
 </script>
 <?require($_SERVER["DOCUMENT_ROOT"]."/bitrix/footer.php");?>
