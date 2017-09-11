@@ -1,6 +1,7 @@
 <link href="/include/custom_css/custom_paging.css?<?=time();?>" rel="stylesheet">
 <?php
 require_once($_SERVER['DOCUMENT_ROOT'] . "/bitrix/modules/main/include/prolog_before.php");
+CModule::IncludeModule("crm");
 if (strripos ($_SERVER['HTTP_REFERER'], 'bpm.ucre.ru')!==false && $_REQUEST['buy_id']>0){
   $type_s = array(
       '383' =>  "Дом",
@@ -11,6 +12,16 @@ if (strripos ($_SERVER['HTTP_REFERER'], 'bpm.ucre.ru')!==false && $_REQUEST['buy
   $rsData = $DB->Query("select b_crm_potential_deals.sell_deal_id, b_uts_crm_deal.UF_CRM_58958B5734602, b_iblock_element_prop_s42.PROPERTY_210, b_iblock_element_prop_s42.PROPERTY_215, b_iblock_element_prop_s42.PROPERTY_217, b_iblock_element_prop_s42.PROPERTY_218, b_iblock_element_prop_s42.PROPERTY_221, b_iblock_element_prop_s42.PROPERTY_222, b_iblock_element_prop_s42.PROPERTY_224, b_iblock_element_prop_s42.PROPERTY_225, b_iblock_element_prop_s42.PROPERTY_226, b_iblock_element_prop_s42.PROPERTY_229, b_iblock_element_prop_s42.PROPERTY_243 from b_crm_potential_deals inner join b_uts_crm_deal ON b_crm_potential_deals.sell_deal_id=b_uts_crm_deal.VALUE_ID INNER JOIN b_iblock_element ON b_uts_crm_deal.UF_CRM_1469534140 = b_iblock_element.ID INNER JOIN b_iblock_element_prop_s42 ON b_iblock_element.ID = b_iblock_element_prop_s42.IBLOCK_ELEMENT_ID where result='new' AND buy_deal_id=".$_REQUEST['buy_id']);
   $count = $rsData->SelectedRowsCount();
   $arUser = $USER->GetById($USER->GetID())->Fetch();
+  
+  $arDeal = CCrmDeal::GetByID($_REQUEST['buy_id']);
+  $arContact = CCrmContact::GetByID($arDeal['CONTACT_ID']);
+  $phoneData = $DB->Query("SELECT * FROM bpm_ucre.b_crm_field_multi WHERE TYPE_ID='PHONE' AND ENTITY_ID='CONTACT' AND ELEMENT_ID=".$arDeal['CONTACT_ID']);
+  while($arPhone = $phoneData->Fetch()){
+    $phones[] = $arPhone['VALUE'];
+  }
+  /*echo "<pre>";
+  print_r($arContact);
+  echo "</pre>";*/
 ?>
 <div class="page active">
   <div>
@@ -21,8 +32,9 @@ if (strripos ($_SERVER['HTTP_REFERER'], 'bpm.ucre.ru')!==false && $_REQUEST['buy
       ООО "Единый центр недвижимости"<br>г. Оренбург, ул. Советская, 46, 3 эт.<br>+7(922) 829-90-57, 8 (3532) 90-90-57<br>без выходных, 9:00 - 21:00</div>
     <div style="float:right">
       <ul style="margin-top:0px">
-        <li>подбор создан в <?=date("H:i:s")?></li>
-        <li>ФИО: <?=$arUser['LAST_NAME']." ".$arUser['NAME']." ".$arUser['SECOND_NAME']?></li>
+        <li>подбор по заявке №<?=$_REQUEST['buy_id']?>, создан в <?=date("H:i:s")?></li>
+        <li><?=$arContact['FULL_NAME']?>: <?=(count($phones))?implode(",",$phones):"нет номеров телефонов"?></li>
+        <li>Агент: <?=$arUser['LAST_NAME']." ".$arUser['NAME']." ".$arUser['SECOND_NAME']?></li>
         <li>отдел: <?=$arUser['WORK_DEPARTMENT']?></li>
         <li>должность: <?=$arUser['WORK_POSITION']?></li>
         <li>телефон: <?=$arUser['WORK_PHONE']?></li>
