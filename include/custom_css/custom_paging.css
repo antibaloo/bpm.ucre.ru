@@ -20,10 +20,9 @@ div.page > table > tbody > tr > td{
 }
 div.page > table > tbody > tr > td:first-child{
   width: 4%;
+  padding: 0px;
 }
-div.page > table > tbody > tr > th:first-child{
-  width: 4%;
-}
+
 div.page > table > tbody > tr > th{
   border: 1px solid black;
   background-color: #b0e0e6;
