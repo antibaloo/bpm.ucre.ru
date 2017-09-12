@@ -3,6 +3,7 @@ require($_SERVER["DOCUMENT_ROOT"]."/bitrix/header.php");
 IncludeModuleLangFile($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/intranet/public/crm/reports/index.php");
 $APPLICATION->SetTitle("Новые лиды");
 ?>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <style>
 </style>
 <div style="margin:0 auto; width: 50%; padding: 5px; background-color: #eeeeee;">
@@ -13,8 +14,7 @@ $APPLICATION->SetTitle("Новые лиды");
 		</div>
 		<div id="roType">
 		</div>
-		<div id="mainProperty">
-			
+		<div id="leadMap">
 		</div>
 		<div id="roProperty">
 		</div>
@@ -23,13 +23,14 @@ $APPLICATION->SetTitle("Новые лиды");
 </div>
 <div id="result" style="margin:0 auto; width: 50%; padding: 5px; background-color: #1eeee1;"></div>
 <script src="/include/maskedInput/jquery.maskedinput.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script>
 	$(document).ready(function(){
 		$("#leadContacts").load("./templates/leadcontacts.html");
 		$("#leadGoal").load("./templates/leadgoal.html");
 		$("#roType").load("./templates/rotype.html");
 		$("#roProperty").load("./templates/roproperty.html");
-		$("#mainProperty").load("./templates/mainproperty.html");
+		/*$("#mainProperty").load("./templates/mainproperty.html");*/
 		$("#result").html("");
 	});
 	$("#resetForm").click(function(){
@@ -37,7 +38,7 @@ $APPLICATION->SetTitle("Новые лиды");
 		$("#leadGoal").load("./templates/leadgoal.html");
 		$("#roType").load("./templates/rotype.html");
 		$("#roProperty").load("./templates/roproperty.html");
-		$("#mainProperty").load("./templates/mainproperty.html");
+		/*$("#mainProperty").load("./templates/mainproperty.html");*/
 		$("#result").html("");
 	});
 	$("#saveForm").click(function(){

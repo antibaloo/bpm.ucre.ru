@@ -3,7 +3,7 @@
 <hr>
 <script>
   $(".goal").click(function(){
-    $("#mainProperty" ).load( "./templates/main"+$(this).val()+".html" );
+    //$("#mainProperty" ).load( "./templates/main"+$(this).val()+".html" );
     $("input[name=goal]").val($(this).val());
     $(".roType").each(function(){
       $(this).prop( "disabled", false);

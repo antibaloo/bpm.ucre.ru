@@ -2,7 +2,7 @@
 /*echo "<pre>";
 print_r($_POST);
 echo "</pre>";*/
-$result = array('result'=>'', 'status' => '', 'errors' => array());
+$result = array('params' => $_POST,'result'=>'', 'status' => '', 'errors' => array());
 
 if ($_POST['email']){
   $validation = filter_var($_POST['email'], FILTER_VALIDATE_EMAIL);
