@@ -15,12 +15,18 @@ $APPLICATION->SetTitle("Очередь выгрузки на Авито");
   <p>
     <b>Месячный лимит составляет 300 объектов. При текущем объеме потерянных лидов и заявок на покупку расширять этот пакет нецелесообразно.</b>
 </p>
+<div>
+  <input id="deal_id"> <input id="stockSearch" type="button" value="Искать"> <label id="searchResult"></label>
+</div>
+<br>
 <?
 $rsData = $DB->Query("select b_crm_deal.ID,b_crm_deal.TITLE,b_crm_deal.ASSIGNED_BY_ID, b_crm_deal.COMMENTS,b_uts_crm_deal.UF_CRM_58958B5734602, b_uts_crm_deal.UF_CRM_1472038962, b_uts_crm_deal.UF_CRM_1476517423,b_iblock_element.ID as ELEMENT_ID, b_iblock_element.CODE, b_iblock_element_prop_s42.PROPERTY_210, b_iblock_element_prop_s42.PROPERTY_300, b_iblock_element_prop_s42.PROPERTY_213, b_iblock_element_prop_s42.PROPERTY_214, b_iblock_element_prop_s42.PROPERTY_215,b_iblock_element_prop_s42.PROPERTY_216,b_iblock_element_prop_s42.PROPERTY_217,b_iblock_element_prop_s42.PROPERTY_218, b_iblock_element_prop_s42.PROPERTY_298, b_iblock_element_prop_s42.PROPERTY_299, b_iblock_element_prop_s42.PROPERTY_229, b_iblock_element_prop_s42.PROPERTY_228, b_iblock_element_prop_s42.PROPERTY_224, b_iblock_element_prop_s42.PROPERTY_292, b_iblock_element_prop_s42.PROPERTY_225, b_iblock_element_prop_s42.PROPERTY_226, b_iblock_element_prop_s42.PROPERTY_221, b_iblock_element_prop_s42.PROPERTY_222, b_iblock_element_prop_s42.PROPERTY_242, b_iblock_element_prop_s42.PROPERTY_243, b_iblock_element_prop_s42.PROPERTY_238, b_iblock_element_prop_s42.PROPERTY_295 from b_crm_deal LEFT JOIN b_uts_crm_deal ON b_crm_deal.ID = b_uts_crm_deal.VALUE_ID LEFT JOIN b_iblock_element ON b_uts_crm_deal.UF_CRM_1469534140 = b_iblock_element.ID LEFT JOIN b_iblock_element_prop_s42 ON b_uts_crm_deal.UF_CRM_1469534140 = b_iblock_element_prop_s42.IBLOCK_ELEMENT_ID where b_crm_deal.CATEGORY_ID = 0 and b_uts_crm_deal.UF_CRM_1469534140 <> '' and b_crm_deal.STAGE_ID = 'PROPOSAL' AND (TIMESTAMP(b_iblock_element_prop_s42.PROPERTY_260) < NOW() OR b_iblock_element_prop_s42.PROPERTY_260 is null) AND b_crm_deal.COMMENTS<>'' AND b_uts_crm_deal.UF_CRM_58958B5734602 > 0 AND (b_uts_crm_deal.UF_CRM_1472038962<>'a:0:{}' OR b_uts_crm_deal.UF_CRM_1476517423 <> 'a:0:{}') AND b_iblock_element_prop_s42.PROPERTY_210<>387 AND b_iblock_element_prop_s42.PROPERTY_210<>386 ORDER BY b_crm_deal.DATE_MODIFY DESC");
 $count = $rsData->SelectedRowsCount();
 $rows = 20;
 $pages = ($count % $rows)?intval($count/$rows)+1:$count/$rows;
 $n = 0;
+
+
 for ($i=1;$i<=$pages;$i++){
 ?>
 <div class="page<?=($i == 1)?" active":""?>" id="page<?=$i?>">
@@ -38,8 +44,8 @@ for ($i=1;$i<=$pages;$i++){
       $assigned_user = CUser::GetByID($aRes['ASSIGNED_BY_ID'])->Fetch();
       $n++;
 ?>
-    <tr id="R<?=$aRes['ID']?>" class="row">
-      <td><?=$n?></td>
+    <tr class="row">
+      <td id="R<?=$aRes['ID']?>"><?=$n?></td>
       <td><?=$aRes['ID']?></td>
       <td style="text-align: left; padding-left: 5px;" title="<?=$aRes['TITLE']?>"><a href="/crm/deal/show/<?=$aRes['ID']?>/" target="_blank"><?=$aRes['TITLE']?></a></td>
       <td style="text-align: right; padding-right: 5px;" title="<?=($aRes['UF_CRM_58958B5734602'])?number_format($aRes['UF_CRM_58958B5734602'],0,"."," "):"цена не указана"?>"><?=($aRes['UF_CRM_58958B5734602'])?number_format($aRes['UF_CRM_58958B5734602'],0,"."," "):"<span style='color:red;'>цена не указана</span>"?></td>
@@ -82,4 +88,9 @@ for ($i=1;$i<=$pages;$i++){
             object.classList.add('active');
           }
         }
+        $("#stockSearch").click(function(){
+          var position = $("#R"+$("#deal_id").val()).html();
+          if (position === undefined) $("#searchResult").html("Такая заявка не найдена!");
+          else $("#searchResult").html("Искомая заявка находится на позиции <b>"+position+"</b> в поиске");
+        });
       </script>
