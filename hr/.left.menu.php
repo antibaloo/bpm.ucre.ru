@@ -11,6 +11,12 @@ $aMenuLinks = array(
 		"/hr/recruiting.php", 
 		array(), 
 		array(),
+	),
+	array(
+		"Резюме", 
+		"/hr/resume.php", 
+		array(), 
+		array(),
 	)
 );
 ?>
