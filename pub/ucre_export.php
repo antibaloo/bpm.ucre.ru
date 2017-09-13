@@ -37,7 +37,6 @@ if(CModule::IncludeModule('iblock') && CModule::IncludeModule("crm")) {
   
   $dbRes = $DB->Query("select b_iblock_element.ID as ELEMENT_ID,
                               b_iblock_element_prop_s42.PROPERTY_210,
-                              b_iblock_element_prop_s42.PROPERTY_258,
                               b_iblock_element_prop_s42.PROPERTY_213, 
                               b_iblock_element_prop_s42.PROPERTY_214,
                               b_iblock_element_prop_s42.PROPERTY_215,
@@ -65,7 +64,7 @@ if(CModule::IncludeModule('iblock') && CModule::IncludeModule("crm")) {
                               b_iblock_element_prop_s42.PROPERTY_301,
                               b_iblock_element_prop_s42.PROPERTY_228,
                               b_iblock_element_prop_s42.PROPERTY_242,
-                              b_iblock_element_prop_s42.PROPERTY_295 from b_crm_deal LEFT JOIN b_uts_crm_deal ON b_crm_deal.ID = b_uts_crm_deal.VALUE_ID LEFT JOIN b_iblock_element ON b_uts_crm_deal.UF_CRM_1469534140 = b_iblock_element.ID LEFT JOIN b_iblock_element_prop_s42 ON b_uts_crm_deal.UF_CRM_1469534140 = b_iblock_element_prop_s42.IBLOCK_ELEMENT_ID where (b_crm_deal.CATEGORY_ID = 0 OR b_crm_deal.CATEGORY_ID = 4) and b_uts_crm_deal.UF_CRM_1469534140 <> '' and (b_crm_deal.STAGE_ID = 'PROPOSAL' OR b_crm_deal.STAGE_ID = 'C4:PROPOSAL') ORDER BY b_crm_deal.ID DESC");
+                              b_iblock_element_prop_s42.PROPERTY_295 from b_crm_deal LEFT JOIN b_uts_crm_deal ON b_crm_deal.ID = b_uts_crm_deal.VALUE_ID LEFT JOIN b_iblock_element ON b_uts_crm_deal.UF_CRM_1469534140 = b_iblock_element.ID LEFT JOIN b_iblock_element_prop_s42 ON b_uts_crm_deal.UF_CRM_1469534140 = b_iblock_element_prop_s42.IBLOCK_ELEMENT_ID where b_crm_deal.CATEGORY_ID = 0  and b_uts_crm_deal.UF_CRM_1469534140 <> '' and b_crm_deal.STAGE_ID = 'PROPOSAL' AND (b_uts_crm_deal.UF_CRM_1472038962<>'a:0:{}' OR b_uts_crm_deal.UF_CRM_1476517423 <> 'a:0:{}') ORDER BY b_crm_deal.ID DESC");
   while($aRes = $dbRes->Fetch()){
     $photos = array();
     $plans = array();
@@ -131,7 +130,7 @@ if(CModule::IncludeModule('iblock') && CModule::IncludeModule("crm")) {
     }
     $json_ro[] = array('ID'               => $aRes['ELEMENT_ID'], 
                        'RO_TYPE'			  	=> $aRes['PROPERTY_210'],
-                       'NEW_BUILDING'		  => ($aRes['PROPERTY_258'])? "Y":"N",
+                       'NEW_BUILDING'		  => "N",
                        'NAME'             => $name,
                        'REGION'           => $aRes['PROPERTY_213'],
                        'DISTRICT'         => ($aRes['PROPERTY_214']=='обл. подчинения')? "":$aRes['PROPERTY_214'],
