@@ -13,9 +13,9 @@ class CCrmViewHelper
 	private static $INVOICE_STATUSES = null;
 
 	private static $ENABLE_DEAL_STAGE_COLORS = array();
-	private static $ENABLE_LEAD_STATUS_COLORS = false;
-	private static $ENABLE_QUOTE_STATUS_COLORS = false;
-	private static $ENABLE_INVOICE_STATUS_COLORS = false;
+	private static $ENABLE_LEAD_STATUS_COLORS = null;
+	private static $ENABLE_QUOTE_STATUS_COLORS = null;
+	private static $ENABLE_INVOICE_STATUS_COLORS = null;
 
 	private static $USER_INFO_PROVIDER_MESSAGES_REGISTRED = false;
 
@@ -216,7 +216,7 @@ class CCrmViewHelper
 				$result .= '<a target="'.htmlspecialcharsbx($target).'" href="'.$url.'"';
 				if($onclick !== '')
 				{
-					$result .= ' onclick="'.CUtil::JSEscape($onclick).'"';
+					$result .= ' onclick="'.htmlspecialcharsbx($onclick).'"';
 				}
 
 				$result .= '>'.($titleHtml !== '' ? $titleHtml : $url).'</a>';
@@ -1810,7 +1810,7 @@ class CCrmViewHelper
 
 			if($processed > 0)
 			{
-				echo '<span class="bx-br-separator">&nbsp;</span>';
+				echo '<span class="bx-br-separator"><br/></span>';
 			}
 
 			echo '<span class="fields files">';
@@ -1819,7 +1819,7 @@ class CCrmViewHelper
 
 			if ($file->IsImage($fileInfo['ORIGINAL_NAME'], $fileInfo['CONTENT_TYPE']))
 			{
-				echo '<a class="fancybox" rel="image_gallery" href="https://bpm.ucre.ru'.$fileInfo['SRC'].'" title=""><img src="https://bpm.ucre.ru'.$fileInfo['SRC'].'" width = "auto" height ="50" alt="" /></a>';
+				echo $file->ShowImage($fileInfo, $fileMaxWidth, $fileMaxHeight, '', '', true, false, 0, 0, $fileUrlTemplate);
 			}
 			else
 			{
@@ -1884,6 +1884,43 @@ class CCrmViewHelper
 
 		return self::$DEAL_STAGES[$categoryID];
 	}
+	public static function AreDealStageColorsEnabled($categoryID = 0)
+	{
+		if(!is_int($categoryID))
+		{
+			$categoryID = (int)$categoryID;
+		}
+		$categoryID = max($categoryID, 0);
+
+		if(!isset(self::$ENABLE_DEAL_STAGE_COLORS[$categoryID]))
+		{
+			self::$ENABLE_DEAL_STAGE_COLORS[$categoryID] = Bitrix\Crm\Color\DealStageColorScheme::getByCategory($categoryID)->isPersistent();
+		}
+		return self::$ENABLE_DEAL_STAGE_COLORS[$categoryID];
+	}
+	public static function PrepareDealStageExtraParams(array &$infos, $categoryID = -1)
+	{
+		foreach(array_keys($infos) as $statusID)
+		{
+			$semanticID = CCrmDeal::GetSemanticID($statusID, $categoryID);
+			$infos[$statusID]['SEMANTICS'] = $semanticID;
+			if(!isset($infos[$statusID]['COLOR']))
+			{
+				if($semanticID === Bitrix\Crm\PhaseSemantics::SUCCESS)
+				{
+					$infos[$statusID]['COLOR'] = \CCrmViewHelper::SUCCESS_COLOR;
+				}
+				elseif($semanticID === Bitrix\Crm\PhaseSemantics::FAILURE)
+				{
+					$infos[$statusID]['COLOR'] = \CCrmViewHelper::FAILURE_COLOR;
+				}
+				else
+				{
+					$infos[$statusID]['COLOR'] = \CCrmViewHelper::PROCESS_COLOR;
+				}
+			}
+		}
+	}
 	public static function RenderDealStageSettings()
 	{
 		$result = array();
@@ -1941,6 +1978,37 @@ class CCrmViewHelper
 	public static function GetLeadStatusInfos()
 	{
 		return self::PrepareLeadStatuses();
+	}
+	public static function AreLeadStatusColorsEnabled()
+	{
+		if(self::$ENABLE_LEAD_STATUS_COLORS === null)
+		{
+			self::$ENABLE_LEAD_STATUS_COLORS = Bitrix\Crm\Color\LeadStatusColorScheme::getCurrent()->isPersistent();
+		}
+		return self::$ENABLE_LEAD_STATUS_COLORS;
+	}
+	public static function PrepareLeadStatusInfoExtraParams(array &$infos)
+	{
+		foreach(array_keys($infos) as $statusID)
+		{
+			$semanticID = CCrmLead::GetSemanticID($statusID);
+			$infos[$statusID]['SEMANTICS'] = $semanticID;
+			if(!isset($infos[$statusID]['COLOR']))
+			{
+				if($semanticID === Bitrix\Crm\PhaseSemantics::SUCCESS)
+				{
+					$infos[$statusID]['COLOR'] = \CCrmViewHelper::SUCCESS_COLOR;
+				}
+				elseif($semanticID === Bitrix\Crm\PhaseSemantics::FAILURE)
+				{
+					$infos[$statusID]['COLOR'] = \CCrmViewHelper::FAILURE_COLOR;
+				}
+				else
+				{
+					$infos[$statusID]['COLOR'] = \CCrmViewHelper::PROCESS_COLOR;
+				}
+			}
+		}
 	}
 	protected static function PrepareLeadStatuses()
 	{
@@ -2215,7 +2283,7 @@ class CCrmViewHelper
 		$enableCustomColors = false;
 		if($entityTypeName === $leadTypeName)
 		{
-			$enableCustomColors = self::$ENABLE_LEAD_STATUS_COLORS;
+			$enableCustomColors = self::AreLeadStatusColorsEnabled();
 		}
 		elseif($entityTypeName === $dealTypeName)
 		{
@@ -2764,7 +2832,6 @@ class CCrmViewHelper
 
 		return $currencyText;
 	}
-
 	public static function RenderSipContext()
 	{
 		echo '<script type="text/javascript">',
