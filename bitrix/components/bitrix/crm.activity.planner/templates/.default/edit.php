@@ -35,6 +35,7 @@ switch ($activity['STORAGE_TYPE_ID'])
 
 	case Integration\StorageType::Disk:
 		CJSCore::Init(array('uploader', 'file_dialog'));
+		CCrmComponentHelper::RegisterScriptLink('/bitrix/js/crm/common.js');
 		CCrmComponentHelper::RegisterScriptLink('/bitrix/js/crm/disk_uploader.js');
 		$APPLICATION->SetAdditionalCSS('/bitrix/js/disk/css/legacy_uf_common.css');
 		$storageValues = $activity['DISK_FILES'];
@@ -64,79 +65,6 @@ $communicationsData = htmlspecialcharsbx(\Bitrix\Main\Web\Json::encode($arResult
 		<input type="hidden" name="ownerId" value="<?=(int)$activity['OWNER_ID']?>" data-role="field-owner-id">
 		<input type="hidden" value="<?=$destinationEntities?>" data-role="destination-entities">
 		<input type="hidden" value="<?=$communicationsData?>" data-role="communications-data">
-		<?/* TODO: add realization (calendar day events sidebar)
-		<div class="crm-activity-popup-timeline-sidebar-container">
-			<span class="crm-activity-popup-timeline-sidebar-date-container">
-				<span class="crm-activity-popup-timeline-sidebar-date">monday, Apr 18, 2016</span>
-			</span><!--crm-activity-popup-timeline-sidebar-date-container-->
-			<span class="crm-activity-popup-timeline-sidebar-date-arrow-container">
-				<span class="crm-activity-popup-timeline-sidebar-arrow-previous"></span>
-				<span class="crm-activity-popup-timeline-sidebar-arrow-next"></span>
-			</span><!--crm-activity-popup-timeline-sidebar-date-arrow-container-->
-			<div class="crm-activity-popup-timeline-events-container">
-				<div class="crm-activity-popup-timeline-events">
-					<span class="crm-activity-popup-timeline-events-time">08:00</span>
-					<span class="crm-activity-popup-timeline-events-line">
-						<span class="crm-activity-popup-timeline-events-middle-line"></span>
-					</span>
-				</div><!--crm-activity-popup-timeline-events-->
-				<div class="crm-activity-popup-timeline-events">
-					<span class="crm-activity-popup-timeline-events-time">10:00</span>
-					<span class="crm-activity-popup-timeline-events-line">
-						<span class="crm-activity-popup-timeline-events-middle-line"></span>
-					</span>
-				</div><!--crm-activity-popup-timeline-events-->
-				<div class="crm-activity-popup-timeline-events">
-					<span class="crm-activity-popup-timeline-events-time">12:00</span>
-					<span class="crm-activity-popup-timeline-events-line">
-						<span class="crm-activity-popup-timeline-events-middle-line"></span>
-					</span>
-				</div><!--crm-activity-popup-timeline-events-->
-				<div class="crm-activity-popup-timeline-events">
-					<span class="crm-activity-popup-timeline-events-time">14:00</span>
-					<span class="crm-activity-popup-timeline-events-line">
-						<div class="crm-popup-event-box">
-							<span class="crm-event-time">14:09</span>
-							<span class="crm-event-line"></span>
-							<div class="crm-event-line-info">Event, 12:35-15:50 Lorem ipsum dolor sit amet, consectetur adipisicing elit. At, atque, dolor doloremque doloribus ducimus excepturi, expedita itaque laudantium libero nam necessitatibus neque nesciunt optio perferendis quisquam recusandae reiciendis rem vel?</div>
-						</div><!--crm-popup-event-box-->
-						<span class="crm-activity-popup-timeline-events-middle-line"></span>
-					</span>
-				</div><!--crm-activity-popup-timeline-events-->
-				<div class="crm-activity-popup-timeline-events">
-					<span class="crm-activity-popup-timeline-events-time">16:00</span>
-					<span class="crm-activity-popup-timeline-events-line">
-						<span class="crm-activity-popup-timeline-events-middle-line"></span>
-					</span>
-				</div><!--crm-activity-popup-timeline-events-->
-				<div class="crm-activity-popup-timeline-events">
-					<span class="crm-activity-popup-timeline-events-time">18:00</span>
-					<span class="crm-activity-popup-timeline-events-line">
-						<span class="crm-activity-popup-timeline-events-middle-line"></span>
-					</span>
-				</div><!--crm-activity-popup-timeline-events-->
-				<div class="crm-activity-popup-timeline-events">
-					<span class="crm-activity-popup-timeline-events-time">20:00</span>
-					<span class="crm-activity-popup-timeline-events-line">
-						<span class="crm-activity-popup-timeline-events-middle-line"></span>
-					</span>
-				</div><!--crm-activity-popup-timeline-events-->
-				<div class="crm-activity-popup-timeline-events">
-					<span class="crm-activity-popup-timeline-events-time">22:00</span>
-					<span class="crm-activity-popup-timeline-events-line">
-						<span class="crm-activity-popup-timeline-events-middle-line"></span>
-					</span>
-				</div><!--crm-activity-popup-timeline-events-->
-				<div class="crm-activity-popup-timeline-events">
-					<span class="crm-activity-popup-timeline-events-time">00:00</span>
-					<span class="crm-activity-popup-timeline-events-line">
-						<span class="crm-activity-popup-timeline-events-middle-line"></span>
-					</span>
-				</div><!--crm-activity-popup-timeline-events-->
-			</div><!--crm-activity-popup-timeline-events-container-->
-		</div><!--crm-activity-popup-timeline-sidebar-container-->
-		*/?>
-
 		<div class="crm-activity-popup-container" data-role="main-container">
 			<div class="crm-activity-popup-recall-container">
 				<div class="crm-activity-popup-recall-select-container" data-role="day-switcher">
@@ -314,50 +242,6 @@ $communicationsData = htmlspecialcharsbx(\Bitrix\Main\Web\Json::encode($arResult
 										echo $field['HTML'];
 							}
 						endforeach; ?>
-
-						<?/* TODO: add repeat activity support
-						<div class="crm-activity-popup-info-person-detail-repeat-checkbox-container">
-							<label class="crm-activity-popup-info-person-detail-repeat-checkbox-name">
-								<input type="checkbox" class="crm-activity-popup-info-person-detail-repeat-checkbox" data-role="repeat-mode-switcher">
-								<?=GetMessage('CRM_ACTIVITY_PLANNER_REPEAT')?>
-							</label>
-						</div><!--crm-activity-popup-info-person-detail-repeat-checkbox-container-->
-						<div class="crm-activity-popup-info-person-detail-repeat-container" data-role="repeat-container">
-							<div class="crm-activity-popup-info-person-detail-repeat-calendar">
-								<span class="crm-activity-popup-info-person-detail-repeat-date-week-container">
-									<select name="" class="crm-activity-popup-info-person-detail-repeat-date-week">
-										<option value="D"><?=GetMessage('CRM_ACTIVITY_PLANNER_EVERY_DAY')?></option>
-										<option value="W"><?=GetMessage('CRM_ACTIVITY_PLANNER_EVERY_WEEK')?></option>
-										<option value="M"><?=GetMessage('CRM_ACTIVITY_PLANNER_EVERY_MONTH')?></option>
-									</select>
-								</span>
-								<span class="crm-activity-popup-info-person-detail-repeat-date-week-number-container">
-									<label class="crm-activity-popup-info-person-detail-repeat-name">every</label>
-									<select name="" class="crm-activity-popup-info-person-detail-repeat-date-week-number">
-										<option value="1">1</option>
-										<option value="2">2</option>
-										<option value="3">3</option>
-										<option value="4">4</option>
-									</select>
-									<label class="crm-activity-popup-info-person-detail-repeat-name">week</label>
-								</span>
-								<label class="crm-activity-popup-info-person-detail-repeat-name">until</label>
-								<span class="crm-activity-popup-info-person-detail-repeat-date-calendar-container">
-									<input type="text" placeholder="<?=GetMessage('CRM_ACTIVITY_PLANNER_NOT_LIMIT_LABEL')?>" class="crm-activity-popup-info-person-detail-repeat-date-calendar" data-role="field-repeat-until" readonly>
-								</span>
-							</div>
-							<div class="crm-activity-popup-info-person-detail-repeat-week-container">
-								<?foreach (array('MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU') as $day):?>
-								<span class="crm-activity-popup-info-person-detail-repeat-week">
-									<label class="crm-activity-popup-info-person-detail-repeat-week-name">
-										<input type="checkbox" class="crm-activity-popup-info-person-detail-repeat-week-checkbox">
-										<?=GetMessage('CRM_ACTIVITY_PLANNER_DAY_'.$day)?>
-									</label>
-								</span>
-								<?endforeach;?>
-							</div><!--crm-activity-popup-info-person-detail-repeat-week-container-->
-						</div><!--crm-activity-popup-info-person-detail-repeat-container-->
-						*/?>
 					</div><!--crm-activity-popup-info-person-detail-container-->
 				</div><!--crm-activity-popup-info-person-container-->
 			</div><!--crm-activity-popup-info-->
