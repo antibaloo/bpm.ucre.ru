@@ -63,10 +63,8 @@ $arParams['PATH_TO_PRODUCT_EDIT'] = CrmCheckPath('PATH_TO_PRODUCT_EDIT', $arPara
 $arParams['PATH_TO_PRODUCT_SHOW'] = CrmCheckPath('PATH_TO_PRODUCT_SHOW', $arParams['PATH_TO_PRODUCT_SHOW'], $APPLICATION->GetCurPage().'?product_id=#product_id#&show');
 $arParams['NAME_TEMPLATE'] = empty($arParams['NAME_TEMPLATE']) ? CSite::GetNameFormat(false) : str_replace(array("#NOBR#","#/NOBR#"), array("",""), $arParams["NAME_TEMPLATE"]);
 
-use Bitrix\Crm\Category\DealCategory;
 global $USER_FIELD_MANAGER;
 $CCrmUserType = new CCrmUserType($USER_FIELD_MANAGER, CCrmDeal::$sUFEntityID);
-$arResult['PERMISSION_ENTITY_TYPE'] = DealCategory::convertToPermissionEntityType($arResult['CATEGORY_ID']);
 
 $obFields = CCrmDeal::GetListEx(
 	array(),
@@ -271,6 +269,25 @@ $arFields['ORIGIN_ID'] = isset($arFields['ORIGIN_ID']) ? intval($arFields['ORIGI
 $arFields['ORIGINATOR_ID'] = isset($arFields['ORIGINATOR_ID']) ? intval($arFields['ORIGINATOR_ID']) : 0;
 
 $arResult['ELEMENT'] = $arFields;
+
+if ($arParams['IS_RECURRING'] === "Y")
+{
+	if ($arFields['IS_RECURRING'] !== "Y")
+	{
+		LocalRedirect(CComponentEngine::makePathFromTemplate($arParams['PATH_TO_DEAL_RECUR'], array()));
+	}
+
+	$recurData = Bitrix\Crm\DealRecurTable::getList(
+		array(
+			"filter" => array("=DEAL_ID" => $arParams['ELEMENT_ID'])
+		)
+	);
+	$arResult['RECURRING_DATA'] = $recurData->fetch();
+}
+elseif ($arFields['IS_RECURRING'] === "Y")
+{
+	LocalRedirect(CComponentEngine::makePathFromTemplate($arParams['PATH_TO_DEAL_LIST'], array()));
+}
 unset($arFields);
 
 if (empty($arResult['ELEMENT']['ID']))
@@ -450,19 +467,56 @@ $arResult['FIELDS']['tab_details'][] = array(
 	'isTactile' => true
 );
 
-if($enableInstantEdit)
+if ($arParams['IS_RECURRING'] !== 'Y')
 {
-	$arResult['EDITABLE_FIELDS'][] = 'CLOSEDATE';
-}
+	if($enableInstantEdit)
+	{
+		$arResult['EDITABLE_FIELDS'][] = 'CLOSEDATE';
+	}
 
-$arResult['FIELDS']['tab_details'][] = array(
-	'id' => 'CLOSEDATE',
-	'name' => GetMessage('CRM_FIELD_CLOSEDATE'),
-	'params' => array('size' => 20),
-	'type' => 'label',
-	'value' => !empty($arResult['ELEMENT']['CLOSEDATE']) ? CCrmComponentHelper::TrimDateTimeString(ConvertTimeStamp(MakeTimeStamp($arResult['ELEMENT']['CLOSEDATE']), 'SHORT', SITE_ID)) : '',
-	'isTactile' => true
-);
+	$arResult['FIELDS']['tab_details'][] = array(
+		'id' => 'CLOSEDATE',
+		'name' => GetMessage('CRM_FIELD_CLOSEDATE'),
+		'params' => array('size' => 20),
+		'type' => 'label',
+		'value' => !empty($arResult['ELEMENT']['CLOSEDATE']) ? CCrmComponentHelper::TrimDateTimeString(ConvertTimeStamp(MakeTimeStamp($arResult['ELEMENT']['CLOSEDATE']), 'SHORT', SITE_ID)) : '',
+		'isTactile' => true
+	);
+}
+elseif (!empty($arResult['RECURRING_DATA']))
+{
+	$arResult['FIELDS']['tab_1'][] = array(
+		'id' => 'RECURRING_ACTIVE',
+		'name' => GetMessage('CRM_FIELD_RECURRING_ACTIVE'),
+		'type' => 'label',
+		'value' => $arResult['RECURRING_DATA']['ACTIVE'] == 'Y' ? GetMessage('MAIN_YES') : GetMessage('MAIN_NO'),
+		'isTactile' => true
+	);
+
+	$arResult['FIELDS']['tab_1'][] = array(
+		'id' => 'RECURRING_NEXT_EXECUTION',
+		'name' => GetMessage('CRM_FIELD_RECURRING_NEXT_EXECUTION'),
+		'type' => 'label',
+		'value' => ($arResult['RECURRING_DATA']['NEXT_EXECUTION']) instanceof \Bitrix\Main\Type\Date? $arResult['RECURRING_DATA']['NEXT_EXECUTION']->toString()  : '',
+		'isTactile' => true
+	);
+
+	$arResult['FIELDS']['tab_1'][] = array(
+		'id' => 'RECURRING_LAST_EXECUTION',
+		'name' => GetMessage('CRM_FIELD_RECURRING_LAST_EXECUTION'),
+		'type' => 'label',
+		'value' => ($arResult['RECURRING_DATA']['LAST_EXECUTION']) instanceof \Bitrix\Main\Type\Date? $arResult['RECURRING_DATA']['LAST_EXECUTION']->toString()  : '',
+		'isTactile' => true
+	);
+
+	$arResult['FIELDS']['tab_1'][] = array(
+		'id' => 'RECURRING_COUNTER_REPEAT',
+		'name' => GetMessage('CRM_FIELD_RECURRING_COUNTER_REPEAT'),
+		'type' => 'label',
+		'value' => (int)($arResult['RECURRING_DATA']['COUNTER_REPEAT']) > 0 ? (int)($arResult['RECURRING_DATA']['COUNTER_REPEAT']) : 0,
+		'isTactile' => true
+	);
+}
 
 // TYPE -->
 if($enableInstantEdit)
@@ -724,6 +778,44 @@ $arResult['USER_FIELD_COUNT'] = $CCrmUserType->AddFields(
 	)
 );
 
+ob_start();
+$APPLICATION->IncludeComponent('bitrix:crm.interface.form.recurring',
+	'show',
+	array(
+		'DATA' => $arResult['RECURRING_DATA']['PARAMS'],
+		'IS_RECURRING' => $arParams['IS_RECURRING'],
+		'ENTITY_TYPE' => Bitrix\Crm\Recurring\Manager::DEAL,
+		'PATH_TO_DEAL_EDIT' => CComponentEngine::makePathFromTemplate($arParams['PATH_TO_DEAL_EDIT']."#section_recurring", array('deal_id' => $arParams['ELEMENT_ID']))
+	),
+	false,
+	array('HIDE_ICONS' => 'Y', 'ACTIVE_COMPONENT'=>'Y')
+);
+$recurringHtml = ob_get_contents();
+ob_end_clean();
+
+$arResult['FIELDS']['tab_1'][] = array(
+	'id' => 'section_recurring',
+	'name' => GetMessage('CRM_SECTION_RECURRING_ROWS'),
+	'type' => 'section',
+	'isTactile' => true,
+	'isHidden' => $arParams['IS_RECURRING'] !== 'Y'
+);
+$arResult['FIELDS']['tab_1'][] = array(
+	'id' => 'section_recurring_rows',
+	'name' => GetMessage('CRM_SECTION_RECURRING_ROWS'),
+	'params' =>
+		array (
+			'class' => 'bx-crm-dialog-input bx-crm-dialog-input-date',
+			'sale_order_marker' => 'Y',
+		),
+	'type' => 'recurring_params',
+	'colspan' => true,
+	'value' => $recurringHtml,
+	'isTactile' => true,
+	'required' => true,
+	'isHidden' => $arParams['IS_RECURRING'] !== 'Y'
+);
+
 // <-- ADDITIONAL SECTION
 
 $arResult['FIELDS']['tab_details'][] = array(
@@ -876,88 +968,96 @@ $arResult['FIELDS'][$arResult['PRODUCT_ROW_TAB_ID']][] = array(
 );
 // <-- PRODUCT ROW SECTION
 
-// LIVE FEED SECTION -->
-$arResult['FIELDS']['tab_live_feed'][] = array(
-	'id' => 'section_live_feed',
-	'name' => GetMessage('CRM_SECTION_LIVE_FEED'),
-	'type' => 'section'
-);
-
-$liveFeedHtml = '';
-if($arParams['ELEMENT_ID'] > 0)
+if ($arParams['IS_RECURRING'] !== 'Y')
 {
-	if(CCrmLiveFeedComponent::needToProcessRequest($_SERVER['REQUEST_METHOD'], $_REQUEST))
-	{
-		ob_start();
-		$APPLICATION->IncludeComponent('bitrix:crm.entity.livefeed',
-			'',
-			array(
-				'DATE_TIME_FORMAT' => (LANGUAGE_ID=='en'?"j F Y g:i a":(LANGUAGE_ID=='de' ? "j. F Y, G:i" : "j F Y G:i")),
-				'CAN_EDIT' => $arResult['CAN_EDIT'],
-				'ENTITY_TYPE_ID' => CCrmOwnerType::Deal,
-				'ENTITY_ID' => $arParams['ELEMENT_ID'],
-				'PERMISSION_ENTITY_TYPE' => $arResult['PERMISSION_ENTITY_TYPE'],
-				'FORM_ID' => $arResult['FORM_ID'],
-				'PATH_TO_USER_PROFILE' => $arParams['PATH_TO_USER_PROFILE']
-			),
-			null,
-			array('HIDE_ICONS' => 'Y')
-		);
-		$liveFeedHtml = ob_get_contents();
-		ob_end_clean();
-		$arResult['ENABLE_LIVE_FEED_LAZY_LOAD'] = false;
-	}
-	else
-	{
-		$liveFeedContainerID = $arResult['LIVE_FEED_CONTAINER_ID'] = $arResult['FORM_ID'].'_live_feed_wrapper';
-		$liveFeedHtml = '<div id="'.htmlspecialcharsbx($liveFeedContainerID).'"></div>';
-		$arResult['ENABLE_LIVE_FEED_LAZY_LOAD'] = true;
-	}
-}
+	// LIVE FEED SECTION -->
 
-$arResult['FIELDS']['tab_live_feed'][] = array(
-	'id' => 'LIVE_FEED',
-	'name' => GetMessage('CRM_FIELD_LIVE_FEED'),
-	'colspan' => true,
-	'type' => 'custom',
-	'value' => $liveFeedHtml
-);
+	$arResult['FIELDS']['tab_live_feed'][] = array(
+		'id' => 'section_live_feed',
+		'name' => GetMessage('CRM_SECTION_LIVE_FEED'),
+		'type' => 'section'
+	);
+
+	$liveFeedHtml = '';
+	if($arParams['ELEMENT_ID'] > 0)
+	{
+		if(CCrmLiveFeedComponent::needToProcessRequest($_SERVER['REQUEST_METHOD'], $_REQUEST))
+		{
+			ob_start();
+			$APPLICATION->IncludeComponent('bitrix:crm.entity.livefeed',
+				'',
+				array(
+					'DATE_TIME_FORMAT' => (LANGUAGE_ID=='en'?"j F Y g:i a":(LANGUAGE_ID=='de' ? "j. F Y, G:i" : "j F Y G:i")),
+					'CAN_EDIT' => $arResult['CAN_EDIT'],
+					'ENTITY_TYPE_ID' => CCrmOwnerType::Deal,
+					'ENTITY_ID' => $arParams['ELEMENT_ID'],
+					'PERMISSION_ENTITY_TYPE' => $arResult['PERMISSION_ENTITY_TYPE'],
+					'FORM_ID' => $arResult['FORM_ID'],
+					'PATH_TO_USER_PROFILE' => $arParams['PATH_TO_USER_PROFILE']
+				),
+				null,
+				array('HIDE_ICONS' => 'Y')
+			);
+			$liveFeedHtml = ob_get_contents();
+			ob_end_clean();
+			$arResult['ENABLE_LIVE_FEED_LAZY_LOAD'] = false;
+		}
+		else
+		{
+			$liveFeedContainerID = $arResult['LIVE_FEED_CONTAINER_ID'] = $arResult['FORM_ID'].'_live_feed_wrapper';
+			$liveFeedHtml = '<div id="'.htmlspecialcharsbx($liveFeedContainerID).'"></div>';
+			$arResult['ENABLE_LIVE_FEED_LAZY_LOAD'] = true;
+		}
+	}
+
+	$arResult['FIELDS']['tab_live_feed'][] = array(
+		'id' => 'LIVE_FEED',
+		'name' => GetMessage('CRM_FIELD_LIVE_FEED'),
+		'colspan' => true,
+		'type' => 'custom',
+		'value' => $liveFeedHtml
+	);
 // <-- LIVE FEED SECTION
-
-$arResult['FIELDS']['tab_activity'][] = array(
-	'id' => 'section_activity_grid',
-	'name' => GetMessage('CRM_SECTION_ACTIVITY_MAIN'),
-	'type' => 'section'
-);
-
-$activityBindings = array(array('TYPE_NAME' => CCrmOwnerType::DealName, 'ID' => $arParams['ELEMENT_ID']));
-if(isset($arResult['ELEMENT']['LEAD_ID']) && $arResult['ELEMENT']['LEAD_ID'] > 0)
-{
-	$activityBindings[] = array('TYPE_NAME' => CCrmOwnerType::LeadName, 'ID' => $arResult['ELEMENT']['LEAD_ID']);
 }
 
-$arResult['FIELDS']['tab_activity'][] = array(
-	'id' => 'DEAL_ACTIVITY_GRID',
-	'name' => GetMessage('CRM_FIELD_DEAL_ACTIVITY'),
-	'colspan' => true,
-	'type' => 'crm_activity_list',
-	'componentData' => array(
-		'template' => 'grid',
-		'enableLazyLoad' => true,
-		'params' => array(
-			'BINDINGS' => $activityBindings,
-			'PREFIX' => 'DEAL_ACTIONS_GRID',
-			'PERMISSION_TYPE' => 'WRITE',
-			'FORM_TYPE' => 'show',
-			'FORM_ID' => $arResult['FORM_ID'],
-			'TAB_ID' => 'tab_activity',
-			'USE_QUICK_FILTER' => 'Y',
-			'PRESERVE_HISTORY' => true
+
+if ($arParams['IS_RECURRING'] !== 'Y')
+{
+	$arResult['FIELDS']['tab_activity'][] = array(
+		'id' => 'section_activity_grid',
+		'name' => GetMessage('CRM_SECTION_ACTIVITY_MAIN'),
+		'type' => 'section'
+	);
+
+	$activityBindings = array(array('TYPE_NAME' => CCrmOwnerType::DealName, 'ID' => $arParams['ELEMENT_ID']));
+	if(isset($arResult['ELEMENT']['LEAD_ID']) && $arResult['ELEMENT']['LEAD_ID'] > 0)
+	{
+		$activityBindings[] = array('TYPE_NAME' => CCrmOwnerType::LeadName, 'ID' => $arResult['ELEMENT']['LEAD_ID']);
+	}
+
+	$arResult['FIELDS']['tab_activity'][] = array(
+		'id' => 'DEAL_ACTIVITY_GRID',
+		'name' => GetMessage('CRM_FIELD_DEAL_ACTIVITY'),
+		'colspan' => true,
+		'type' => 'crm_activity_list',
+		'componentData' => array(
+			'template' => 'grid',
+			'enableLazyLoad' => true,
+			'params' => array(
+				'BINDINGS' => $activityBindings,
+				'PREFIX' => 'DEAL_ACTIONS_GRID',
+				'PERMISSION_TYPE' => 'WRITE',
+				'FORM_TYPE' => 'show',
+				'FORM_ID' => $arResult['FORM_ID'],
+				'TAB_ID' => 'tab_activity',
+				'USE_QUICK_FILTER' => 'Y',
+				'PRESERVE_HISTORY' => true
+			)
 		)
-	)
-);
-$formTabKey = $arResult['FORM_ID'].'_active_tab';
-$currentFormTabID = $_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET[$formTabKey]) ? $_GET[$formTabKey] : '';
+	);
+	$formTabKey = $arResult['FORM_ID'].'_active_tab';
+	$currentFormTabID = $_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET[$formTabKey]) ? $_GET[$formTabKey] : '';
+}
 
 if (!empty($arResult['ELEMENT']['CONTACT_IDS']))
 {
@@ -1013,7 +1113,7 @@ if ($companyID > 0 && CCrmCompany::CheckReadPermission($companyID, $currentUserP
 
 
 $quoteID = isset($arResult['ELEMENT']['QUOTE_ID']) ? (int)$arResult['ELEMENT']['QUOTE_ID'] : 0;
-if (CCrmQuote::CheckReadPermission($quoteID, $userPermissions))
+if (CCrmQuote::CheckReadPermission($quoteID, $userPermissions) && $arParams['IS_RECURRING'] !== 'Y')
 {
 	if ($quoteID > 0)
 	{
@@ -1073,7 +1173,7 @@ if (CCrmQuote::CheckReadPermission($quoteID, $userPermissions))
 	}
 }
 
-if (CCrmInvoice::CheckReadPermission(0, $userPermissions))
+if (CCrmInvoice::CheckReadPermission(0, $userPermissions) && $arParams['IS_RECURRING'] !== 'Y')
 {
 	$arResult['FIELDS']['tab_invoice'][] = array(
 		'id' => 'DEAL_INVOICE',
@@ -1132,7 +1232,7 @@ if(CModule::IncludeModule('lists'))
 	}
 }
 
-if (IsModuleInstalled('bizproc') && CModule::IncludeModule('bizproc') && CBPRuntime::isFeatureEnabled())
+if (IsModuleInstalled('bizproc') && CModule::IncludeModule('bizproc') && CBPRuntime::isFeatureEnabled() && $arParams['IS_RECURRING'] !== 'Y')
 {
 	//HACK: main.interface.grid may override current tab
 	if($_SERVER['REQUEST_METHOD'] === 'GET' && $currentFormTabID !== '')
@@ -1306,7 +1406,7 @@ if (IsModuleInstalled('bizproc') && CModule::IncludeModule('bizproc') && CBPRunt
 	}
 }
 
-if (\Bitrix\Crm\Automation\Factory::isAutomationAvailable(CCrmOwnerType::Deal))
+if (\Bitrix\Crm\Automation\Factory::isAutomationAvailable(CCrmOwnerType::Deal) && $arParams['IS_RECURRING'] !== 'Y')
 {
 	$arResult['FIELDS']['tab_automation'][] = array(
 		'id'            => 'DEAL_AUTOMATION',
