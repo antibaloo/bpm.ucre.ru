@@ -49,6 +49,9 @@ if (!empty($_REQUEST['copy']))
 	$isEditMode = false;
 }
 
+if ($arParams['IS_RECURRING'] !== 'Y' && $_REQUEST['RECUR_PARAM']['RECURRING_SWITCHER'] == 'Y')
+	$isEditMode = false;
+
 //region Category
 $arResult['CATEGORY_ID'] = -1;
 if($isEditMode || $isCopyMode)
@@ -263,6 +266,45 @@ elseif ($isEditMode || $isCopyMode)
 			$arFields['~OPPORTUNITY_ACCOUNT'] = $arFields['OPPORTUNITY_ACCOUNT'] = floatval($arFields['~OPPORTUNITY_ACCOUNT']);
 		}
 	}
+
+	if ($arParams['IS_RECURRING'] === "Y")
+	{
+		if ($arFields['IS_RECURRING'] !== "Y")
+		{
+			LocalRedirect(CComponentEngine::makePathFromTemplate($arParams['PATH_TO_DEAL_RECUR'], array()));
+		}
+		elseif ($_REQUEST['expose'] === 'Y')
+		{
+			$exposeSelectionLimit = 1;
+			$result = Bitrix\Crm\Recurring\Manager::expose(
+				array(
+					"=DEAL_ID" => $arParams['ELEMENT_ID']
+				),
+				$exposeSelectionLimit,
+				Bitrix\Crm\Recurring\Manager::DEAL
+			);
+			if ($result->isSuccess())
+			{
+				$exposeData = $result->getData();
+				LocalRedirect(CComponentEngine::makePathFromTemplate($arParams['PATH_TO_DEAL_SHOW'], array('deal_id' => $exposeData['ID'][0])));
+			}
+			else
+			{
+				LocalRedirect(CComponentEngine::makePathFromTemplate($arParams['PATH_TO_DEAL_RECUR'], array()));
+			}
+		}
+
+		$recurData = Bitrix\Crm\DealRecurTable::getList(
+			array(
+				"filter" => array("=DEAL_ID" => $arParams['ELEMENT_ID'])
+			)
+		);
+		$arFields['RECURRING_DATA'] = $recurData->fetch();
+	}
+	elseif ($arFields['IS_RECURRING'] === "Y")
+	{
+		LocalRedirect(CComponentEngine::makePathFromTemplate($arParams['PATH_TO_DEAL_LIST'], array()));
+	}
 }
 else
 {
@@ -273,7 +315,7 @@ else
 	$beginDate -= $time['tm_sec'];
 
 	$arFields['BEGINDATE'] = ConvertTimeStamp($beginDate, 'FULL', SITE_ID);
-	$arFields['CLOSEDATE'] = ConvertTimeStamp($beginDate + 182 * 86400, 'FULL', SITE_ID);
+	$arFields['CLOSEDATE'] = ConvertTimeStamp($beginDate + 7 * 86400, 'FULL', SITE_ID);
 
 	$extVals =  isset($arParams['~VALUES']) && is_array($arParams['~VALUES']) ? $arParams['~VALUES'] : array();
 	if (count($extVals) > 0)
@@ -703,6 +745,69 @@ else
 				if ($isEditMode)
 				{
 					$bSuccess = $CCrmDeal->Update($arResult['ELEMENT']['ID'], $arFields, true, true, array('REGISTER_SONET_EVENT' => true));
+
+					if ($_POST['RECUR_PARAM']['RECURRING_SWITCHER'] === 'Y')
+					{
+						if (strlen($_POST['RECUR_PARAM']['START_DATE']) > 0)
+							$recurringList['START_DATE'] = new \Bitrix\Main\Type\Date($_POST['RECUR_PARAM']['START_DATE']);
+
+						if (strlen($_POST['RECUR_PARAM']['DEAL_DATEPICKER_BEFORE']) > 0)
+						{
+							$recurringList['START_DATE'] = new \Bitrix\Main\Type\Date($_POST['RECUR_PARAM']['DEAL_DATEPICKER_BEFORE']);
+						}
+
+						if (strlen($_POST['RECUR_PARAM']['END_DATE']) > 0)
+						{
+							$recurringList['LIMIT_DATE'] = new \Bitrix\Main\Type\Date($_POST['RECUR_PARAM']['END_DATE']);
+						}
+						else
+						{
+							$recurringList['LIMIT_DATE'] = null;
+						}
+
+						if ((int)($_POST['RECUR_PARAM']['LIMIT_REPEAT']) > 0)
+						{
+							$recurringList['LIMIT_REPEAT'] = (int)($_POST['RECUR_PARAM']['LIMIT_REPEAT']);
+						}
+						else
+						{
+							$recurringList['LIMIT_REPEAT'] = null;
+						}
+
+						if (
+							$_POST['RECUR_PARAM']['REPEAT_TILL'] === \Bitrix\Crm\Recurring\Entity\Deal::LIMITED_BY_TIMES
+							&& (int)$recurringList['LIMIT_REPEAT'] > 0
+						)
+						{
+							$recurringList['IS_LIMIT'] = \Bitrix\Crm\Recurring\Entity\Deal::LIMITED_BY_TIMES;
+						}
+						elseif($_POST['RECUR_PARAM']['REPEAT_TILL'] === \Bitrix\Crm\Recurring\Entity\Deal::LIMITED_BY_DATE)
+						{
+							$recurringList['IS_LIMIT'] = \Bitrix\Crm\Recurring\Entity\Deal::LIMITED_BY_DATE;
+						}
+						else
+						{
+							$recurringList['IS_LIMIT'] = \Bitrix\Crm\Recurring\Entity\Deal::NO_LIMITED;
+						}
+
+						$recurringList['PARAMS'] = $_POST['RECUR_PARAM'];
+						$recur = \Bitrix\Crm\DealRecurTable::getList(
+							array(
+								"filter" => array("=DEAL_ID" => $arResult['ELEMENT']['ID'])
+							)
+						)->fetch();
+
+						$res = \Bitrix\Crm\Recurring\Manager::update(							
+							$recur['ID'],
+							$recurringList,
+							\Bitrix\Crm\Recurring\Manager::DEAL
+						);
+
+						if ($res->isSuccess())
+						{
+							\Bitrix\Crm\Recurring\Manager::exposeToday(null, Bitrix\Crm\Recurring\Manager::DEAL);
+						}
+					}
 				}
 				else
 				{
@@ -729,7 +834,52 @@ else
 					}
 					//endregion
 
-					$ID = $CCrmDeal->Add($arFields, true, array('REGISTER_SONET_EVENT' => true));
+					if ($_POST['RECUR_PARAM']['RECURRING_SWITCHER'] === 'Y')
+					{
+						if (strlen($_POST['RECUR_PARAM']['START_DATE']) > 0)
+							$recurringList['START_DATE'] = new \Bitrix\Main\Type\Date($_POST['RECUR_PARAM']['START_DATE']);
+
+						if (strlen($_POST['RECUR_PARAM']['DEAL_DATEPICKER_BEFORE']) > 0)
+						{
+							$recurringList['START_DATE'] = new \Bitrix\Main\Type\Date($_POST['RECUR_PARAM']['DEAL_DATEPICKER_BEFORE']);
+						}
+
+						if (strlen($_POST['RECUR_PARAM']['END_DATE']) > 0
+							&& $_POST['RECUR_PARAM']['REPEAT_TILL'] === 'date')
+						{
+							$recurringList['LIMIT_DATE'] = new \Bitrix\Main\Type\Date($_POST['RECUR_PARAM']['END_DATE']);
+							$recurringList['IS_LIMIT'] = 'D';
+						}
+
+						if ((int)($_POST['RECUR_PARAM']['LIMIT_REPEAT']) > 0
+							&& $_POST['RECUR_PARAM']['REPEAT_TILL'] === 'times')
+						{
+							$recurringList['LIMIT_REPEAT'] =(int)($_POST['RECUR_PARAM']['LIMIT_REPEAT']);
+							$recurringList['IS_LIMIT'] = 'T';
+						}
+
+						if (empty($recurringList['IS_LIMIT']))
+							$recurringList['IS_LIMIT'] = 'N';
+
+						if (isset($_POST['ENTITY_CATEGORY_ID']))
+							$recurringList['CATEGORY_ID'] = (int)$_POST['ENTITY_CATEGORY_ID'];
+
+						$recurringList['PARAMS'] = is_array($_POST['RECUR_PARAM']) ? $_POST['RECUR_PARAM'] : array();
+						$recurringList['LIMIT_REPEAT'] = (int)$_POST['RECUR_PARAM']['LIMIT_REPEAT'] ? (int)$_POST['RECUR_PARAM']['LIMIT_REPEAT'] : null;
+
+						$result = \Bitrix\Crm\Recurring\Manager::createEntity(
+							$arFields,
+							$recurringList,
+							\Bitrix\Crm\Recurring\Manager::DEAL
+						);
+						$resultData = $result->getData();
+						$ID = $resultData['DEAL_ID'];
+					}
+					else
+					{
+						$ID = $CCrmDeal->Add($arFields, true, array('REGISTER_SONET_EVENT' => true));
+					}
+
 					$bSuccess = $ID !== false;
 					if($bSuccess)
 					{
@@ -812,16 +962,20 @@ else
 					$arResult['ERROR_MESSAGE'] = $CCrmBizProc->LAST_ERROR;
 			}
 
-			//Region automation
-			if (!$isEditMode)
+			if ($_POST['RECUR_PARAM']['RECURRING_SWITCHER'] !== 'Y')
 			{
-				\Bitrix\Crm\Automation\Factory::runOnAdd(\CCrmOwnerType::Deal, $arResult['ELEMENT']['ID']);
+				//Region automation
+				if (!$isEditMode)
+				{
+					\Bitrix\Crm\Automation\Factory::runOnAdd(\CCrmOwnerType::Deal, $arResult['ELEMENT']['ID']);
+				}
+				elseif (isset($arFields['STAGE_ID']) && $arSrcElement['STAGE_ID'] != $arFields['STAGE_ID'])
+				{
+					\Bitrix\Crm\Automation\Factory::runOnStatusChanged(\CCrmOwnerType::Deal, $arResult['ELEMENT']['ID']);
+				}
+				//end automation
 			}
-			elseif (isset($arFields['STAGE_ID']) && $arSrcElement['STAGE_ID'] != $arFields['STAGE_ID'])
-			{
-				\Bitrix\Crm\Automation\Factory::runOnStatusChanged(\CCrmOwnerType::Deal, $arResult['ELEMENT']['ID']);
-			}
-			//end automation
+
 
 			$ID = isset($arResult['ELEMENT']['ID']) ? $arResult['ELEMENT']['ID'] : 0;
 			if($arResult['CALL_LIST_ID'] > 0 && $arResult['CALL_LIST_ELEMENT'] > 0)
@@ -840,14 +994,27 @@ else
 					array_merge(array('ID' => $ID), $arFields),
 					CCrmDeal::GetFields()
 				);
+
+				$arResult['ELEMENT']['RECURRING_DATA']['PARAMS'] = $_POST['RECUR_PARAM'];
 			}
 			else
 			{
+				if ($_POST['RECUR_PARAM']['RECURRING_SWITCHER'] === 'Y')
+				{
+					$pathEdit = $arParams['PATH_TO_DEAL_RECUR_EDIT'];
+					$pathShow = $arParams['PATH_TO_DEAL_RECUR_SHOW'];
+				}
+				else
+				{
+					$pathEdit = $arParams['PATH_TO_DEAL_EDIT'];
+					$pathShow = $arParams['PATH_TO_DEAL_SHOW'];
+				}
+
 				if ($originId > 0)
 				{
 					LocalRedirect(
 						CComponentEngine::MakePathFromTemplate(
-							$arParams['PATH_TO_DEAL_SHOW'],
+							$pathShow,
 							array('deal_id' => $ID)
 						)
 					);
@@ -859,7 +1026,7 @@ else
 					{
 						LocalRedirect(
 							CComponentEngine::MakePathFromTemplate(
-								$arParams['PATH_TO_DEAL_EDIT'],
+								$pathEdit,
 								array('deal_id' => $ID)
 							)
 						);
@@ -869,7 +1036,7 @@ else
 				{
 					LocalRedirect(
 						CComponentEngine::MakePathFromTemplate(
-							$arParams['PATH_TO_DEAL_EDIT'],
+							$pathEdit,
 							array('deal_id' => 0)
 						)
 					);
@@ -880,7 +1047,7 @@ else
 					{
 						LocalRedirect(
 							CComponentEngine::MakePathFromTemplate(
-								$arParams['PATH_TO_DEAL_SHOW'],
+								$pathShow,
 								array('deal_id' => $ID)
 							)
 						);
@@ -995,7 +1162,6 @@ else
 }
 
 $arResult['STAGE_LIST'] = array();
-
 $arResult['~STAGE_LIST'] = Bitrix\Crm\Category\DealCategory::getStageList($arResult['CATEGORY_ID']);
 foreach ($arResult['~STAGE_LIST'] as $statusID => $statusTitle)
 {
@@ -1216,7 +1382,7 @@ $arResult['FIELDS']['tab_1'][] = array(
 
 //Fix for issue #36848
 $beginDate = isset($arResult['ELEMENT']['BEGINDATE']) ? $arResult['ELEMENT']['BEGINDATE'] : '';
-$closeDate = isset($arResult['ELEMENT']['CLOSEDATE']) ? $arResult['ELEMENT']['CLOSEDATE'] : ConvertTimeStamp(MakeTimeStamp($beginDate) + 182 * 86400, 'FULL', SITE_ID);
+$closeDate = isset($arResult['ELEMENT']['CLOSEDATE']) ? $arResult['ELEMENT']['CLOSEDATE'] : $beginDate;
 
 $arResult['FIELDS']['tab_1'][] = array(
 	'id' => 'BEGINDATE',
@@ -1248,6 +1414,17 @@ $arResult['FIELDS']['tab_1'][] = array(
 	'type' => 'checkbox',
 	'value' => (isset($arResult['ELEMENT']['CLOSED']) ? $arResult['ELEMENT']['CLOSED'] : 'N')
 );*/
+
+/*if ($arResult['ELEMENT']['IS_RECURRING'] !== 'Y')
+{
+	$arResult['FIELDS']['tab_1'][] = array(
+		'id' => 'DATE_PAY_BEFORE',
+		'name' => GetMessage('CRM_FIELD_DATE_PAY_BEFORE'),
+		'params' => array('class' => 'bx-crm-dialog-input bx-crm-dialog-input-date', 'sale_order_marker' => 'Y'),
+		'type' => 'date_short',
+		'value' => !empty($arResult['ELEMENT']['DATE_PAY_BEFORE']) ? ConvertTimeStamp(MakeTimeStamp($arResult['ELEMENT']['DATE_PAY_BEFORE']), 'SHORT', SITE_ID) : '' //ConvertTimeStamp(time()+5*24*3600, 'SHORT', SITE_ID)
+	);
+}	*/
 
 $arResult['FIELDS']['tab_1'][] = array(
 	'id' => 'OPENED',
@@ -1451,6 +1628,49 @@ if (isset($arPersonTypes['COMPANY']) && isset($arPersonTypes['CONTACT']))
 	}
 }
 
+ob_start();
+$data = !empty($arResult['ELEMENT']['RECURRING_DATA']['PARAMS']) ? $arResult['ELEMENT']['RECURRING_DATA']['PARAMS'] : array();
+$data['CONTEXT'] = $arParams['ELEMENT_ID'] > 0 ? "INVOICE_{$arParams['ELEMENT_ID']}" : 'NEWINVOICE';
+$data['CLIENT_PRIMARY_ENTITY_TYPE_NAME'] = $primaryEntityTypeName;
+$data['CLIENT_PRIMARY_ENTITY_ID'] = $primaryEntityID;
+$data['CLIENT_SECONDARY_ENTITY_IDS'] = $secondaryIDs;
+$data['LAST_EXECUTION'] = $arResult['ELEMENT']['RECURRING_DATA']['LAST_EXECUTION'];
+$data['CATEGORY_ID'] = $arResult['ELEMENT']['RECURRING_DATA']['CATEGORY_ID'];
+$data['UF_MYCOMPANY_ID'] = (int)$arResult['ELEMENT']['UF_MYCOMPANY_ID'] > 0 ? $arResult['ELEMENT']['UF_MYCOMPANY_ID'] : null;
+$APPLICATION->IncludeComponent('bitrix:crm.interface.form.recurring',
+	'edit',
+	array(
+		'DATA' => $data,
+		'ID' => $arResult['ELEMENT']['ID'],
+		'ENTITY_TYPE' => Bitrix\Crm\Recurring\Manager::DEAL,
+		'IS_RECURRING' => $arResult['ELEMENT']['IS_RECURRING']
+	),
+	false,
+	array('HIDE_ICONS' => 'Y', 'ACTIVE_COMPONENT'=>'Y')
+);
+
+$recurringHtml = ob_get_contents();
+ob_end_clean();
+
+$arResult['FIELDS']['tab_1'][] = array(
+	'id' => 'section_recurring',
+	'name' => GetMessage('CRM_SECTION_RECURRING_ROWS'),
+	'type' => 'section'
+);
+$arResult['FIELDS']['tab_1'][] = array(
+	'id' => 'section_recurring_rows',
+	'name' => GetMessage('CRM_SECTION_RECURRING_ROWS'),
+	'params' =>
+		array (
+			'class' => 'bx-crm-dialog-input bx-crm-dialog-input-date',
+			'sale_order_marker' => 'Y',
+		),
+	'type' => 'recurring_params',
+	'colspan' => true,
+	'value' => $recurringHtml,
+	'required' => true
+);
+
 $arResult['PRODUCT_ROW_EDITOR_ID'] = ($arParams['ELEMENT_ID'] > 0 ? 'deal_'.strval($arParams['ELEMENT_ID']) : 'new_deal').'_product_editor';
 $componentSettings = array(
 	'ID' => $arResult['PRODUCT_ROW_EDITOR_ID'],
@@ -1538,7 +1758,7 @@ $CCrmUserType->AddFields(
 if (count($arResult['FIELDS']['tab_1']) == $icnt)
 	unset($arResult['FIELDS']['tab_1'][$icnt - 1]);
 
-if (IsModuleInstalled('bizproc') && CBPRuntime::isFeatureEnabled())
+if (IsModuleInstalled('bizproc') && CBPRuntime::isFeatureEnabled() && $arParams['IS_RECURRING'] !== 'Y')
 {
 	CBPDocument::AddShowParameterInit('crm', 'only_users', 'DEAL');
 
