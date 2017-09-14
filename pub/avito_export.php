@@ -158,6 +158,10 @@ while($aRes = $db_res->Fetch()){
       }
     }else{//Если населенного пункта нет в справочнике Авито
       switch ($aRes['PROPERTY_214']){
+				case "Переволоцкий р-н":
+					$City = $dom->createElement("City",'Переволоцкий');
+					$Ad->appendChild($City);
+					break;
 				case "Саракташский р-н":
 					$City = $dom->createElement("City",'Саракташ');
 					$Ad->appendChild($City);
