@@ -4,8 +4,8 @@ if ($_SERVER['HTTP_ORIGIN'] == "http://job.ucre.ru"){
   CModule::IncludeModule('iblock');
   //status= OK|ERROR
   //errors - массив строк с сообщениями об ошибках
-  $result = array('file' => $_FILES, 'params' => $_POST, 'status' => 'ERROR', 'errors' => '', 'server' => $_SERVER);
-  //$result = array('status' => 'ERROR', 'errors' => '');
+  //$result = array('file' => $_FILES, 'params' => $_POST, 'status' => 'ERROR', 'errors' => '', 'server' => $_SERVER);
+  $result = array('status' => 'ERROR', 'errors' => '');
   $errors = array();
   if ($_POST['FullName'] == "") $errors[] = "Не заполнено поле 'ФИО'.";
   if ($_POST['BirthDate'] == ""){
