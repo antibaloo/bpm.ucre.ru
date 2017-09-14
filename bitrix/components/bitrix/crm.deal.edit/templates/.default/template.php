@@ -34,15 +34,21 @@ unset($field);
 
 $elementID = isset($arResult['ELEMENT']['ID']) ? $arResult['ELEMENT']['ID'] : 0;
 
-$arResult['CRM_CUSTOM_PAGE_TITLE'] =
-	$elementID > 0
-	? GetMessage('CRM_DEAL_EDIT_TITLE',
+if ($elementID > 0)
+{
+	$titleCode = $arParams['IS_RECURRING'] === 'Y' ? 'CRM_DEAL_RECUR_SHOW_TITLE' : 'CRM_DEAL_EDIT_TITLE';
+	$arResult['CRM_CUSTOM_PAGE_TITLE'] = GetMessage(
+		$titleCode,
 		array(
-			'#ID#' => $elementID,
-			'#TITLE#' => isset($arResult['ELEMENT']['TITLE']) ? $arResult['ELEMENT']['TITLE'] : ''
+			'#ID#' => $arResult['ELEMENT']['ID'],
+			'#TITLE#' => $arResult['ELEMENT']['TITLE']
 		)
-	)
-	: GetMessage('CRM_DEAL_CREATE_TITLE');
+	);
+}
+else
+{
+	$arResult['CRM_CUSTOM_PAGE_TITLE'] = GetMessage('CRM_DEAL_CREATE_TITLE');
+}
 
 $arFormButtons = array(
 	'back_url' => $arResult['BACK_URL'],
@@ -104,7 +110,6 @@ $APPLICATION->IncludeComponent(
 	)
 );
 ?>
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script type="text/javascript">
 
 	window.CrmProductRowSetLocation = function(){ BX.onCustomEvent('CrmProductRowSetLocation', ['LOC_CITY']); };
@@ -112,66 +117,6 @@ $APPLICATION->IncludeComponent(
 	BX.ready(
 		function()
 		{
-			//Фотографии
-			$("[name = 'UF_CRM_1472038962[]']").each(function(){
-				$(this).attr('multiple', true);
-			});
-			//Планировки
-			$("[name = 'UF_CRM_1476517423[]']").each(function(){
-				$(this).attr('multiple', true);
-			});
-			//Документы
-			$("[name = 'UF_CRM_1472704376[]']").each(function(){
-				$(this).attr('multiple', true);
-			});
-			
-			
-			//блоки файлов в блоке фото делаем draggable
-			var len = $("[id='main_UF_CRM_1472038962[]']").find("[class = 'fields files']").length;
-			$("[id='main_UF_CRM_1472038962[]']").find("[class = 'fields files']").each(function(index){
-				if (index < len-1)	{
-					$(this).css('border','1px dotted black');
-					$(this).css('cursor','move');
-					$(this).addClass('ui-state-default');
-				}
-			});
-			//блоки файлов в блоке планировок делаем draggable
-			var len = $("[id='main_UF_CRM_1476517423[]']").find("[class = 'fields files']").length;
-			$("[id='main_UF_CRM_1476517423[]']").find("[class = 'fields files']").each(function(index){
-				if (index < len-1)	{
-					$(this).css('border','1px dotted black');
-					$(this).css('cursor','move');
-					$(this).addClass('ui-state-default');
-				}
-			});
-			
-			//блоки файлов в блоке документов делаем draggable
-			var len = $("[id='main_UF_CRM_1472704376[]']").find("[class = 'fields files']").length;
-			$("[id='main_UF_CRM_1472704376[]']").find("[class = 'fields files']").each(function(index){
-				if (index < len-1)	{
-					$(this).css('border','1px dotted black');
-					$(this).css('cursor','move');
-					$(this).addClass('ui-state-default');
-				}
-			});
-			
-			//Размер картинок в форме
-			$("[class = 'fields files ui-state-default']").find("img").each(function(){
-				$(this).attr('width', 'auto');
-				$(this).attr('height', '200');
-			});
-			
-			$( function() {
-				$( "[id='main_UF_CRM_1472038962[]']" ).sortable();
-				$( "[id='main_UF_CRM_1472038962[]']" ).disableSelection();
-				
-				$( "[id='main_UF_CRM_1476517423[]']" ).sortable();
-				$( "[id='main_UF_CRM_1476517423[]']" ).disableSelection();
-				
-				$( "[id='main_UF_CRM_1472704376[]']" ).sortable();
-				$( "[id='main_UF_CRM_1472704376[]']" ).disableSelection();
-			} );
-			
 			var formID = 'form_' + '<?= $arResult['FORM_ID'] ?>';
 			var form = BX(formID);
 
