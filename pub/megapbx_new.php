@@ -41,7 +41,7 @@ if ($_POST['crm_token'] == $megapbx->crm_key){
   }
   switch ($_POST['diversion']){
     case '79325360157':
-      $SOURCE_ID = '13';
+      $SOURCE_ID = 'WEB';
       break;
     case '79325360657':
       $SOURCE_ID = '10';
