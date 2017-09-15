@@ -22,6 +22,13 @@ $aMenuLinks = array(
 		Array(), 
 		Array(), 
 		"in_array($curUser,array(1,11,24,26,218))" 
+	),
+	array(
+		"CRM ЕЦН", 
+		"/crm_ucre/", 
+		Array(), 
+		Array(), 
+		"in_array($curUser,array(24))" 
 	)
 );
 ?>
