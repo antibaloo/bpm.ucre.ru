@@ -18,7 +18,7 @@
 					'',
 					array(
 						'position' => array(
-							'stream' => true
+							'start' => true
 						),
 					)
 				);}
