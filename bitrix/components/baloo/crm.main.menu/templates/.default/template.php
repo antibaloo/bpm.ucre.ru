@@ -8,8 +8,8 @@
 					</button>
 					<div class="collapse navbar-collapse" id="navbarSupportedContent">
 						<ul class="navbar-nav mr-auto">
-							<li class="nav-item <?=($arResult['position']['stream'])?"active":""?>">
-								<a class="nav-link" href="<?=$arResult['streamLink']?>">Лента</a>
+							<li class="nav-item <?=($arResult['position']['start'])?"active":""?>">
+								<a class="nav-link" href="<?=$arResult['startLink']?>">Старт</a>
 							</li>
 							<li class="nav-item <?=($arResult['position']['leads'])?"active":""?>">
 								<a class="nav-link" href="<?=$arResult['leadsLink']?>">Лиды</a>
@@ -34,6 +34,9 @@
 							</li>
 							<li class="nav-item <?=($arResult['position']['realty'])?"active":""?>">
 								<a class="nav-link" href="<?=$arResult['realtyLink']?>">База города</a>
+							</li>
+              <li class="nav-item <?=($arResult['position']['reports'])?"active":""?>">
+								<a class="nav-link" href="<?=$arResult['reportsLink']?>">Отчеты</a>
 							</li>
 						</ul>
 						<form class="form-inline my-2 my-lg-0">
