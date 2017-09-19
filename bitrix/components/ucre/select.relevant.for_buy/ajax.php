@@ -2,6 +2,52 @@
 require_once($_SERVER['DOCUMENT_ROOT'] . "/bitrix/modules/main/include/prolog_before.php");
 if (strripos ($_SERVER['HTTP_REFERER'], 'bpm.ucre.ru')!==false){
   if ($_POST['market'] == "нет данных") die("Не введены параметры рынка поиска");
+  /*Справочник типов балконов*/
+  $balkon = array(
+    '' => '<span title="нет данных" style="color: red">-</span>',
+    '400' => '<span title="2 балкона">2Б</span>',
+    '401' => '<span title="2 балкона, 2 лоджии">2Б2Л</span>',
+    '402' => '<span title="2 лоджии">2Л</span>',
+    '403' => '<span title="3 балкона">3Б</span>',
+    '404' => '<span title="3 лоджии">3Л</span>',
+    '405' => '<span title="4 лоджии">4Л</span>',
+    '406' => '<span title="балкон">Б</span>',
+    '407' => '<span title="Балкон, 2 лоджии">Б2Л</span>',
+    '408' => '<span title="Балкон, лоджия">БЛ</span>',
+    '409' => '<span title="лоджия">Л</span>',
+    '410' => '<span title="Нет">нет</span>',
+    '411' => '<span title="Эркер">Э</span>',
+    '412' => '<span title="Эркер и лоджия">ЭЛ</span>',
+   );
+  /*Справочник типов домов*/
+  $housetype = array(
+    '' => '<span title="нет данных" style="color: red">-</span>',
+    '426' => '<span title="Блочный">Б</span>',
+    '427' => '<span title="Деревянный">Д</span>',
+    '428' => '<span title="Кирпичный">К</span>',
+    '429' => '<span title="Монолитно-Кирпичный">МК</span>',
+    '430' => '<span title="Монолитный">М</span>',
+    '431' => '<span title="Панельный">П</span>',
+    '432' => '<span title="Сталинский">С</span>',
+    '433' => '<span title="Элитный">Э</span>'
+  );
+  /*Справочник материалов стен*/
+  $wallstype = array(
+    '' => '<span title="нет данных" style="color: red">-</span>',
+    '413' => '<span title="блок">Бл</span>',
+    '414' => '<span title="бревно">Бр</span>',
+    '415' => '<span title="брус">Б-с</span>',
+    '416' => '<span title="иное">И</span>',
+    '417' => '<span title="каркасно-щитовой">КЩ</span>',
+    '418' => '<span title="кирпич">К</span>',
+    '419' => '<span title="монолит">М</span>',
+    '420' => '<span title="нет">нет</span>',
+    '421' => '<span title="оцилиндрованное бревно">ОБ</span>',
+    '422' => '<span title="панели">П</span>',
+    '423' => '<span title="пеноблок">ПБ</span>',
+    '424' => '<span title="сэндвич">С</span>',
+    '425' => '<span title="шлакоблок">Ш</span>'
+  );
   $sql_string = hex2bin($_POST['sql']);
   
   //Фильтр по уже имеющимся в потенциальных
@@ -57,6 +103,12 @@ if (strripos ($_SERVER['HTTP_REFERER'], 'bpm.ucre.ru')!==false){
       <th>N<sub>комнат</sub></th>
       <th>S<sub>общая</sub></th>
       <th>S<sub>кухни</sub></th>
+      <?if ($_POST['rotype'] == 'Комната' || $_POST['rotype'] == 'Квартира'){?>
+      <th title="Тип балкона">Б</th>
+      <?}?>
+      <?if ($_POST['rotype'] != 'Участок' && $_POST['rotype'] != 'Коммерческая'){?>
+      <th title="<?=($_POST['rotype'] == 'Комната' || $_POST['rotype'] == 'Квартира')?"Тип дома":"Материал стен"?>"><?=($_POST['rotype'] == 'Комната' || $_POST['rotype'] == 'Квартира')?"Т":"М"?></th>
+      <?}?>
       <th title="Этажность">Эт.</th>
       <th width="15%">Ответственный</th>
     </tr>
@@ -66,7 +118,9 @@ if (strripos ($_SERVER['HTTP_REFERER'], 'bpm.ucre.ru')!==false){
         $assigned_user = CUser::GetByID($aRes['ASSIGNED_BY_ID'])->Fetch();
         if ($aRes['PROPERTY_210'] == 386) $square = $aRes['PROPERTY_292'];
         else $square = $aRes['PROPERTY_224'];
-        $shortAddress = $aRes['PROPERTY_217'].", ".$aRes['PROPERTY_218']." (".$aRes['PROPERTY_215'].")";
+        $shortAddress = $aRes['PROPERTY_217'].", ".$aRes['PROPERTY_218']." (".$aRes['PROPERTY_215'];
+        if ($aRes['PROPERTY_216']) $shortAddress.=", ".$aRes['PROPERTY_216'];
+        $shortAddress.=")";
 ?>
     <tr id="R<?=$aRes['ID']?>" class="row">
       <td><?=($_POST['assigned_by_id'] == $USER->GetID() || $USER->IsAdmin())?"<a href='javascript:addpotential(".$aRes['ID'].")'><span style='color:green;font-weight: bold'>+</span></a>":""?></td>
@@ -77,6 +131,12 @@ if (strripos ($_SERVER['HTTP_REFERER'], 'bpm.ucre.ru')!==false){
       <td><?=($aRes['PROPERTY_229'])?intval($aRes['PROPERTY_229']):"-"?></td>
       <td style="text-align: right; padding-right: 5px;"><?=($square)?number_format($square,2):"-"?></td>
       <td style="text-align: right; padding-right: 5px;"><?=($aRes['PROPERTY_226'])?number_format($aRes['PROPERTY_226'],2):"-"?></td>
+      <?if ($aRes['PROPERTY_210'] == 381 || $aRes['PROPERTY_210'] == 382){?>
+      <td><?=$balkon[$aRes['PROPERTY_241']]?></td>
+      <?}?>
+      <?if ($aRes['PROPERTY_210'] != 386 && $aRes['PROPERTY_210'] != 387){?>
+      <td><?=($aRes['PROPERTY_210'] ==381 || $aRes['PROPERTY_210']  == 382)?$housetype[$aRes['PROPERTY_243']]:$wallstype[$aRes['PROPERTY_242']]?></td>
+      <?}?>
       <td><?=($aRes['PROPERTY_221'])?$aRes['PROPERTY_221']:"-"?>/<?=($aRes['PROPERTY_222'])?$aRes['PROPERTY_222']:"-"?></td>
       <td><a href="/company/personal/user/<?=$assigned_user['ID']?>/" target="_blank" title="<?=$assigned_user['PERSONAL_PHONE']?>" ><?=$assigned_user['LAST_NAME']." ".$assigned_user['NAME']?></a></td>
     </tr>

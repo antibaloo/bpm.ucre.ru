@@ -21,8 +21,14 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED!==true)die();
     <tr style="border: 1px solid lightgrey">
       <td style="text-align:right;width:25%"><b>S<sub>кух.</sub> от:</b></td>
       <td style="text-align:left;width:25%"><?=$arResult['SELECT_PARAMS']['KITCHEN_AREA']?></td>
-      <td style="text-align:right;width:25%"></td>
-      <td style="text-align:left;width:25%"></td>
+      <td style="text-align:right;width:25%"><b>Нужен балкон:</b></td>
+      <td style="text-align:left;width:25%"><?=$arResult['SELECT_PARAMS']['TYPEBALKON'] ?></td>
+    </tr>
+    <tr style="border: 1px solid lightgrey">
+      <td style="text-align:right;width:25%"><b>Тип дома:</b></td>
+      <td style="text-align:left;width:25%"><?=$arResult['SELECT_PARAMS']['TYPEHOUSE']?></td>
+      <td style="text-align:right;width:25%"><b>Материал стен:</b></td>
+      <td style="text-align:left;width:25%"><?=$arResult['SELECT_PARAMS']['TYPEWALLS'] ?></td>
     </tr>
     <tr style="border: 1px solid lightgrey">
       <td style="text-align:right;width:25%"><b>1-й этаж:</b></td>
@@ -36,12 +42,19 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED!==true)die();
       <td style="text-align:right;width:25%"><b>Цена до:</b></td>
       <td style="text-align:left;width:25%"><?=$arResult['SELECT_PARAMS']['MAXPRICE']?></td>
     </tr>
+    <tr style="border: 1px solid lightgrey">
+      <td style="text-align:right;width:25%"><b>Населенный пункт:</b></td>
+      <td style="text-align:left;width:25%"><?=$arResult['SELECT_PARAMS']['CITY']?></td>
+      <td style="text-align:right;width:25%"><b>Район:</b></td>
+      <td style="text-align:left;width:25%"><?=$arResult['SELECT_PARAMS']['LOCALITY']?></td>
+    </tr>
   </table>
   <center><input id="submit" type="button" value="Искать"></center>
   
   <input type="hidden" name="sql" value="<?=bin2hex($arResult['SQL_STRING'])?>">
   <input type="hidden" name="deal_id" value="<?=$arResult['ID']?>">
   <input type="hidden" name="assigned_by_id" value="<?=$arResult['ASSIGNED_BY_ID']?>">
+  <input type="hidden" name="rotype" value="<?=$arResult['SELECT_PARAMS']['TYPE']?>">
 </form>
 <hr>
 <div id="resultGrid">
