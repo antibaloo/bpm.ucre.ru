@@ -16,8 +16,11 @@ if ($mainDeal["CATEGORY_ID"] == 0 || $mainDeal["CATEGORY_ID"] == 4){
     $mainObject = $rsObject->GetNextElement();
     $objectFields = $mainObject->GetFields();
     $objectProperties = $mainObject->GetProperties();
+		$arResult['CITY'] = ($objectProperties['CITY']['VALUE'])?$objectProperties['CITY']['VALUE']:'<span style="color: red">нет данных</span>';
+		$arResult['LOCALITY'] = ($objectProperties['LOCALITY']['VALUE'])?$objectProperties['LOCALITY']['VALUE']:'<span style="color: red">нет данных</span>';;
     $arResult['ADDRESS'] = ($objectProperties['ADDRESS']['VALUE'])?$objectProperties['ADDRESS']['VALUE']:'<span style="color: red">нет данных</span>';
-    $arResult['LINK'] = ($objectProperties['LINK']['VALUE'])?'<a href="'.$objectProperties['LINK']['VALUE'].'" target="_blank">'.$objectProperties['LINK']['VALUE'].'</a>':'<span style="color: red">нет данных</span>';
+		$arResult['BALKON_TYPE'] = ($objectProperties['BALKON_TYPE']['VALUE'])?$objectProperties['BALKON_TYPE']['VALUE']:'<span style="color: red">нет данных</span>';
+    $arResult['LINK'] = $objectProperties['LINK']['VALUE'];
     switch ($objectProperties['TYPE']['VALUE']) {
 			case 'комната':
 				if ($objectProperties['ISHOSTEL']['VALUE'] == 'да'){
