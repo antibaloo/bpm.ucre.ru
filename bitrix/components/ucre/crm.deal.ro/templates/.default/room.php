@@ -3,7 +3,7 @@ if(!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED!==true) die();
 ?>
 <table class="crm-offer-info-table crm-offer-main-info-text">
   <tbody>
-    <tr><td colspan="5"><div class="crm-offer-title">Характеристики объекта по адресу: <?=$arResult['ADDRESS']?>, <?=($arResult['LINK'])?"<a href='".$arResult['LINK']."' target='_blank'>ссылка на сайт</a>":"<span style='color: red'>ссылки на сайт нет</span>"?></div></td></tr>
+    <tr><td colspan="5"><div class="crm-offer-title">Характеристики объекта по адресу: <?=$arResult['ADDRESS']?>, <?=$arResult['LINK']?></div></td></tr>
     <tr class="crm-offer-row">
       <td class="crm-offer-info-drg-btn"></td>
       <td class="crm-offer-info-left">
