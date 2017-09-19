@@ -151,13 +151,13 @@ if ($mainDeal['UF_CRM_1505805394']) {
 //Фильтр по населенному пункту
 $arResult['SELECT_PARAMS']['CITY'] = "нет данных";
 if ($mainDeal['UF_CRM_1505802775']) {
-  $arResult["SQL_STRING"] .= " AND b_iblock_element_prop_s42.PROPERTY_215 LIKE '%".$mainDeal['UF_CRM_1505802775']."%'";
+  $arResult["SQL_STRING"] .= " AND b_iblock_element_prop_s42.PROPERTY_215 LIKE '%".trim($mainDeal['UF_CRM_1505802775'])."%'";
   $arResult['SELECT_PARAMS']['CITY'] = $mainDeal['UF_CRM_1505802775'];
 }
 //Фильтр по району
 $arResult['SELECT_PARAMS']['LOCALITY'] = "нет данных";
 if ($mainDeal['UF_CRM_1505802786']) {
-  $arResult["SQL_STRING"] .= " AND b_iblock_element_prop_s42.PROPERTY_216 LIKE '%".$mainDeal['UF_CRM_1505802786']."%'";
+  $arResult["SQL_STRING"] .= " AND b_iblock_element_prop_s42.PROPERTY_216 LIKE '%".trim($mainDeal['UF_CRM_1505802786'])."%'";
   $arResult['SELECT_PARAMS']['LOCALITY'] = $mainDeal['UF_CRM_1505802786'];
 }
 $this->IncludeComponentTemplate();
