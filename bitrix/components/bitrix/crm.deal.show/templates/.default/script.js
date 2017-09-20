@@ -1,5 +1,5 @@
 $(document).ready(function() {
-	$("a.fancybox").fancybox();
+	if ($("a").is(".fancybox")){$("a.fancybox").fancybox();}
 });
 $(document).ready(function() {
   $('#create').on('click', function () {
