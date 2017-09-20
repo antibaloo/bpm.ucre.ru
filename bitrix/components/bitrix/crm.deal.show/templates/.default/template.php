@@ -215,6 +215,14 @@ $APPLICATION->IncludeComponent(
 	$component,
 	array('HIDE_ICONS' => 'Y')
 );
+if ($USER->GetID()==24){
+/*Компонент для редактирования географии поиска для заявок на покупку*/
+$APPLICATION->IncludeComponent(
+	'ucre:crm.deal.buy.geo',
+	'',
+	array('DEAL_ID' => $element['ID'])
+);
+}
 /*Общий компонент для отображения данных объявления Авито для заявок из лидов парсера*/
 $APPLICATION->IncludeComponent(
 	'ucre:crm.deal.avito',
