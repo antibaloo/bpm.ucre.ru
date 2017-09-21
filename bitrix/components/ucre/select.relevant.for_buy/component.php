@@ -33,7 +33,7 @@ $rsDeal = CCrmDeal::GetListEx(
   array("ID" => $arParams['ID']), 
   false, 
   false, 
-  array("TITLE","ASSIGNED_BY_ID","UF_CRM_5895BC940ED3F","UF_CRM_58CFC7CDAAB96","UF_CRM_58958B529E628","UF_CRM_58958B52BA439","UF_CRM_58958B52F2BAC","UF_CRM_58958B576448C","UF_CRM_58958B5751841","UF_CRM_1502432955","UF_CRM_1502433005","UF_CRM_1505802775","UF_CRM_1505802786","UF_CRM_58958B532A119","UF_CRM_1505805281","UF_CRM_1505805394"),
+  array("TITLE","ASSIGNED_BY_ID","UF_CRM_5895BC940ED3F","UF_CRM_58CFC7CDAAB96","UF_CRM_58958B529E628","UF_CRM_58958B52BA439","UF_CRM_58958B52F2BAC","UF_CRM_58958B576448C","UF_CRM_58958B5751841","UF_CRM_1502432955","UF_CRM_1502433005","UF_CRM_1505802775","UF_CRM_1505802786","UF_CRM_58958B532A119","UF_CRM_1505805281","UF_CRM_1505805394","UF_CRM_1505965059"),
   array()
 );
 $arResult['ID'] = $arParams['ID'];
@@ -159,6 +159,17 @@ $arResult['SELECT_PARAMS']['LOCALITY'] = "нет данных";
 if ($mainDeal['UF_CRM_1505802786']) {
   $arResult["SQL_STRING"] .= " AND b_iblock_element_prop_s42.PROPERTY_216 LIKE '%".trim($mainDeal['UF_CRM_1505802786'])."%'";
   $arResult['SELECT_PARAMS']['LOCALITY'] = $mainDeal['UF_CRM_1505802786'];
+}
+//Фильтр по улицам
+$arResult['SELECT_PARAMS']['STREETS'] = "нет данных";
+if ($mainDeal['UF_CRM_1505965059']) {
+  $arResult['SELECT_PARAMS']['STREETS'] = $mainDeal['UF_CRM_1505965059'];
+  $arResult["SQL_STRING"] .= " AND (";
+  foreach (explode(",",$mainDeal['UF_CRM_1505965059']) as $key=>$street){
+    if ($key) $arResult["SQL_STRING"] .=" OR b_iblock_element_prop_s42.PROPERTY_217 LIKE '%".trim($street)."%'";
+    else $arResult["SQL_STRING"] .="b_iblock_element_prop_s42.PROPERTY_217 LIKE '%".trim($street)."%'";
+  }
+  $arResult["SQL_STRING"] .= ")";
 }
 $this->IncludeComponentTemplate();
 ?>

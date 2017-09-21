@@ -48,6 +48,10 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED!==true)die();
       <td style="text-align:right;width:25%"><b>Район:</b></td>
       <td style="text-align:left;width:25%"><?=$arResult['SELECT_PARAMS']['LOCALITY']?></td>
     </tr>
+    <tr style="border: 1px solid lightgrey">
+      <td style="text-align:right;width:25%"><b>Улицы поиска:</b></td>
+      <td colspan="3" style="text-align:left;width:75%"><?=$arResult['SELECT_PARAMS']['STREETS']?></td>
+    </tr>
   </table>
   <center><input id="submit" type="button" value="Искать"></center>
   
