@@ -36,6 +36,12 @@ $arParams['PATH_TO_PRODUCT_SHOW'] = CrmCheckPath('PATH_TO_PRODUCT_SHOW', $arPara
 $arParams['NAME_TEMPLATE'] = empty($arParams['NAME_TEMPLATE']) ? CSite::GetNameFormat(false) : str_replace(array("#NOBR#","#/NOBR#"), array("",""), $arParams["NAME_TEMPLATE"]);
 $arParams['ELEMENT_ID'] = isset($arParams['ELEMENT_ID']) ? (int)$arParams['ELEMENT_ID'] : 0;
 
+if ($arParams['IS_RECURRING'] === 'Y')
+{
+	$arParams['PATH_TO_DEAL_CATEGORY'] = CrmCheckPath('PATH_TO_DEAL_RECUR_CATEGORY', $arParams['PATH_TO_DEAL_RECUR_CATEGORY'], $APPLICATION->GetCurPage().'?category_id=#category_id#');
+	$arParams['PATH_TO_DEAL_LIST'] = CrmCheckPath('PATH_TO_DEAL_RECUR', $arParams['PATH_TO_DEAL_RECUR'], $APPLICATION->GetCurPage());
+}
+
 $isNew = $arParams['ELEMENT_ID'] <= 0;
 $isEditMode = false;
 $isCopyMode = false;
@@ -315,7 +321,7 @@ else
 	$beginDate -= $time['tm_sec'];
 
 	$arFields['BEGINDATE'] = ConvertTimeStamp($beginDate, 'FULL', SITE_ID);
-	$arFields['CLOSEDATE'] = ConvertTimeStamp($beginDate + 182 * 86400, 'FULL', SITE_ID);
+	$arFields['CLOSEDATE'] = ConvertTimeStamp($beginDate + 7 * 86400, 'FULL', SITE_ID);
 
 	$extVals =  isset($arParams['~VALUES']) && is_array($arParams['~VALUES']) ? $arParams['~VALUES'] : array();
 	if (count($extVals) > 0)
@@ -1382,7 +1388,7 @@ $arResult['FIELDS']['tab_1'][] = array(
 
 //Fix for issue #36848
 $beginDate = isset($arResult['ELEMENT']['BEGINDATE']) ? $arResult['ELEMENT']['BEGINDATE'] : '';
-$closeDate = isset($arResult['ELEMENT']['CLOSEDATE']) ? $arResult['ELEMENT']['CLOSEDATE'] : ConvertTimeStamp(MakeTimeStamp($beginDate) + 182 * 86400, 'FULL', SITE_ID);
+$closeDate = isset($arResult['ELEMENT']['CLOSEDATE']) ? $arResult['ELEMENT']['CLOSEDATE'] : $beginDate;
 
 $arResult['FIELDS']['tab_1'][] = array(
 	'id' => 'BEGINDATE',
