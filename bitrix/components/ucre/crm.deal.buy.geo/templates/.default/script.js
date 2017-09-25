@@ -24,16 +24,17 @@ function mouseMove(e) {
       y = e.pageY /*- e.target.offsetTop*/;
   
   ctx.beginPath();
-  ctx.moveTo(startX, startY);
-  ctx.lineTo(x, y);
-  ctx.strokeStyle="#FF0000";
+  ctx.moveTo(startX, startY - window.pageYOffset);
+  ctx.lineTo(x, y - window.pageYOffset);
+  ctx.strokeStyle="#0000FF";
+  ctx.lineWidth = 3;
   ctx.stroke();
 
   startX = x;
   startY = y;
   line.push({
     x: x,
-    y: y
+    y: y 
   });
 }
 
@@ -45,6 +46,7 @@ function mouseUp() {
   drawButton.data.set("content","Очистить");
   $("#canv").css( "zIndex", -1);
   canv.removeEventListener('mousedown', mouseDown);
+  saveButton.state.set("enabled",true);
 }
 function aproximate() {
   ctx.clearRect(0, 0, canv.width, canv.height);
@@ -57,5 +59,6 @@ function aproximate() {
     strokeWidth: 3
   });
   myMap.geoObjects.add(polygon);
-  console.log(res);
+  $("#polygonCoords").val(JSON.stringify(res));
+  //console.log(res);
 }
