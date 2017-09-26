@@ -35,8 +35,8 @@ while($aRes = $db_res->Fetch()){
 		case 381: //Комнаты
 			$Category = $dom->createElement("Category", "roomSale");
 			$object->appendChild($Category);
-			$RoomsCount = $dom->createElement("RoomsForSaleCount", 1);
-			$object->appendChild($RoomsCount);
+			$RoomsForSaleCount = $dom->createElement("RoomsForSaleCount", 1);
+			$object->appendChild($RoomsForSaleCount);
 			$RoomArea = $dom->createElement("RoomArea", number_format($aRes['PROPERTY_228'],2,".",""));
 			$object->appendChild($RoomArea);
 			if ($aRes['PROPERTY_224'] > 0){
@@ -57,6 +57,30 @@ while($aRes = $db_res->Fetch()){
 			$num++;
 			break;
 		case 382://Квартиры
+			$Category = $dom->createElement("Category", "flatSale");
+			$object->appendChild($Category);
+			$FlatRoomsCount = $dom->createElement("FlatRoomsCount", intval($aRes['PROPERTY_229']));
+			$object->appendChild($FlatRoomsCount);
+			if ($aRes['PROPERTY_224'] > 0){
+				$TotalArea = $dom->createElement("TotalArea", number_format($aRes['PROPERTY_224'],2,".",""));
+				$object->appendChild($TotalArea);
+			}
+			if ($aRes['PROPERTY_225'] > 0){
+				$LivingArea = $dom->createElement("LivingArea", number_format($aRes['PROPERTY_225'],2,".",""));
+				$object->appendChild($LivingArea);
+			}
+			if ($aRes['PROPERTY_226'] > 0){
+				$KitchenArea = $dom->createElement("KitchenArea", number_format($aRes['PROPERTY_226'],2,".",""));
+				$object->appendChild($KitchenArea);
+			}
+			$FloorNumber = $dom->createElement("FloorNumber", $aRes['PROPERTY_221']);
+			$object->appendChild($FloorNumber);
+			$Building = $dom->createElement("Building");
+				$FloorsCount = $dom->createElement("FloorsCount", $aRes['PROPERTY_222']);
+				$Building->appendChild($FloorsCount);
+				$MaterialType = $dom->createElement("MaterialType", $materialtype[$aRes['PROPERTY_243']]);
+				$Building->appendChild($MaterialType);
+			$object->appendChild($Building);
 			$Address = $dom->createElement("Address", $aRes['PROPERTY_215'].", ".$aRes['PROPERTY_217'].", ".$aRes['PROPERTY_218']);
 			$object->appendChild($Address);
 			$f++;
@@ -64,6 +88,7 @@ while($aRes = $db_res->Fetch()){
 			break;
 		case 383://Дома, дачи
 		case 385:
+			
 			$Address = $dom->createElement("Address", $aRes['PROPERTY_215'].", ".$aRes['PROPERTY_217']);
 			$object->appendChild($Address);
 			$h++;
@@ -112,7 +137,10 @@ while($aRes = $db_res->Fetch()){
 		$LayoutPhoto->appendChild($IsDefault);
 		$object->appendChild($LayoutPhoto);
 	}
-	
+	$BargainTerms = $dom->createElement("BargainTerms");
+	$Price = $dom->createElement("Price",$aRes['UF_CRM_58958B5734602']);
+	$BargainTerms->appendChild($Price);
+	$object->appendChild($BargainTerms);
 	$Phones = $dom->createElement("Phones");
 		$PhoneSchema = $dom->createElement("PhoneSchema");
 			$CountryCode = $dom->createElement("CountryCode","+7");
