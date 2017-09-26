@@ -17,7 +17,9 @@ if ($mainDeal["CATEGORY_ID"] == 0 || $mainDeal["CATEGORY_ID"] == 4){
     $objectFields = $mainObject->GetFields();
     $objectProperties = $mainObject->GetProperties();
 		$arResult['CITY'] = ($objectProperties['CITY']['VALUE'])?$objectProperties['CITY']['VALUE']:'<span style="color: red">нет данных</span>';
-		$arResult['LOCALITY'] = ($objectProperties['LOCALITY']['VALUE'])?$objectProperties['LOCALITY']['VALUE']:'<span style="color: red">нет данных</span>';;
+		if ($arResult['CITY'] == "Оренбург" ||$arResult['CITY'] == "Оренбург г") $arResult['LOCALITY'] = ($objectProperties['LOCALITY']['VALUE'])?$objectProperties['LOCALITY']['VALUE']:'<span style="color: red">нет данных</span>';
+		else $arResult['LOCALITY'] = ($objectProperties['LOCALITY']['VALUE'])?$objectProperties['LOCALITY']['VALUE']:'<span style="grey: red">отсутствует</span>';
+		
     $arResult['ADDRESS'] = ($objectProperties['ADDRESS']['VALUE'])?$objectProperties['ADDRESS']['VALUE']:'<span style="color: red">нет данных</span>';
 		$arResult['BALKON_TYPE'] = ($objectProperties['BALKON_TYPE']['VALUE'])?$objectProperties['BALKON_TYPE']['VALUE']:'<span style="color: red">нет данных</span>';
     $arResult['LINK'] = ($objectProperties['LINK']['VALUE'])?'<a href="'.$objectProperties['LINK']['VALUE'].'" target="_blank">ссылка на сайт</a>':'<span style="color: red">нет ссылки на сайт</span>';
