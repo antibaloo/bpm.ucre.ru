@@ -151,13 +151,13 @@ if ($mainDeal['UF_CRM_1505805394']) {
 //Фильтр по населенному пункту
 $arResult['SELECT_PARAMS']['CITY'] = "нет данных";
 if ($mainDeal['UF_CRM_1505802775']) {
-  $arResult["SQL_STRING"] .= " AND b_iblock_element_prop_s42.PROPERTY_215 LIKE '%".trim($mainDeal['UF_CRM_1505802775'])."%'";
+  $arResult["SQL_STRING"] .= " AND LOWER(b_iblock_element_prop_s42.PROPERTY_215) LIKE '%".trim(strtolower($mainDeal['UF_CRM_1505802775']))."%'";
   $arResult['SELECT_PARAMS']['CITY'] = $mainDeal['UF_CRM_1505802775'];
 }
 //Фильтр по району
 $arResult['SELECT_PARAMS']['LOCALITY'] = "нет данных";
 if ($mainDeal['UF_CRM_1505802786']) {
-  $arResult["SQL_STRING"] .= " AND b_iblock_element_prop_s42.PROPERTY_216 LIKE '%".trim($mainDeal['UF_CRM_1505802786'])."%'";
+  $arResult["SQL_STRING"] .= " AND LOWER(b_iblock_element_prop_s42.PROPERTY_216) LIKE '%".trim(strtolower($mainDeal['UF_CRM_1505802786']))."%'";
   $arResult['SELECT_PARAMS']['LOCALITY'] = $mainDeal['UF_CRM_1505802786'];
 }
 //Фильтр по улицам
@@ -166,8 +166,8 @@ if ($mainDeal['UF_CRM_1505965059']) {
   $arResult['SELECT_PARAMS']['STREETS'] = $mainDeal['UF_CRM_1505965059'];
   $arResult["SQL_STRING"] .= " AND (";
   foreach (explode(",",$mainDeal['UF_CRM_1505965059']) as $key=>$street){
-    if ($key) $arResult["SQL_STRING"] .=" OR b_iblock_element_prop_s42.PROPERTY_217 LIKE '%".trim($street)."%'";
-    else $arResult["SQL_STRING"] .="b_iblock_element_prop_s42.PROPERTY_217 LIKE '%".trim($street)."%'";
+    if ($key) $arResult["SQL_STRING"] .=" OR LOWER(b_iblock_element_prop_s42.PROPERTY_217) LIKE '%".trim(strtolower($street))."%'";
+    else $arResult["SQL_STRING"] .="LOWER(b_iblock_element_prop_s42.PROPERTY_217) LIKE '%".trim(strtolower($street))."%'";
   }
   $arResult["SQL_STRING"] .= ")";
 }
