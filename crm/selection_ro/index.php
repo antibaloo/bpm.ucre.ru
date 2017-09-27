@@ -3,6 +3,16 @@
 require($_SERVER["DOCUMENT_ROOT"]."/bitrix/header.php");
 use \Bitrix\Crm\Category\DealCategory;
 $APPLICATION->SetTitle("Подбор заявок");
+?>
+<center>
+  <h1>Раздел закрыт!</h1>
+  <h2>Пользуётесь "Встречными заявками"!</h2>
+  <hr>
+  <img src="./closed.jpg">
+</center>
+
+<?
+goto footer;
 //-Список сотрудников, включая уволеных-//
 $rsUsers = CUser::GetList(($by="id"), ($order="asc"), array("GROUPS_ID"=> array(12))); // выбираем пользователей
 //--------------------------------------//
@@ -371,6 +381,7 @@ $rsUsers = CUser::GetList(($by="id"), ($order="asc"), array("GROUPS_ID"=> array(
   ?>
 </div>
 <?
+footer:
 require($_SERVER["DOCUMENT_ROOT"]."/bitrix/footer.php");
 ?>
 <script type="text/javascript">
