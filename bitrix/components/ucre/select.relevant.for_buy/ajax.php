@@ -152,7 +152,7 @@ if (strripos ($_SERVER['HTTP_REFERER'], 'bpm.ucre.ru')!==false){
       <th>N<sub>комнат</sub></th>
       <th>S<sub>общая</sub></th>
       <th>S<sub>кухни</sub></th>
-      <?if ($_POST['rotype'] == 'Комната' || $_POST['rotype'] == 'Квартира'){?>
+      <?if ($_POST['rotype'] == 'Комната' || $_POST['rotype'] == 'Квартира'|| $_POST['rotype'] == 'Таунхаус'){?>
       <th title="Тип балкона">Б</th>
       <?}?>
       <?if ($_POST['rotype'] != 'Участок' && $_POST['rotype'] != 'Коммерческая'){?>

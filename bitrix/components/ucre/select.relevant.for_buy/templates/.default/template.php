@@ -31,9 +31,9 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED!==true)die();
       <td style="text-align:left;width:25%"><?=$arResult['SELECT_PARAMS']['TYPEWALLS'] ?></td>
     </tr>
     <tr style="border: 1px solid lightgrey">
-      <td style="text-align:right;width:25%"><b>1-й этаж:</b></td>
-      <td style="text-align:left;width:25%"><?=($arResult['SELECT_PARAMS']['FIRST'])?$arResult['SELECT_PARAMS']['FIRST']:"можно первый"?></td>
-      <td style="text-align:right;width:25%"><b>N-й этаж:</b></td>
+      <td style="text-align:right;width:25%"><b>Желаемый этаж:</b></td>
+      <td style="text-align:left;width:25%"><?="с ".$arResult['SELECT_PARAMS']['FLOOR_FROM']." по ".$arResult['SELECT_PARAMS']['FLOOR_TO']?></td>
+      <td style="text-align:right;width:25%"><b>Не последний:</b></td>
       <td style="text-align:left;width:25%"><?=($arResult['SELECT_PARAMS']['LAST'])?$arResult['SELECT_PARAMS']['LAST']:"можно последний"?></td>
     </tr>
     <tr style="border: 1px solid lightgrey">

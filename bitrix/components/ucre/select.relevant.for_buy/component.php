@@ -33,7 +33,7 @@ $rsDeal = CCrmDeal::GetListEx(
   array("ID" => $arParams['ID']), 
   false, 
   false, 
-  array("TITLE","ASSIGNED_BY_ID","UF_CRM_5895BC940ED3F","UF_CRM_58CFC7CDAAB96","UF_CRM_58958B529E628","UF_CRM_58958B52BA439","UF_CRM_58958B52F2BAC","UF_CRM_58958B576448C","UF_CRM_58958B5751841","UF_CRM_1502432955","UF_CRM_1502433005","UF_CRM_1505802775","UF_CRM_1505802786","UF_CRM_58958B532A119","UF_CRM_1505805281","UF_CRM_1505805394","UF_CRM_1505965059"),
+  array("TITLE","ASSIGNED_BY_ID","UF_CRM_5895BC940ED3F","UF_CRM_58CFC7CDAAB96","UF_CRM_58958B529E628","UF_CRM_58958B52BA439","UF_CRM_58958B52F2BAC","UF_CRM_58958B576448C","UF_CRM_58958B5751841","UF_CRM_1502432955","UF_CRM_1502433005","UF_CRM_1505802775","UF_CRM_1505802786","UF_CRM_58958B532A119","UF_CRM_1505805281","UF_CRM_1505805394","UF_CRM_1505965059","UF_CRM_1506501917","UF_CRM_1506501950"),
   array()
 );
 $arResult['ID'] = $arParams['ID'];
@@ -104,12 +104,20 @@ if ($mainDeal['UF_CRM_58958B52F2BAC']) {
   $arResult["SQL_STRING"] .= " AND b_iblock_element_prop_s42.PROPERTY_226 >=".$mainDeal['UF_CRM_58958B52F2BAC'];
   $arResult['SELECT_PARAMS']['KITCHEN_AREA'] = $mainDeal['UF_CRM_58958B52F2BAC'];
 }
-//Исключить этажи
-$arResult['SELECT_PARAMS']['FIRST'] = "";
-if ($mainDeal['UF_CRM_1502432955']){
-  $arResult["SQL_STRING"] .=" AND b_iblock_element_prop_s42.PROPERTY_221 >1";
-  $arResult['SELECT_PARAMS']['FIRST'] = "[не первый]";  
+//Диапазон этажей
+//от
+$arResult['SELECT_PARAMS']['FLOOR_FROM'] = "любого";
+if ($mainDeal['UF_CRM_1506501917']>1){
+  $arResult["SQL_STRING"] .=" AND b_iblock_element_prop_s42.PROPERTY_221 >=".$mainDeal['UF_CRM_1506501917'];
+  $arResult['SELECT_PARAMS']['FLOOR_FROM'] = $mainDeal['UF_CRM_1506501917'];
 }
+//до
+$arResult['SELECT_PARAMS']['FLOOR_TO'] = "любой";
+if ($mainDeal['UF_CRM_1506501950']>1){
+  $arResult["SQL_STRING"] .=" AND b_iblock_element_prop_s42.PROPERTY_221 <=".$mainDeal['UF_CRM_1506501950'];
+  $arResult['SELECT_PARAMS']['FLOOR_TO'] = $mainDeal['UF_CRM_1506501950'];
+}
+//Исключить последний
 $arResult['SELECT_PARAMS']['LAST'] = "";
 if ($mainDeal['UF_CRM_1502433005']){
   $arResult["SQL_STRING"] .=" AND b_iblock_element_prop_s42.PROPERTY_221 < b_iblock_element_prop_s42.PROPERTY_222";
