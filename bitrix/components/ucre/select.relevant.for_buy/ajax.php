@@ -113,11 +113,13 @@ if (strripos ($_SERVER['HTTP_REFERER'], 'bpm.ucre.ru')!==false){
   $count = $rsData->SelectedRowsCount();
   //Запись результатов вызова инструмента в таблицу для отчета
   $DB->PrepareFields("b_crm_relevant_search");
+  
   $arFields = array(
     "deal_id" => $_POST['deal_id'],
     "user_id" => $USER->GetID(),
     "search_date" => $DB->GetNowFunction(),
-    "result_count" => $count
+    "result_count" => $count,
+    "search_params" => "'".hex2bin($_POST['searchParams'])."'"
   );
   $DB->StartTransaction();
   $ID = $DB->Insert("b_crm_relevant_search", $arFields, $err_mess.__LINE__);

@@ -60,6 +60,7 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED!==true)die();
   <input type="hidden" name="assigned_by_id" value="<?=$arResult['ASSIGNED_BY_ID']?>">
   <input type="hidden" name="rotype" value="<?=$arResult['SELECT_PARAMS']['TYPE']?>">
   <input type="hidden" name="searchGeo" value="<?=$arResult['SELECT_PARAMS']['SEARCHGEO']?>">
+  <input type="hidden" name="searchParams" value="<?=bin2hex(serialize($arResult['SELECT_PARAMS']))?>">
 </form>
 <hr>
 <div id="resultGrid">
