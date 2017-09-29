@@ -110,6 +110,18 @@ if (strripos ($_SERVER['HTTP_REFERER'], 'bpm.ucre.ru')!==false){
 
   $rsData = $DB->Query($sql_string);
   
+  $temp_array = array();
+  while ($aRes=$rsData->Fetch()){
+    /*--Проверка условий попадания в географическую область поиска--*/
+    if ($_POST['searchGeo']!=""){
+      if ($aRes['PROPERTY_298'] && $aRes['PROPERTY_299']){
+        if (isInPoly(makePolyArray($_POST['searchGeo']),array("lat" =>$aRes['PROPERTY_298'], "lon" => $aRes['PROPERTY_299']))) $temp_array[] = $aRes;
+      }
+    }
+  }
+  $rsData->InitFromArray($temp_array);
+
+  
   $count = $rsData->SelectedRowsCount();
   //Запись результатов вызова инструмента в таблицу для отчета
   $DB->PrepareFields("b_crm_relevant_search");
@@ -164,16 +176,6 @@ if (strripos ($_SERVER['HTTP_REFERER'], 'bpm.ucre.ru')!==false){
 <?
     for ($j=1;$j<=$rows;$j++){
       if ($aRes = $rsData->Fetch()){
-        /*--Проверка условий попадания в географическую область поиска--*/
-        
-        if ($_POST['searchGeo']!=""){
-          if ($aRes['PROPERTY_298'] && $aRes['PROPERTY_299']){
-            if (!isInPoly(makePolyArray($_POST['searchGeo']),array("lat" =>$aRes['PROPERTY_298'], "lon" => $aRes['PROPERTY_299']))){
-              continue;
-            }
-          }
-        }
-        /*-------------------------------------------------------------*/
         $assigned_user = CUser::GetByID($aRes['ASSIGNED_BY_ID'])->Fetch();
         if ($aRes['PROPERTY_210'] == 386) $square = $aRes['PROPERTY_292'];
         else $square = $aRes['PROPERTY_224'];
