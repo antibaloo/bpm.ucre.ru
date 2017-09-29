@@ -66,7 +66,8 @@ if (strripos ($_SERVER['HTTP_REFERER'], 'bpm.ucre.ru')!==false){
   if ($params['TYPE'] == 'комната') $arFilter['<=UF_CRM_58958B52BA439'] = $params['ROOM_AREA'];
   elseif ($params['TYPE'] == 'участок') $arFilter['<=UF_CRM_58958B52BA439'] = $params['PLOT_AREA'];
   else $arFilter['<=UF_CRM_58958B52BA439'] = $params['TOTAL_AREA'];
-    
+  //print_r($params);
+  //print_r($arFilter);
   $rsDeal = CCrmDeal::GetList(
     array("DATE_MODIFY" => "DESC"),
     $arFilter,
@@ -80,7 +81,8 @@ if (strripos ($_SERVER['HTTP_REFERER'], 'bpm.ucre.ru')!==false){
     "deal_id" => $_POST['deal_id'],
     "user_id" => $USER->GetID(),
     "search_date" => $DB->GetNowFunction(),
-    "result_count" => $count
+    "result_count" => $count,
+    "search_params" => "'".$_POST['params']."'"
   );
   $DB->StartTransaction();
   $ID = $DB->Insert("b_crm_relevant_search", $arFields, $err_mess.__LINE__);

@@ -21,7 +21,7 @@ if ($mainDeal["UF_CRM_1469534140"]){
   $arResult['COMPONENT_PATH'] = $this->GetPath(); //Пусть к папке компонента для вызова ajax скриптов
   $arResult['ASSIGNED_BY_ID'] = $mainDeal['ASSIGNED_BY_ID'];
   $arResult['SELECT_PARAMS']['PRICE'] = $mainDeal['UF_CRM_58958B5734602'];
-  $arResult['SELECT_PARAMS']['MARKET'] = ($mainDeal['CATEGORY_ID'])?"новостройка":"вторичка";
+  $arResult['SELECT_PARAMS']['MARKET'] = ($mainDeal['CATEGORY_ID'])?"первичка":"вторичка";
   $arResult['SELECT_PARAMS']['TYPE'] = $objectProperties['TYPE']['VALUE'];
   $arResult['SELECT_PARAMS']['ROOMS'] = $objectProperties['ROOMS']['VALUE'];
   $arResult['SELECT_PARAMS']['TOTAL_AREA'] = $objectProperties['TOTAL_AREA']['VALUE'];
