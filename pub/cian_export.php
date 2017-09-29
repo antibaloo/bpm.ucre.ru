@@ -21,6 +21,31 @@ $materialtype = array(
 	'432' => 'stalin'
 );
 //------Наполнили справочник типов домов
+
+//------Наполняем справочник материалов домов/дач
+$wallstype = array(
+	'413' => 'block',
+	'414' => 'wood',
+	'415' => 'wood',
+	'416' => 'other',
+	'417' => 'boards',
+	'418' => 'brick',
+	'419' => 'monolith',
+	'420' => 'no',
+	'421' => 'wood',
+	'422' => 'panel',
+	'423' => 'block',
+	'424' => 'sandwich',
+	'425' => 'block'
+);
+//------Наполнили справочник типов домов
+//------Наполняем справочник категрий земель
+$statusPlot = array(
+	'530' => 'individualHousingConstruction',
+	'531' => 'suburbanNonProfitPartnership',
+	'532' => 'industrialLand'
+);
+//------Наполнили справочник категорий земель
 $dom = new domDocument("1.0", "utf-8");
 $feed = $dom->createElement("feed"); // Создаём корневой элемент
 $dom->appendChild($feed);//Присоединяем его к документу	
@@ -88,25 +113,107 @@ while($aRes = $db_res->Fetch()){
 			break;
 		case 383://Дома, дачи
 		case 385:
-			
+			$Category = $dom->createElement("Category", "houseSale");
+			$object->appendChild($Category);
+			if ($aRes['PROPERTY_224'] > 0){
+				$TotalArea = $dom->createElement("TotalArea", number_format($aRes['PROPERTY_224'],2,".",""));
+				$object->appendChild($TotalArea);
+			}
+			$Building = $dom->createElement("Building");
+				$FloorsCount = $dom->createElement("FloorsCount", $aRes['PROPERTY_222']);
+				$Building->appendChild($FloorsCount);
+				$MaterialType = $dom->createElement("MaterialType", $wallstype[$aRes['PROPERTY_242']]);
+				$Building->appendChild($MaterialType);
+			$object->appendChild($Building);
+			$Land = $dom->createElement("Land");
+				$Area = $dom->createElement("Area", number_format($aRes['PROPERTY_292'],2,".",""));
+				$Land->appendChild($Area);
+				$AreaUnitType =  $dom->createElement("AreaUnitType","sotka");
+				$Land->appendChild($AreaUnitType);
+			$object->appendChild($Land);
 			$Address = $dom->createElement("Address", $aRes['PROPERTY_215'].", ".$aRes['PROPERTY_217']);
 			$object->appendChild($Address);
 			$h++;
 			$num++;
 			break;
 		case 384://Таунхаусы
+			$Category = $dom->createElement("Category", "townhouseSale");
+			$object->appendChild($Category);
+			if ($aRes['PROPERTY_224'] > 0){
+				$TotalArea = $dom->createElement("TotalArea", number_format($aRes['PROPERTY_224'],2,".",""));
+				$object->appendChild($TotalArea);
+			}
+			$Building = $dom->createElement("Building");
+				$FloorsCount = $dom->createElement("FloorsCount", $aRes['PROPERTY_222']);
+				$Building->appendChild($FloorsCount);
+				$MaterialType = $dom->createElement("MaterialType", $wallstype[$aRes['PROPERTY_242']]);
+				$Building->appendChild($MaterialType);
+			$object->appendChild($Building);
+			$Land = $dom->createElement("Land");
+				$Area = $dom->createElement("Area", number_format($aRes['PROPERTY_292'],2,".",""));
+				$Land->appendChild($Area);
+				$AreaUnitType =  $dom->createElement("AreaUnitType","sotka");
+				$Land->appendChild($AreaUnitType);
+			$object->appendChild($Land);
 			$Address = $dom->createElement("Address", $aRes['PROPERTY_215'].", ".$aRes['PROPERTY_217']);
 			$object->appendChild($Address);
 			$t++;
 			$num++;
 			break;
 		case 386://Участки
+			$Category = $dom->createElement("Category", "landSale");
+			$object->appendChild($Category);
+			$Land = $dom->createElement("Land");
+				$Area = $dom->createElement("Area", number_format($aRes['PROPERTY_292'],2,".",""));
+				$Land->appendChild($Area);
+				$AreaUnitType =  $dom->createElement("AreaUnitType","sotka");
+				$Land->appendChild($AreaUnitType);
+				$Status = $dom->createElement("Status",$statusPlot[$aRes['PROPERTY_295']]);
+				$Land->appendChild($Status);
+			$object->appendChild($Land);
 			$Address = $dom->createElement("Address", $aRes['PROPERTY_215'].", ".$aRes['PROPERTY_217']);
 			$object->appendChild($Address);
 			$p++;
 			$num++;
 			break;
 		case 387://Коммерческая
+			switch ($aRes['PROPERTY_238']){
+				case 388://Бизнес-центр
+					break;
+				case 389://Гараж
+					$Category = $dom->createElement("Category", "garageSale");
+					$object->appendChild($Category);
+					$Garage = $dom->createElement("Garage");
+						$Type = $dom->createElement("Type","garage");
+						$Garage->appendChild($Type);
+					$object->appendChild($Garage);
+					if ($aRes['PROPERTY_224'] > 0){
+						$TotalArea = $dom->createElement("TotalArea", number_format($aRes['PROPERTY_224'],2,".",""));
+						$object->appendChild($TotalArea);
+					}
+					break;
+				case 390://Гостиница
+					
+					break;
+				case 391://Иное
+					break;
+				case 392://Магазин
+					break;
+				case 393://Отдельно-стоящее здание
+					break;
+				case 394://Офис
+					break;
+				case 395://Помещение свободного назначения
+					break;
+				case 396://Предприятие питания
+					break;
+				case 397://Торгово-промышленное помещение
+					break;
+				case 398://Склад
+					break;
+				case 399://Торговый центр
+					break;
+			}
 			$Address = $dom->createElement("Address", $aRes['PROPERTY_215'].", ".$aRes['PROPERTY_217']);
 			$object->appendChild($Address);
 			$c++;
