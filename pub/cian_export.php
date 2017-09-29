@@ -54,8 +54,9 @@ $feed->appendChild($feed_version);
 $db_res = $DB->Query("select b_crm_deal.ID, b_crm_deal.COMMENTS,b_uts_crm_deal.UF_CRM_58958B5734602, b_uts_crm_deal.UF_CRM_1472038962, b_uts_crm_deal.UF_CRM_1476517423,b_iblock_element.ID as ELEMENT_ID, b_iblock_element.CODE, b_iblock_element_prop_s42.PROPERTY_210, b_iblock_element_prop_s42.PROPERTY_300, b_iblock_element_prop_s42.PROPERTY_213, b_iblock_element_prop_s42.PROPERTY_214, b_iblock_element_prop_s42.PROPERTY_215,b_iblock_element_prop_s42.PROPERTY_216,b_iblock_element_prop_s42.PROPERTY_217,b_iblock_element_prop_s42.PROPERTY_218, b_iblock_element_prop_s42.PROPERTY_298, b_iblock_element_prop_s42.PROPERTY_299, b_iblock_element_prop_s42.PROPERTY_229, b_iblock_element_prop_s42.PROPERTY_228, b_iblock_element_prop_s42.PROPERTY_224, b_iblock_element_prop_s42.PROPERTY_292, b_iblock_element_prop_s42.PROPERTY_225, b_iblock_element_prop_s42.PROPERTY_226, b_iblock_element_prop_s42.PROPERTY_221, b_iblock_element_prop_s42.PROPERTY_222, b_iblock_element_prop_s42.PROPERTY_242, b_iblock_element_prop_s42.PROPERTY_243, b_iblock_element_prop_s42.PROPERTY_238, b_iblock_element_prop_s42.PROPERTY_295, b_iblock_element_prop_s42.PROPERTY_374, b_iblock_element_prop_s42.PROPERTY_258, b_iblock_element_prop_s42.PROPERTY_313, b_iblock_element_prop_s42.PROPERTY_375 from b_crm_deal LEFT JOIN b_uts_crm_deal ON b_crm_deal.ID = b_uts_crm_deal.VALUE_ID LEFT JOIN b_iblock_element ON b_uts_crm_deal.UF_CRM_1469534140 = b_iblock_element.ID LEFT JOIN b_iblock_element_prop_s42 ON b_uts_crm_deal.UF_CRM_1469534140 = b_iblock_element_prop_s42.IBLOCK_ELEMENT_ID where b_crm_deal.CATEGORY_ID = 0 and b_uts_crm_deal.UF_CRM_1469534140 <> '' and b_crm_deal.STAGE_ID = 'PROPOSAL' AND (b_uts_crm_deal.UF_CRM_1472038962<>'a:0:{}' OR b_uts_crm_deal.UF_CRM_1476517423 <> 'a:0:{}') ORDER BY b_crm_deal.DATE_MODIFY DESC");
 while($aRes = $db_res->Fetch()){
 	$object = $dom->createElement("object");// Создаём узел "Object"
-	$ExternalId = $dom->createElement("ExternalId", "C".$aRes['ELEMENT_ID']);
+	$ExternalId = $dom->createElement("ExternalId", "C".$aRes['ID']);
 	$object->appendChild($ExternalId);
+	$AddressString = ($aRes['PROPERTY_214'] == 'обл. подчинения')?$aRes['PROPERTY_213'].", ".$aRes['PROPERTY_215'].", ".$aRes['PROPERTY_217']:$aRes['PROPERTY_213'].", ".$aRes['PROPERTY_214'].", ".$aRes['PROPERTY_215'].", ".$aRes['PROPERTY_217'];
 	switch ($aRes['PROPERTY_210']){
 		case 381: //Комнаты
 			$Category = $dom->createElement("Category", "roomSale");
@@ -76,7 +77,7 @@ while($aRes = $db_res->Fetch()){
 				$MaterialType = $dom->createElement("MaterialType", $materialtype[$aRes['PROPERTY_243']]);
 				$Building->appendChild($MaterialType);
 			$object->appendChild($Building);
-			$Address = $dom->createElement("Address", $aRes['PROPERTY_215'].", ".$aRes['PROPERTY_217'].", ".$aRes['PROPERTY_218']);
+			$Address = $dom->createElement("Address", $AddressString.", ".$aRes['PROPERTY_218']);
 			$object->appendChild($Address);
 			$r++;
 			$num++;
@@ -106,7 +107,7 @@ while($aRes = $db_res->Fetch()){
 				$MaterialType = $dom->createElement("MaterialType", $materialtype[$aRes['PROPERTY_243']]);
 				$Building->appendChild($MaterialType);
 			$object->appendChild($Building);
-			$Address = $dom->createElement("Address", $aRes['PROPERTY_215'].", ".$aRes['PROPERTY_217'].", ".$aRes['PROPERTY_218']);
+			$Address = $dom->createElement("Address", $AddressString.", ".$aRes['PROPERTY_218']);
 			$object->appendChild($Address);
 			$f++;
 			$num++;
@@ -131,7 +132,7 @@ while($aRes = $db_res->Fetch()){
 				$AreaUnitType =  $dom->createElement("AreaUnitType","sotka");
 				$Land->appendChild($AreaUnitType);
 			$object->appendChild($Land);
-			$Address = $dom->createElement("Address", $aRes['PROPERTY_215'].", ".$aRes['PROPERTY_217']);
+			$Address = $dom->createElement("Address", $AddressString);
 			$object->appendChild($Address);
 			$h++;
 			$num++;
@@ -155,7 +156,7 @@ while($aRes = $db_res->Fetch()){
 				$AreaUnitType =  $dom->createElement("AreaUnitType","sotka");
 				$Land->appendChild($AreaUnitType);
 			$object->appendChild($Land);
-			$Address = $dom->createElement("Address", $aRes['PROPERTY_215'].", ".$aRes['PROPERTY_217']);
+			$Address = $dom->createElement("Address", $AddressString);
 			$object->appendChild($Address);
 			$t++;
 			$num++;
@@ -171,7 +172,7 @@ while($aRes = $db_res->Fetch()){
 				$Status = $dom->createElement("Status",$statusPlot[$aRes['PROPERTY_295']]);
 				$Land->appendChild($Status);
 			$object->appendChild($Land);
-			$Address = $dom->createElement("Address", $aRes['PROPERTY_215'].", ".$aRes['PROPERTY_217']);
+			$Address = $dom->createElement("Address", $AddressString);
 			$object->appendChild($Address);
 			$p++;
 			$num++;
@@ -193,34 +194,148 @@ while($aRes = $db_res->Fetch()){
 					}
 					break;
 				case 390://Гостиница
-					
+					$Category = $dom->createElement("Category", "businessSale");
+					$object->appendChild($Category);
+					if ($aRes['PROPERTY_224'] > 0){
+						$TotalArea = $dom->createElement("TotalArea", number_format($aRes['PROPERTY_224'],2,".",""));
+						$object->appendChild($TotalArea);
+					}
+					$FloorNumber = $dom->createElement("FloorNumber", $aRes['PROPERTY_221']);
+					$object->appendChild($FloorNumber);
+					$Specialty = $dom->createElement("Specialty");
+						$Types = $dom->createElement("Types","hotel");
+						$Specialty->appendChild($Types);
+					$object->appendChild($Specialty);
+					$Building = $dom->createElement("Building");
+						$FloorsCount = $dom->createElement("FloorsCount", $aRes['PROPERTY_222']);
+						$Building->appendChild($FloorsCount);
+					$object->appendChild($Building);
 					break;
 				case 391://Иное
 					break;
 				case 392://Магазин
+					$Category = $dom->createElement("Category", "shoppingAreaSale");
+					$object->appendChild($Category);
+					$PlacementType = $dom->createElement("PlacementType", "streetRetail");
+					$object->appendChild($PlacementType);
+					if ($aRes['PROPERTY_224'] > 0){
+						$TotalArea = $dom->createElement("TotalArea", number_format($aRes['PROPERTY_224'],2,".",""));
+						$object->appendChild($TotalArea);
+					}
+					$FloorNumber = $dom->createElement("FloorNumber", $aRes['PROPERTY_221']);
+					$object->appendChild($FloorNumber);
+					$Building = $dom->createElement("Building");
+						$FloorsCount = $dom->createElement("FloorsCount", $aRes['PROPERTY_222']);
+						$Building->appendChild($FloorsCount);
+					$object->appendChild($Building);
 					break;
 				case 393://Отдельно-стоящее здание
+					$Category = $dom->createElement("Category", "buildingSale");
+					$object->appendChild($Category);
+					$Building = $dom->createElement("Building");
+						$FloorsCount = $dom->createElement("FloorsCount", $aRes['PROPERTY_222']);
+						$Building->appendChild($FloorsCount);
+						$TotalArea = $dom->createElement("TotalArea", number_format($aRes['PROPERTY_224'],2,".",""));
+						$Building->appendChild($TotalArea);
+					$object->appendChild($Building);
 					break;
 				case 394://Офис
+					$Category = $dom->createElement("Category", "officeSale");
+					$object->appendChild($Category);
+					$TotalArea = $dom->createElement("TotalArea", number_format($aRes['PROPERTY_224'],2,".",""));
+					$object->appendChild($TotalArea);
+					$FloorNumber = $dom->createElement("FloorNumber", $aRes['PROPERTY_221']);
+					$object->appendChild($FloorNumber);
+					$Building = $dom->createElement("Building");
+						$FloorsCount = $dom->createElement("FloorsCount", $aRes['PROPERTY_222']);
+						$Building->appendChild($FloorsCount);
+					$object->appendChild($Building);
 					break;
 				case 395://Помещение свободного назначения
+					$Category = $dom->createElement("Category", "freeAppointmentObjectSale");
+					$object->appendChild($Category);
+					$TotalArea = $dom->createElement("TotalArea", number_format($aRes['PROPERTY_224'],2,".",""));
+					$object->appendChild($TotalArea);
+					$FloorNumber = $dom->createElement("FloorNumber", $aRes['PROPERTY_221']);
+					$object->appendChild($FloorNumber);
+					$Building = $dom->createElement("Building");
+						$FloorsCount = $dom->createElement("FloorsCount", $aRes['PROPERTY_222']);
+						$Building->appendChild($FloorsCount);
+					$object->appendChild($Building);
 					break;
 				case 396://Предприятие питания
+					$Category = $dom->createElement("Category", "businessSale");
+					$object->appendChild($Category);
+					if ($aRes['PROPERTY_224'] > 0){
+						$TotalArea = $dom->createElement("TotalArea", number_format($aRes['PROPERTY_224'],2,".",""));
+						$object->appendChild($TotalArea);
+					}
+					$FloorNumber = $dom->createElement("FloorNumber", $aRes['PROPERTY_221']);
+					$object->appendChild($FloorNumber);
+					$Specialty = $dom->createElement("Specialty");
+						$Types = $dom->createElement("Types","publicCatering");
+						$Specialty->appendChild($Types);
+					$object->appendChild($Specialty);
+					$Building = $dom->createElement("Building");
+						$FloorsCount = $dom->createElement("FloorsCount", $aRes['PROPERTY_222']);
+						$Building->appendChild($FloorsCount);
+					$object->appendChild($Building);
 					break;
-				case 397://Торгово-промышленное помещение
+				case 397://Производственно-промышленное помещение
+					$Category = $dom->createElement("Category", "industrySale");
+					$object->appendChild($Category);
+					$TotalArea = $dom->createElement("TotalArea", number_format($aRes['PROPERTY_224'],2,".",""));
+					$object->appendChild($TotalArea);
+					$FloorNumber = $dom->createElement("FloorNumber", $aRes['PROPERTY_221']);
+					$object->appendChild($FloorNumber);
+					$Building = $dom->createElement("Building");
+						$FloorsCount = $dom->createElement("FloorsCount", $aRes['PROPERTY_222']);
+						$Building->appendChild($FloorsCount);
+					$object->appendChild($Building);
 					break;
 				case 398://Склад
+					$Category = $dom->createElement("Category", "warehouseSale");
+					$object->appendChild($Category);
+					$TotalArea = $dom->createElement("TotalArea", number_format($aRes['PROPERTY_224'],2,".",""));
+					$object->appendChild($TotalArea);
+					$FloorNumber = $dom->createElement("FloorNumber", $aRes['PROPERTY_221']);
+					$object->appendChild($FloorNumber);
+					$Building = $dom->createElement("Building");
+						$FloorsCount = $dom->createElement("FloorsCount", $aRes['PROPERTY_222']);
+						$Building->appendChild($FloorsCount);
+					$object->appendChild($Building);
 					break;
 				case 399://Торговый центр
+					$Category = $dom->createElement("Category", "businessSale");
+					$object->appendChild($Category);
+					if ($aRes['PROPERTY_224'] > 0){
+						$TotalArea = $dom->createElement("TotalArea", number_format($aRes['PROPERTY_224'],2,".",""));
+						$object->appendChild($TotalArea);
+					}
+					$FloorNumber = $dom->createElement("FloorNumber", $aRes['PROPERTY_221']);
+					$object->appendChild($FloorNumber);
+					$Specialty = $dom->createElement("Specialty");
+						$Types = $dom->createElement("Types","tradingCenter");
+						$Specialty->appendChild($Types);
+					$object->appendChild($Specialty);
+					$Building = $dom->createElement("Building");
+						$FloorsCount = $dom->createElement("FloorsCount", $aRes['PROPERTY_222']);
+						$Building->appendChild($FloorsCount);
+					$object->appendChild($Building);
 					break;
 			}
-			$Address = $dom->createElement("Address", $aRes['PROPERTY_215'].", ".$aRes['PROPERTY_217']);
+			$Address = $dom->createElement("Address", $AddressString);
 			$object->appendChild($Address);
 			$c++;
 			$num++;
 			break;
 	}
-	
+	$Coodinates = $dom->createElement("Coordinates");
+		$Lat = $dom->createElement("Lat",$aRes['PROPERTY_298']);
+		$Coodinates->appendChild($Lat);
+		$Lng = $dom->createElement("Lng",$aRes['PROPERTY_299']);
+		$Coodinates->appendChild($Lng);
+	$object->appendChild($Coodinates);
 	
 	$Description = $dom->createElement("Description", html_entity_decode($aRes['COMMENTS'])." Номер заявки в базе ЕЦН: ".$aRes['ID'].". При обращении в компанию назовите этот номер сотруднику, это поможет быстрее обработать Ваш запрос.");
 	$object->appendChild($Description);
@@ -260,7 +375,7 @@ while($aRes = $db_res->Fetch()){
 }
 
 
-$result = $dom->save("/home/bitrix/www_bpm/orenburg_cian.xml"); // Сохраняем полученный XML-документ в файл
+$result = $dom->save("/home/bitrix/ucre.ru/orenburg_cian.xml"); // Сохраняем полученный XML-документ в файл
 $time = microtime(true) - $start;
 CEventLog::Add(array(
   "SEVERITY" => "SECURITY",
