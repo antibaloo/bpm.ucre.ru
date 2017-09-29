@@ -110,17 +110,18 @@ if (strripos ($_SERVER['HTTP_REFERER'], 'bpm.ucre.ru')!==false){
 
   $rsData = $DB->Query($sql_string);
   
-  $temp_array = array();
-  while ($aRes=$rsData->Fetch()){
-    /*--Проверка условий попадания в географическую область поиска--*/
-    if ($_POST['searchGeo']!=""){
+  /*--Проверка условий попадания в географическую область поиска--*/
+  if ($_POST['searchGeo']!=""){
+    $temp_array = array();
+    while ($aRes=$rsData->Fetch()){
       if ($aRes['PROPERTY_298'] && $aRes['PROPERTY_299']){
         if (isInPoly(makePolyArray($_POST['searchGeo']),array("lat" =>$aRes['PROPERTY_298'], "lon" => $aRes['PROPERTY_299']))) $temp_array[] = $aRes;
       }
     }
+    $rsData->InitFromArray($temp_array);
   }
-  $rsData->InitFromArray($temp_array);
-
+  /*-------------------------------------------------------------*/
+  
   
   $count = $rsData->SelectedRowsCount();
   //Запись результатов вызова инструмента в таблицу для отчета
