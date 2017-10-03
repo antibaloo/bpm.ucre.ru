@@ -51,7 +51,7 @@ $feed = $dom->createElement("feed"); // Создаём корневой элем
 $dom->appendChild($feed);//Присоединяем его к документу	
 $feed_version = $dom->createElement("feed_version",2);
 $feed->appendChild($feed_version);
-$db_res = $DB->Query("select b_crm_deal.ID, b_crm_deal.COMMENTS,b_uts_crm_deal.UF_CRM_58958B5734602, b_uts_crm_deal.UF_CRM_1472038962, b_uts_crm_deal.UF_CRM_1476517423,b_iblock_element.ID as ELEMENT_ID, b_iblock_element.CODE, b_iblock_element_prop_s42.PROPERTY_210, b_iblock_element_prop_s42.PROPERTY_300, b_iblock_element_prop_s42.PROPERTY_213, b_iblock_element_prop_s42.PROPERTY_214, b_iblock_element_prop_s42.PROPERTY_215,b_iblock_element_prop_s42.PROPERTY_216,b_iblock_element_prop_s42.PROPERTY_217,b_iblock_element_prop_s42.PROPERTY_218, b_iblock_element_prop_s42.PROPERTY_298, b_iblock_element_prop_s42.PROPERTY_299, b_iblock_element_prop_s42.PROPERTY_229, b_iblock_element_prop_s42.PROPERTY_228, b_iblock_element_prop_s42.PROPERTY_224, b_iblock_element_prop_s42.PROPERTY_292, b_iblock_element_prop_s42.PROPERTY_225, b_iblock_element_prop_s42.PROPERTY_226, b_iblock_element_prop_s42.PROPERTY_221, b_iblock_element_prop_s42.PROPERTY_222, b_iblock_element_prop_s42.PROPERTY_242, b_iblock_element_prop_s42.PROPERTY_243, b_iblock_element_prop_s42.PROPERTY_238, b_iblock_element_prop_s42.PROPERTY_295, b_iblock_element_prop_s42.PROPERTY_374, b_iblock_element_prop_s42.PROPERTY_258, b_iblock_element_prop_s42.PROPERTY_313, b_iblock_element_prop_s42.PROPERTY_375 from b_crm_deal LEFT JOIN b_uts_crm_deal ON b_crm_deal.ID = b_uts_crm_deal.VALUE_ID LEFT JOIN b_iblock_element ON b_uts_crm_deal.UF_CRM_1469534140 = b_iblock_element.ID LEFT JOIN b_iblock_element_prop_s42 ON b_uts_crm_deal.UF_CRM_1469534140 = b_iblock_element_prop_s42.IBLOCK_ELEMENT_ID where b_crm_deal.CATEGORY_ID = 0 and b_uts_crm_deal.UF_CRM_1469534140 <> '' and b_crm_deal.STAGE_ID = 'PROPOSAL' AND (b_uts_crm_deal.UF_CRM_1472038962<>'a:0:{}' OR b_uts_crm_deal.UF_CRM_1476517423 <> 'a:0:{}') ORDER BY b_crm_deal.DATE_MODIFY DESC");
+$db_res = $DB->Query("select b_crm_deal.ID, b_crm_deal.COMMENTS,b_uts_crm_deal.UF_CRM_58958B5734602, b_uts_crm_deal.UF_CRM_1472038962, b_uts_crm_deal.UF_CRM_1476517423,b_iblock_element.ID as ELEMENT_ID, b_iblock_element.CODE, b_iblock_element_prop_s42.PROPERTY_210, b_iblock_element_prop_s42.PROPERTY_300, b_iblock_element_prop_s42.PROPERTY_213, b_iblock_element_prop_s42.PROPERTY_214, b_iblock_element_prop_s42.PROPERTY_215,b_iblock_element_prop_s42.PROPERTY_216,b_iblock_element_prop_s42.PROPERTY_217,b_iblock_element_prop_s42.PROPERTY_218, b_iblock_element_prop_s42.PROPERTY_298, b_iblock_element_prop_s42.PROPERTY_299, b_iblock_element_prop_s42.PROPERTY_229, b_iblock_element_prop_s42.PROPERTY_228, b_iblock_element_prop_s42.PROPERTY_224, b_iblock_element_prop_s42.PROPERTY_292, b_iblock_element_prop_s42.PROPERTY_225, b_iblock_element_prop_s42.PROPERTY_226, b_iblock_element_prop_s42.PROPERTY_221, b_iblock_element_prop_s42.PROPERTY_222, b_iblock_element_prop_s42.PROPERTY_242, b_iblock_element_prop_s42.PROPERTY_243, b_iblock_element_prop_s42.PROPERTY_238, b_iblock_element_prop_s42.PROPERTY_295, b_iblock_element_prop_s42.PROPERTY_374, b_iblock_element_prop_s42.PROPERTY_258, b_iblock_element_prop_s42.PROPERTY_313, b_iblock_element_prop_s42.PROPERTY_375 from b_crm_deal LEFT JOIN b_uts_crm_deal ON b_crm_deal.ID = b_uts_crm_deal.VALUE_ID LEFT JOIN b_iblock_element ON b_uts_crm_deal.UF_CRM_1469534140 = b_iblock_element.ID LEFT JOIN b_iblock_element_prop_s42 ON b_uts_crm_deal.UF_CRM_1469534140 = b_iblock_element_prop_s42.IBLOCK_ELEMENT_ID where b_crm_deal.CATEGORY_ID = 0 and b_uts_crm_deal.UF_CRM_1469534140 <> '' and b_crm_deal.STAGE_ID = 'PROPOSAL' AND (b_uts_crm_deal.UF_CRM_1472038962<>'a:0:{}' OR b_uts_crm_deal.UF_CRM_1476517423 <> 'a:0:{}') AND b_uts_crm_deal.UF_CRM_58958B5734602>0 ORDER BY b_crm_deal.DATE_MODIFY DESC");
 while($aRes = $db_res->Fetch()){
 	$object = $dom->createElement("object");// Создаём узел "Object"
 	$ExternalId = $dom->createElement("ExternalId", "C".$aRes['ID']);
@@ -340,24 +340,27 @@ while($aRes = $db_res->Fetch()){
 	$Description = $dom->createElement("Description", html_entity_decode($aRes['COMMENTS'])." Номер заявки в базе ЕЦН: ".$aRes['ID'].". При обращении в компанию назовите этот номер сотруднику, это поможет быстрее обработать Ваш запрос.");
 	$object->appendChild($Description);
 	
-	$Photos = $dom->createElement("Photos");
-	foreach (unserialize($aRes['UF_CRM_1472038962']) as $key=>$imageid){
-		$PhotoSchema = $dom->createElement("PhotoSchema");
-		$FullUrl = $dom->createElement("FullUrl","https://bpm.ucre.ru".CFile::GetPath($imageid));
-		$PhotoSchema->appendChild($FullUrl);
-		$IsDefault = $dom->createElement("IsDefault",($key)?false:true);
-		$PhotoSchema->appendChild($IsDefault);
-		$Photos->appendChild($PhotoSchema);
+	if (count(unserialize($aRes['UF_CRM_1472038962']))){
+		$Photos = $dom->createElement("Photos");
+		foreach (unserialize($aRes['UF_CRM_1472038962']) as $key=>$imageid){
+			$PhotoSchema = $dom->createElement("PhotoSchema");
+			$FullUrl = $dom->createElement("FullUrl","https://bpm.ucre.ru".CFile::GetPath($imageid));
+			$PhotoSchema->appendChild($FullUrl);
+			$IsDefault = $dom->createElement("IsDefault",($key)?false:true);
+			$PhotoSchema->appendChild($IsDefault);
+			$Photos->appendChild($PhotoSchema);
+		}
+		$object->appendChild($Photos);
 	}
-	$object->appendChild($Photos);
-	
-	if (unserialize($aRes['UF_CRM_1472038962'])[0]){
-		$LayoutPhoto = $dom->createElement("LayoutPhoto");
-		$FullUrl = $dom->createElement("FullUrl","https://bpm.ucre.ru".CFile::GetPath(unserialize($aRes['UF_CRM_1472038962'])[0]));
-		$LayoutPhoto->appendChild($FullUrl);
-		$IsDefault = $dom->createElement("IsDefault",1);
-		$LayoutPhoto->appendChild($IsDefault);
-		$object->appendChild($LayoutPhoto);
+	if (count(unserialize($aRes['UF_CRM_1476517423']))){
+		if (unserialize($aRes['UF_CRM_1476517423'])[0]){
+			$LayoutPhoto = $dom->createElement("LayoutPhoto");
+			$FullUrl = $dom->createElement("FullUrl","https://bpm.ucre.ru".CFile::GetPath(unserialize($aRes['UF_CRM_1476517423'])[0]));
+			$LayoutPhoto->appendChild($FullUrl);
+			$IsDefault = $dom->createElement("IsDefault",1);
+			$LayoutPhoto->appendChild($IsDefault);
+			$object->appendChild($LayoutPhoto);
+		}
 	}
 	$BargainTerms = $dom->createElement("BargainTerms");
 	$Price = $dom->createElement("Price",$aRes['UF_CRM_58958B5734602']);
