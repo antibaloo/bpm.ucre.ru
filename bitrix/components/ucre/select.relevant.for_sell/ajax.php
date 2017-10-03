@@ -61,7 +61,9 @@ if (strripos ($_SERVER['HTTP_REFERER'], 'bpm.ucre.ru')!==false){
       "<=UF_CRM_58958B52F2BAC" =>$params['KITCHEN_AREA'],
   );
   //Фильтр по исключению этажей
-  if ($params['FLOOR'] == 1)  $arFilter['UF_CRM_1502432955'] = 0;//не первый
+  $arFilter[] = array('LOGIC' => 'OR',array('UF_CRM_1506501917' => 0),array('<=UF_CRM_1506501917' => $params['FLOOR'])); //Поле "Этаж от" в заявке на покупку равно 0 или меньше или равно этажу 
+  $arFilter[] = array('LOGIC' => 'OR',array('UF_CRM_1506501950' => 0),array('>=UF_CRM_1506501950' => $params['FLOOR'])); //Поле "Этаж до" в заявке на покупку равно 0 или больше или равно этажу 
+
   if ($params['FLOOR'] == $params['FLOORS'])  $arFilter['UF_CRM_1502433005'] = 0;//не последний
   if ($params['TYPE'] == 'комната') $arFilter['<=UF_CRM_58958B52BA439'] = $params['ROOM_AREA'];
   elseif ($params['TYPE'] == 'участок') $arFilter['<=UF_CRM_58958B52BA439'] = $params['PLOT_AREA'];
