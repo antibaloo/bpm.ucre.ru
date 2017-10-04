@@ -1,0 +1,22 @@
+<center>
+  <button type="button" class="roType" disabled value="room">Комната</button>&nbsp;
+  <button type="button" class="roType" disabled value="flat">Квартира</button>&nbsp;
+  <button type="button" class="roType" disabled value="house">Дом, Дача, Таун</button>&nbsp;
+  <button type="button" class="roType" disabled value="plot">Участок</button>&nbsp;
+  <button type="button" class="roType" disabled value="comm">Коммерция</button> <span style="color:red">*</span>
+</center>
+<input name="roType" type="hidden">
+<hr>
+<script>
+  $(".roType").click(function(){
+		$("input[name=roType]").val($(this).val());
+		$("#roProperty" ).load( "./templates/"+$("input[name=goal]").val()+$(this).val()+".html" );
+		$("#leadMap").load( "./templates/"+$("input[name=goal]").val()+"Map.html");
+		
+		$(".roType").each(function(){
+			$(this).prop( "disabled", true);
+		});
+		$(this).css("font-weight","800");
+		$(this).css("color","black");
+	});
+</script>
