@@ -240,7 +240,26 @@ if($isAdmin || CCrmLead::CheckReadPermission(0, $userPermissions))
 		'IS_DISABLED' => !\Bitrix\Crm\Settings\LeadSettings::isEnabled()
 	);
 }
-
+$actions = array();
+if($isAdmin){
+	$createUrl = CComponentEngine::MakePathFromTemplate(
+				/*$arParams['PATH_TO_LEAD_EDIT']*/'/crm/lead_ucre/edit/#lead_id#/',
+				array('lead_id' => 0)
+			);
+	$actions[] = array('ID' => 'CREATE', 'URL' => $createUrl);
+	$stdItems['LEAD_UCRE'] = array(
+		'ID' => 'LEAD_UCRE',
+		'MENU_ID' => 'menu_crm_lead_ucre',
+		'NAME' => "Новые лиды",
+		'TITLE' => "Что-то с чем-то",
+		'URL' => "/crm/lead_ucre/",
+		'ICON' => 'lead',
+		'COUNTER' => $counter->getValue(),
+		'COUNTER_ID' => $counter->getCode(),
+		'ACTIONS' => $actions,
+		'IS_DISABLED' => !\Bitrix\Crm\Settings\LeadSettings::isEnabled()
+	);
+}
 if($isAdmin || CCrmDeal::CheckReadPermission(0, $userPermissions))
 {
 	$counter = EntityCounterFactory::create(
