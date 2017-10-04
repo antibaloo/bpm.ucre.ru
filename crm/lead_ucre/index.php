@@ -1,61 +1,44 @@
 <?
 require($_SERVER["DOCUMENT_ROOT"]."/bitrix/header.php");
-IncludeModuleLangFile($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/intranet/public/crm/reports/index.php");
-$APPLICATION->SetTitle("Новые лиды");
 ?>
-<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-<style>
-</style>
-<div style="margin:0 auto; width: 50%; padding: 5px; background-color: #eeeeee;">
-	<form id="leadForm">
-		<div id="leadContacts">
-		</div>
-		<div id="leadGoal">
-		</div>
-		<div id="roType">
-		</div>
-		<div id="leadMap">
-		</div>
-		<div id="roProperty">
-		</div>
-		<button id="saveForm" type="button">Сохранить форму</button>&nbsp;<button id="resetForm" type="button">Сбросить форму</button>
-	</form>
-</div>
-<div id="result" style="margin:0 auto; width: 50%; padding: 5px; background-color: #1eeee1;"></div>
-<script src="/include/maskedInput/jquery.maskedinput.js"></script>
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-<script>
-	$(document).ready(function(){
-		$("#leadContacts").load("./templates/leadcontacts.html");
-		$("#leadGoal").load("./templates/leadgoal.html");
-		$("#roType").load("./templates/rotype.html");
-		$("#roProperty").load("./templates/roproperty.html");
-		/*$("#mainProperty").load("./templates/mainproperty.html");*/
-		$("#result").html("");
-	});
-	$("#resetForm").click(function(){
-		$("#leadContacts").load("./templates/leadcontacts.html");
-		$("#leadGoal").load("./templates/leadgoal.html");
-		$("#roType").load("./templates/rotype.html");
-		$("#roProperty").load("./templates/roproperty.html");
-		/*$("#mainProperty").load("./templates/mainproperty.html");*/
-		$("#result").html("");
-	});
-	$("#saveForm").click(function(){
-		var data = $("#leadForm").serialize();
-		$.ajax({
-			type: "POST",
-      url: "check.php",
-      dataType: "json",
-      data: data,
-			success: function (json) {
-        $("#result").html(json);
-				console.log(json);
-      },
-      error: function (json) {
-        $("#result").html("Технические неполадки! В ближайшее время все будет исправлено!");
-      },
-		});
-	});
-</script>
+<?$APPLICATION->IncludeComponent(
+	"ucre:crm.lead", 
+	"", 
+	Array(
+	"SEF_MODE" => "Y", // Включить поддержку ЧПУ
+		"PATH_TO_CONTACT_SHOW" => "/crm/contact/show/#contact_id#/",
+		"PATH_TO_CONTACT_EDIT" => "/crm/contact/edit/#contact_id#/",
+		"PATH_TO_COMPANY_SHOW" => "/crm/company/show/#company_id#/",
+		"PATH_TO_COMPANY_EDIT" => "/crm/company/edit/#company_id#/",
+		"PATH_TO_DEAL_SHOW" => "/crm/deal/show/#deal_id#/",
+		"PATH_TO_DEAL_EDIT" => "/crm/deal/edit/#deal_id#/",
+		"PATH_TO_USER_PROFILE" => "/company/personal/user/#user_id#/",
+		"PATH_TO_PRODUCT_EDIT" => "/crm/product/edit/#product_id#/",
+		"PATH_TO_PRODUCT_SHOW" => "/crm/product/show/#product_id#/",
+		"ELEMENT_ID" => $_REQUEST["lead_id"],	// ID лида
+		"SEF_FOLDER" => "/crm/lead_ucre/",	// Каталог ЧПУ (относительно корня сайта)
+		"SEF_URL_TEMPLATES" => array(
+			"index" => "index.php",
+			"list" => "list/",
+			"edit" => "edit/#lead_id#/",
+			"show" => "show/#lead_id#/",
+			"convert" => "convert/#lead_id#/",
+			"import" => "import/",
+			"service" => "service/",
+			"dedupe" => "dedupe/",
+		),
+		"VARIABLE_ALIASES" => array(
+			"index" => "",
+			"list" => "",
+			"edit" => "",
+			"show" => "",
+			"convert" => "",
+			"import" => "",
+			"service" => "",
+			"dedupe" => "",
+		)
+	),
+	false
+);
+?>
 <?require($_SERVER["DOCUMENT_ROOT"]."/bitrix/footer.php");?>
