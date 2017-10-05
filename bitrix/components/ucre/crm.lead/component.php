@@ -78,7 +78,7 @@ else
 	$arVariableAliases = CComponentEngine::MakeComponentVariableAliases($arDefaultVariableAliases, $arParams['VARIABLE_ALIASES']);
 	CComponentEngine::InitComponentVariables(false, $arComponentVariables, $arVariableAliases, $arVariables);
 
-	$componentPage = 'index';
+	$componentPage = 'list';
 	if (isset($_REQUEST['edit']))
 		$componentPage = 'edit';
 	else if (isset($_REQUEST['copy']))
@@ -123,5 +123,8 @@ if($componentPage === 'index')
 {
 	$componentPage = 'list';
 }
+echo "<pre>";
+print_r($arResult);
+echo "</pre>";
 $this->IncludeComponentTemplate($componentPage);
 ?>
