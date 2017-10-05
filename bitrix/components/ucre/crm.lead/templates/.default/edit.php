@@ -7,7 +7,7 @@ $APPLICATION->IncludeComponent(
 	'',
 	array(
 		'ID' => 'LEAD_EDIT',
-		'ACTIVE_ITEM_ID' => 'LEAD',
+		'ACTIVE_ITEM_ID' => 'LEAD_UCRE',
 		'PATH_TO_COMPANY_LIST' => isset($arResult['PATH_TO_COMPANY_LIST']) ? $arResult['PATH_TO_COMPANY_LIST'] : '',
 		'PATH_TO_COMPANY_EDIT' => isset($arResult['PATH_TO_COMPANY_EDIT']) ? $arResult['PATH_TO_COMPANY_EDIT'] : '',
 		'PATH_TO_CONTACT_LIST' => isset($arResult['PATH_TO_CONTACT_LIST']) ? $arResult['PATH_TO_CONTACT_LIST'] : '',
