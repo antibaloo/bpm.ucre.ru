@@ -667,7 +667,6 @@ if (isset($arParams["MENU_MODE"]) && $arParams["MENU_MODE"] === "Y")
 			$options
 		);
 	}
-
 	return $arResult;
 }
 else
