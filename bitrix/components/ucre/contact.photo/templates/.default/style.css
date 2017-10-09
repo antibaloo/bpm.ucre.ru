@@ -1,0 +1,43 @@
+  .booth {
+    width: 800px;
+    height: 325px;
+    background: #ccc;
+    border: 10px solid #ddd;
+    margin:auto;
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    z-index: 200;
+    box-shadow: 0px 0px 100px 0px #000000;
+    display:none;
+  }
+  .booth-capture-button {
+    display: block;
+    margin: 10px 0;
+    padding: 10px 20px;
+    background: cornflowerblue;
+    color: #fff;
+    text-align: center;
+    text-decoration: none;
+  }
+  #canvas {
+    display: none;
+  }
+.left{
+  float: left;
+}
+.right{
+  float: right;
+}
+.buttons{
+  padding-top: 5px;
+  text-align: center;
+  height: 20px;
+}
+a.disabled {
+    pointer-events: none; /* делаем ссылку некликабельной */
+    cursor: default;  /* устанавливаем курсор в виде стрелки */
+    color: #999; /* цвет текста для нективной ссылки */
+}
