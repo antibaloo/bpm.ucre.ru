@@ -55,7 +55,7 @@ if ($mainDeal["CATEGORY_ID"] == 0 || $mainDeal["CATEGORY_ID"] == 4){
 				$rooms = ($objectProperties['ROOMS']['VALUE'])?$objectProperties['ROOMS']['VALUE']."-к ":'<span style="color: red">?-к </span>';
 				$arResult['TYPE'] = $rooms.$objectProperties['TYPE']['VALUE'];
 				$arResult['TOTAL_AREA'] = ($objectProperties['TOTAL_AREA']['VALUE'])?$objectProperties['TOTAL_AREA']['VALUE']." м<sup>2</sup>":'<span style="color: red">нет данных</span>';
-				$arResult['PLOT_AREA'] = ($objectProperties['PLOT_AREA']['VALUE'])?$objectProperties['PLOT_AREA']['VALUE']." соток":'<span style="color: red">нет данных</span>';
+				$arResult['PLOT_AREA'] = ($objectProperties['PLOT_AREA']['VALUE'])?$objectProperties['PLOT_AREA']['VALUE']." сот.":'<span style="color: red">нет данных</span>';
 				$arResult['FLOORALL'] = ($objectProperties['FLOORALL']['VALUE'])?$objectProperties['FLOORALL']['VALUE']:'<span style="color: red">нет данных</span>';
 				$arResult['WALLS'] = ($objectProperties['WALLS']['VALUE'])?$objectProperties['WALLS']['VALUE']:'<span style="color: red">нет данных</span>';
         $componentPage = 'house';
@@ -63,14 +63,14 @@ if ($mainDeal["CATEGORY_ID"] == 0 || $mainDeal["CATEGORY_ID"] == 4){
 			case 'дача':
         $arResult['TYPE'] = $objectProperties['TYPE']['VALUE'];
 				$arResult['TOTAL_AREA'] = ($objectProperties['TOTAL_AREA']['VALUE'])?$objectProperties['TOTAL_AREA']['VALUE']." м<sup>2</sup>":'<span style="color: red">нет данных</span>';
-				$arResult['PLOT_AREA'] = ($objectProperties['PLOT_AREA']['VALUE'])?$objectProperties['PLOT_AREA']['VALUE']." соток":'<span style="color: red">нет данных</span>';
+				$arResult['PLOT_AREA'] = ($objectProperties['PLOT_AREA']['VALUE'])?$objectProperties['PLOT_AREA']['VALUE']." сот.":'<span style="color: red">нет данных</span>';
 				$arResult['FLOORALL'] = ($objectProperties['FLOORALL']['VALUE'])?$objectProperties['FLOORALL']['VALUE']:'<span style="color: red">нет данных</span>';
 				$arResult['WALLS'] = ($objectProperties['WALLS']['VALUE'])?$objectProperties['WALLS']['VALUE']:'<span style="color: red">нет данных</span>';
         $componentPage = 'house';
         break;
        case 'участок':
         $arResult['TYPE'] = $objectProperties['TYPE']['VALUE'];
-				$arResult['PLOT_AREA'] = ($objectProperties['PLOT_AREA']['VALUE'])?$objectProperties['PLOT_AREA']['VALUE']." соток":'<span style="color: red">нет данных</span>';
+				$arResult['PLOT_AREA'] = ($objectProperties['PLOT_AREA']['VALUE'])?$objectProperties['PLOT_AREA']['VALUE']." сот.":'<span style="color: red">нет данных</span>';
 				$arResult['PLOT_CAT'] = ($objectProperties['PLOT_CAT']['VALUE'])?$objectProperties['PLOT_CAT']['VALUE']:'<span style="color: red">нет данных</span>';
         $componentPage = 'plot';
         break;
