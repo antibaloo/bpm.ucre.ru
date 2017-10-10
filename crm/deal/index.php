@@ -9,13 +9,13 @@ $APPLICATION->SetTitle(GetMessage("CRM_TITLE"));
 -->
 <script type="text/javascript">
 	$(document).ready(function() {
-		if (pagetitle.innerHTML.indexOf("Продажа: ",0)==-1 && pagetitle.innerHTML.indexOf("Новостройки: ",0)==-1){
+		if (pagetitle.innerHTML.indexOf("Поиск покупателя: ",0)==-1 && pagetitle.innerHTML.indexOf("Новостройки: ",0)==-1){
 			if (document.getElementById("CRM_DEAL_SHOW_V12_tab_tab_208445")) CRM_DEAL_SHOW_V12_tab_tab_208445.remove();
 		}
-		if (pagetitle.innerHTML.indexOf("Продажа: ",0)==-1 && pagetitle.innerHTML.indexOf("Покупка: ",0)==-1 && pagetitle.innerHTML.indexOf("Новостройки: ",0)==-1){
+		if (pagetitle.innerHTML.indexOf("Поиск покупателя: ",0)==-1 && pagetitle.innerHTML.indexOf("Подбор объекта: ",0)==-1 && pagetitle.innerHTML.indexOf("Новостройки: ",0)==-1){
 			if (document.getElementById("CRM_DEAL_SHOW_V12_tab_tab_583919")) CRM_DEAL_SHOW_V12_tab_tab_583919.remove();
 		}
-		if (pagetitle.innerHTML.indexOf("Продажа: ",0)==-1 && pagetitle.innerHTML.indexOf("Покупка: ",0)==-1 && pagetitle.innerHTML.indexOf("Новостройки: ",0)==-1){
+		if (pagetitle.innerHTML.indexOf("Поиск покупателя: ",0)==-1 && pagetitle.innerHTML.indexOf("Подбор объекта: ",0)==-1 && pagetitle.innerHTML.indexOf("Новостройки: ",0)==-1){
 			if (document.getElementById("CRM_DEAL_SHOW_V12_tab_tab_791211")) CRM_DEAL_SHOW_V12_tab_tab_791211.remove();
 		}
 	});
