@@ -91,8 +91,8 @@ $APPLICATION->SetTitle(GetMessage("CRM_TITLE"));
 					if (matches = window.location.href.match(/\/crm\/deal\/show\/([\d]+)\//i)) { 
 						var dealId = parseInt(matches[1]); 
 					}
-					if (pagetitle.innerHTML.indexOf("Продажа: ",0)!=-1){ var categoryId = 0;}
-					if (pagetitle.innerHTML.indexOf("Покупка: ",0)!=-1){ var categoryId = 2;}
+					if (pagetitle.innerHTML.indexOf("Поиск покупателя: ",0)!=-1){ var categoryId = 0;}
+					if (pagetitle.innerHTML.indexOf("Подбор объекта: ",0)!=-1){ var categoryId = 2;}
 					if (pagetitle.innerHTML.indexOf("Новостройки: ",0)!=-1){ var categoryId = 4;}
 					if (dealId > 0) { 
 						//чтобы не грузить повторно 
@@ -125,8 +125,8 @@ $APPLICATION->SetTitle(GetMessage("CRM_TITLE"));
 					if (matches = window.location.href.match(/\/crm\/deal\/show\/([\d]+)\//i)) { 
 						var dealId = parseInt(matches[1]); 
 					}
-					if (pagetitle.innerHTML.indexOf("Продажа: ",0)!=-1){ var categoryId = 0;}
-					if (pagetitle.innerHTML.indexOf("Покупка: ",0)!=-1){ var categoryId = 2;}
+					if (pagetitle.innerHTML.indexOf("Поиск покупателя: ",0)!=-1){ var categoryId = 0;}
+					if (pagetitle.innerHTML.indexOf("Подбор объекта: ",0)!=-1){ var categoryId = 2;}
 					if (pagetitle.innerHTML.indexOf("Новостройки: ",0)!=-1){ var categoryId = 4;}
 					if (dealId > 0) { 
 						//чтобы не грузить повторно 
