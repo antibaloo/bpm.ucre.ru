@@ -251,13 +251,32 @@ if($isAdmin){
 		'ID' => 'LEAD_UCRE',
 		'MENU_ID' => 'menu_crm_lead_ucre',
 		'NAME' => "Новые лиды",
-		'TITLE' => "Что-то с чем-то",
+		'TITLE' => "Новые лиды",
 		'URL' => "/crm/lead_ucre/",
 		'ICON' => 'lead',
 		'COUNTER' => $counter->getValue(),
 		'COUNTER_ID' => $counter->getCode(),
 		'ACTIONS' => $actions,
 		'IS_DISABLED' => !\Bitrix\Crm\Settings\LeadSettings::isEnabled()
+	);
+}
+$actions = array();
+if($isAdmin){
+	$createUrl = CComponentEngine::MakePathFromTemplate(
+				/*$arParams['PATH_TO_LEAD_EDIT']*/'/crm/client_deal/edit/#cdeal_id#/',
+				array('cdeal_id' => 0)
+			);
+	$actions[] = array('ID' => 'CREATE', 'URL' => $createUrl);
+	$stdItems['CDEAL_UCRE'] = array(
+		'ID' => 'CDEAL_UCRE',
+		'MENU_ID' => 'menu_crm_cdeal_ucre',
+		'NAME' => "Сделки",
+		'TITLE' => "Сделки",
+		'URL' => "/crm/client_deal/",
+		'ICON' => 'deal',
+		'COUNTER' => $counter->getValue(),
+		'COUNTER_ID' => $counter->getCode(),
+		'ACTIONS' => $actions
 	);
 }
 if($isAdmin || CCrmDeal::CheckReadPermission(0, $userPermissions))
