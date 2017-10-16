@@ -2,7 +2,7 @@
 use Bitrix\Intranet\Integration\Templates\Bitrix24\ThemePicker;
 
 if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true)die();
-
+CJSCore::Init(array("jquery"));
 if (isset($_GET["RELOAD"]) && $_GET["RELOAD"] == "Y")
 {
 	return; //Live Feed Ajax
