@@ -10,16 +10,8 @@ $sumHiddenCounters = 0;
 $arHiddenItemsCounters = array();
 $arAllItemsCounters = array();
 $groupPopupExists = false;
+
 ?>
-<style>
-	ucre{
-		border: 1px solid #eeeeee;
-	}
-	.ucre:hover {
-		cursor: pointer;
-		color: #379ce5;
-	}
-</style>
 <div class="menu-items-block" id="bx-left-menu">
 	<div class="menu-resize-container" id="left-menu-resizer">
 		<div class="menu-resize-item" id="left-menu-resizer-button">
@@ -28,11 +20,6 @@ $groupPopupExists = false;
 	</div>
 	<ul class="menu-items" id="left-menu-list">
 		<li class="menu-items-empty-li" id="left-menu-empty-item" style="height: 3px;"></li>
-		<li id="bx_left_menu_quick_link">		
- 			<input style="margin-left: 34px;" id="ucre_entity_id" type="text" size="5">		
- 			<span class="menu-item-link-text ucre" data-role="item-text" onclick="location.href=ucre_entity_id.value != ''?'https://bpm.ucre.ru/crm/lead/show/'+ucre_entity_id.value+'/':'#'">Лид</span>&nbsp;		
- 			<span class="menu-item-link-text ucre" data-role="item-text" onclick="location.href=ucre_entity_id.value != ''?'https://bpm.ucre.ru/crm/deal/show/'+ucre_entity_id.value+'/':'#'">Заявка</span>		
- 		</li>
 	<?
 	foreach(array("show", "hide") as $status)
 	{
@@ -106,16 +93,17 @@ $groupPopupExists = false;
 						data-type="<?=$item["ITEM_TYPE"]?>"
 						data-delete-perm="<?=$item["DELETE_PERM"]?>"
 						<? if (isset($item["PARAMS"]["is_application"])):?>
-						data-app-id="<?=$item["PARAMS"]["app_id"]?>"
+							data-app-id="<?=$item["PARAMS"]["app_id"]?>"
 						<?endif ?>
 						<? if (isset($item["PARAMS"]["top_menu_id"])):?>
 							data-top-menu-id="<?=$item["PARAMS"]["top_menu_id"]?>"
 						<?endif ?>
+						data-new-page="<?=(isset($item["OPEN_IN_NEW_PAGE"]) && $item["OPEN_IN_NEW_PAGE"])? "Y" : "N"?>"
 						class="menu-item-block<? if ($isCompositeMode === false && $counter > 0 && strlen($counterId) > 0):?> menu-item-with-index<?endif ?><? if (IsModuleInstalled("bitrix24") && $item["PARAMS"]["menu_item_id"] == "menu_live_feed"):?> menu-item-live-feed<?endif ?>"
 					>
 						<span
 							class="menu-fav-editable-btn menu-favorites-btn"
-							onclick="B24menuItemsObj.openMenuPopup(this, '<?=CUtil::JSEscape($item["PARAMS"]["menu_item_id"])?>')">
+							onclick="BX.Bitrix24.LeftMenuClass.openMenuPopup(this, '<?=CUtil::JSEscape($item["PARAMS"]["menu_item_id"])?>')">
 								<span class="menu-favorites-btn-icon"></span>
 						</span>
 
@@ -137,7 +125,7 @@ $groupPopupExists = false;
 							<?if (isset($item["OPEN_IN_NEW_PAGE"]) && $item["OPEN_IN_NEW_PAGE"]):?>
 							target="_blank"
 							<?endif?>
-							onclick="if (B24menuItemsObj.isEditMode()) return false;
+							onclick="if (BX.Bitrix24.LeftMenuClass.isEditMode()) return false;
 							<? if (isset($item["PARAMS"]["onclick"])):?>
 								<?=CUtil::JSEscape($item["PARAMS"]["onclick"])?>;
 								return false;
@@ -196,7 +184,7 @@ $groupPopupExists = false;
 		<span class="menu-items-title-text" id="left-menu-settings">
 			<?=GetMessage("MENU_SETTINGS_TITLE")?>
 		</span>
-		<span class="menu-favorites-btn-done" onclick="B24menuItemsObj.applyEditMode();"><?=GetMessage("MENU_EDIT_READY_FULL")?></span>
+		<span class="menu-favorites-btn-done" onclick="BX.Bitrix24.LeftMenuClass.applyEditMode();"><?=GetMessage("MENU_EDIT_READY_FULL")?></span>
 	</div>
 
 	<? if (CModule::IncludeModule("bitrix24") && CBitrix24::isInvitingUsersAllowed() && CModule::IncludeModule("intranet")):?>
@@ -224,7 +212,9 @@ $arJSParams = array(
 	"isCompositeMode" => $isCompositeMode,
 	"isCollapsedMode" => CUserOptions::GetOption("intranet", "left_menu_collapsed") === "Y",
 	"showPresetPopup" => $arResult["SHOW_PRESET_POPUP"] ? "Y" : "N",
-	"isPublicConverted" => $arResult["IS_PUBLIC_CONVERTED"] ? "Y" : "N"
+	"isPublicConverted" => $arResult["IS_PUBLIC_CONVERTED"] ? "Y" : "N",
+	"isCustomPresetAvailable" => $arResult["IS_CUSTOM_PRESET_AVAILABLE"] ? "Y" : "N",
+	"customPresetExists" => $arResult["CUSTOM_PRESET_EXISTS"] ? "Y" : "N"
 );
 ?>
 
@@ -245,7 +235,7 @@ $arJSParams = array(
 		SORT_ITEMS: '<?=GetMessageJS("MENU_SORT_ITEMS")?>',
 		MENU_ADD_SELF_PAGE: '<?=GetMessageJS("MENU_ADD_SELF_PAGE")?>',
 		MENU_EDIT_SELF_PAGE: '<?=GetMessageJS("MENU_EDIT_SELF_PAGE")?>',
-		MENU_SET_DEFAULT: '<?=GetMessageJS("MENU_SET_DEFAULT")?>',
+		MENU_SET_DEFAULT: '<?=GetMessageJS("MENU_SET_DEFAULT2")?>',
 		MENU_ADD_BUTTON: '<?=GetMessageJS("MENU_ADD_BUTTON")?>',
 		MENU_ITEM_NAME: '<?=GetMessageJS("MENU_ITEM_NAME")?>',
 		MENU_ITEM_LINK: '<?=GetMessageJS("MENU_ITEM_LINK")?>',
@@ -280,10 +270,19 @@ $arJSParams = array(
 		MENU_ADD_TO_LEFT_MENU: '<?=GetMessageJS("MENU_ADD_TO_LEFT_MENU")?>',
 		MENU_DELETE_FROM_LEFT_MENU: '<?=GetMessageJS("MENU_DELETE_FROM_LEFT_MENU")?>',
 		MENU_ITEM_MAIN_SECTION_PAGE: '<?=GetMessageJS("MENU_ITEM_MAIN_SECTION_PAGE")?>',
-		MENU_TOP_ITEM_LAST_HIDDEN: '<?=GetMessageJS("MENU_TOP_ITEM_LAST_HIDDEN")?>'
+		MENU_TOP_ITEM_LAST_HIDDEN: '<?=GetMessageJS("MENU_TOP_ITEM_LAST_HIDDEN")?>',
+		MENU_SAVE_CUSTOM_PRESET: '<?=GetMessageJS("MENU_SAVE_CUSTOM_PRESET")?>',
+		MENU_DELETE_CUSTOM_PRESET: '<?=GetMessageJS("MENU_DELETE_CUSTOM_PRESET")?>',
+		MENU_CUSTOM_PRESET_POPUP_TITLE: '<?=GetMessageJS("MENU_CUSTOM_PRESET_POPUP_TITLE")?>',
+		MENU_CUSTOM_PRESET_CURRENT_USER: '<?=GetMessageJS("MENU_CUSTOM_PRESET_CURRENT_USER")?>',
+		MENU_CUSTOM_PRESET_NEW_USER: '<?=GetMessageJS("MENU_CUSTOM_PRESET_NEW_USER")?>',
+		MENU_SET_CUSTOM_PRESET: '<?=GetMessageJS("MENU_SET_CUSTOM_PRESET")?>',
+		MENU_CUSTOM_PRESET_SEPARATOR: '<?=GetMessageJS("MENU_CUSTOM_PRESET_SEPARATOR")?>',
+		MENU_DELETE_CUSTOM_PRESET_CONFIRM: '<?=GetMessageJS("MENU_DELETE_CUSTOM_PRESET_CONFIRM")?>',
+		MENU_CUSTOM_PRESET_SUCCESS: '<?=GetMessageJS("MENU_CUSTOM_PRESET_SUCCESS")?>'
 	});
 
-	window.B24menuItemsObj = new BX.Bitrix24.LeftMenuClass(<?=CUtil::PhpToJSObject($arJSParams)?>);
+	BX.Bitrix24.LeftMenuClass.init(<?=CUtil::PhpToJSObject($arJSParams)?>);
 </script>
 
 <?
@@ -291,10 +290,10 @@ $arJSParams = array(
 $js = <<<HTML
 
 <script>
-if (!window.B24menuItemsObj.initPagetitleStar())
+if (!BX.Bitrix24.LeftMenuClass.initPagetitleStar())
 {
 	BX.ready(function() {
-		window.B24menuItemsObj.initPagetitleStar()
+		BX.Bitrix24.LeftMenuClass.initPagetitleStar()
 	});
 }
 
