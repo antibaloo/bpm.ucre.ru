@@ -1,5 +1,8 @@
-<?if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)die();
-CJSCore::Init(array("jquery"));
+<?
+use Bitrix\Intranet\Integration\Templates\Bitrix24\ThemePicker;
+
+if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true)die();
+
 if (isset($_GET["RELOAD"]) && $_GET["RELOAD"] == "Y")
 {
 	return; //Live Feed Ajax
@@ -33,8 +36,8 @@ $isCompositeMode = defined("USE_HTML_STATIC_CACHE");
 $isIndexPage =
 	$APPLICATION->GetCurPage(true) === SITE_DIR."stream/index.php" ||
 	$APPLICATION->GetCurPage(true) === SITE_DIR."index.php" ||
-	(defined("BITRIX24_INDEX_PAGE") && constant("BITRIX_INDEX_PAGE") === true)
-;
+	(defined("BITRIX24_INDEX_PAGE") && constant("BITRIX_INDEX_PAGE") === true);
+$isBitrix24Cloud = IsModuleInstalled("bitrix24");
 
 if ($isIndexPage)
 {
@@ -48,8 +51,6 @@ if ($isIndexPage)
 		define("BITRIX24_INDEX_COMPOSITE", true);
 	}
 }
-
-
 
 if ($isCompositeMode)
 {
@@ -78,7 +79,7 @@ function getJsTitle()
 <head>
 <meta name="viewport" content="width=1135">
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<?if (IsModuleInstalled("bitrix24")):?>
+<?if ($isBitrix24Cloud):?>
 <meta name="apple-itunes-app" content="app-id=561683423" />
 <link rel="apple-touch-icon-precomposed" href="/images/iphone/57x57.png" />
 <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/images/iphone/72x72.png" />
@@ -89,12 +90,26 @@ function getJsTitle()
 $APPLICATION->ShowHead(false);
 $APPLICATION->SetAdditionalCSS(SITE_TEMPLATE_PATH."/interface.css", true);
 $APPLICATION->AddHeadScript(SITE_TEMPLATE_PATH."/bitrix24.js", true);
+
+ThemePicker::getInstance()->showHeadAssets();
 ?>
 <title><? if (!$isCompositeMode || $isIndexPage) $APPLICATION->ShowTitle()?></title>
 </head>
 
-<body class="template-bitrix24<?=($isIndexPage ? " no-paddings start-page" : "")?>">
 <?
+$bodyClass = "template-bitrix24";
+if ($isIndexPage)
+{
+	$bodyClass .= " no-paddings start-page";
+}
+
+$bodyClass .= " bitrix24-".ThemePicker::getInstance()->getCurrentBaseThemeId()."-theme";
+?>
+
+<body class="<?=$bodyClass?>">
+<?
+ThemePicker::getInstance()->showBodyAssets();
+
 if ($isCompositeMode && !$isIndexPage)
 {
 	$frame = new \Bitrix\Main\Page\FrameStatic("title");
@@ -109,7 +124,7 @@ $APPLICATION->ShowViewContent("im-fullscreen");
 <table class="bx-layout-table">
 	<tr>
 		<td class="bx-layout-header">
-			<? if ((!IsModuleInstalled("bitrix24") || $USER->IsAdmin()) && !defined("SKIP_SHOW_PANEL")):?>
+			<? if ((!$isBitrix24Cloud || $USER->IsAdmin()) && !defined("SKIP_SHOW_PANEL")):?>
 				<div id="panel">
 				<?$APPLICATION->ShowPanel();?>
 				</div>
@@ -227,6 +242,14 @@ if(\Bitrix\Main\ModuleManager::isModuleInstalled('bitrix24'))
 						<span class="header-logo-block-util"></span>
 						<?
 						$clientLogo = COption::GetOptionInt("bitrix24", "client_logo", "");
+						if (\Bitrix\Main\Loader::includeModule("bitrix24"))
+						{
+							$licenseType = CBitrix24::getLicenseType();
+							if (!in_array($licenseType, array("team", "company", "nfr", "edu", "demo")))
+							{
+								$clientLogo = "";
+							}
+						}
 						$siteTitle = trim(COption::GetOptionString("bitrix24", "site_title", ""));
 
 						if (file_exists($_SERVER["DOCUMENT_ROOT"].SITE_DIR."include/company_name.php") && !$clientLogo && !$siteTitle)
@@ -252,7 +275,7 @@ if(\Bitrix\Main\ModuleManager::isModuleInstalled('bitrix24'))
 							<a id="logo_24_a" href="<?=SITE_DIR?>" title="<?=GetMessage("BITRIX24_LOGO_TOOLTIP")?>" class="logo"><?
 								if(strlen($siteTitle) <= 0)
 								{
-									$siteTitle = IsModuleInstalled("bitrix24") ? GetMessage('BITRIX24_SITE_TITLE_DEFAULT') : COption::GetOptionString("main", "site_name", "");
+									$siteTitle = $isBitrix24Cloud ? GetMessage('BITRIX24_SITE_TITLE_DEFAULT') : COption::GetOptionString("main", "site_name", "");
 								}
 								?>
 								<span id="logo_24_text" <?if ($clientLogo):?>style="display:none"<?endif?>>
@@ -363,7 +386,6 @@ if(\Bitrix\Main\ModuleManager::isModuleInstalled('bitrix24'))
 					);?>
 				</div>
 			</div>
-
 		</td>
 	</tr>
 	<tr>
@@ -438,11 +460,13 @@ if(\Bitrix\Main\ModuleManager::isModuleInstalled('bitrix24'))
 					<?
 					if ($isCompositeMode && !$isIndexPage)
 					{
+						$isDefaultTheme = ThemePicker::getInstance()->getCurrentThemeId() === "default";
+						$bodyClass = $isDefaultTheme ? "" : " no-background";
 						$dynamicArea = new \Bitrix\Main\Page\FrameStatic("workarea");
 						$dynamicArea->setAssetMode(\Bitrix\Main\Page\AssetMode::STANDARD);
 						$dynamicArea->setContainerId("content-table");
 						$dynamicArea->setStub('
-							<table class="bx-layout-inner-inner-table">
+							<table class="bx-layout-inner-inner-table composite-mode'.$bodyClass.'">
 								<colgroup>
 									<col class="bx-layout-inner-inner-cont">
 								</colgroup>
@@ -456,7 +480,16 @@ if(\Bitrix\Main\ModuleManager::isModuleInstalled('bitrix24'))
 										<div id="workarea">
 											<div id="workarea-content">
 												<div class="workarea-content-paddings">
-													<div class="b24-loader" id="b24-loader"><div class="b24-loader-curtain"></div></div>
+													<div style="position: relative; height: 50vh;">
+														<div class="intranet-loader-container" id="b24-loader">
+															<svg class="intranet-loader-circular" viewBox="25 25 50 50">
+																<circle class="intranet-loader-path" 
+																	cx="50" cy="50" r="20" fill="none" 
+																	stroke-miterlimit="10"
+																/>
+															</svg>
+														</div>
+													</div>
 												</div>
 											</div>
 										</div>
@@ -479,34 +512,29 @@ if(\Bitrix\Main\ModuleManager::isModuleInstalled('bitrix24'))
 										<?
 										$APPLICATION->ShowViewContent("above_pagetitle");
 										$APPLICATION->IncludeComponent(
-	"bitrix:menu", 
-	"top_horizontal", 
-	array(
-		"ROOT_MENU_TYPE" => "left",
-		"MENU_CACHE_TYPE" => "N",
-		"MENU_CACHE_TIME" => "604800",
-		"MENU_CACHE_USE_GROUPS" => "N",
-		"MENU_CACHE_USE_USERS" => "Y",
-		"CACHE_SELECTED_ITEMS" => "N",
-		"MENU_CACHE_GET_VARS" => array(
-		),
-		"MAX_LEVEL" => "1",
-		"USE_EXT" => "Y",
-		"DELAY" => "N",
-		"ALLOW_MULTI_SELECT" => "N",
-		"COMPONENT_TEMPLATE" => "top_horizontal",
-		"CHILD_MENU_TYPE" => "left",
-		"COMPOSITE_FRAME_MODE" => "A",
-		"COMPOSITE_FRAME_TYPE" => "AUTO"
-	),
-	false
-);
+											"bitrix:menu",
+											"top_horizontal",
+											array(
+												"ROOT_MENU_TYPE" => "left",
+												"MENU_CACHE_TYPE" => "N",
+												"MENU_CACHE_TIME" => "604800",
+												"MENU_CACHE_USE_GROUPS" => "N",
+												"MENU_CACHE_USE_USERS" => "Y",
+												"CACHE_SELECTED_ITEMS" => "N",
+												"MENU_CACHE_GET_VARS" => array(),
+												"MAX_LEVEL" => "1",
+												"USE_EXT" => "Y",
+												"DELAY" => "N",
+												"ALLOW_MULTI_SELECT" => "N"
+											),
+											false
+										);
 										?>
 
 										<div class="pagetitle-wrap">
 											<div class="pagetitle-inner-container">
 												<div class="pagetitle-menu pagetitle-container pagetitle-last-item-in-a-row" id="pagetitle-menu"><?
-													if (IsModuleInstalled("bitrix24")):
+													if ($isBitrix24Cloud):
 														$GLOBALS['INTRANET_TOOLBAR']->Disable();
 													else:
 														$GLOBALS['INTRANET_TOOLBAR']->Enable();
