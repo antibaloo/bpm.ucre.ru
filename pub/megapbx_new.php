@@ -9,7 +9,7 @@ CModule::IncludeModule('crm');
 CModule::IncludeModule('search');
 $megapbx = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT']."/../megapbx_params"));
 if ($_POST['crm_token'] == $megapbx->crm_key){
-  //$megalog = fopen('mepbx.log', 'a');
+  //$megalog = fopen('megapbx.log', 'a');
   //fwrite( $megalog, serialize($_POST)."\r\n");
   //fclose( $megalog );
   //Пишем лог сообщений АТС
