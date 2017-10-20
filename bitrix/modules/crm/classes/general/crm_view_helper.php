@@ -50,10 +50,7 @@ class CCrmViewHelper
 		{
 			if($showPath === '')
 			{
-				$showPath = CComponentEngine::MakePathFromTemplate(
-					COption::GetOptionString('crm', 'path_to_company_show'),
-					array('company_id' => $entityID)
-				);
+				$showPath = CCrmOwnerType::GetEntityShowPath(CCrmOwnerType::Company, $entityID, false);
 			}
 
 			$title = isset($arParams['TITLE']) ? $arParams['TITLE'] : '';
@@ -70,10 +67,7 @@ class CCrmViewHelper
 		{
 			if($showPath === '')
 			{
-				$showPath = CComponentEngine::MakePathFromTemplate(
-					COption::GetOptionString('crm', 'path_to_contact_show'),
-					array('contact_id' => $entityID)
-				);
+				$showPath = CCrmOwnerType::GetEntityShowPath(CCrmOwnerType::Contact, $entityID, false);
 			}
 
 			$title = isset($arParams['TITLE']) ? $arParams['TITLE'] : '';
@@ -90,10 +84,7 @@ class CCrmViewHelper
 		{
 			if($showPath === '')
 			{
-				$showPath = CComponentEngine::MakePathFromTemplate(
-					COption::GetOptionString('crm', 'path_to_lead_show'),
-					array('lead_id' => $entityID)
-				);
+				$showPath = CCrmOwnerType::GetEntityShowPath(CCrmOwnerType::Lead, $entityID, false);
 			}
 
 			$title = isset($arParams['TITLE']) ? $arParams['TITLE'] : '';
@@ -110,10 +101,7 @@ class CCrmViewHelper
 		{
 			if($showPath === '')
 			{
-				$showPath = CComponentEngine::MakePathFromTemplate(
-					COption::GetOptionString('crm', 'path_to_deal_show'),
-					array('deal_id' => $entityID)
-				);
+				$showPath = CCrmOwnerType::GetEntityShowPath(CCrmOwnerType::Deal, $entityID, false);
 			}
 
 			$title = isset($arParams['TITLE']) ? $arParams['TITLE'] : '';
@@ -131,10 +119,7 @@ class CCrmViewHelper
 		{
 			if($showPath === '')
 			{
-				$showPath = CComponentEngine::MakePathFromTemplate(
-					COption::GetOptionString('crm', 'path_to_quote_show'),
-					array('quote_id' => $entityID)
-				);
+				$showPath = CCrmOwnerType::GetEntityShowPath(CCrmOwnerType::Quote, $entityID, false);
 			}
 
 			$title = isset($arParams['TITLE']) ? $arParams['TITLE'] : '';
@@ -333,7 +318,7 @@ class CCrmViewHelper
 			$entityID = isset($arParams['ENTITY_ID']) ? intval($arParams['ENTITY_ID']) : 0;
 			if($entityTypeID > 0 && $entityID > 0)
 			{
-				$showUrl = CCrmOwnerType::GetShowUrl($entityTypeID, $entityID);
+				$showUrl = CCrmOwnerType::GetEntityShowPath($entityTypeID, $entityID);
 			}
 		}
 
@@ -826,6 +811,7 @@ class CCrmViewHelper
 				return isset($arOptions['STUB']) ? $arOptions['STUB'] : '';
 			}
 
+			$valueUrl = \Bitrix\Main\PhoneNumber\Parser::getInstance()->parse($value)->format();
 			$additionalHtml = '';
 			$enableSip = is_array($arOptions) && isset($arOptions['ENABLE_SIP']) && (bool)$arOptions['ENABLE_SIP'];
 			if($enableSip)
@@ -838,11 +824,11 @@ class CCrmViewHelper
 			$className = isset($arParams['CLASS_NAME']) ? $arParams['CLASS_NAME'] : 'crm-client-contacts-block-text-tel';
 
 			return '<a'.($className !== '' ? ' class="'.htmlspecialcharsbx($className).'"' : '')
-				.' title="'.htmlspecialcharsbx($value).'"'
+				.' title="'.htmlspecialcharsbx($valueUrl).'"'
 				.' href="'.htmlspecialcharsbx($linkAttrs['HREF']).'"'
 				.' onclick="'.htmlspecialcharsbx($linkAttrs['ONCLICK'])
 				.'">'
-				.htmlspecialcharsbx($value).'</a>'.$additionalHtml;
+				.htmlspecialcharsbx($valueUrl).'</a>'.$additionalHtml;
 		}
 		elseif($typeName === 'EMAIL')
 		{
@@ -1810,7 +1796,7 @@ class CCrmViewHelper
 
 			if($processed > 0)
 			{
-				echo '<span class="bx-br-separator">&nbsp;</span>';
+				echo '<span class="bx-br-separator"><br/></span>';
 			}
 
 			echo '<span class="fields files">';
@@ -1819,7 +1805,7 @@ class CCrmViewHelper
 
 			if ($file->IsImage($fileInfo['ORIGINAL_NAME'], $fileInfo['CONTENT_TYPE']))
 			{
-				echo '<a class="fancybox" rel="image_gallery" href="https://bpm.ucre.ru'.$fileInfo['SRC'].'" title=""><img src="https://bpm.ucre.ru'.$fileInfo['SRC'].'" width = "auto" height ="50" alt="" /></a>';
+				echo $file->ShowImage($fileInfo, $fileMaxWidth, $fileMaxHeight, '', '', true, false, 0, 0, $fileUrlTemplate);
 			}
 			else
 			{
