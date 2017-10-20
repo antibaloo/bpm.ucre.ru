@@ -1796,7 +1796,7 @@ class CCrmViewHelper
 
 			if($processed > 0)
 			{
-				echo '<span class="bx-br-separator"><br/></span>';
+				echo '<span class="bx-br-separator">&nbsp;</span>';
 			}
 
 			echo '<span class="fields files">';
@@ -1805,7 +1805,7 @@ class CCrmViewHelper
 
 			if ($file->IsImage($fileInfo['ORIGINAL_NAME'], $fileInfo['CONTENT_TYPE']))
 			{
-				echo $file->ShowImage($fileInfo, $fileMaxWidth, $fileMaxHeight, '', '', true, false, 0, 0, $fileUrlTemplate);
+				echo '<a class="fancybox" rel="image_gallery" href="https://bpm.ucre.ru'.$fileInfo['SRC'].'" title=""><img src="https://bpm.ucre.ru'.$fileInfo['SRC'].'" width = "auto" height ="50" alt="" /></a>';
 			}
 			else
 			{
