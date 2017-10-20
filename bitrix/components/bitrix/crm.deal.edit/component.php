@@ -321,7 +321,7 @@ else
 	$beginDate -= $time['tm_sec'];
 
 	$arFields['BEGINDATE'] = ConvertTimeStamp($beginDate, 'FULL', SITE_ID);
-	$arFields['CLOSEDATE'] = ConvertTimeStamp($beginDate + 182 * 86400, 'FULL', SITE_ID);
+	$arFields['CLOSEDATE'] = ConvertTimeStamp($beginDate + 7 * 86400, 'FULL', SITE_ID);
 
 	$extVals =  isset($arParams['~VALUES']) && is_array($arParams['~VALUES']) ? $arParams['~VALUES'] : array();
 	if (count($extVals) > 0)
@@ -880,6 +880,28 @@ else
 						);
 						$resultData = $result->getData();
 						$ID = $resultData['DEAL_ID'];
+
+						if ($ID && !empty($arProd))
+						{
+							if ((int)($arParams['ELEMENT_ID']) > 0)
+							{
+								$oldProducts = \CCrmProductRow::LoadRows('D', (int)($arParams['ELEMENT_ID']), true);
+							}
+
+							if (is_array($arProd))
+							{
+								foreach ($arProd as &$product)
+								{
+									$oldProduct = $oldProducts[$product['ID']];
+									unset($product['ID'], $product['OWNER_ID']);
+
+									if (empty($oldProduct))
+										continue;
+
+									$product = array_merge($oldProduct, $product);
+								}
+							}
+						}
 					}
 					else
 					{
@@ -1388,7 +1410,7 @@ $arResult['FIELDS']['tab_1'][] = array(
 
 //Fix for issue #36848
 $beginDate = isset($arResult['ELEMENT']['BEGINDATE']) ? $arResult['ELEMENT']['BEGINDATE'] : '';
-$closeDate = isset($arResult['ELEMENT']['CLOSEDATE']) ? $arResult['ELEMENT']['CLOSEDATE'] : ConvertTimeStamp(MakeTimeStamp($beginDate) + 182 * 86400, 'FULL', SITE_ID);
+$closeDate = isset($arResult['ELEMENT']['CLOSEDATE']) ? $arResult['ELEMENT']['CLOSEDATE'] : $beginDate;
 
 $arResult['FIELDS']['tab_1'][] = array(
 	'id' => 'BEGINDATE',
@@ -1438,7 +1460,7 @@ $arResult['FIELDS']['tab_1'][] = array(
 	'type' => 'vertical_checkbox',
 	'params' => array(),
 	'value' => isset($arResult['ELEMENT']['OPENED'])
-		? $arResult['ELEMENT']['OPENED'] : \Bitrix\Crm\Settings\DealSettings::getCurrent()->getOpenedFlag(),
+		? $arResult['ELEMENT']['OPENED'] : (\Bitrix\Crm\Settings\DealSettings::getCurrent()->getOpenedFlag() ? 'Y' : 'N'),
 	'title' => GetMessage('CRM_FIELD_OPENED_TITLE')
 );
 $arResult['FIELDS']['tab_1'][] = array(
@@ -1673,8 +1695,7 @@ $arResult['FIELDS']['tab_1'][] = array(
 		),
 	'type' => 'recurring_params',
 	'colspan' => true,
-	'value' => $recurringHtml,
-	'required' => true
+	'value' => $recurringHtml
 );
 
 $arResult['PRODUCT_ROW_EDITOR_ID'] = ($arParams['ELEMENT_ID'] > 0 ? 'deal_'.strval($arParams['ELEMENT_ID']) : 'new_deal').'_product_editor';
