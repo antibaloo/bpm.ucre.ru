@@ -3,6 +3,7 @@
 require($_SERVER["DOCUMENT_ROOT"]."/bitrix/header.php");
 use \Bitrix\Crm\Category\DealCategory;
 $APPLICATION->SetTitle("Подбор заявок");
+if (!in_array($USER->GetID(),array(1,24)) ){
 ?>
 <center>
   <h1>Раздел закрыт!</h1>
@@ -13,6 +14,7 @@ $APPLICATION->SetTitle("Подбор заявок");
 
 <?
 goto footer;
+}
 //-Список сотрудников, включая уволеных-//
 $rsUsers = CUser::GetList(($by="id"), ($order="asc"), array("GROUPS_ID"=> array(12))); // выбираем пользователей
 //--------------------------------------//
