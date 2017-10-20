@@ -812,7 +812,6 @@ $arResult['FIELDS']['tab_1'][] = array(
 	'colspan' => true,
 	'value' => $recurringHtml,
 	'isTactile' => true,
-	'required' => true,
 	'isHidden' => $arParams['IS_RECURRING'] !== 'Y'
 );
 
@@ -1137,7 +1136,7 @@ if (CCrmQuote::CheckReadPermission($quoteID, $userPermissions) && $arParams['IS_
 						'CRM_DEAL_QUOTE_LINK',
 						array(
 							'#TITLE#' => htmlspecialcharsbx($quoteFields['TITLE']),
-							'#URL#' => CCrmOwnerType::GetShowUrl(CCrmOwnerType::Quote, $arResult['ELEMENT']['QUOTE_ID'], false)
+							'#URL#' => CCrmOwnerType::GetEntityShowPath(CCrmOwnerType::Quote, $arResult['ELEMENT']['QUOTE_ID'], false)
 						)
 					)
 					.'</div>'
