@@ -22,6 +22,7 @@ use Bitrix\Crm\Settings\ContactSettings;
 use Bitrix\Crm\Settings\DealSettings;
 use Bitrix\Crm\Settings\LeadSettings;
 use Bitrix\Crm\Settings\InvoiceSettings;
+use Bitrix\Crm\Settings\QuoteSettings;
 use Bitrix\Crm\Counter\EntityCounterFactory;
 use Bitrix\Crm\Counter\EntityCounterType;
 
@@ -114,6 +115,10 @@ $defaultViews = array(
 		InvoiceSettings::VIEW_WIDGET => $arParams['PATH_TO_INVOICE_WIDGET'],
 		InvoiceSettings::VIEW_KANBAN => $arParams['PATH_TO_INVOICE_KANBAN']
 	),
+	'QUOTE' => array(
+		QuoteSettings::VIEW_LIST => $arParams['PATH_TO_QUOTE_LIST'],
+		QuoteSettings::VIEW_KANBAN => $arParams['PATH_TO_QUOTE_KANBAN']
+	),
 	'COMPANY' => array(
 		CompanySettings::VIEW_LIST => $arParams['PATH_TO_COMPANY_LIST'],
 		CompanySettings::VIEW_WIDGET => $arParams['PATH_TO_COMPANY_WIDGET']
@@ -141,8 +146,6 @@ foreach ($defaultViews as $vewCode => $viewPath)
 		$arParams['PATH_TO_' . $vewCode . '_INDEX'] = $arParams['PATH_TO_' . $vewCode . '_LIST'];
 	}
 }
-
-$arParams['PATH_TO_QUOTE_INDEX'] = $arParams['PATH_TO_QUOTE_LIST'];
 
 $navigationIndex = CUserOptions::GetOption('crm.navigation', 'index');
 if(is_array($navigationIndex))
@@ -225,6 +228,7 @@ if($isAdmin || CCrmLead::CheckReadPermission(0, $userPermissions))
 
 		$actions[] = array('ID' => 'CREATE', 'URL' => $createUrl);
 	}
+
 	$stdItems['LEAD'] = array(
 		'ID' => 'LEAD',
 		'MENU_ID' => 'menu_crm_lead',
@@ -240,45 +244,8 @@ if($isAdmin || CCrmLead::CheckReadPermission(0, $userPermissions))
 		'IS_DISABLED' => !\Bitrix\Crm\Settings\LeadSettings::isEnabled()
 	);
 }
-$actions = array();
-if($isAdmin){
-	$createUrl = CComponentEngine::MakePathFromTemplate(
-				/*$arParams['PATH_TO_LEAD_EDIT']*/'/crm/lead_ucre/edit/#lead_id#/',
-				array('lead_id' => 0)
-			);
-	$actions[] = array('ID' => 'CREATE', 'URL' => $createUrl);
-	$stdItems['LEAD_UCRE'] = array(
-		'ID' => 'LEAD_UCRE',
-		'MENU_ID' => 'menu_crm_lead_ucre',
-		'NAME' => "Новые лиды",
-		'TITLE' => "Новые лиды",
-		'URL' => "/crm/lead_ucre/",
-		'ICON' => 'lead',
-		'COUNTER' => $counter->getValue(),
-		'COUNTER_ID' => $counter->getCode(),
-		'ACTIONS' => $actions,
-		'IS_DISABLED' => !\Bitrix\Crm\Settings\LeadSettings::isEnabled()
-	);
-}
-$actions = array();
-if($isAdmin){
-	$createUrl = CComponentEngine::MakePathFromTemplate(
-				/*$arParams['PATH_TO_LEAD_EDIT']*/'/crm/client_deal/edit/#cdeal_id#/',
-				array('cdeal_id' => 0)
-			);
-	$actions[] = array('ID' => 'CREATE', 'URL' => $createUrl);
-	$stdItems['CDEAL_UCRE'] = array(
-		'ID' => 'CDEAL_UCRE',
-		'MENU_ID' => 'menu_crm_cdeal_ucre',
-		'NAME' => "Сделки",
-		'TITLE' => "Сделки",
-		'URL' => "/crm/client_deal/",
-		'ICON' => 'deal',
-		'COUNTER' => $counter->getValue(),
-		'COUNTER_ID' => $counter->getCode(),
-		'ACTIONS' => $actions
-	);
-}
+
+
 if($isAdmin || CCrmDeal::CheckReadPermission(0, $userPermissions))
 {
 	$counter = EntityCounterFactory::create(
@@ -606,7 +573,7 @@ $stdItems['SETTINGS'] = array(
 if (\Bitrix\Main\Loader::includeModule('bitrix24'))
 {
 	$licensePrefix = CBitrix24::getLicensePrefix();
-	if (in_array($licensePrefix, array("ru", "kz", "by")))
+	if (in_array($licensePrefix, array("ru", "by")))
 	{
 		$stdItems['RETAIL'] = array(
 			'ID' => 'RETAIL',
@@ -686,6 +653,7 @@ if (isset($arParams["MENU_MODE"]) && $arParams["MENU_MODE"] === "Y")
 			$options
 		);
 	}
+
 	return $arResult;
 }
 else
