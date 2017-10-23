@@ -244,7 +244,19 @@ if($isAdmin || CCrmLead::CheckReadPermission(0, $userPermissions))
 		'IS_DISABLED' => !\Bitrix\Crm\Settings\LeadSettings::isEnabled()
 	);
 }
-
+if($isAdmin){
+	$stdItems['EXCHANGE'] = array(
+ 		'ID' => 'EXCHANGE',
+ 		'MENU_ID' => 'menu_exchange',
+ 		'NAME' => "Биржа",
+ 		'TITLE' => "Биржа",
+ 		'URL' => "/crm/exchange/",
+ 		'ICON' => 'exchange',
+ 		'COUNTER' => $counter->getValue(),
+ 		'COUNTER_ID' => $counter->getCode(),
+ 		'IS_DISABLED' => !\Bitrix\Crm\Settings\LeadSettings::isEnabled()
+ 	);
+ }
 $actions = array();
  if($isAdmin){
  	$createUrl = CComponentEngine::MakePathFromTemplate(
