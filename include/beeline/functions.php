@@ -1,5 +1,5 @@
 <?
-function xmlToJSON($xmlString, $assoc = false){
+function xmlToJSON($xmlString){
   $reader = new XMLReader();
   $reader->XML($xmlString);
   $jsonString = "{";
@@ -26,6 +26,6 @@ function xmlToJSON($xmlString, $assoc = false){
   $reader->close();
   $jsonString = mb_substr($jsonString, 0, -1);
   $jsonString .= "}";
-  return json_decode($jsonString, $assoc);
+  return $jsonString;
 }
 ?>
