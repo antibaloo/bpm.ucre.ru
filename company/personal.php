@@ -352,7 +352,13 @@ $APPLICATION->SetTitle(GetMessage("COMPANY_TITLE"));
 		)
 	),
 	false
-);?><br><?require($_SERVER["DOCUMENT_ROOT"]."/bitrix/footer.php");?>
+);?><br>
+<?if ($USER->isAdmin()){?>
+<script>
+	$("#im-call-button").after("<br><br><a class='webform-small-button' id='fire' style='background: red;color:white;'><span>Уволить</span></a>");
+</script>
+<?}?>
+<?require($_SERVER["DOCUMENT_ROOT"]."/bitrix/footer.php");?>
 <script>
 	 window.onload = function() {
 		 $(".bx-br-separator").each(function(){
