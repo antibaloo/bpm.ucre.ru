@@ -321,7 +321,7 @@ else
 	$beginDate -= $time['tm_sec'];
 
 	$arFields['BEGINDATE'] = ConvertTimeStamp($beginDate, 'FULL', SITE_ID);
-	$arFields['CLOSEDATE'] = ConvertTimeStamp($beginDate + 182 * 86400, 'FULL', SITE_ID);
+	$arFields['CLOSEDATE'] = ConvertTimeStamp($beginDate + 7 * 86400, 'FULL', SITE_ID);
 
 	$extVals =  isset($arParams['~VALUES']) && is_array($arParams['~VALUES']) ? $arParams['~VALUES'] : array();
 	if (count($extVals) > 0)
@@ -881,14 +881,18 @@ else
 						$resultData = $result->getData();
 						$ID = $resultData['DEAL_ID'];
 
-						if ($ID && !empty($arProd))
+						if ($ID)
 						{
 							if ((int)($arParams['ELEMENT_ID']) > 0)
 							{
 								$oldProducts = \CCrmProductRow::LoadRows('D', (int)($arParams['ELEMENT_ID']), true);
+								foreach ($oldProducts as &$product)
+								{
+									unset($product['ID'], $product['OWNER_ID']);
+								}
 							}
 
-							if (is_array($arProd))
+							if (is_array($arProd) && !empty($arProd))
 							{
 								foreach ($arProd as &$product)
 								{
@@ -900,6 +904,10 @@ else
 
 									$product = array_merge($oldProduct, $product);
 								}
+							}
+							elseif (!empty($oldProducts))
+							{
+								$arProd = $oldProducts;
 							}
 						}
 					}
@@ -1410,7 +1418,7 @@ $arResult['FIELDS']['tab_1'][] = array(
 
 //Fix for issue #36848
 $beginDate = isset($arResult['ELEMENT']['BEGINDATE']) ? $arResult['ELEMENT']['BEGINDATE'] : '';
-$closeDate = isset($arResult['ELEMENT']['CLOSEDATE']) ? $arResult['ELEMENT']['CLOSEDATE'] : ConvertTimeStamp(MakeTimeStamp($beginDate) + 182 * 86400, 'FULL', SITE_ID);
+$closeDate = isset($arResult['ELEMENT']['CLOSEDATE']) ? $arResult['ELEMENT']['CLOSEDATE'] : $beginDate;
 
 $arResult['FIELDS']['tab_1'][] = array(
 	'id' => 'BEGINDATE',
