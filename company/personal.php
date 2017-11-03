@@ -356,6 +356,28 @@ $APPLICATION->SetTitle(GetMessage("COMPANY_TITLE"));
 <?if ($USER->isAdmin()){?>
 <script>
 	$("#im-call-button").after("<br><br><a class='webform-small-button' id='fire' style='background: red;color:white;'><span>Уволить</span></a>");
+	$(".user-profile-block-wrap").after("<div id='resultOfFire'><div>");
+	$("#fire").click(function(){
+		if (confirm("Вы уверены, что хотите уволить этого сотрудника?")){
+			console.log("Уволить нахуй!");
+			var begin = document.location.href.indexOf("/user/")+6;
+			var end = document.location.href.indexOf("/",begin);
+			var userId = document.location.href.substring(document.location.href.indexOf("/user/")+6,document.location.href.indexOf("/",begin)); 
+			console.log(userId);
+			$.ajax({
+				url: "/ajax/fireUser.php",
+				type: "POST",
+				data: {userId: userId},
+				dataType: "html",
+				success: function (html) {
+					$("#resultOfFire").html(html);
+				},
+				error: function (html) {
+					$("#resultOfFire").html("Технические неполадки! В ближайшее время все будет исправлено!");
+				},
+			});
+		}
+	});
 </script>
 <?}?>
 <?require($_SERVER["DOCUMENT_ROOT"]."/bitrix/footer.php");?>
