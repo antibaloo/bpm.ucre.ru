@@ -31,3 +31,23 @@
   margin: 0 auto;
   text-align:center;
 }
+.menu{
+  float: right;
+}
+.clearFloat{
+  clear: both;
+}
+.button{
+    width: 100px;
+    height: 20px;
+    text-align: center;
+    padding: 5px;
+    background: cadetblue;
+    margin: 2px;
+    color:  white;
+    font-weight:  bold;
+}
+.button:hover{
+  background: cornflowerblue;
+  cursor: pointer;
+}

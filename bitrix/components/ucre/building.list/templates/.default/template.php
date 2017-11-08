@@ -5,6 +5,12 @@ if(!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED!==true) die();
 <pre>
 <?//print_r($arResult);?>
 </pre>
+<div class="menu">
+  <div class="button" href="/townbase/building/new/">
+    Новое здание
+  </div>
+</div>
+<div class="clearFloat"></div>
 <form id="buildingList" method="POST" action="<?=$_SERVER["REQUEST_URI"]?>" enctype="multipart/formdata">
   <div class="gridWrapper">
     <div class="gridHeader textCenter"></div>
@@ -48,5 +54,8 @@ if(!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED!==true) die();
        $("#page").val($(this).html())
      $('#submit').trigger('click');
    }
+  });
+  $(".button").click(function(){
+    location.href = $(this).attr("href");
   });
 </script>
