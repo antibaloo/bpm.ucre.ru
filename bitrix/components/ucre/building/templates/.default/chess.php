@@ -9,7 +9,10 @@ $APPLICATION->IncludeComponent(
 		'ucre:building.chess',
 		'',
 		array(
-			'TEMPLATE' => $arResult['template'],
+			'ELEMENT_ID' => $arResult['VARIABLES']['element_id'],
+			'AJAX_MODE' => 'Y',
+			'AJAX_OPTION_SHADOW' => 'Y',
+			'AJAX_OPTION_JUMP' => 'N'
 		),
 		$component
 	);

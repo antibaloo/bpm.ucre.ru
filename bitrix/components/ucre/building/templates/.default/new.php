@@ -1,15 +1,14 @@
 <?php
 if(!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED!==true) die();
 ?>
-<h2>
-	Новое здание
-</h2>
 <?
 $APPLICATION->IncludeComponent(
 		'ucre:building.new',
 		'',
 		array(
-			'TEMPLATE' => $arResult['template'],
+			'AJAX_MODE' => 'Y',
+			'AJAX_OPTION_SHADOW' => 'Y',
+			'AJAX_OPTION_JUMP' => 'N'
 		),
 		$component
 	);

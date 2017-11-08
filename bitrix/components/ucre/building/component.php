@@ -23,8 +23,6 @@ $componentPage = CComponentEngine::ParseComponentPath($arParams['SEF_FOLDER'], $
 if (empty($componentPage) || (!array_key_exists($componentPage, $arDefaultUrlTemplates404)))	$componentPage = 'index';
 CComponentEngine::InitComponentVariables($componentPage, $arComponentVariables, $arVariableAliases, $arVariables);
 
-$arResult = array('template' => $componentPage);
-
 $arResult = array_merge(
 	array(
 		'VARIABLES' => $arVariables,
