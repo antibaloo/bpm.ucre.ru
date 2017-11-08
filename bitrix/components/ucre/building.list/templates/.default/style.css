@@ -1,0 +1,33 @@
+.pagesList{
+  cursor: pointer;
+}
+.active {
+  color: blue;
+}
+.gridWrapper{
+  display: grid;
+  grid-template-columns: 5% 5% 5fr 2fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-gap: 2px;
+}
+.gridHeader{
+  font-weight: bold;
+  background-color: #cccccc;
+  padding: 2px;
+}
+.gridCell {
+  padding: 2px;
+}
+.textCenter{
+  text-align: center
+}
+.textRight{
+  text-align: right;
+}
+.textLeft{
+  text-align: left;
+}
+.gridFooter{
+  background-color: #eee;
+  margin: 0 auto;
+  text-align:center;
+}
