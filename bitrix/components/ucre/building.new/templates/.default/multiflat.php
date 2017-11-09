@@ -90,18 +90,145 @@ $APPLICATION->SetTitle("Заполните параметры здания");
   
   $(".searchButton").click(function(){
     if ($("#UF_BUILDING_ADDRESS").val() != ""){
-      
+      $.ajax({
+        url: "https://geocode-maps.yandex.ru/1.x/",
+        type: "GET",
+        datatype: "json",
+        data:{
+          geocode: $("#UF_BUILDING_ADDRESS").val(),
+          format: 'json'
+        },
+        success: function (json) {
+          console.log(json.response.GeoObjectCollection/*.featureMember[0].GeoObject*/);
+          if (json.response.GeoObjectCollection.metaDataProperty.GeocoderResponseMetaData.found > 0){
+            var pos = json.response.GeoObjectCollection.featureMember[0].GeoObject.Point.pos.split(" ");
+            $("#UF_LATITUDE").val(pos[1]);
+            $("#UF_LONGITUDE").val(pos[0]);
+            $("#UF_BUILDING_ADDRESS").val(json.response.GeoObjectCollection.featureMember[0].GeoObject.metaDataProperty.GeocoderMetaData.Address.formatted);
+            $("#UF_POSTAL").val(json.response.GeoObjectCollection.featureMember[0].GeoObject.metaDataProperty.GeocoderMetaData.Address.postal_code);
+            var coords = [pos[1], pos[0]];
+            // Если метка уже создана – удалить ее.
+            if (myPlacemark) myMap.geoObjects.remove(myPlacemark);
+            myPlacemark = new ymaps.Placemark(coords,{
+              hintContent: $("#UF_BUILDING_ADDRESS").val(),
+              iconContent: $("#UF_BUILDING_ADDRESS").val()
+            },{
+              preset: 'twirl#redStretchyIcon',
+              draggable: true
+            });
+            myMap.geoObjects.add(myPlacemark);
+            // Слушаем событие окончания перетаскивания на метке.
+            myPlacemark.events.add('dragend', function () {
+              myPlacemark.properties.set('iconContent', 'поиск...');
+              var coords = myPlacemark.geometry.getCoordinates();
+              myMap.setCenter(coords, 16);
+              $("#UF_LATITUDE").val(coords[0]);
+              $("#UF_LONGITUDE").val(coords[1]);
+              ymaps.geocode(coords, {json: true}).then(function (json) {
+                console.log(json);
+                $("#UF_BUILDING_ADDRESS").val(json.GeoObjectCollection.featureMember[0].GeoObject.metaDataProperty.GeocoderMetaData.Address.formatted);
+                $("#UF_POSTAL").val(json.GeoObjectCollection.featureMember[0].GeoObject.metaDataProperty.GeocoderMetaData.Address.postal_code);
+                myPlacemark.properties.set({
+                  hintContent: $("#UF_BUILDING_ADDRESS").val(),
+                  iconContent: $("#UF_BUILDING_ADDRESS").val()
+                });
+              });
+            });
+            myMap.setCenter(coords, 16);
+          }else{
+            $("#UF_BUILDING_ADDRESS").val("");
+            $("#UF_BUILDING_ADDRESS").attr("placeholder", "заданный объект не найден");
+          }
+        },
+        error: function (json) {
+          console.log("WFT!!!");
+        },
+      });
     }
   });
   var myPlacemark, myMap;
   ymaps.ready(init);
   
   function init() {
-    myMap = new ymaps.Map("map", {
-      center: [51.779700, 55.116868], 
-      zoom: 14
+    if ($("#UF_LATITUDE").val()>0 && $("#UF_LONGITUDE").val()>0 && $("#UF_BUILDING_ADDRESS").val() != "" ){
+      myMap = new ymaps.Map("map", {
+        center: [$("#UF_LATITUDE").val(), $("#UF_LONGITUDE").val()], 
+        zoom: 16
+      });
+      myMap.controls.add('zoomControl');
+      myMap.behaviors.enable('scrollZoom');
+      myPlacemark = new ymaps.Placemark([$("#UF_LATITUDE").val(), $("#UF_LONGITUDE").val()],{
+        hintContent: $("#UF_BUILDING_ADDRESS").val(),
+        iconContent: $("#UF_BUILDING_ADDRESS").val()
+      },{
+        preset: 'twirl#redStretchyIcon',
+        draggable: true
+      });
+      myMap.geoObjects.add(myPlacemark);
+      // Слушаем событие окончания перетаскивания на метке.
+      myPlacemark.events.add('dragend', function () {
+        myPlacemark.properties.set('iconContent', 'поиск...');
+        var coords = myPlacemark.geometry.getCoordinates();
+        myMap.setCenter(coords, 16);
+        $("#UF_LATITUDE").val(coords[0]);
+        $("#UF_LONGITUDE").val(coords[1]);
+        ymaps.geocode(coords, {json: true}).then(function (json) {
+          console.log(json);
+          $("#UF_BUILDING_ADDRESS").val(json.GeoObjectCollection.featureMember[0].GeoObject.metaDataProperty.GeocoderMetaData.Address.formatted);
+          $("#UF_POSTAL").val(json.GeoObjectCollection.featureMember[0].GeoObject.metaDataProperty.GeocoderMetaData.Address.postal_code);
+          myPlacemark.properties.set({
+            hintContent: $("#UF_BUILDING_ADDRESS").val(),
+            iconContent: $("#UF_BUILDING_ADDRESS").val()
+          });
+        });
+      });
+    }else{
+      myMap = new ymaps.Map("map", {
+        center: [51.779700, 55.116868], 
+        zoom: 13
+      });
+      myMap.controls.add('zoomControl');
+      myMap.behaviors.enable('scrollZoom');
+    }
+    myMap.events.add('click', function (e) {
+      var coords = e.get('coords');
+      if (myPlacemark) myMap.geoObjects.remove(myPlacemark);
+      myPlacemark = new ymaps.Placemark(coords,{
+        iconContent: "поиск..."
+      },{
+        preset: 'twirl#redStretchyIcon',
+        draggable: true
+      });
+      myMap.geoObjects.add(myPlacemark);
+      myMap.setCenter(coords, 16);
+      $("#UF_LATITUDE").val(coords[0]);
+      $("#UF_LONGITUDE").val(coords[1]);
+      ymaps.geocode(coords, {json: true}).then(function (json) {
+        console.log(json);
+        $("#UF_BUILDING_ADDRESS").val(json.GeoObjectCollection.featureMember[0].GeoObject.metaDataProperty.GeocoderMetaData.Address.formatted);
+        $("#UF_POSTAL").val(json.GeoObjectCollection.featureMember[0].GeoObject.metaDataProperty.GeocoderMetaData.Address.postal_code);
+        myPlacemark.properties.set({
+          hintContent: $("#UF_BUILDING_ADDRESS").val(),
+          iconContent: $("#UF_BUILDING_ADDRESS").val()
+        });
+      });
+      // Слушаем событие окончания перетаскивания на метке.
+      myPlacemark.events.add('dragend', function () {
+        myPlacemark.properties.set('iconContent', 'поиск...');
+        var coords = myPlacemark.geometry.getCoordinates();
+        myMap.setCenter(coords, 16);
+        $("#UF_LATITUDE").val(coords[0]);
+        $("#UF_LONGITUDE").val(coords[1]);
+        ymaps.geocode(coords, {json: true}).then(function (json) {
+          console.log(json);
+          $("#UF_BUILDING_ADDRESS").val(json.GeoObjectCollection.featureMember[0].GeoObject.metaDataProperty.GeocoderMetaData.Address.formatted);
+          $("#UF_POSTAL").val(json.GeoObjectCollection.featureMember[0].GeoObject.metaDataProperty.GeocoderMetaData.Address.postal_code);
+          myPlacemark.properties.set({
+            hintContent: $("#UF_BUILDING_ADDRESS").val(),
+            iconContent: $("#UF_BUILDING_ADDRESS").val()
+          });
+        });
+      });
     });
-    myMap.controls.add('zoomControl');
-    myMap.behaviors.enable('scrollZoom');
   }
 </script>
