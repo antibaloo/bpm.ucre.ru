@@ -13,6 +13,22 @@ $hlblock   = HL\HighloadBlockTable::getById(2)->fetch();
 $Building   = HL\HighloadBlockTable::compileEntity( $hlblock );
 $BuildingDataClass = $Building->getDataClass();
 $template = 'type';//По-умолчанию шаблон выбора типа здания
+//echo "<pre>";print_r($_POST);echo "</pre>";
+if ($_POST['ACTION'] == 'type') {
+  switch ($_POST['UF_BUILDING_TYPE_ID']){
+    case 1:
+      $template = 'nonresidental';
+      break;
+    case 2:
+      $template = 'private';
+      break;
+    case 3:
+      $template = 'multiflat';
+      break;
+  }
+  $arResult['UF_BUILDING_TYPE_ID'] = $_POST['UF_BUILDING_TYPE_ID'];
+}
+
 
 $this->IncludeComponentTemplate($template);
 ?>
