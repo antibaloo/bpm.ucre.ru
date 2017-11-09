@@ -36,6 +36,7 @@ if ($arParams['CATEGORY'] == 2){
 </table>
 <?}?>
 <?
+if ($USER->GetID()!=24){
 $APPLICATION->IncludeComponent(
   'bitrix:main.interface.grid',
   '',
@@ -45,7 +46,7 @@ $APPLICATION->IncludeComponent(
 				'SORT_VARS'=>$arResult['SORT_VARS'],
 				'ROWS'=>$arResult['ROWS'],
 				'FOOTER'=>array(array('title'=>"Всего", 'value'=>$arResult['ROWS_COUNT'])),
-        'ACTION_ALL_ROWS'=>false,
+        'ACTION_ALL_ROWS'=>true,
         'EDITABLE'=>false,
         'NAV_OBJECT'=>$arResult['NAV_OBJECT'],
         'AJAX_MODE'=>"Y",
@@ -54,6 +55,17 @@ $APPLICATION->IncludeComponent(
        ),
   $component
 );
+}else{
+	$APPLICATION->IncludeComponent(
+		'bitrix:crm.interface.grid',
+		'titleflex',
+		array(
+			'GRID_ID' => $arResult['GRID_ID'],
+			
+		),
+		false
+	);
+}
 /*echo "<pre>";
 print_r($arResult);
 echo "</pre>";*/

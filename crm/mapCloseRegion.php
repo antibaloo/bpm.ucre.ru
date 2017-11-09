@@ -102,6 +102,7 @@
       zoom: 13
     });
     myMap.controls.add('zoomControl');
+    myMap.behaviors.enable('scrollZoom');
   }
   
   //-------------Основной код--------------

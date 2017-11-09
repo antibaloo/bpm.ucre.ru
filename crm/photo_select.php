@@ -4,11 +4,6 @@ $APPLICATION->SetTitle("Фотографирование клиентов");
 ?>
 <div id="container">
 
-    <div class="highlight">
-      <p>New codelab: <a href="https://codelabs.developers.google.com/codelabs/webrtc-web">Realtime communication with WebRTC</a></p>
-    </div>
-
-    <h1><a href="//webrtc.github.io/samples/" title="WebRTC samples homepage">WebRTC samples</a><span>Select sources &amp; outputs</span></h1>
 
     <p>Get available audio, video sources and audio output devices from <code>mediaDevices.enumerateDevices()</code> then set the source for <code>getUserMedia()</code> using a <code>deviceId</code> constraint.</p>
 
@@ -28,7 +23,6 @@ $APPLICATION->SetTitle("Фотографирование клиентов");
 
     <p class="small"><b>Note:</b> If you hear a reverb sound your microphone is picking up the output of your speakers/headset, lower the volume and/or move the microphone further away from your speakers/headset.</p>
 
-    <a href="https://github.com/webrtc/samples/tree/gh-pages/src/content/devices/input-output" title="View source for this page on GitHub" id="viewSource">View source on GitHub</a>
   </div>
 
 <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>

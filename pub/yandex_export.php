@@ -38,7 +38,7 @@ while($aRes = $db_res->Fetch()){
       $category = $dom->createElement("category","комната");
       $offer->appendChild($category);
       $area = $dom->createElement("area");
-      $value = $dom->createElement("value",number_format($aRes['PROPERTY_224'],2,".",""));
+      $value = $dom->createElement("value",number_format($aRes['PROPERTY_228'],2,".",""));//228 - площадь команты, 224 - общая площадь
       $area->appendChild($value);
       $unit = $dom->createElement("unit","кв. м");
       $area->appendChild($unit);
@@ -50,12 +50,7 @@ while($aRes = $db_res->Fetch()){
       $rooms_offered = $dom->createElement("rooms-offered",1);
       $offer->appendChild($rooms_offered);
       
-      $room_space = $dom->createElement("room-space");
-      $value = $dom->createElement("value",number_format($aRes['PROPERTY_228'],2,".",""));
-      $room_space->appendChild($value);
-      $unit = $dom->createElement("unit","кв. м");
-      $room_space->appendChild($unit);
-      $offer->appendChild($room_space);
+
       $floor = $dom->createElement("floor",$aRes['PROPERTY_221']);
       $offer->appendChild($floor);
       $floors_total = $dom->createElement("floors-total", $aRes['PROPERTY_222']);

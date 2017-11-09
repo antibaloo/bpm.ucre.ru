@@ -23,7 +23,6 @@ CPullWatch::Add($USER->GetId(), 'UCRE_CALL_CARD');
 								BX(params.CALLID).innerHTML = "Что-то пошло не так!!!";
 							}
 						});
-						//BX(params.CALLID).innerHTML += command+' '+params.USER+' '+params.CALLID+'<br>';
 					}
 					if(command == 'finish'){
 						$("#"+params.CALLID).remove()

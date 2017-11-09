@@ -331,7 +331,9 @@ if ($arParams['CATEGORY'] == '2'){ //Поиск встречных заявок 
       "UF_CRM_58958B5751841" => (intval($aRes['UF_CRM_58958B5751841']))?intval($aRes['UF_CRM_58958B5751841']):"не задана",
       "ASSIGNED_BY_ID" => $assigned_user['LAST_NAME']." ".$assigned_user['NAME'],
     );
-    $aActions = array();
+    $aActions = array(
+      array("ICONCLASS"=>"edit", "TEXT"=>"Добавить в потенциальные", "ONCLICK"=>"alert('Добавил!');", "DEFAULT"=>true),
+    );
     $aRows[] = array("data"=>$aRes, "actions"=>$aActions, "columns"=>$aCols, "editable"=>false);
   }
   

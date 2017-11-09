@@ -15,6 +15,7 @@
       .add('zoomControl')               
       .add('typeSelector')                
       .add('mapTools');
+    myMap.behaviors.enable('scrollZoom');
 
     polyline = new ymaps.Polyline([], {}, {
       editorMenuManager: function (items) {
@@ -22,7 +23,12 @@
         items.push({
           title: "Замкнуть область",
           onClick:  function () {
-            polygon = new ymaps.Polygon([polyline.editor.geometry.getCoordinates()], {}, {});
+            polygon = new ymaps.Polygon([polyline.editor.geometry.getCoordinates()], {}, {
+              fillColor: '#1092DC',
+              strokeColor: '#0000FF',
+              opacity: 0.5,
+              strokeWidth: 3
+            });
             console.log(polyline.editor.geometry.getCoordinates());
             myMap.geoObjects.remove(polyline);
             myMap.geoObjects.add(polygon);

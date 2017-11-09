@@ -2,9 +2,7 @@
 if(!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED!==true) die();
 ?>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-<pre>
-<?//print_r($arResult);?>
-</pre>
+<?//echo "<pre>";print_r($arResult);echo "</pre>";?>
 <div class="menu">
   <div class="button" href="/townbase/building/new/">
     Новое здание
