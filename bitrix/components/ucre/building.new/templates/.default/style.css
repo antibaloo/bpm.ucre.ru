@@ -1,21 +1,77 @@
-.gridWrapper{
+.typeWrapper{
   display: grid;
   grid-template-columns: 3fr 1fr 1fr 1fr 3fr;
   grid-gap: 20px;
 }
 .empty{
-  height: 35px;
 }
 .buildingType{
   text-align: center;
-  vertical-align: middle;
-  height: 35px;
-  line-height: 35px;/*Добавлено для центровки текстового содержимого*/
-  background: cadetblue;
+  height: 30px;
+  line-height: 30px;/*Добавлено для центровки текстового содержимого*/
   color:  white;
   font-weight: bold;
+  background: cadetblue;
+  border: 1px solid cadetblue;
 }
 .buildingType:hover{
   background: cornflowerblue;
+  border: 1px solid red;
   cursor: pointer;
+}
+.chosen{
+  background: cornflowerblue;
+  border: 1px solid red;
+}
+.addressWrapper{
+  margin-top: 10px;
+  display: grid;
+  grid-template-rows: 25px;
+  grid-template-columns: 1fr 1fr 4fr 1fr 1fr;
+  grid-gap: 20px;
+}
+.paramsWrapper{
+  margin-top: 10px;
+  display: grid;
+  grid-template-rows: 25px;
+  grid-template-columns:1fr 1fr 2fr 1fr 2fr 1fr;
+  grid-gap: 20px;
+}
+.label{
+  text-align: right;
+  font-weight: bold;
+}
+.param{
+  text-align: left;
+}
+.searchButton{
+  text-align: center;
+  color:  white;
+  font-weight: bold;
+  background: cadetblue;
+}
+.searchButton:hover{
+  background: cornflowerblue;
+  cursor: pointer;
+}
+.addressBox{
+  height: 25px;
+  line-height: 25px;
+}
+.paramBox{
+  height: 25px;
+  line-height: 25px;
+}
+.mapWrapper{
+  margin-top: 10px;
+  display: grid;
+  grid-template-rows: 300px;
+  grid-template-columns: 1fr 7fr 1fr;
+  grid-gap: 20px;
+}
+.block-input {
+  display: block;
+  width: 100%;
+  height: 25px;
+  line-height: 25px;
 }

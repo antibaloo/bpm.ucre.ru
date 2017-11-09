@@ -3,7 +3,7 @@ if(!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED!==true) die();
 $APPLICATION->SetTitle("Выберите тип здания");
 ?>
 <form id ="buildingForm" method="POST" action="<?=$_SERVER["REQUEST_URI"]?>">
-  <div class="gridWrapper">
+  <div class="typeWrapper">
     <div class="empty"></div>
     <div class="buildingType" action="type" typeId="1">Нежилое здание</div>
     <div class="buildingType" action="type" typeId="2">Жилой дом</div>

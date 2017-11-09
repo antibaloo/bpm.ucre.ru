@@ -26,7 +26,8 @@ if ($_POST['ACTION'] == 'type') {
       $template = 'multiflat';
       break;
   }
-  $arResult['UF_BUILDING_TYPE_ID'] = $_POST['UF_BUILDING_TYPE_ID'];
+  foreach ($_POST as $key=>$value) $arResult[$key] = $value;
+  //$arResult['UF_BUILDING_TYPE_ID'] = $_POST['UF_BUILDING_TYPE_ID'];
 }
 
 
