@@ -2,6 +2,8 @@
 if(!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED!==true) die();
 $APPLICATION->SetTitle("Заполните параметры здания");
 ?>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/js/select2.min.js"></script>
 <script src="https://api-maps.yandex.ru/2.0/?load=package.full&lang=ru-RU"></script>
 <form id ="buildingForm" method="POST" action="<?=$_SERVER["REQUEST_URI"]?>">
   <div class="typeWrapper">
@@ -73,13 +75,89 @@ $APPLICATION->SetTitle("Заполните параметры здания");
     <div class="param paramBox"><input class="block-input" type="search" id="UF_LONGITUDE" name="UF_LONGITUDE" placeholder="долгота" value="<?=$arResult['UF_LONGITUDE']?>"></div>
     <div class="empty"></div>
   </div>
+  <div class="paramsWrapper">
+    <div class="empty"></div>
+    <div class="label paramBox">Кадастровый номер</div>
+    <div class="param paramBox"><input class="block-input" type="search" id="UF_BUILDING_KAD_NUM" name="UF_BUILDING_KAD_NUM" placeholder="кадастровый номер" value="<?=$arResult['UF_BUILDING_KAD_NUM']?>"></div>
+    <div class="label paramBox">Общая площадь</div>
+    <div class="param paramBox"><input class="block-input" type="search" id="UF_B_SQUARE" name="UF_B_SQUARE" placeholder="общая площадь" value="<?=$arResult['UF_B_SQUARE']?>"></div>
+    <div class="empty"></div>
+  </div>
+  <div class="paramsWrapper">
+    <div class="empty"></div>
+    <div class="label paramBox">Количество помещений</div>
+    <div class="param paramBox"><input class="block-input" type="search" id="UF_PLACEMENT_COUNT" name="UF_PLACEMENT_COUNT" placeholder="количеств опомещений" value="<?=$arResult['UF_PLACEMENT_COUNT']?>"></div>
+    <div class="label paramBox">из них жилые</div>
+    <div class="param paramBox"><input class="block-input" type="search" id="UF_LIVE_COUNT" name="UF_LIVE_COUNT" placeholder="из них жилые" value="<?=$arResult['UF_LIVE_COUNT']?>"></div>
+    <div class="empty"></div>
+  </div>
+  <div class="paramsWrapper">
+    <div class="empty"></div>
+    <div class="label paramBox">Минимальная этажность</div>
+    <div class="param paramBox"><input class="block-input" type="search" id="UF_FLOORS_MIN" name="UF_FLOORS_MIN" placeholder="минимальная этажность" value="<?=$arResult['UF_FLOORS_MIN']?>"></div>
+    <div class="label paramBox">Максимальная этажность</div>
+    <div class="param paramBox"><input class="block-input" type="search" id="UF_FLOORS_MAX" name="UF_FLOORS_MAX" placeholder="максимальная этажность" value="<?=$arResult['UF_FLOORS_MAX']?>"></div>
+    <div class="empty"></div>
+  </div>
+  <div class="paramsWrapper">
+    <div class="empty"></div>
+    <div class="label paramBox">Подземных этажей</div>
+    <div class="param paramBox"><input class="block-input" type="search" id="UF_UNDER_FLOORS" name="UF_UNDER_FLOORS" placeholder="подземных этажей" value="<?=$arResult['UF_UNDER_FLOORS']?>"></div>
+    <div class="empty"></div>
+    <div class="empty"></div>
+    <div class="empty"></div>
+  </div>
+  <div class="paramsWrapper">
+    <div class="empty"></div>
+    <div class="label paramBox">Количество секций</div>
+    <div class="param paramBox"><input class="block-input" type="search" id="UF_SECTIONS" name="UF_SECTIONS" placeholder="количество секций" value="<?=$arResult['UF_SECTIONS']?>"></div>
+    <div class="label paramBox">Количество лифтов</div>
+    <div class="param paramBox"><input class="block-input" type="search" id="UF_ELEVATORS" name="UF_ELEVATORS" placeholder="количество лифтов" value="<?=$arResult['UF_ELEVATORS']?>"></div>
+    <div class="empty"></div>
+  </div>
+  <div class="paramsWrapper">
+    <div class="empty"></div>
+    <div class="label paramBox">Земельный участок</div>
+    <div class="param paramBox">
+      <select class="selectList" id="UF_B_PLOT_ID" name="UF_B_PLOT_ID"></select>
+    </div>
+    <div class="label paramBox">Входит в состав ЖК</div>
+    <div class="param paramBox">
+      <select class="selectList" id="UF_RS" name="UF_RS"></select>
+      <!--<input class="block-input" type="search" id="UF_RS" name="UF_RS" placeholder="жилой комплекс" value="<?=$arResult['UF_RS']?>">-->
+    </div>
+    <div class="empty"></div>
+  </div>
   <input id="UF_BUILDING_TYPE_ID" name="UF_BUILDING_TYPE_ID" type="hidden" value="<?=$arResult['UF_BUILDING_TYPE_ID']?>">
   <input id="ACTION" name="ACTION" type="hidden">
   <button id="submit" type="submit" style="display:none;"></button>
+  <div class="buttonWrapper">
+    <div class="empty"></div>
+    <div class="empty"></div>
+    <div class="empty"></div>
+    <div class="formButton" action="save">Сохранить</div>
+    <div class="formButton">Отменить</div>
+    <div class="empty"></div>
+    <div class="empty"></div>
+    <div class="empty"></div>
+  </div>
 </form>
-<a href="/townbase/building/list/">Отменить</a>
 <?echo "<pre>";print_r($arResult);echo "</pre>";?>
 <script>
+  $(document).ready(function() {
+    $('#UF_B_PLOT_ID').select2({data: <?=$arResult['PLOTS']?>});//ZHKS
+    $('#UF_RS').select2({data: <?=$arResult['ZHKS']?>});
+  });
+  
+  $(".formButton").click(function (){
+    if ($(this).attr("action") == 'cancel'){
+      document.location.href = '/townbase/building/list/';
+    }else{
+      $("#ACTION").val($(this).attr("action"));
+      $('#submit').trigger('click');
+    }
+  });
+
   $(".buildingType").click(function (){
     if ($(this).attr("typeId")!=$("#UF_BUILDING_TYPE_ID").val()){
       $("#UF_BUILDING_TYPE_ID").val($(this).attr("typeId"));
