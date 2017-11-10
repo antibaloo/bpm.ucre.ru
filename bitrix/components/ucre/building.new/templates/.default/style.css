@@ -12,16 +12,14 @@
   color:  white;
   font-weight: bold;
   background: cadetblue;
-  border: 1px solid cadetblue;
 }
 .buildingType:hover{
   background: cornflowerblue;
-  border: 1px solid red;
   cursor: pointer;
 }
 .chosen{
   background: cornflowerblue;
-  border: 1px solid red;
+
 }
 .addressWrapper{
   margin-top: 10px;
@@ -48,10 +46,10 @@
   text-align: center;
   color:  white;
   font-weight: bold;
-  background: cadetblue;
+  background: #66A1D2;
 }
 .searchButton:hover{
-  background: cornflowerblue;
+  background: #3F8FD2;
   cursor: pointer;
 }
 .addressBox{
@@ -75,3 +73,23 @@
   height: 25px;
   line-height: 25px;
 }
+.buttonWrapper{
+  margin-top: 10px;
+  display: grid;
+  grid-template-rows: 25px;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-gap: 20px;
+}
+.formButton{
+  height: 25px;
+  line-height: 25px;
+  text-align: center;
+  color:  white;
+  font-weight: bold;
+  background: #5CCCCC;
+}
+.formButton:hover{
+  background: #009999;
+  cursor: pointer;
+}
+.selectList{width:100%}

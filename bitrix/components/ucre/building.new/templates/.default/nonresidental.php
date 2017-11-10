@@ -76,10 +76,28 @@ $APPLICATION->SetTitle("Заполните параметры здания");
   <input id="UF_BUILDING_TYPE_ID" name="UF_BUILDING_TYPE_ID" type="hidden" value="<?=$arResult['UF_BUILDING_TYPE_ID']?>">
   <input id="ACTION" name="ACTION" type="hidden">
   <button id="submit" type="submit" style="display:none;"></button>
+  <div class="buttonWrapper">
+    <div class="empty"></div>
+    <div class="empty"></div>
+    <div class="empty"></div>
+    <div class="formButton" action="save">Сохранить</div>
+    <div class="formButton" action="cancel">Отменить</div>
+    <div class="empty"></div>
+    <div class="empty"></div>
+    <div class="empty"></div>
+  </div>
 </form>
-<a href="/townbase/building/list/">Отменить</a>
 <?echo "<pre>";print_r($arResult);echo "</pre>";?>
 <script>
+  $(".formButton").click(function (){
+    if ($(this).attr("action") == 'cancel'){
+      document.location.href = '/townbase/building/list/';
+    }else{
+      $("#ACTION").val($(this).attr("action"));
+      $('#submit').trigger('click');
+    }
+  });
+  
   $(".buildingType").click(function (){
     if ($(this).attr("typeId")!=$("#UF_BUILDING_TYPE_ID").val()){
       $("#UF_BUILDING_TYPE_ID").val($(this).attr("typeId"));

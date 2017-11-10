@@ -13,10 +13,22 @@ $APPLICATION->SetTitle("Выберите тип здания");
   <input id="UF_BUILDING_TYPE_ID" name="UF_BUILDING_TYPE_ID" type="hidden">
   <input id="ACTION" name="ACTION" type="hidden">
   <button id="submit" type="submit" style="display:none;"></button>
+  <div class="buttonWrapper">
+    <div class="empty"></div>
+    <div class="empty"></div>
+    <div class="empty"></div>
+    <div class="empty"></div>
+    <div class="empty"></div>
+    <div class="empty"></div>
+    <div class="empty"></div>
+    <div class="formButton" action="cancel">Отменить</div>
+  </div>
 </form>
-<a href="/townbase/building/list/">Отменить</a>
 <?echo "<pre>";print_r($arResult);echo "</pre>";?>
 <script>
+  $(".formButton").click(function (){
+      document.location.href = '/townbase/building/list/';
+  });
   $(".buildingType").click(function (){
     $("#UF_BUILDING_TYPE_ID").val($(this).attr("typeId"));
     $("#ACTION").val($(this).attr("action"));
