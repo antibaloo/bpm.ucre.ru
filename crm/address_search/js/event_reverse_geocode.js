@@ -26,6 +26,7 @@ function init() {
                 getAddress(myPlacemark.geometry.getCoordinates());
             });
         }
+      console.log("Координаты: "+coords);
         getAddress(coords);
     });
 
