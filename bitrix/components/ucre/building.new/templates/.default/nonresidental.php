@@ -87,20 +87,199 @@ $APPLICATION->SetTitle("Заполните параметры здания");
       $('#submit').trigger('click');
     }
   });
+  
   $(".searchButton").click(function(){
     if ($("#UF_BUILDING_ADDRESS").val() != ""){
-      
+      $.ajax({
+        url: "https://geocode-maps.yandex.ru/1.x/",
+        type: "GET",
+        datatype: "json",
+        data:{
+          geocode: $("#UF_BUILDING_ADDRESS").val(),
+          format: 'json'
+        },
+        success: function (json) {
+          if (json.response.GeoObjectCollection.metaDataProperty.GeocoderResponseMetaData.found > 0){
+            var pos = json.response.GeoObjectCollection.featureMember[0].GeoObject.Point.pos.split(" ");
+            $("#UF_LATITUDE").val(pos[1]);
+            $("#UF_LONGITUDE").val(pos[0]);
+            $("#UF_BUILDING_ADDRESS").val(json.response.GeoObjectCollection.featureMember[0].GeoObject.metaDataProperty.GeocoderMetaData.Address.formatted);
+            $("#UF_POSTAL").val(json.response.GeoObjectCollection.featureMember[0].GeoObject.metaDataProperty.GeocoderMetaData.Address.postal_code);
+            //Заполняем поля компонентов адреса
+            json.response.GeoObjectCollection.featureMember[0].GeoObject.metaDataProperty.GeocoderMetaData.Address.Components.forEach(function(el){
+              switch (el.kind){
+                case 'country':
+                  $("#UF_COUNTRY").val(el.name);
+                  break;
+                case 'province':
+                  if (el.name.indexOf("округ")>-1) $("#UF_FED_DISTRICT").val(el.name);
+                  else $("#UF_PROVINCE").val(el.name);
+                  break;
+                case 'area':
+                  $("#UF_AREA").val(el.name);
+                  break;
+                case 'locality':
+                  $("#UF_LOCALITY").val(el.name);
+                  break;
+                case 'district':
+                  $("#UF_DISTRICT").val(el.name);
+                  break;
+                case 'street':
+                  $("#UF_STREET").val(el.name);
+                  break;
+                case 'house':
+                  $("#UF_HOUSE").val(el.name);
+                  break;
+              }
+            });
+            
+            var coords = [pos[1], pos[0]];
+            // Если метка уже создана – удалить ее.
+            if (myPlacemark) myMap.geoObjects.remove(myPlacemark);
+            myPlacemark = new ymaps.Placemark(coords,{
+              hintContent: $("#UF_BUILDING_ADDRESS").val(),
+              iconContent: $("#UF_BUILDING_ADDRESS").val()
+            },{
+              preset: 'twirl#redStretchyIcon',
+              draggable: true
+            });
+            myMap.geoObjects.add(myPlacemark);
+            // Слушаем событие окончания перетаскивания на метке.
+            myPlacemark.events.add('dragend', dragEndFunc);
+            myMap.setCenter(coords, 16);
+          }else{
+            $("#UF_BUILDING_ADDRESS").val("");
+            $("#UF_BUILDING_ADDRESS").attr("placeholder", "заданный объект не найден");
+          }
+        },
+        error: function (json) {
+          console.log("WFT!!!");
+        },
+      });
     }
   });
-  var myPlacemark, myMap;
+    
+  var myPlacemark, myMap;//Делаем глобальными для доступности из всех функций
   ymaps.ready(init);
   
   function init() {
-    myMap = new ymaps.Map("map", {
-      center: [51.779700, 55.116868], 
-      zoom: 14
+    if ($("#UF_LATITUDE").val()>0 && $("#UF_LONGITUDE").val()>0 && $("#UF_BUILDING_ADDRESS").val() != "" ){
+      myMap = new ymaps.Map("map", {
+        center: [$("#UF_LATITUDE").val(), $("#UF_LONGITUDE").val()], 
+        zoom: 16
+      });
+      myMap.controls.add('zoomControl');
+      myMap.behaviors.enable('scrollZoom');
+      myPlacemark = new ymaps.Placemark([$("#UF_LATITUDE").val(), $("#UF_LONGITUDE").val()],{
+        hintContent: $("#UF_BUILDING_ADDRESS").val(),
+        iconContent: $("#UF_BUILDING_ADDRESS").val()
+      },{
+        preset: 'twirl#redStretchyIcon',
+        draggable: true
+      });
+      myMap.geoObjects.add(myPlacemark);
+      // Слушаем событие окончания перетаскивания на метке.
+      myPlacemark.events.add('dragend', dragEndFunc);
+    }else{
+      myMap = new ymaps.Map("map", {
+        center: [51.779700, 55.116868], 
+        zoom: 13
+      });
+      myMap.controls.add('zoomControl');
+      myMap.behaviors.enable('scrollZoom');
+    }
+    myMap.events.add('click', function (e) {
+      var coords = e.get('coords');
+      if (myPlacemark) myMap.geoObjects.remove(myPlacemark);
+      myPlacemark = new ymaps.Placemark(coords,{
+        iconContent: "поиск..."
+      },{
+        preset: 'twirl#redStretchyIcon',
+        draggable: true
+      });
+      myMap.geoObjects.add(myPlacemark);
+      myMap.setCenter(coords, 16);
+      $("#UF_LATITUDE").val(coords[0]);
+      $("#UF_LONGITUDE").val(coords[1]);
+      ymaps.geocode(coords, {json: true}).then(function (json) {
+        $("#UF_BUILDING_ADDRESS").val(json.GeoObjectCollection.featureMember[0].GeoObject.metaDataProperty.GeocoderMetaData.Address.formatted);
+        $("#UF_POSTAL").val(json.GeoObjectCollection.featureMember[0].GeoObject.metaDataProperty.GeocoderMetaData.Address.postal_code);
+        $("#UF_DISTRICT").val("");
+        json.GeoObjectCollection.featureMember[0].GeoObject.metaDataProperty.GeocoderMetaData.Address.Components.forEach(function(el){
+          switch (el.kind){
+            case 'country':
+              $("#UF_COUNTRY").val(el.name);
+              break;
+            case 'province':
+              if (el.name.indexOf("округ")>-1) $("#UF_FED_DISTRICT").val(el.name);
+              else $("#UF_PROVINCE").val(el.name);
+              break;
+            case 'area':
+              $("#UF_AREA").val(el.name);
+              break;
+            case 'locality':
+              $("#UF_LOCALITY").val(el.name);
+              break;
+            case 'district':
+              $("#UF_DISTRICT").val(el.name);
+              break;
+            case 'street':
+              $("#UF_STREET").val(el.name);
+              break;
+            case 'house':
+              $("#UF_HOUSE").val(el.name);
+              break;
+          }
+        });
+        myPlacemark.properties.set({
+          hintContent: $("#UF_BUILDING_ADDRESS").val(),
+          iconContent: $("#UF_BUILDING_ADDRESS").val()
+        });
+      });
+      // Слушаем событие окончания перетаскивания на метке.
+      myPlacemark.events.add('dragend', dragEndFunc);
     });
-    myMap.controls.add('zoomControl');
-    myMap.behaviors.enable('scrollZoom');
+  }
+  function dragEndFunc(){
+    myPlacemark.properties.set('iconContent', 'поиск...');
+    var coords = myPlacemark.geometry.getCoordinates();
+    myMap.setCenter(coords, 16);
+    $("#UF_LATITUDE").val(coords[0]);
+    $("#UF_LONGITUDE").val(coords[1]);
+    ymaps.geocode(coords, {json: true}).then(function (json) {
+      $("#UF_BUILDING_ADDRESS").val(json.GeoObjectCollection.featureMember[0].GeoObject.metaDataProperty.GeocoderMetaData.Address.formatted);
+      $("#UF_POSTAL").val(json.GeoObjectCollection.featureMember[0].GeoObject.metaDataProperty.GeocoderMetaData.Address.postal_code);
+      $("#UF_DISTRICT").val("");
+      json.GeoObjectCollection.featureMember[0].GeoObject.metaDataProperty.GeocoderMetaData.Address.Components.forEach(function(el){
+        switch (el.kind){
+          case 'country':
+            $("#UF_COUNTRY").val(el.name);
+            break;
+          case 'province':
+            if (el.name.indexOf("округ")>-1) $("#UF_FED_DISTRICT").val(el.name);
+            else $("#UF_PROVINCE").val(el.name);
+            break;
+          case 'area':
+            $("#UF_AREA").val(el.name);
+            break;
+          case 'locality':
+            $("#UF_LOCALITY").val(el.name);
+            break;
+          case 'district':
+            $("#UF_DISTRICT").val(el.name);
+            break;
+          case 'street':
+            $("#UF_STREET").val(el.name);
+            break;
+          case 'house':
+            $("#UF_HOUSE").val(el.name);
+            break;
+        }        
+      });
+      myPlacemark.properties.set({
+        hintContent: $("#UF_BUILDING_ADDRESS").val(),
+        iconContent: $("#UF_BUILDING_ADDRESS").val()
+      });
+    });
   }
 </script>
