@@ -38,6 +38,7 @@
 .label{
   text-align: right;
   font-weight: bold;
+  padding-right: 5px;
 }
 .param{
   text-align: left;
@@ -93,3 +94,6 @@
   cursor: pointer;
 }
 .selectList{width:100%}
+.fieldError{
+  border: 1px solid red;
+}
