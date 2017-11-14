@@ -15,7 +15,7 @@ $APPLICATION->SetTitle("Заполните параметры здания");
   </div>
   <div class="addressWrapper">
     <div class="empty"></div>
-    <div class="label addressBox  <?=($arResult['errors']['UF_BUILDING_ADDRESS'])?"fieldError":""?>" title="<?=($arResult['errors']['UF_BUILDING_ADDRESS'])?$arResult['errors']['UF_BUILDING_ADDRESS']:""?>">Адрес здания *</div>
+    <div class="label addressBox <?=($arResult['errors']['UF_BUILDING_ADDRESS'])?"fieldError":""?>" title="<?=($arResult['errors']['UF_BUILDING_ADDRESS'])?$arResult['errors']['UF_BUILDING_ADDRESS']:""?>">Адрес здания *</div>
     <div class="param addressBox">
       <input class="block-input" type="search" id="UF_BUILDING_ADDRESS" name="UF_BUILDING_ADDRESS" placeholder="Введите адрес здания" value="<?=$arResult['UF_BUILDING_ADDRESS']?>">
     </div>
@@ -47,7 +47,7 @@ $APPLICATION->SetTitle("Заполните параметры здания");
     <div class="empty"></div>
     <div class="label paramBox <?=($arResult['errors']['UF_LOCALITY'])?"fieldError":""?>" title="<?=($arResult['errors']['UF_LOCALITY'])?$arResult['errors']['UF_LOCALITY']:""?>">Населенный пункт *</div>
     <div class="param paramBox"><input class="block-input" type="search" id="UF_LOCALITY" name="UF_LOCALITY" placeholder="населенный пункт без топонимова" value="<?=$arResult['UF_LOCALITY']?>"></div>
-    <div class="label paramBox  <?=($arResult['errors']['UF_DISTRICT'])?"fieldError":""?>" title="<?=($arResult['errors']['UF_DISTRICT'])?$arResult['errors']['UF_DISTRICT']:""?>">Район НП</div>
+    <div class="label paramBox <?=($arResult['errors']['UF_DISTRICT'])?"fieldError":""?>" title="<?=($arResult['errors']['UF_DISTRICT'])?$arResult['errors']['UF_DISTRICT']:""?>">Район НП</div>
     <div class="param paramBox"><input class="block-input" type="search" id="UF_DISTRICT" name="UF_DISTRICT" placeholder="район населенного пункта" value="<?=$arResult['UF_DISTRICT']?>"></div>
     <div class="empty"></div>
   </div>
@@ -63,8 +63,8 @@ $APPLICATION->SetTitle("Заполните параметры здания");
     <div class="empty"></div>
     <div class="label paramBox <?=($arResult['errors']['UF_POSTAL'])?"fieldError":""?>" title="<?=($arResult['errors']['UF_POSTAL'])?$arResult['errors']['UF_POSTAL']:""?>">Индекс *</div>
     <div class="param paramBox"><input class="block-input" type="search" id="UF_POSTAL" name="UF_POSTAL" placeholder="индекс" value="<?=$arResult['UF_POSTAL']?>"></div>
-    <div class="empty"></div>
-    <div class="empty"></div>
+    <div class="label paramBox <?=($arResult['errors']['UF_YEAR_BUILT'])?"fieldError":""?>" title="<?=($arResult['errors']['UF_YEAR_BUILT'])?$arResult['errors']['UF_YEAR_BUILT']:""?>">Год постройки</div>
+    <div class="param paramBox"><input class="block-input" type="search" id="UF_YEAR_BUILT" name="UF_YEAR_BUILT" placeholder="год постройки" value="<?=$arResult['UF_YEAR_BUILT']?>"></div>
     <div class="empty"></div>
   </div>
   <div class="paramsWrapper">
@@ -103,7 +103,7 @@ $APPLICATION->SetTitle("Заполните параметры здания");
     <div class="empty"></div>
     <div class="label paramBox <?=($arResult['errors']['UF_UNDER_FLOORS'])?"fieldError":""?>" title="<?=($arResult['errors']['UF_UNDER_FLOORS'])?$arResult['errors']['UF_UNDER_FLOORS']:""?>">Подземных этажей *</div>
     <div class="param paramBox"><input class="block-input" type="search" id="UF_UNDER_FLOORS" name="UF_UNDER_FLOORS" placeholder="подземных этажей" value="<?=$arResult['UF_UNDER_FLOORS']?>"></div>
-    <div class="label paramBox <?=($arResult['errors']['UF_MATERIAL'])?"fieldError":""?>" title="<?=($arResult['errors']['UF_MATERIAL'])?$arResult['errors']['UF_MATERIAL']:""?>">Тип здания *</div>
+    <div class="label paramBox <?=($arResult['errors']['UF_MATERIAL'])?"fieldError":""?>" title="<?=($arResult['errors']['UF_MATERIAL'])?$arResult['errors']['UF_MATERIAL']:""?>">Тип дома *</div>
     <div class="param paramBox">
       <select class="selectList" id="UF_MATERIAL" name="UF_MATERIAL"></select>
     </div>
@@ -142,7 +142,6 @@ $APPLICATION->SetTitle("Заполните параметры здания");
     <div class="empty"></div>
   </div>
 </form>
-<?echo "<pre>";print_r($arResult);echo "</pre>";?>
 <script>
    $(document).ready(function() {
      $('#UF_MATERIAL').select2({data: <?=$arResult['MATERIALS']?>});

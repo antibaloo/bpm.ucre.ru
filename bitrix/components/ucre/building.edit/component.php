@@ -34,6 +34,7 @@ $checkFields = array(
     "UF_SECTIONS" => array('required' => true, 'regexp' => '/^[0-9]+$/'),
     "UF_ELEVATORS" => array('required' => true, 'regexp' => '/^[0-9]+$/'),
     "UF_B_PLOT_ID" => array('required' => true, 'regexp' => ''),
+    "UF_YEAR_BUILT" => array('required' => false, 'regexp' => ''),
   ),
   "2" => array(
     "UF_BUILDING_TYPE_ID" => array('required' => true, 'regexp' => ''),
@@ -55,6 +56,7 @@ $checkFields = array(
     "UF_FLOORS_MAX"  =>array('required' => true, 'regexp' => '/^[0-9]+$/'),
     "UF_MATERIAL" =>array('required' => true, 'regexp' => ''),
     "UF_B_PLOT_ID" => array('required' => true, 'regexp' => ''),
+    "UF_YEAR_BUILT" => array('required' => false, 'regexp' => ''),
   ),
   "3" => array(
     "UF_BUILDING_TYPE_ID" => array('required' => true, 'regexp' => ''),
@@ -82,6 +84,7 @@ $checkFields = array(
     "UF_ELEVATORS" => array('required' => true, 'regexp' => '/^[0-9]+$/'),
     "UF_B_PLOT_ID" => array('required' => true, 'regexp' => ''),
     "UF_RS" => array('required' => false, 'regexp' => ''),
+    "UF_YEAR_BUILT" => array('required' => false, 'regexp' => ''),
   )
 );
 

@@ -63,8 +63,8 @@ $APPLICATION->SetTitle("Заполните параметры здания");
     <div class="empty"></div>
     <div class="label paramBox <?=($arResult['errors']['UF_POSTAL'])?"fieldError":""?>" title="<?=($arResult['errors']['UF_POSTAL'])?$arResult['errors']['UF_POSTAL']:""?>">Индекс *</div>
     <div class="param paramBox"><input class="block-input" type="search" id="UF_POSTAL" name="UF_POSTAL" placeholder="индекс" value="<?=$arResult['UF_POSTAL']?>"></div>
-    <div class="empty"></div>
-    <div class="empty"></div>
+    <div class="label paramBox <?=($arResult['errors']['UF_YEAR_BUILT'])?"fieldError":""?>" title="<?=($arResult['errors']['UF_YEAR_BUILT'])?$arResult['errors']['UF_YEAR_BUILT']:""?>">Год постройки</div>
+    <div class="param paramBox"><input class="block-input" type="search" id="UF_YEAR_BUILT" name="UF_YEAR_BUILT" placeholder="год постройки" value="<?=$arResult['UF_YEAR_BUILT']?>"></div>
     <div class="empty"></div>
   </div>
   <div class="paramsWrapper">
@@ -118,7 +118,6 @@ $APPLICATION->SetTitle("Заполните параметры здания");
     <div class="empty"></div>
   </div>
 </form>
-<?echo "<pre>";print_r($arResult);echo "</pre>";?>
 <script>
    $(document).ready(function() {
     $('#UF_B_PLOT_ID').select2({data: <?=$arResult['PLOTS']?>});
