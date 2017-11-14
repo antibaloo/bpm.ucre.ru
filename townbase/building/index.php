@@ -12,7 +12,7 @@ $APPLICATION->SetTitle("Здания: многоквартирные, частн
 			"list" => "list/",
 			"edit" => "edit/#element_id#/",
       "show" => "show/#element_id#/",
-      "chess" => "chess/#element_id#/"
+      "chess" => "chess/#action#/#element_id#/"
 		),
 		"VARIABLE_ALIASES" => array(
 			"index" => "",

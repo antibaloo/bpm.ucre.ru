@@ -5,14 +5,14 @@ $arDefaultUrlTemplates404 = array(
 	'list' => 'list/',
 	'edit' => 'edit/#element_id#/',
   'show' => 'show/#element_id#/',
-	'chess' => 'chess/#element_id#/'
+	'chess' => 'chess/#action#/#element_id#/'
 );
 $arDefaultVariableAliases404 = array(
 
 );
 $arDefaultVariableAliases = array();
 $componentPage = '';
-$arComponentVariables = array('element_id');
+$arComponentVariables = array('element_id','action');
 
 $arVariables = array();
 $arUrlTemplates = CComponentEngine::MakeComponentUrlTemplates($arDefaultUrlTemplates404, $arParams['SEF_URL_TEMPLATES']);
@@ -37,5 +37,6 @@ if($componentPage === 'index')
 echo "<pre>";
 print_r($arResult);
 echo "</pre>";*/
+
 $this->IncludeComponentTemplate($componentPage);
 ?>

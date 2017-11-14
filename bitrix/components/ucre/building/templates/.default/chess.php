@@ -10,6 +10,7 @@ $APPLICATION->IncludeComponent(
 		'',
 		array(
 			'ELEMENT_ID' => $arResult['VARIABLES']['element_id'],
+			'ACTION' => $arResult['VARIABLES']['action'],
 			'AJAX_MODE' => 'Y',
 			'AJAX_OPTION_SHADOW' => 'Y',
 			'AJAX_OPTION_JUMP' => 'N'
