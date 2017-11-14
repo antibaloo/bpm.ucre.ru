@@ -121,10 +121,9 @@ $APPLICATION->SetTitle("Карточка многоквартирного дом
 <div class="buttonWrapper">
   <div class="empty"></div>
   <div class="empty"></div>
-  <div class="empty"></div>
   <div class="formButton" href="/townbase/building/edit/<?=$arResult['DATA']['ID']?>/">Редактировать</div>
-  <div class="formButton" href="/townbase/building/list/">Отменить</div>
-  <div class="empty"></div>
+  <div class="formButton" href="/townbase/building/chess/<?=$arResult['DATA']['ID']?>/">Шахматка</div>
+  <div class="formButton" href="/townbase/building/list/">к списку</div>
   <div class="empty"></div>
   <div class="empty"></div>
 </div>

@@ -110,10 +110,9 @@ $APPLICATION->SetTitle("Заполните параметры здания");
   <div class="buttonWrapper">
     <div class="empty"></div>
     <div class="empty"></div>
-    <div class="empty"></div>
     <div class="formButton" action="save">Сохранить</div>
-    <div class="formButton" action="cancel">Отменить</div>
     <div class="empty"></div>
+    <div class="formButton" action="cancel">Отменить</div>
     <div class="empty"></div>
     <div class="empty"></div>
   </div>
