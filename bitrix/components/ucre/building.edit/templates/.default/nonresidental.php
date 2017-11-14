@@ -111,7 +111,7 @@ $APPLICATION->SetTitle("Заполните параметры здания");
   </div>
   <div class="paramsWrapper">
     <div class="empty"></div>
-    <div class="label paramBox <?=($arResult['errors']['UF_SECTIONS'])?"fieldError":""?>" title="<?=($arResult['errors']['UF_SECTIONS'])?$arResult['errors']['UF_SECTIONS']:""?>">Количество секций *</div>
+    <div class="label paramBox <?=($arResult['errors']['UF_SECTIONS'])?"fieldError":""?>" title="<?=($arResult['errors']['UF_SECTIONS'])?$arResult['errors']['UF_SECTIONS']:""?>">Подъездов *</div>
     <div class="param paramBox"><input class="block-input" type="search" id="UF_SECTIONS" name="UF_SECTIONS" placeholder="количество секций" value="<?=$arResult['UF_SECTIONS']?>"></div>
     <div class="label paramBox <?=($arResult['errors']['UF_ELEVATORS'])?"fieldError":""?>" title="<?=($arResult['errors']['UF_ELEVATORS'])?$arResult['errors']['UF_ELEVATORS']:""?>">Количество лифтов *</div>
     <div class="param paramBox"><input class="block-input" type="search" id="UF_ELEVATORS" name="UF_ELEVATORS" placeholder="количество лифтов" value="<?=$arResult['UF_ELEVATORS']?>"></div>
