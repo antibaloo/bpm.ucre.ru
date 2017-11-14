@@ -3,7 +3,6 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED!==true)die();
 $arDefaultUrlTemplates404 = array(
 	'index' => 'index.php',
 	'list' => 'list/',
-	'new' => 'new/',
 	'edit' => 'edit/#element_id#/',
   'show' => 'show/#element_id#/',
 	'chess' => 'chess/#element_id#/'
@@ -22,7 +21,6 @@ $componentPage = CComponentEngine::ParseComponentPath($arParams['SEF_FOLDER'], $
 
 if (empty($componentPage) || (!array_key_exists($componentPage, $arDefaultUrlTemplates404)))	$componentPage = 'index';
 CComponentEngine::InitComponentVariables($componentPage, $arComponentVariables, $arVariableAliases, $arVariables);
-
 $arResult = array_merge(
 	array(
 		'VARIABLES' => $arVariables,

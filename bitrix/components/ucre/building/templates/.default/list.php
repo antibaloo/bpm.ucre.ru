@@ -6,7 +6,7 @@ $APPLICATION->IncludeComponent(
 		'ucre:building.list',
 		'',
 		array(
-			'ON_PAGE' => 3,
+			'ON_PAGE' => 20,
 			'AJAX_MODE' => 'Y',
 			'AJAX_OPTION_SHADOW' => 'Y',
 			'AJAX_OPTION_JUMP' => 'N'
