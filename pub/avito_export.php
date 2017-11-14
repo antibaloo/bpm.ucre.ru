@@ -258,20 +258,6 @@ while($aRes = $db_res->Fetch()){
   $xml->endElement();//Ad
   $num++;
 }
-/*
-            $xml->startElement("product");      
-            $xml->writeAttribute("pid", 314);
-                $xml->writeElement("name", "Яблоко");
-                $xml->writeElement("price", "$1.00");
-                $xml->writeElement("discount", "3%");
-            $xml->endElement();                           
-            $xml->startElement("product");      
-            $xml->writeAttribute("pid", 315);
-                $xml->writeElement("name", "Манго");
-                $xml->writeElement("price", "$0.90");
-                $xml->writeElement("discount", "3%");
-            $xml->endElement();                     */     
-
 $xml->endElement();//Ads
 $xml->endDocument();//Закрываем документ
 $xml->flush(); 
