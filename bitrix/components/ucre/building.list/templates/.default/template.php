@@ -25,7 +25,7 @@ if(!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED!==true) die();
     <div class="gridCell textCenter">
       <a href="/townbase/building/show/<?=$building['ID']?>/"><i class="fa fa-eye" title="Смотреть"></i></a>&nbsp;
       <a href="/townbase/building/edit/<?=$building['ID']?>/"><i class="fa fa-pencil-square-o" title="Редактировать"></i></a>&nbsp;
-      <a href="/townbase/building/chess/show/<?=$building['ID']?>/"><i class="fa fa-table" aria-hidden="true" title="Шахматка"></i></a>
+      <a href="/townbase/chess/show/<?=$building['ID']?>/"><i class="fa fa-table" aria-hidden="true" title="Шахматка"></i></a>
     </div>
     <div class="gridCell textCenter"><?=$building['ID']?></div>
     <div class="gridCell textRight"><?=$building['UF_BUILDING_ADDRESS']?></div>
