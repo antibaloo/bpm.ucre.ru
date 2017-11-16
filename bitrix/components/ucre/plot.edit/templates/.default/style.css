@@ -1,0 +1,99 @@
+.typeWrapper{
+  display: grid;
+  grid-template-columns: 3fr 1fr 1fr 1fr 3fr;
+  grid-gap: 20px;
+}
+.empty{
+}
+.buildingType{
+  text-align: center;
+  height: 30px;
+  line-height: 30px;/*Добавлено для центровки текстового содержимого*/
+  color:  white;
+  font-weight: bold;
+  background: cadetblue;
+}
+.toChoose:hover{
+  background: cornflowerblue;
+  cursor: pointer;
+}
+.chosen{
+  background: cornflowerblue;
+
+}
+.addressWrapper{
+  margin-top: 10px;
+  display: grid;
+  grid-template-rows: 25px;
+  grid-template-columns: 1fr 1fr 4fr 1fr 1fr;
+  grid-gap: 20px;
+}
+.paramsWrapper{
+  margin-top: 10px;
+  display: grid;
+  grid-template-rows: 25px;
+  grid-template-columns:1fr 1fr 2fr 1fr 2fr 1fr;
+  grid-gap: 20px;
+}
+.label{
+  text-align: right;
+  font-weight: bold;
+  padding-right: 5px;
+}
+.param{
+  text-align: left;
+}
+.searchButton{
+  text-align: center;
+  color:  white;
+  font-weight: bold;
+  background: #66A1D2;
+}
+.searchButton:hover{
+  background: #3F8FD2;
+  cursor: pointer;
+}
+.addressBox{
+  height: 25px;
+  line-height: 25px;
+}
+.paramBox{
+  height: 25px;
+  line-height: 25px;
+}
+.mapWrapper{
+  margin-top: 10px;
+  display: grid;
+  grid-template-rows: 300px;
+  grid-template-columns: 1fr 7fr 1fr;
+  grid-gap: 20px;
+}
+.block-input {
+  display: block;
+  width: 100%;
+  height: 25px;
+  line-height: 25px;
+}
+.buttonWrapper{
+  margin-top: 10px;
+  display: grid;
+  grid-template-rows: 25px;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-gap: 20px;
+}
+.formButton{
+  height: 25px;
+  line-height: 25px;
+  text-align: center;
+  color:  white;
+  font-weight: bold;
+  background: #5CCCCC;
+}
+.formButton:hover{
+  background: #009999;
+  cursor: pointer;
+}
+.selectList{width:100%}
+.fieldError{
+  border: 1px solid red;
+}
