@@ -1,21 +1,28 @@
 <?
 if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED!==true)die();
-// подключаем модули
-CModule::IncludeModule('iblock');
-CModule::IncludeModule('highloadblock');
+$arDefaultUrlTemplates404 = array(
+	'index' => 'index.php',
+	'edit' => 'edit/#element_id#/',
+  'show' => 'show/#element_id#/'
+);
+$arDefaultVariableAliases404 = array();
+$arDefaultVariableAliases = array();
+$componentPage = '';
+$arComponentVariables = array('element_id');
 
-// необходимые классы
-use Bitrix\Highloadblock as HL;
-use Bitrix\Main\Entity;
+$arVariables = array();
+$arUrlTemplates = CComponentEngine::MakeComponentUrlTemplates($arDefaultUrlTemplates404, $arParams['SEF_URL_TEMPLATES']);
+$arVariableAliases = CComponentEngine::MakeComponentVariableAliases($arDefaultVariableAliases404, $arParams['VARIABLE_ALIASES']);
+$componentPage = CComponentEngine::ParseComponentPath($arParams['SEF_FOLDER'], $arUrlTemplates, $arVariables);
 
-// $hlblock - это массив, 2 - hl блок Building
-$hlblock   = HL\HighloadBlockTable::getById(2)->fetch();
-$Building   = HL\HighloadBlockTable::compileEntity( $hlblock );
-$BuildingDataClass = $Building->getDataClass();
-$arResult['DATA'] = $BuildingDataClass::getRowById($arParams['ELEMENT_ID']);
-$flatFloorCount = 3;
-echo "<pre>"; print_r($arParams);echo "</pre>";
-echo "<pre>"; print_r($_POST);echo "</pre>";
-$template = $arParams['ACTION'];
-$this->IncludeComponentTemplate($template);
+if (empty($componentPage) || (!array_key_exists($componentPage, $arDefaultUrlTemplates404)))	$componentPage = 'index';
+CComponentEngine::InitComponentVariables($componentPage, $arComponentVariables, $arVariableAliases, $arVariables);
+$arResult = array_merge(
+	array(
+		'VARIABLES' => $arVariables,
+		'ALIASES' => $arVariableAliases,
+	),
+	$arResult
+);
+$this->IncludeComponentTemplate($componentPage);
 ?>
