@@ -67,12 +67,6 @@ $arUrlRewrite = array(
 		"PATH" => "/extranet/contacts/personal.php",
 	),
 	array(
-		"CONDITION" => "#^/crm/configs/deal_category/#",
-		"RULE" => "",
-		"ID" => "bitrix:crm.deal_category",
-		"PATH" => "/crm/configs/deal_category/index.php",
-	),
-	array(
 		"CONDITION" => "#^/stssync/calendar_extranet/#",
 		"RULE" => "",
 		"ID" => "bitrix:stssync.server",
@@ -83,6 +77,12 @@ $arUrlRewrite = array(
 		"RULE" => "",
 		"ID" => "bitrix:stssync.server",
 		"PATH" => "/bitrix/services/stssync/contacts_extranet/index.php",
+	),
+	array(
+		"CONDITION" => "#^/crm/configs/deal_category/#",
+		"RULE" => "",
+		"ID" => "bitrix:crm.deal_category",
+		"PATH" => "/crm/configs/deal_category/index.php",
 	),
 	array(
 		"CONDITION" => "#^/crm/configs/mailtemplate/#",
@@ -109,28 +109,16 @@ $arUrlRewrite = array(
 		"PATH" => "/bitrix/services/ymarket/index.php",
 	),
 	array(
-		"CONDITION" => "#^/crm/configs/automation/#",
-		"RULE" => "",
-		"ID" => "bitrix:crm.config.automation",
-		"PATH" => "/crm/configs/automation/index.php",
-	),
-	array(
 		"CONDITION" => "#^/stssync/tasks_extranet/#",
 		"RULE" => "",
 		"ID" => "bitrix:stssync.server",
 		"PATH" => "/bitrix/services/stssync/tasks_extranet/index.php",
 	),
 	array(
-		"CONDITION" => "#^/crm/configs/mycompany/#",
+		"CONDITION" => "#^/crm/configs/automation/#",
 		"RULE" => "",
-		"ID" => "bitrix:crm.company",
-		"PATH" => "/crm/configs/mycompany/index.php",
-	),
-	array(
-		"CONDITION" => "#^/extranet/mobile/webdav#",
-		"RULE" => "",
-		"ID" => "bitrix:mobile.webdav.file.list",
-		"PATH" => "/extranet/mobile/webdav/index.php",
+		"ID" => "bitrix:crm.config.automation",
+		"PATH" => "/crm/configs/automation/index.php",
 	),
 	array(
 		"CONDITION" => "#^/company/personal/mail/#",
@@ -139,16 +127,22 @@ $arUrlRewrite = array(
 		"PATH" => "/company/personal/mail/index.php",
 	),
 	array(
+		"CONDITION" => "#^/extranet/mobile/webdav#",
+		"RULE" => "",
+		"ID" => "bitrix:mobile.webdav.file.list",
+		"PATH" => "/extranet/mobile/webdav/index.php",
+	),
+	array(
+		"CONDITION" => "#^/crm/configs/mycompany/#",
+		"RULE" => "",
+		"ID" => "bitrix:crm.company",
+		"PATH" => "/crm/configs/mycompany/index.php",
+	),
+	array(
 		"CONDITION" => "#^/crm/configs/locations/#",
 		"RULE" => "",
 		"ID" => "bitrix:crm.config.locations",
 		"PATH" => "/crm/configs/locations/index.php",
-	),
-	array(
-		"CONDITION" => "#^/stssync/contacts_crm/#",
-		"RULE" => "",
-		"ID" => "bitrix:stssync.server",
-		"PATH" => "/bitrix/services/stssync/contacts_crm/index.php",
 	),
 	array(
 		"CONDITION" => "#^/crm/configs/currency/#",
@@ -157,10 +151,10 @@ $arUrlRewrite = array(
 		"PATH" => "/crm/configs/currency/index.php",
 	),
 	array(
-		"CONDITION" => "#^/crm/configs/measure/#",
+		"CONDITION" => "#^/stssync/contacts_crm/#",
 		"RULE" => "",
-		"ID" => "bitrix:crm.config.measure",
-		"PATH" => "/crm/configs/measure/index.php",
+		"ID" => "bitrix:stssync.server",
+		"PATH" => "/bitrix/services/stssync/contacts_crm/index.php",
 	),
 	array(
 		"CONDITION" => "#^/extranet/workgroups/#",
@@ -169,10 +163,10 @@ $arUrlRewrite = array(
 		"PATH" => "/extranet/workgroups/index.php",
 	),
 	array(
-		"CONDITION" => "#^/crm/configs/fields/#",
+		"CONDITION" => "#^/crm/configs/measure/#",
 		"RULE" => "",
-		"ID" => "bitrix:crm.config.fields",
-		"PATH" => "/crm/configs/fields/index.php",
+		"ID" => "bitrix:crm.config.measure",
+		"PATH" => "/crm/configs/measure/index.php",
 	),
 	array(
 		"CONDITION" => "#^/crm/configs/exch1c/#",
@@ -181,16 +175,34 @@ $arUrlRewrite = array(
 		"PATH" => "/crm/configs/exch1c/index.php",
 	),
 	array(
-		"CONDITION" => "#^/crm/configs/preset/#",
+		"CONDITION" => "#^/crm/configs/fields/#",
 		"RULE" => "",
-		"ID" => "bitrix:crm.config.preset",
-		"PATH" => "/crm/configs/preset/index.php",
+		"ID" => "bitrix:crm.config.fields",
+		"PATH" => "/crm/configs/fields/index.php",
+	),
+	array(
+		"CONDITION" => "#^/townbase/placement/#",
+		"RULE" => "",
+		"ID" => "ucre:placement",
+		"PATH" => "/townbase/placement/index.php",
 	),
 	array(
 		"CONDITION" => "#^/crm/reports/report/#",
 		"RULE" => "",
 		"ID" => "bitrix:crm.report",
 		"PATH" => "/crm/reports/report/index.php",
+	),
+	array(
+		"CONDITION" => "#^/crm/configs/preset/#",
+		"RULE" => "",
+		"ID" => "bitrix:crm.config.preset",
+		"PATH" => "/crm/configs/preset/index.php",
+	),
+	array(
+		"CONDITION" => "#^/online/(/?)([^/]*)#",
+		"RULE" => "",
+		"ID" => "",
+		"PATH" => "/desktop_app/router.php",
 	),
 	array(
 		"CONDITION" => "#^/townbase/building/#",
@@ -205,12 +217,6 @@ $arUrlRewrite = array(
 		"PATH" => "/marketplace/local/index.php",
 	),
 	array(
-		"CONDITION" => "#^/online/(/?)([^/]*)#",
-		"RULE" => "",
-		"ID" => "",
-		"PATH" => "/desktop_app/router.php",
-	),
-	array(
 		"CONDITION" => "#^/bizproc/processes/#",
 		"RULE" => "",
 		"ID" => "bitrix:lists",
@@ -223,16 +229,10 @@ $arUrlRewrite = array(
 		"PATH" => "/crm/configs/perms/index.php",
 	),
 	array(
-		"CONDITION" => "#^/townbase/complex/#",
+		"CONDITION" => "#^/stssync/calendar/#",
 		"RULE" => "",
-		"ID" => "ucre:complex",
-		"PATH" => "/townbase/complex/index.php",
-	),
-	array(
-		"CONDITION" => "#^/crm/realtyobject/#",
-		"RULE" => "",
-		"ID" => "ucre:crm.realtyobject",
-		"PATH" => "/crm/realtyobject/index.php",
+		"ID" => "bitrix:stssync.server",
+		"PATH" => "/bitrix/services/stssync/calendar/index.php",
 	),
 	array(
 		"CONDITION" => "#^/crm/realtyobject/#",
@@ -241,16 +241,22 @@ $arUrlRewrite = array(
 		"PATH" => "/crm/stream/index.php",
 	),
 	array(
-		"CONDITION" => "#^/stssync/calendar/#",
-		"RULE" => "",
-		"ID" => "bitrix:stssync.server",
-		"PATH" => "/bitrix/services/stssync/calendar/index.php",
-	),
-	array(
 		"CONDITION" => "#^/marketplace/hook/#",
 		"RULE" => "",
 		"ID" => "bitrix:rest.hook",
 		"PATH" => "/marketplace/hook/index.php",
+	),
+	array(
+		"CONDITION" => "#^/crm/realtyobject/#",
+		"RULE" => "",
+		"ID" => "ucre:crm.realtyobject",
+		"PATH" => "/crm/realtyobject/index.php",
+	),
+	array(
+		"CONDITION" => "#^/townbase/complex/#",
+		"RULE" => "",
+		"ID" => "ucre:complex",
+		"PATH" => "/townbase/complex/index.php",
 	),
 	array(
 		"CONDITION" => "#^/company/personal/#",
@@ -289,16 +295,16 @@ $arUrlRewrite = array(
 		"PATH" => "/timeman/meeting/index.php",
 	),
 	array(
-		"CONDITION" => "#^/townbase/chess/#",
-		"RULE" => "",
-		"ID" => "ucre:chess",
-		"PATH" => "/townbase/chess/index.php",
-	),
-	array(
 		"CONDITION" => "#^/crm/configs/ps/#",
 		"RULE" => "",
 		"ID" => "bitrix:crm.config.ps",
 		"PATH" => "/crm/configs/ps/index.php",
+	),
+	array(
+		"CONDITION" => "#^/townbase/chess/#",
+		"RULE" => "",
+		"ID" => "ucre:chess",
+		"PATH" => "/townbase/chess/index.php",
 	),
 	array(
 		"CONDITION" => "#^/services/lists/#",
@@ -319,10 +325,10 @@ $arUrlRewrite = array(
 		"PATH" => "/bitrix/services/stssync/tasks/index.php",
 	),
 	array(
-		"CONDITION" => "#^/crm/invoicing/#",
+		"CONDITION" => "#^/services/idea/#",
 		"RULE" => "",
-		"ID" => "",
-		"PATH" => "/crm/invoicing/index.php",
+		"ID" => "bitrix:idea",
+		"PATH" => "/services/idea/index.php",
 	),
 	array(
 		"CONDITION" => "#^/about/gallery/#",
@@ -331,16 +337,16 @@ $arUrlRewrite = array(
 		"PATH" => "/about/gallery/index.php",
 	),
 	array(
-		"CONDITION" => "#^/crm/lead_ucre/#",
+		"CONDITION" => "#^/townbase/plot/#",
 		"RULE" => "",
-		"ID" => "ucre:crm.lead",
-		"PATH" => "/crm/lead_ucre/index.php",
+		"ID" => "ucre:plot",
+		"PATH" => "/townbase/plot/index.php",
 	),
 	array(
-		"CONDITION" => "#^/services/idea/#",
+		"CONDITION" => "#^/crm/invoicing/#",
 		"RULE" => "",
-		"ID" => "bitrix:idea",
-		"PATH" => "/services/idea/index.php",
+		"ID" => "",
+		"PATH" => "/crm/invoicing/index.php",
 	),
 	array(
 		"CONDITION" => "#^/services/wiki/#",
@@ -349,16 +355,22 @@ $arUrlRewrite = array(
 		"PATH" => "/services/wiki.php",
 	),
 	array(
-		"CONDITION" => "#^/crm/activity/#",
+		"CONDITION" => "#^/crm/lead_ucre/#",
 		"RULE" => "",
-		"ID" => "bitrix:crm.activity",
-		"PATH" => "/crm/activity/index.php",
+		"ID" => "ucre:crm.lead",
+		"PATH" => "/crm/lead_ucre/index.php",
 	),
 	array(
 		"CONDITION" => "#^/mobile/webdav#",
 		"RULE" => "",
 		"ID" => "bitrix:mobile.webdav.file.list",
 		"PATH" => "/mobile/webdav/index.php",
+	),
+	array(
+		"CONDITION" => "#^/crm/activity/#",
+		"RULE" => "",
+		"ID" => "bitrix:crm.activity",
+		"PATH" => "/crm/activity/index.php",
 	),
 	array(
 		"CONDITION" => "#^/crm/exchange/#",
@@ -373,46 +385,10 @@ $arUrlRewrite = array(
 		"PATH" => "/services/faq/index.php",
 	),
 	array(
-		"CONDITION" => "#^/crm/complex/#",
-		"RULE" => "",
-		"ID" => "ucre:complex.test",
-		"PATH" => "/crm/complex/index.php",
-	),
-	array(
-		"CONDITION" => "#^/crm/contact/#",
-		"RULE" => "",
-		"ID" => "bitrix:crm.contact",
-		"PATH" => "/crm/contact/index.php",
-	),
-	array(
-		"CONDITION" => "#^/docs/manage/#",
-		"RULE" => "",
-		"ID" => "bitrix:disk.common",
-		"PATH" => "/docs/manage/index.php",
-	),
-	array(
-		"CONDITION" => "#^/services/bp/#",
-		"RULE" => "",
-		"ID" => "bitrix:bizproc.wizards",
-		"PATH" => "/services/bp/index.php",
-	),
-	array(
 		"CONDITION" => "#^/crm/company/#",
 		"RULE" => "",
 		"ID" => "bitrix:crm.company",
 		"PATH" => "/crm/company/index.php",
-	),
-	array(
-		"CONDITION" => "#^/marketplace/#",
-		"RULE" => "",
-		"ID" => "bitrix:rest.marketplace",
-		"PATH" => "/marketplace/index.php",
-	),
-	array(
-		"CONDITION" => "#^/\\.well-known#",
-		"RULE" => "",
-		"ID" => "",
-		"PATH" => "/bitrix/groupdav.php",
 	),
 	array(
 		"CONDITION" => "#^/crm/webform/#",
@@ -421,10 +397,34 @@ $arUrlRewrite = array(
 		"PATH" => "/crm/webform/index.php",
 	),
 	array(
+		"CONDITION" => "#^/services/bp/#",
+		"RULE" => "",
+		"ID" => "bitrix:bizproc.wizards",
+		"PATH" => "/services/bp/index.php",
+	),
+	array(
+		"CONDITION" => "#^/docs/manage/#",
+		"RULE" => "",
+		"ID" => "bitrix:disk.common",
+		"PATH" => "/docs/manage/index.php",
+	),
+	array(
+		"CONDITION" => "#^/crm/complex/#",
+		"RULE" => "",
+		"ID" => "ucre:complex.test",
+		"PATH" => "/crm/complex/index.php",
+	),
+	array(
 		"CONDITION" => "#^/crm/product/#",
 		"RULE" => "",
 		"ID" => "bitrix:crm.product",
 		"PATH" => "/crm/product/index.php",
+	),
+	array(
+		"CONDITION" => "#^/marketplace/#",
+		"RULE" => "",
+		"ID" => "bitrix:rest.marketplace",
+		"PATH" => "/marketplace/index.php",
 	),
 	array(
 		"CONDITION" => "#^/crm/invoice/#",
@@ -433,10 +433,22 @@ $arUrlRewrite = array(
 		"PATH" => "/crm/invoice/index.php",
 	),
 	array(
-		"CONDITION" => "#^/workgroups/#",
+		"CONDITION" => "#^/\\.well-known#",
 		"RULE" => "",
-		"ID" => "bitrix:socialnetwork_group",
-		"PATH" => "/workgroups/index.php",
+		"ID" => "",
+		"PATH" => "/bitrix/groupdav.php",
+	),
+	array(
+		"CONDITION" => "#^/crm/contact/#",
+		"RULE" => "",
+		"ID" => "bitrix:crm.contact",
+		"PATH" => "/crm/contact/index.php",
+	),
+	array(
+		"CONDITION" => "#^/beelinePbx/#",
+		"RULE" => "",
+		"ID" => "",
+		"PATH" => "/beelinePbx/index.php",
 	),
 	array(
 		"CONDITION" => "#^/crm/button/#",
@@ -445,16 +457,16 @@ $arUrlRewrite = array(
 		"PATH" => "/crm/button/index.php",
 	),
 	array(
+		"CONDITION" => "#^/workgroups/#",
+		"RULE" => "",
+		"ID" => "bitrix:socialnetwork_group",
+		"PATH" => "/workgroups/index.php",
+	),
+	array(
 		"CONDITION" => "#^/docs/shared#",
 		"RULE" => "",
 		"ID" => "bitrix:disk.common",
 		"PATH" => "/docs/shared/index.php",
-	),
-	array(
-		"CONDITION" => "#^/beelinePbx/#",
-		"RULE" => "",
-		"ID" => "",
-		"PATH" => "/beelinePbx/index.php",
 	),
 	array(
 		"CONDITION" => "#^/crm/quote/#",
@@ -469,16 +481,16 @@ $arUrlRewrite = array(
 		"PATH" => "/docs/sale/index.php",
 	),
 	array(
+		"CONDITION" => "#^//docs/all#",
+		"RULE" => "",
+		"ID" => "bitrix:disk.aggregator",
+		"PATH" => "/docs/index.php",
+	),
+	array(
 		"CONDITION" => "#^/docs/pub/#",
 		"RULE" => "",
 		"ID" => "bitrix:disk.external.link",
 		"PATH" => "/docs/pub/extlinks.php",
-	),
-	array(
-		"CONDITION" => "#^/crm/lead/#",
-		"RULE" => "",
-		"ID" => "bitrix:crm.lead",
-		"PATH" => "/crm/lead/index.php",
 	),
 	array(
 		"CONDITION" => "#^/crm/call/#",
@@ -493,10 +505,10 @@ $arUrlRewrite = array(
 		"PATH" => "/crm/deal/index.php",
 	),
 	array(
-		"CONDITION" => "#^//docs/all#",
+		"CONDITION" => "#^/crm/lead/#",
 		"RULE" => "",
-		"ID" => "bitrix:disk.aggregator",
-		"PATH" => "/docs/index.php",
+		"ID" => "bitrix:crm.lead",
+		"PATH" => "/crm/lead/index.php",
 	),
 	array(
 		"CONDITION" => "#^/onec/#",
