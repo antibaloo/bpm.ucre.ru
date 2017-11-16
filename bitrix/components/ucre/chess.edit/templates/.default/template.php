@@ -7,7 +7,7 @@ $APPLICATION->SetTitle("Редактирование шахматки");
     <div class="empty"></div>
     <div class="empty"></div>
     <div class="formButton" href="/townbase/building/show/<?=$arResult['DATA']['ID']?>/">Карточка здания</div>
-    <div class="formButton">Сохранить шахматку</div>
+    <div class="formButton" onclick="$('#submit').trigger('click');">Сохранить шахматку</div>
     <div class="formButton" href="/townbase/building/list/">к списку</div>
     <div class="empty"></div>
     <div class="empty"></div>
