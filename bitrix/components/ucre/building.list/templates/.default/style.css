@@ -16,6 +16,7 @@
 }
 .gridCell {
   padding: 2px;
+  background-color: #eee;
 }
 .textCenter{
   text-align: center
@@ -27,7 +28,7 @@
   text-align: left;
 }
 .gridFooter{
-  background-color: #eee;
+  background-color: #cccccc;
   margin: 0 auto;
   text-align:center;
 }

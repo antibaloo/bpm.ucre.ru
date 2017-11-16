@@ -12,15 +12,15 @@ if(!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED!==true) die();
 <form id="buildingList" method="POST" action="<?=$_SERVER["REQUEST_URI"]?>" enctype="multipart/formdata">
   <div class="gridWrapper">
     <div class="gridHeader textCenter"></div>
-    <div class="gridHeader textCenter">ID</div>
-    <div class="gridHeader textCenter">Address</div>
-    <div class="gridHeader textCenter">kadNamber</div>
-    <div class="gridHeader textCenter">Square</div>
-    <div class="gridHeader textCenter">placementCount</div>
-    <div class="gridHeader textCenter">liveCount</div>
-    <div class="gridHeader textCenter">minFloors</div>
-    <div class="gridHeader textCenter">maxFloors</div>
-    <div class="gridHeader textCenter">accessCount</div>
+    <div class="gridHeader textCenter">id</div>
+    <div class="gridHeader textCenter">Адрес</div>
+    <div class="gridHeader textCenter">N<sub>кад</sub></div>
+    <div class="gridHeader textCenter">S<sub>общ</sub></div>
+    <div class="gridHeader textCenter">Помещений</div>
+    <div class="gridHeader textCenter">жилых</div>
+    <div class="gridHeader textCenter">Этажность<sub>min</sub></div>
+    <div class="gridHeader textCenter">Этажность<sub>max</sub></div>
+    <div class="gridHeader textCenter">Подъездов</div>
     <?foreach ($arResult['DATA'] as $building){?>
     <div class="gridCell textCenter">
       <a href="/townbase/building/show/<?=$building['ID']?>/"><i class="fa fa-eye" title="Смотреть"></i></a>&nbsp;
@@ -35,7 +35,7 @@ if(!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED!==true) die();
     <div class="gridCell textRight"><?=$building['UF_LIVE_COUNT']?></div>
     <div class="gridCell textRight"><?=$building['UF_FLOORS_MIN']?></div>
     <div class="gridCell textRight"><?=$building['UF_FLOORS_MAX']?></div>
-    <div class="gridCell textRight"><?=$building['UF_ACCESSES']?></div>
+    <div class="gridCell textRight"><?=$building['UF_SECTIONS']?></div>
     <?}?>
   </div>
   <div class="gridFooter">
