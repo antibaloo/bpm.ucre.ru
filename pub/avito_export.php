@@ -5,11 +5,17 @@ CModule::IncludeModule('iblock');
 CModule::IncludeModule('crm');
 $locations = simplexml_load_file('http://autoload.avito.ru/format/Locations.xml');
 $cityspr = array();//Справочник населенных пунктов Оренбургской области по версии Авито
+$cityCoords = array();
 $districtspr = array("Ленинский", "Промышленный", "Центральный", "Дзержинский","отсутствует");//Справочник районов города
 foreach ($locations->Region as $region) {
   if ($region['Id']=='642480') {
     foreach ($region->City as $city){
       array_push($cityspr,trim((string)$city['Name']));
+			$tempCoords = explode(" ",(string)$city['Coord']);
+			$cityCoords[trim((string)$city['Name'])] =array(
+				"lat" => $tempCoords[0],
+				"lon" => $tempCoords[1]
+			);
     }
   }
 }
@@ -130,31 +136,17 @@ while($aRes = $db_res->Fetch()){
         if ($aRes['PROPERTY_258']=="") $xml->writeElement("Street",$street);//Улица
       }
     }else{//Если населенного пункта нет в справочнике Авито
-      switch ($aRes['PROPERTY_214']){
-				case "Переволоцкий р-н":
-					$xml->writeElement("City",'Переволоцкий');
-					break;
-				case "Саракташский р-н":
-					$xml->writeElement("City",'Саракташ');
-					break;
-				case "Беляевский р-н":
-					$xml->writeElement("City",'Беляевка');
-					break;
-				case "Сакмарский р-н":
-					$xml->writeElement("City",'Сакмара');
-					break;
-				case "Оренбургский р-н":
-					$xml->writeElement("City",'Оренбург');
-					$xml->writeElement("District","Ленинский");
-					break;
-				case "Октябрьский р-н":
-					$xml->writeElement("City",'Октябрьское');
-					break;
-				default:
-					$xml->writeElement("City",'Оренбург');
-					$xml->writeElement("District","Ленинский");
-					break;
+			$city = "";
+			$distance = 17.846840;//условное расстояние по координатам до Москвы
+			foreach($cityCoords as $name=>$coords){
+				$temp = sqrt(($aRes['PROPERTY_298']-$coords['lat'])*($aRes['PROPERTY_298']-$coords['lat'])+($aRes['PROPERTY_299']-$coords['lon'])*($aRes['PROPERTY_299']-$coords['lon']));
+				if ($temp<$distance) {
+					$distance = $temp;
+					$city = $name;
+				}
 			}
+			$xml->writeElement("City",$city);
+			if ($city=="Оренбург") $xml->writeElement("District","Ленинский");			
       if ($aRes['PROPERTY_210']==382 || $aRes['PROPERTY_210']==381) {
         if ($aRes['PROPERTY_258']=="") $xml->writeElement("Street",$aRes['PROPERTY_214'].','.$aRes['PROPERTY_215'].', '.$street.', '.$aRes['PROPERTY_218']);//Район, нас. пункт, улица, дом
       }else{
@@ -270,5 +262,6 @@ CEventLog::Add(array(
   "DESCRIPTION" => "Результат записи фида: ".$result."<br>Выгрузка скриптом объектов недвижимости в формате АВИТО, выгружено ".$num." объектов за ".$time." секунд (включая комнат - ".$r.", квартир - ".$f.", домов, дач, коттеджей - ".$h.", участков - ".$p.", коммерческих - ".$c.").",
 ));
 echo "Выгрузка скриптом объектов недвижимости в формате АВИТО, выгружено ".$num." объектов за ".$time." секунд (включая комнат - ".$r.", квартир - ".$f.", домов, дач, коттеджей - ".$h.", участков - ".$p.", коммерческих - ".$c.").";
+//echo "<pre>";print_r($cityCoords);echo "</pre>";
 require ($_SERVER['DOCUMENT_ROOT'] . "/bitrix/modules/main/include/epilog_after.php");      
 ?>
