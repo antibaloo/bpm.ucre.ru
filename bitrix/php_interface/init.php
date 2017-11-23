@@ -145,5 +145,54 @@ function DealUpdate(&$arFields){
 		}	
 	}
 }*/
+AddEventHandler('crm', 'OnBeforeCrmLeadUpdate', 'LeadUpdate');
+function LeadUpdate(&$arFields){
+	$ar = CCrmStatus::GetStatusListEx('SOURCE');
+	$list = array();
+	foreach ($ar as $key => $value){
+		$list[$key] = $value;
+	}
+	//Bitrix\Main\Diag\Debug::writeToFile(array( 'source'=>$list ),"","/lead.txt");
+	$rsData = CUserFieldEnum::GetList(array(), array(
+		"ID" => $arFields["UF_CRM_1486022615"],
+		"USER_FIELD_NAME"=>"UF_CRM_1486022615"
+	));
+	if($rs = $rsData->GetNext()) $direction = $rs['VALUE'];
+	
+	$type = "кое-что";
+	switch ($arFields["UF_CRM_1490011939"]){
+		case 1:
+			$type = "комната";
+			$rooms = "";
+			break;
+		case 2:
+			$type = "квартира";
+			$rooms = ($arFields["UF_CRM_1486191523"]>0)?$arFields["UF_CRM_1486191523"]."-к":"количество комнат неизвестно";
+			break;
+		case 3:
+			$type = "дом";
+			$rooms = ($arFields["UF_CRM_1486191523"]>0)?$arFields["UF_CRM_1486191523"]."-к":"количество комнат неизвестно";
+			break;
+		case 4:
+			$type = "таунхаус";
+			$rooms = ($arFields["UF_CRM_1486191523"]>0)?$arFields["UF_CRM_1486191523"]."-к":"количество комнат неизвестно";
+			break;
+		case 5:
+			$type = "дача";
+			$rooms = "";
+			break;
+		case 6:
+			$type = "участок";
+			$rooms = "";
+			break;
+		case 7:
+			$type = "коммерческий";
+			$rooms = "";
+			break;
+			
+	}
 
+	$name = ($arFields['NAME'] != "")?$arFields['NAME']:"кто-то";
+	$arFields['TITLE'] = $direction.": ".$name.", ".$type.", ".$rooms." (".$list[$arFields['SOURCE_ID']].")";
+}
 ?>
