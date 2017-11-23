@@ -147,20 +147,26 @@ function DealUpdate(&$arFields){
 }*/
 AddEventHandler('crm', 'OnBeforeCrmLeadUpdate', 'LeadUpdate');
 function LeadUpdate(&$arFields){
+	$dbResult = CCrmLead::GetList(array(),array("ID"=>$arFields["ID"]),array());//Получаем полный вектор полей заявки, не зависимо от того, какие поля сохранялись
+	$existFields = $dbResult->Fetch();
+
 	$ar = CCrmStatus::GetStatusListEx('SOURCE');
 	$list = array();
 	foreach ($ar as $key => $value){
 		$list[$key] = $value;
 	}
 	//Bitrix\Main\Diag\Debug::writeToFile(array( 'source'=>$list ),"","/lead.txt");
+	
 	$rsData = CUserFieldEnum::GetList(array(), array(
-		"ID" => $arFields["UF_CRM_1486022615"],
+		"ID" => (isset($arFields["UF_CRM_1486022615"]))?$arFields["UF_CRM_1486022615"]:$existFields["UF_CRM_1486022615"],
 		"USER_FIELD_NAME"=>"UF_CRM_1486022615"
 	));
+	
 	if($rs = $rsData->GetNext()) $direction = $rs['VALUE'];
 	
 	$type = "кое-что";
-	switch ($arFields["UF_CRM_1490011939"]){
+	$type_id = (isset($arFields["UF_CRM_1490011939"]))?$arFields["UF_CRM_1490011939"]:$existFields["UF_CRM_1490011939"];
+	switch ($type_id){
 		case 1:
 			$type = "комната";
 			$rooms = "";
@@ -191,8 +197,14 @@ function LeadUpdate(&$arFields){
 			break;
 			
 	}
-
-	$name = ($arFields['NAME'] != "")?$arFields['NAME']:"кто-то";
-	$arFields['TITLE'] = $direction.": ".$name.", ".$type.", ".$rooms." (".$list[$arFields['SOURCE_ID']].")";
+	if (isset($arFields['NAME'])){
+		$name = ($arFields['NAME'] != "")?$arFields['NAME']:"кто-то";
+	}else{
+		$name = ($existFields['NAME'] != "")?$existFields['NAME']:"кто-то";
+	}
+	if (isset($arFields['SOURCE_ID'])) $source_id = $list[$arFields['SOURCE_ID']];
+	else $source_id = $list[$existFields['SOURCE_ID']];
+	
+	$arFields['TITLE'] = $direction.": ".$name.", ".$type.", ".$rooms." (".$source_id.")";
 }
 ?>
