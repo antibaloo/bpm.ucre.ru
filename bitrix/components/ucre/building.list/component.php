@@ -16,7 +16,7 @@ $BuildingDataClass = $Building->getDataClass();
 $rsData = $BuildingDataClass::getList(
   array(
     "select" => array('*'), //выбираем все поля
-    "filter" => array(),
+    "filter" => $arParams['FILTER'],
     "order" => array("ID"=>"ASC"), // сортировка по полю ID, будет работать только, если вы завели такое поле в hl'блоке
   )
 );
@@ -27,6 +27,5 @@ $arResult['COUNT'] = $rsData->getSelectedRowsCount();
 $arResult['PAGES'] = ($arResult['COUNT'] / $arResult['ON_PAGE'] > 1)?ceil($arResult['COUNT'] / $arResult['ON_PAGE']):1;
 
 $arResult['DATA'] = array_slice ($rsData->FetchAll(),($arResult['ACTIVE_PAGE']-1)*$arResult['ON_PAGE'],$arResult['ON_PAGE']);//Вырезаем часть результата в соответствии с активной страницей и кол-вом записей на странице
-
 $this->IncludeComponentTemplate();
 ?>
