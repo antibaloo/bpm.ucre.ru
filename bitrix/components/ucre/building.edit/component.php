@@ -178,22 +178,13 @@ foreach($materialsData as $material){
 }
 $arResult['MATERIALS'] = "[".implode(",",$data)."]";
 
-//Формируем список участков
-$rsData = $PlotsDataClass::getList(
-  array(
-    "select" => array('*'), //выбираем все поля
-    "filter" => array(),
-    "order" => array("ID"=>"ASC"), // сортировка по полю ID, будет работать только, если вы завели такое поле в hl'блоке
-  )
-);
 
-$plotsData = $rsData->FetchAll();
-$data = array("{id : '', text: 'нет'}");
-foreach($plotsData as $plot){
-  if ($arResult['UF_B_PLOT_ID'] == $plot['ID']) $data[] ="{ id:".$plot['ID'].",text:'".trim ($plot['UF_PLOT_KAD_NUM']." ".$plot['UF_PLOT_ADDRESS'])."', selected: true}";
-  else $data[] ="{ id:".$plot['ID'].",text:'".trim ($plot['UF_PLOT_KAD_NUM']." ".$plot['UF_PLOT_ADDRESS'])."'}";
+//Получаем адрес участка
+if($arResult['UF_B_PLOT_ID']>0){
+  $temp = $PlotsDataClass::getRowById($arResult['UF_B_PLOT_ID']);
+  $arResult['UF_PLOT_ADDRESS'] = $temp['UF_PLOT_ADDRESS'];
 }
-$arResult['PLOTS'] = "[".implode(",",$data)."]";
+
 
 //Формируем список ЖК
 $rsData = $ZHKDataClass::getList(
