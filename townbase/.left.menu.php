@@ -1,0 +1,34 @@
+<?
+$aMenuLinks = array(
+	array(
+		"Сводка", 
+		"/townbase/", 
+		array(), 
+		array(),
+	),
+	array(
+		"Помещения", 
+		"/townbase/placement/", 
+		array(), 
+		array(),
+	),
+	array(
+		"Здания", 
+		"/townbase/building/", 
+		array(), 
+		array(),
+	),
+	array(
+		"Участки", 
+		"/townbase/plot/", 
+		array(), 
+		array(),
+	),
+	array(
+		"Жилые комплексы", 
+		"/townbase/complex/", 
+		array(), 
+		array(),
+	),
+);
+?>
