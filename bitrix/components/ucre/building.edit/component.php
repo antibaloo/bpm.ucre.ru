@@ -140,6 +140,8 @@ if ($_POST['AJAX_CALL'] == 'Y'){//вызов из формы
   if ($arParams['ELEMENT_ID']>0){
     $row = $BuildingDataClass::getRowById($arParams['ELEMENT_ID']);
     foreach ($row as $key=>$value) $arResult[$key] = $value;
+  }elseif (isset($_GET)){
+    foreach ($_GET as $key=>$value) $arResult[$key] = $value;
   }
 }
 
