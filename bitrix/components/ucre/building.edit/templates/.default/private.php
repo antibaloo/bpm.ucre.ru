@@ -93,10 +93,8 @@ $APPLICATION->SetTitle("Заполните параметры здания");
   </div>
   <div class="paramsWrapper">
     <div class="empty"></div>
-    <div class="label paramBox <?=($arResult['errors']['UF_B_PLOT_ID'])?"fieldError":""?>" title="<?=($arResult['errors']['UF_B_PLOT_ID'])?$arResult['errors']['UF_B_PLOT_ID']:""?>">Земельный участок *</div>
-    <div class="param paramBox">
-      <select class="selectList" id="UF_B_PLOT_ID" name="UF_B_PLOT_ID"></select>
-    </div>
+    <div class="label paramBox">Земельный участок *</div>
+    <div class="param paramBox"><a href="/townbase/plot/show/<?=$arResult['UF_B_PLOT_ID']?>/" target="_blank"><?=$arResult['UF_PLOT_ADDRESS']?></a></div>
     <div class="label paramBox <?=($arResult['errors']['UF_MATERIAL'])?"fieldError":""?>" title="<?=($arResult['errors']['UF_MATERIAL'])?$arResult['errors']['UF_MATERIAL']:""?>">Материал стен *</div>
     <div class="param paramBox">
       <select class="selectList" id="UF_MATERIAL" name="UF_MATERIAL"></select>
@@ -119,7 +117,6 @@ $APPLICATION->SetTitle("Заполните параметры здания");
 </form>
 <script>
    $(document).ready(function() {
-    $('#UF_B_PLOT_ID').select2({data: <?=$arResult['PLOTS']?>});
     $('#UF_MATERIAL').select2({data: <?=$arResult['MATERIALS']?>});                            
   });
   $(".formButton").click(function (){

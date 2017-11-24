@@ -119,10 +119,8 @@ $APPLICATION->SetTitle("Заполните параметры здания");
   </div>
   <div class="paramsWrapper">
     <div class="empty"></div>
-    <div class="label paramBox <?=($arResult['errors']['UF_B_PLOT_ID'])?"fieldError":""?>" title="<?=($arResult['errors']['UF_B_PLOT_ID'])?$arResult['errors']['UF_B_PLOT_ID']:""?>">Земельный участок *</div>
-    <div class="param paramBox">
-      <select class="selectList" id="UF_B_PLOT_ID" name="UF_B_PLOT_ID"></select>
-    </div>
+    <div class="label paramBox">Земельный участок *</div>
+    <div class="param paramBox"><a href="/townbase/plot/show/<?=$arResult['UF_B_PLOT_ID']?>/" target="_blank"><?=$arResult['UF_PLOT_ADDRESS']?></a></div>
     <div class="label paramBox <?=($arResult['errors']['UF_RS'])?"fieldError":""?>" title="<?=($arResult['errors']['UF_RS'])?$arResult['errors']['UF_RS']:""?>">ЖК</div>
     <div class="param paramBox">
       <select class="selectList" id="UF_RS" name="UF_RS"></select>
@@ -131,6 +129,7 @@ $APPLICATION->SetTitle("Заполните параметры здания");
   </div>
   <input id="ID" name="ID" type="hidden" value="<?=$arResult['ID']?>">
   <input id="UF_BUILDING_TYPE_ID" name="UF_BUILDING_TYPE_ID" type="hidden" value="<?=$arResult['UF_BUILDING_TYPE_ID']?>">
+  <input id="UF_B_PLOT_ID" name="UF_B_PLOT_ID" type="hidden" value="<?=$arResult['UF_B_PLOT_ID']?>">
   <input id="ACTION" name="ACTION" type="hidden">
   <button id="submit" type="submit" style="display:none;"></button>
   <div class="buttonWrapper">
@@ -143,9 +142,9 @@ $APPLICATION->SetTitle("Заполните параметры здания");
     <div class="empty"></div>
   </div>
 </form>
+<?echo "<pre>";print_r($arResult);echo "</pre>";?>
 <script>
   $(document).ready(function() {
-    $('#UF_B_PLOT_ID').select2({data: <?=$arResult['PLOTS']?>});
     $('#UF_RS').select2({data: <?=$arResult['ZHKS']?>});
     $('#UF_MATERIAL').select2({data: <?=$arResult['MATERIALS']?>});
   });
@@ -272,6 +271,7 @@ $APPLICATION->SetTitle("Заполните параметры здания");
       $("#UF_LATITUDE").val(coords[0]);
       $("#UF_LONGITUDE").val(coords[1]);
       ymaps.geocode(coords, {json: true}).then(function (json) {
+         console.log(json);
         $("#UF_BUILDING_ADDRESS").val(json.GeoObjectCollection.featureMember[0].GeoObject.metaDataProperty.GeocoderMetaData.Address.formatted);
         $("#UF_POSTAL").val(json.GeoObjectCollection.featureMember[0].GeoObject.metaDataProperty.GeocoderMetaData.Address.postal_code);
         $("#UF_DISTRICT").val("");
