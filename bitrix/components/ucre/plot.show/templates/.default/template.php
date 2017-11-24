@@ -65,7 +65,7 @@ $APPLICATION->SetTitle("Карточка участка");
     myMap.behaviors.disable('drag');
     myPlacemark = new ymaps.Placemark([<?=$arResult['DATA']['UF_LATITUDE']?>, <?=$arResult['DATA']['UF_LONGITUDE']?>],{
       hintContent: '<?=$arResult['DATA']['UF_PLOT_ADDRESS']?>',
-      iconContent: '<?=$arResult['DATA']['UF_PLOT_ADDRESS']?>'
+      iconContent: '<?=$arResult['DATA']['UF_PLOT_ADDRESS']?>'.slice(0,55)+"..."
     },{
       preset: 'twirl#redStretchyIcon',
       draggable: false

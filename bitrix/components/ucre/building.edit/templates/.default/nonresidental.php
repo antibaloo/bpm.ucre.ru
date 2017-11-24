@@ -204,7 +204,7 @@ $APPLICATION->SetTitle("Заполните параметры здания");
             if (myPlacemark) myMap.geoObjects.remove(myPlacemark);
             myPlacemark = new ymaps.Placemark(coords,{
               hintContent: $("#UF_BUILDING_ADDRESS").val(),
-              iconContent: $("#UF_BUILDING_ADDRESS").val()
+              iconContent: $("#UF_BUILDING_ADDRESS").val().slice(0,55)+"..."
             },{
               preset: 'twirl#redStretchyIcon',
               draggable: true
@@ -238,7 +238,7 @@ $APPLICATION->SetTitle("Заполните параметры здания");
       myMap.behaviors.enable('scrollZoom');
       myPlacemark = new ymaps.Placemark([$("#UF_LATITUDE").val(), $("#UF_LONGITUDE").val()],{
         hintContent: $("#UF_BUILDING_ADDRESS").val(),
-        iconContent: $("#UF_BUILDING_ADDRESS").val()
+        iconContent: $("#UF_BUILDING_ADDRESS").val().slice(0,55)+"..."
       },{
         preset: 'twirl#redStretchyIcon',
         draggable: true
@@ -299,7 +299,7 @@ $APPLICATION->SetTitle("Заполните параметры здания");
         });
         myPlacemark.properties.set({
           hintContent: $("#UF_BUILDING_ADDRESS").val(),
-          iconContent: $("#UF_BUILDING_ADDRESS").val()
+          iconContent: $("#UF_BUILDING_ADDRESS").val().slice(0,55)+"..."
         });
       });
       // Слушаем событие окончания перетаскивания на метке.
@@ -344,7 +344,7 @@ $APPLICATION->SetTitle("Заполните параметры здания");
       });
       myPlacemark.properties.set({
         hintContent: $("#UF_BUILDING_ADDRESS").val(),
-        iconContent: $("#UF_BUILDING_ADDRESS").val()
+        iconContent: $("#UF_BUILDING_ADDRESS").val().slice(0,55)+"..."
       });
     });
   }

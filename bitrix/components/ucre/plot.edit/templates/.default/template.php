@@ -90,7 +90,7 @@ $APPLICATION->SetTitle("Заполните параметры участка");
             if (myPlacemark) myMap.geoObjects.remove(myPlacemark);
             myPlacemark = new ymaps.Placemark(coords,{
               hintContent: $("#UF_PLOT_ADDRESS").val(),
-              iconContent: $("#UF_PLOT_ADDRESS").val()
+              iconContent: $("#UF_PLOT_ADDRESS").val().slice(0,55)+"..."
             },{
               preset: 'twirl#redStretchyIcon',
               draggable: true
@@ -130,7 +130,7 @@ $APPLICATION->SetTitle("Заполните параметры участка");
       
       myPlacemark = new ymaps.Placemark([$("#UF_LATITUDE").val(), $("#UF_LONGITUDE").val()],{
         hintContent: $("#UF_PLOT_ADDRESS").val(),
-        iconContent: $("#UF_PLOT_ADDRESS").val()
+        iconContent: $("#UF_PLOT_ADDRESS").val().slice(0,55)+"..."
       },{
         preset: 'twirl#redStretchyIcon',
         draggable: true
@@ -219,7 +219,7 @@ $APPLICATION->SetTitle("Заполните параметры участка");
               $("#UF_PLOT_TYPE_SHORT").val(PlotTypeListByCode[json.feature.attrs.category_type].UF_PLOT_TYPE_SHORT);
               myPlacemark.properties.set({
                 hintContent: $("#UF_PLOT_ADDRESS").val(),
-                iconContent: $("#UF_PLOT_ADDRESS").val()
+                iconContent: $("#UF_PLOT_ADDRESS").val().slice(0,55)+"..."
               });
               //console.log(json.feature.attrs); 
             },

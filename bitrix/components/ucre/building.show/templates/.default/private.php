@@ -120,7 +120,7 @@ $APPLICATION->SetTitle("Карточка жилого дома");
     myMap.behaviors.disable('drag');
     myPlacemark = new ymaps.Placemark([<?=$arResult['DATA']['UF_LATITUDE']?>, <?=$arResult['DATA']['UF_LONGITUDE']?>],{
       hintContent: '<?=$arResult['DATA']['UF_BUILDING_ADDRESS']?>',
-      iconContent: '<?=$arResult['DATA']['UF_BUILDING_ADDRESS']?>'
+      iconContent: '<?=$arResult['DATA']['UF_BUILDING_ADDRESS']?>'.slice(0,55)+"..."
     },{
       preset: 'twirl#redStretchyIcon',
       draggable: false
