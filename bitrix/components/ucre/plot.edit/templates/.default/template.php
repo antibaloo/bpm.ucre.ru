@@ -186,60 +186,69 @@ $APPLICATION->SetTitle("Заполните параметры участка");
         limit: 11
       },
       success: function (json) {
-        //console.log(json);
-        id = json.features[0].attrs.id;
-        bbox = myMap.getBounds();
-        //console.log(bbox);
-        
-        //Если прямоугольник уже есть, удаляем
-        if (rectangle) myMap.geoObjects.remove(rectangle);
-        // Создаем прямоугольник на основе границы карты. 
-        
-        rectangle = new ymaps.Rectangle(myMap.getBounds(), {}, {
-          interactivityModel: 'default#transparent',//Для прозрачности для событий карты
-          separateContainer: true,
-          outline: false,
-          fillOpacity: 0.7,
-          fillImageHref: 'https://pkk5.rosreestr.ru/arcgis/rest/services/Cadastre/CadastreSelected/MapServer/export?dpi=96&transparent=true&format=png32&bbox='+bbox[0][1]+","+bbox[0][0]+","+bbox[1][1]+","+bbox[1][0]+'&size='+$("#map").width()+","+$("#map").height()+'&bboxSR=4326&imageSR=102100&layers=show%3A6%2C7&layerDefs=%7B"6":"ID%20=%20%27'+id+'%27","7":"ID%20=%20%27'+id+'%27"%7D&f=image'      
-        });
-        // Добавляем прямоугольник на карту.
-        myMap.geoObjects.add(rectangle);
-        
-        $.ajax({
-          url: "https://pkk5.rosreestr.ru/api/features/1/"+id,
-          datatype: "json",
-          type: "GET",
-          success: function(json) {
-            $("#UF_PLOT_ADDRESS").val(json.feature.attrs.address);
-            $("#UF_P_SQUARE").val(json.feature.attrs.area_value);
-            $("#UF_PLOT_KAD_NUM").val(json.feature.attrs.cn);
-            $("#UF_PLOT_TYPE_ID").val(PlotTypeListByCode[json.feature.attrs.category_type].ID);
-            $("#UF_PLOT_TYPE_SHORT").val(PlotTypeListByCode[json.feature.attrs.category_type].UF_PLOT_TYPE_SHORT);
-            myPlacemark.properties.set({
-              hintContent: $("#UF_PLOT_ADDRESS").val(),
-              iconContent: $("#UF_PLOT_ADDRESS").val()
-            });
-            //console.log(json.feature.attrs); 
-          },
-          error: function (){
-            console.log("Error in pkk5 id request");
-          }
-        });
-        /*
-        $.ajax({
+        if (json.features.length){
+          //console.log(json);
+          id = json.features[0].attrs.id;
+          bbox = myMap.getBounds();
+          //console.log(bbox);
+          
+          
+          //Если прямоугольник уже есть, удаляем
+          if (rectangle) myMap.geoObjects.remove(rectangle);
+          // Создаем прямоугольник на основе границы карты. 
+          
+          rectangle = new ymaps.Rectangle(myMap.getBounds(), {}, {
+            interactivityModel: 'default#transparent',//Для прозрачности для событий карты
+            separateContainer: true,
+            outline: false,
+            fillOpacity: 0.7,
+            fillImageHref: 'https://pkk5.rosreestr.ru/arcgis/rest/services/Cadastre/CadastreSelected/MapServer/export?dpi=96&transparent=true&format=png32&bbox='+bbox[0][1]+","+bbox[0][0]+","+bbox[1][1]+","+bbox[1][0]+'&size='+$("#map").width()+","+$("#map").height()+'&bboxSR=4326&imageSR=102100&layers=show%3A6%2C7&layerDefs=%7B"6":"ID%20=%20%27'+id+'%27","7":"ID%20=%20%27'+id+'%27"%7D&f=image'      
+          });
+          // Добавляем прямоугольник на карту.
+          myMap.geoObjects.add(rectangle);
+          
+          $.ajax({
+            url: "https://pkk5.rosreestr.ru/api/features/1/"+id,
+            datatype: "json",
+            type: "GET",
+            success: function(json) {
+              $("#UF_PLOT_ADDRESS").val(json.feature.attrs.address);
+              $("#UF_P_SQUARE").val(json.feature.attrs.area_value);
+              $("#UF_PLOT_KAD_NUM").val(json.feature.attrs.cn);
+              $("#UF_PLOT_TYPE_ID").val(PlotTypeListByCode[json.feature.attrs.category_type].ID);
+              $("#UF_PLOT_TYPE_SHORT").val(PlotTypeListByCode[json.feature.attrs.category_type].UF_PLOT_TYPE_SHORT);
+              myPlacemark.properties.set({
+                hintContent: $("#UF_PLOT_ADDRESS").val(),
+                iconContent: $("#UF_PLOT_ADDRESS").val()
+              });
+              //console.log(json.feature.attrs); 
+            },
+            error: function (){
+              console.log("Error in pkk5 id request");
+            }
+          });
+          /*
+          $.ajax({
           url: "/ajax/getRequest.php",
           type: "POST",
           data: {
-            url: "https://rosreestr.ru/api/online/fir_object/"+id
+          url: "https://rosreestr.ru/api/online/fir_object/"+id
           },
           datatype: "json",
           success: function(json) {
-            //console.log(JSON.parse(json)); 
+          //console.log(JSON.parse(json)); 
           },
           error: function (){
-            console.log("Error!");
+          console.log("Error!");
           }
-        });*/
+          });*/
+        }else{
+          $("#UF_PLOT_ADDRESS").val("Участок не найден, попробуйте еще раз!");
+          myPlacemark.properties.set({
+            hintContent: "Попробуйте еще раз!",
+            iconContent: "Участок не найден!"
+          });
+        }
       },
       error: function (json) {
         console.log("WFT!!!");

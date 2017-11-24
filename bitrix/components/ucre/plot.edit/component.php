@@ -58,7 +58,7 @@ if ($_POST['AJAX_CALL'] == 'Y'){//вызов из формы
         if (preg_match($rules['regexp'],$arResult[$key]) == 0 || preg_match($rules['regexp'],$arResult[$key]) === false) $arResult['errors'][$key] = "поле не соответствует формату";
       }
     }
-    /*
+    
     if (!isset($arResult['errors'])) {
       if ($arResult['ID']>0){
         $result = $PlotDataClass::update($arResult['ID'], $dataToSave);
@@ -68,11 +68,12 @@ if ($_POST['AJAX_CALL'] == 'Y'){//вызов из формы
       if ($result->isSuccess()) LocalRedirect('/townbase/plot/show/'.$result->getId().'/');
       else  $arResult['errors']['global'] =implode(', ', $result->getErrors());
     }
-    */
+    
   }
-}else{//Чисты вызов
+}else{//Чистый вызов
    if ($arParams['ELEMENT_ID']>0){
-     
+     $row = $PlotDataClass::getRowById($arParams['ELEMENT_ID']);
+    foreach ($row as $key=>$value) $arResult[$key] = $value;
    }
 }
 
