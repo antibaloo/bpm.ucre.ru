@@ -3,11 +3,6 @@ if(!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED!==true) die();
 ?>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 <?//echo "<pre>";print_r($arResult);echo "</pre>";?>
-<div class="menu">
-  <div class="button" href="/townbase/building/edit/0/">
-    Новое здание
-  </div>
-</div>
 <div class="clearFloat"></div>
 <form id="buildingList" method="POST" action="<?=$_SERVER["REQUEST_URI"]?>" enctype="multipart/formdata">
   <div class="gridWrapper">
@@ -52,8 +47,5 @@ if(!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED!==true) die();
        $("#page").val($(this).html())
      $('#submit').trigger('click');
    }
-  });
-  $(".button").click(function(){
-    location.href = $(this).attr("href");
   });
 </script>
