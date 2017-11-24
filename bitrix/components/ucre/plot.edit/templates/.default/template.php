@@ -6,7 +6,7 @@ $APPLICATION->SetTitle("Заполните параметры участка");
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/js/select2.min.js"></script>
 <script src="https://api-maps.yandex.ru/2.0/?load=package.full&lang=ru-RU"></script>
 <form id ="plotForm" method="POST" action="<?=$_SERVER["REQUEST_URI"]?>">
-    <div class="addressWrapper">
+  <div class="addressWrapper">
     <div class="empty"></div>
     <div class="label addressBox <?=($arResult['errors']['UF_PLOT_ADDRESS'])?"fieldError":""?>" title="<?=($arResult['errors']['UF_PLOT_ADDRESS'])?$arResult['errors']['UF_PLOT_ADDRESS']:""?>">Адрес участка *</div>
     <div class="param addressBox">

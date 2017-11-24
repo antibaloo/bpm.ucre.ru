@@ -30,7 +30,7 @@ $PlotTypeDataClass = $PlotType->getDataClass();
 $rsData = $PlotTypeDataClass::getList(
       array(
         "select" => array('*'), //выбираем все поля
-        "filter" => $materialFilter,
+        "filter" => array(),
         "order" => array("ID"=>"ASC"), // сортировка по полю ID, будет работать только, если вы завели такое поле в hl'блоке
       )
     );
