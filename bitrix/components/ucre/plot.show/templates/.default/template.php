@@ -48,10 +48,36 @@ $APPLICATION->SetTitle("Карточка участка");
   <div class="empty"></div>
   <div class="empty"></div>
 </div>
+
+
+<div class="menu">
+  <div class="button" href="/townbase/building/edit/0/?UF_B_PLOT_ID=<?=$arResult['DATA']['ID']?>">
+    Новое здание
+  </div>
+</div>
+
+<?
+$APPLICATION->IncludeComponent(
+		'ucre:building.list',
+		'',
+		array(
+      'FILTER' => array("UF_B_PLOT_ID" => $arResult['DATA']['ID']),
+			'ON_PAGE' => 20,
+			'AJAX_MODE' => 'Y',
+			'AJAX_OPTION_SHADOW' => 'Y',
+			'AJAX_OPTION_JUMP' => 'N'
+		),
+		$component
+	);
+?>
 <script>
   $(".formButton").click(function (){
     document.location.href = $(this).attr("href");
   });
+  $(".button").click(function(){
+    location.href = $(this).attr("href");
+  });
+  
   ymaps.ready(init);
   
   var myPlacemark, myMap;
