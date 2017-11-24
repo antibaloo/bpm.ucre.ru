@@ -13,10 +13,11 @@ $hlblock   = HL\HighloadBlockTable::getById(2)->fetch();
 $Building   = HL\HighloadBlockTable::compileEntity( $hlblock );
 $BuildingDataClass = $Building->getDataClass();
 
+$arResult['FILTER'] = (isset($_POST['filter']))?array_merge( $_POST['filter'],$arParams['FILTER']):$arParams['FILTER'];
 $rsData = $BuildingDataClass::getList(
   array(
     "select" => array('*'), //выбираем все поля
-    "filter" => $arParams['FILTER'],
+    "filter" => $arResult['FILTER'],
     "order" => array("ID"=>"ASC"), // сортировка по полю ID, будет работать только, если вы завели такое поле в hl'блоке
   )
 );
@@ -27,5 +28,6 @@ $arResult['COUNT'] = $rsData->getSelectedRowsCount();
 $arResult['PAGES'] = ($arResult['COUNT'] / $arResult['ON_PAGE'] > 1)?ceil($arResult['COUNT'] / $arResult['ON_PAGE']):1;
 
 $arResult['DATA'] = array_slice ($rsData->FetchAll(),($arResult['ACTIVE_PAGE']-1)*$arResult['ON_PAGE'],$arResult['ON_PAGE']);//Вырезаем часть результата в соответствии с активной страницей и кол-вом записей на странице
+//echo "<pre>";print_r($arResult);echo "</pre>";
 $this->IncludeComponentTemplate();
 ?>
