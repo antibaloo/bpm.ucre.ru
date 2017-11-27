@@ -142,7 +142,6 @@ $APPLICATION->SetTitle("Заполните параметры здания");
     <div class="empty"></div>
   </div>
 </form>
-<?echo "<pre>";print_r($arResult);echo "</pre>";?>
 <script>
   $(document).ready(function() {
     $('#UF_RS').select2({data: <?=$arResult['ZHKS']?>});

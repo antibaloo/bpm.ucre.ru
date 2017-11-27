@@ -26,7 +26,6 @@ $APPLICATION->SetTitle("Выберите тип здания");
     <div class="formButton" action="cancel">Отменить</div>
   </div>
 </form>
-<?echo "<pre>";print_r($arResult);echo "</pre>";?>
 <script>
   $(".formButton").click(function (){
       document.location.href = '/townbase/building/list/';
