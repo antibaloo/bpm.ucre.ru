@@ -49,10 +49,16 @@ $APPLICATION->SetTitle("Карточка участка");
   <div class="empty"></div>
 </div>
 
-
+<br>
 <div class="menu">
-  <div class="button" href="/townbase/building/edit/0/?UF_B_PLOT_ID=<?=$arResult['DATA']['ID']?>">
-    Новое здание
+	<div class="button" href="/townbase/building/edit/0/?UF_B_PLOT_ID=<?=$arResult['DATA']['ID']?>&UF_BUILDING_TYPE_ID=1">
+    Новое нежилое здание
+  </div>
+	<div class="button" href="/townbase/building/edit/0/?UF_B_PLOT_ID=<?=$arResult['DATA']['ID']?>&UF_BUILDING_TYPE_ID=2">
+    Новый жилой дом
+  </div>
+	<div class="button" href="/townbase/building/edit/0/?UF_B_PLOT_ID=<?=$arResult['DATA']['ID']?>&UF_BUILDING_TYPE_ID=3">
+    Новый многоквартирный дом
   </div>
 </div>
 

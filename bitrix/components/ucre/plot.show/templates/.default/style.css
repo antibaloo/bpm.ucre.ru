@@ -109,7 +109,8 @@
   clear: both;
 }
 .button{
-  width: 100px;
+  display:inline-block;
+  width: auto;
   height: 20px;
   line-height: 20px;
   text-align: center;
