@@ -3,7 +3,6 @@ if(!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED!==true) die();
 ?>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 <?//echo "<pre>";print_r($arResult);echo "</pre>";?>
-<div class="clearFloat"></div>
 <form id="buildingList" method="POST" action="<?=$_SERVER["REQUEST_URI"]?>" enctype="multipart/formdata">
   <div class="gridWrapper">
     <div class="gridHeader textCenter"></div>

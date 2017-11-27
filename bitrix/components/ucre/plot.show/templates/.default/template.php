@@ -61,7 +61,7 @@ $APPLICATION->SetTitle("Карточка участка");
     Новый многоквартирный дом
   </div>
 </div>
-
+<div class="clearFloat"></div>
 <?
 $APPLICATION->IncludeComponent(
 		'ucre:building.list',

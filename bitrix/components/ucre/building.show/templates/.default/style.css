@@ -102,3 +102,25 @@
 .fieldError{
   border: 1px solid red;
 }
+.menu{
+  float: right;
+}
+.clearFloat{
+  clear: both;
+}
+.button{
+  display:inline-block;
+  width: auto;
+  height: 20px;
+  line-height: 20px;
+  text-align: center;
+  padding: 5px;
+  background: cadetblue;
+  color:  white;
+  font-weight:  bold;
+  margin-bottom: 2px;
+}
+.button:hover{
+  background: cornflowerblue;
+  cursor: pointer;
+}
