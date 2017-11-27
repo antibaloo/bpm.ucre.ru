@@ -127,7 +127,6 @@ $APPLICATION->SetTitle("Карточка нежилого здания");
   <div class="empty"></div>
   <div class="empty"></div>
 </div>
-<?echo "<pre>";print_r($arResult);echo "</pre>";?>
 <script>
     $(".formButton").click(function (){
       document.location.href = $(this).attr("href");
