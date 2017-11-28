@@ -127,6 +127,7 @@ $APPLICATION->SetTitle("Заполните параметры здания");
   </div>
   <input id="ID" name="ID" type="hidden" value="<?=$arResult['ID']?>">
   <input id="UF_BUILDING_TYPE_ID" name="UF_BUILDING_TYPE_ID" type="hidden" value="<?=$arResult['UF_BUILDING_TYPE_ID']?>">
+  <input id="UF_B_PLOT_ID" name="UF_B_PLOT_ID" type="hidden" value="<?=$arResult['UF_B_PLOT_ID']?>">
   <input id="ACTION" name="ACTION" type="hidden">
   <button id="submit" type="submit" style="display:none;"></button>
   <div class="buttonWrapper">
