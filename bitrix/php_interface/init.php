@@ -205,6 +205,10 @@ function LeadUpdate(&$arFields){
 	if (isset($arFields['SOURCE_ID'])) $source_id = $list[$arFields['SOURCE_ID']];
 	else $source_id = $list[$existFields['SOURCE_ID']];
 	
-	$arFields['TITLE'] = $direction.": ".$name.", ".$type.", ".$rooms." (".$source_id.")";
+	if (in_array($direction,array("Покупка","Продажа", "Сдать","Снять","Новостройки","Ипотека"){
+		$arFields['TITLE'] = $direction.": ".$name.", ".$type.", ".$rooms." (".$source_id.")";
+	}else{
+		$arFields['TITLE'] = $direction.": ".$name.", (".$source_id.")";
+	}
 }
 ?>
