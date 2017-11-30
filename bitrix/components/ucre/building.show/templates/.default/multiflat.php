@@ -146,6 +146,7 @@ $APPLICATION->IncludeComponent(
 		'',
 		array(
       'FILTER' => array("UF_BUILDING_ID" => $arResult['DATA']['ID']),
+			'SORT' => array("UF_PL_NUMBER_INT" => "ASC"), 
 			'ON_PAGE' => 20,
 			'AJAX_MODE' => 'Y',
 			'AJAX_OPTION_SHADOW' => 'Y',
