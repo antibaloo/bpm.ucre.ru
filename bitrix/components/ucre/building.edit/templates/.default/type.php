@@ -22,7 +22,6 @@ $APPLICATION->SetTitle("Выберите тип здания");
     <div class="empty"></div>
     <div class="empty"></div>
     <div class="empty"></div>
-    <div class="empty"></div>
     <div class="formButton" action="cancel">Отменить</div>
   </div>
 </form>
