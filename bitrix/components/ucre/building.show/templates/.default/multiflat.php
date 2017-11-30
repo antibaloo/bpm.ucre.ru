@@ -129,14 +129,14 @@ $APPLICATION->SetTitle("Карточка многоквартирного дом
 </div>
 <br>
 <div class="menu">
-	<div class="button" href="/townbase/placement/edit/0/">
+	<div class="button" href="/townbase/placement/edit/0/?UF_BUILDING_ID=<?=$arResult['DATA']['ID']?>&UF_PLACEMENT_TYPE_ID=1">
     Новое нежилое помещение
   </div>
-	<div class="button" href="/townbase/placement/edit/0/">
-    Новыая комната
+	<div class="button" href="/townbase/placement/edit/0/?UF_BUILDING_ID=<?=$arResult['DATA']['ID']?>&UF_PLACEMENT_TYPE_ID=2&UF_LIVING_TYPE_ID=1">
+    Новая комната
   </div>
-	<div class="button" href="/townbase/placement/edit/0/">
-    Новыя квартира
+	<div class="button" href="/townbase/placement/edit/0/?UF_BUILDING_ID=<?=$arResult['DATA']['ID']?>&UF_PLACEMENT_TYPE_ID=2&UF_LIVING_TYPE_ID=2">
+    Новая квартира
   </div>
 </div>
 <div class="clearFloat"></div>

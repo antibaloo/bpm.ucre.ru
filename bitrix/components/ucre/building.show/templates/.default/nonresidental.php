@@ -127,6 +127,28 @@ $APPLICATION->SetTitle("Карточка нежилого здания");
   <div class="empty"></div>
   <div class="empty"></div>
 </div>
+<br>
+<div class="menu">
+	<div class="button" href="/townbase/placement/edit/0/?UF_BUILDING_ID=<?=$arResult['DATA']['ID']?>&UF_PLACEMENT_TYPE_ID=1">
+    Новое нежилое помещение
+  </div>
+</div>
+<div class="clearFloat"></div>
+<?
+$APPLICATION->IncludeComponent(
+		'ucre:placement.list',
+		'',
+		array(
+      'FILTER' => array("UF_BUILDING_ID" => $arResult['DATA']['ID']),
+			'SORT' => array("UF_PL_NUMBER_INT" => "ASC"), 
+			'ON_PAGE' => 20,
+			'AJAX_MODE' => 'Y',
+			'AJAX_OPTION_SHADOW' => 'Y',
+			'AJAX_OPTION_JUMP' => 'N'
+		),
+		$component
+	);
+?>
 <script>
     $(".formButton").click(function (){
       document.location.href = $(this).attr("href");
