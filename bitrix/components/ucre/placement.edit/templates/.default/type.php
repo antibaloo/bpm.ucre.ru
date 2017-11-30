@@ -6,7 +6,7 @@ echo "<pre>";print_r($arResult);echo "</pre>";
 <form id ="placementForm" method="POST" action="<?=$_SERVER["REQUEST_URI"]?>">
   <div class="typeWrapper">
     <div class="empty"></div>
-    <div class="placementType toChoose" action="type" typeId="1">Нежилое</div>
+    <div class="placementType toChoose" action="type" typeId="1">Нежилое помещение</div>
     <div class="placementType toChoose" action="type" typeId="2" livingTypeId="1">Комната</div>
     <div class="placementType toChoose" action="type" typeId="2" livingTypeId="1">Квартира</div>
     <div class="empty"></div>
@@ -15,10 +15,8 @@ echo "<pre>";print_r($arResult);echo "</pre>";
   <input id="UF_BUILDING_ID" name="UF_BUILDING_ID" type="hidden" value="<?=$arResult['UF_BUILDING_ID']?>">
   <input id="UF_PLACEMENT_TYPE_ID" name="UF_PLACEMENT_TYPE_ID" type="hidden" value="<?=$arResult['UF_PLACEMENT_TYPE_ID']?>">
   <input id="UF_LIVING_TYPE_ID" name="UF_LIVING_TYPE_ID" type="hidden" value="<?=$arResult['UF_LIVING_TYPE_ID']?>">
-  <input id="ACTION" name="ACTION" type="hidden">
   <button id="submit" type="submit" style="display:none;"></button>
   <div class="buttonWrapper">
-    <div class="empty"></div>
     <div class="empty"></div>
     <div class="empty"></div>
     <div class="empty"></div>
@@ -32,10 +30,9 @@ echo "<pre>";print_r($arResult);echo "</pre>";
   $(".formButton").click(function (){
       document.location.href = '/townbase/placement/list/';
   });
-  $(".buildingType").click(function (){
+  $(".placementType").click(function (){
     $("#UF_PLACEMENT_TYPE_ID").val($(this).attr("typeId"));
     $("#UF_LIVING_TYPE_ID").val($(this).attr("livingTypeId"));
-    $("#ACTION").val($(this).attr("action"));
     $('#submit').trigger('click');
   });
 </script>
