@@ -42,6 +42,6 @@ foreach ($arResult['DATA'] as $key=>$placement){
   $arResult['DATA'][$key]['UF_BUILDING_ADDRESS'] = $temp['UF_BUILDING_ADDRESS'];
    $arResult['DATA'][$key]['FLOORS'] = $placement['UF_FLOOR']."/".$temp['UF_FLOORS_MAX'];
 }
-echo "<pre>";print_r($arResult);echo "</pre>";
+//echo "<pre>";print_r($arResult);echo "</pre>";
 $this->IncludeComponentTemplate();
 ?>
