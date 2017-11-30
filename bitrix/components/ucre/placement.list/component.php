@@ -17,13 +17,14 @@ $hlblock   = HL\HighloadBlockTable::getById(2)->fetch();
 $Building   = HL\HighloadBlockTable::compileEntity( $hlblock );
 $BuildingDataClass = $Building->getDataClass();
 
+$arResult['SORT'] = (isset($arParams['SORT']))? $arParams['SORT']: array("ID"=>"ASC");
 
 $arResult['FILTER'] = (isset($_POST['filter']))?array_merge( $_POST['filter'],$arParams['FILTER']):$arParams['FILTER'];
 $rsData = $PlacementDataClass::getList(
   array(
     "select" => array('*'), //выбираем все поля
     "filter" => $arResult['FILTER'],
-    "order" => array("ID"=>"ASC"), // сортировка по полю ID, будет работать только, если вы завели такое поле в hl'блоке
+    "order" => $arResult['SORT'], // сортировка по полю ID, будет работать только, если вы завели такое поле в hl'блоке
   )
 );
 
