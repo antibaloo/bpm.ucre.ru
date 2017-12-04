@@ -93,58 +93,7 @@ function myDealUpdate (&$arFields){
 	}
 	//file_put_contents('/home/bitrix/www_bpm/myupdate.log', var_export($arFieldsExist, true));
 }
-/*
-AddEventHandler('crm', 'OnBeforeCrmDealAdd', 'DealAdd');
-function DealAdd(&$arFields){
-	if ($arFields['UF_CRM_1469534140']!=''){
-		$ro_res = CIBlockElement::GetByID($arFields['UF_CRM_1469534140']);
-		$ro_element = $ro_res->GetNextElement();
-		$ro_props = $ro_element->GetProperties();
-		$arFields['UF_CRM_1476448884'] = $ro_props['ROOMS']['VALUE']; //Кол-во комнат
-		$arFields['UF_CRM_1476448585'] = $ro_props['FLOOR']['VALUE']; //Этаж
-		$arFields['UF_CRM_1475915490'] = $ro_props['TOTAL_AREA']['VALUE']; //Общ. площадь
-		$arFields['UF_CRM_1479470711'] = $ro_props['STREET']['VALUE']; //улица
-		$arFields['UF_CRM_1479470723'] = $ro_props['HOUSE']['VALUE']; //дом
-		$arFields['UF_CRM_1479470770'] = $ro_props['FLAT']['VALUE']; //квартира
-		$arFields['UF_CRM_1469597960'] = $ro_props['ADDRESS']['VALUE']; //Адрес
-	} else {
-		$arFields['UF_CRM_1476448884'] = ""; //Кол-во комнат
-		$arFields['UF_CRM_1476448585'] = ""; //Этаж
-		$arFields['UF_CRM_1475915490'] = ""; //Общ. площадь
-		$arFields['UF_CRM_1479470711'] = ""; //улица
-		$arFields['UF_CRM_1479470723'] = ""; //дом
-		$arFields['UF_CRM_1479470770'] = ""; //квартира
-		$arFields['UF_CRM_1469597960'] = ""; //Адрес
-	}	
-}
 
-
-
-AddEventHandler('crm', 'OnBeforeCrmDealUpdate', 'DealUpdate');
-function DealUpdate(&$arFields){
-	if (isset($arFields['UF_CRM_1469534140'])){
-		if ($arFields['UF_CRM_1469534140']!=''){
-			$ro_res = CIBlockElement::GetByID($arFields['UF_CRM_1469534140']);
-			$ro_element = $ro_res->GetNextElement();
-			$ro_props = $ro_element->GetProperties();
-			$arFields['UF_CRM_1476448884'] = $ro_props['ROOMS']['VALUE']; //Кол-во комнат
-			$arFields['UF_CRM_1476448585'] = $ro_props['FLOOR']['VALUE']; //Этаж
-			$arFields['UF_CRM_1475915490'] = $ro_props['TOTAL_AREA']['VALUE']; //Общ. площадь
-			$arFields['UF_CRM_1479470711'] = $ro_props['STREET']['VALUE']; //улица
-			$arFields['UF_CRM_1479470723'] = $ro_props['HOUSE']['VALUE']; //дом
-			$arFields['UF_CRM_1479470770'] = $ro_props['FLAT']['VALUE']; //квартира
-			$arFields['UF_CRM_1469597960'] = $ro_props['ADDRESS']['VALUE']; //Адрес
-		} else {
-			$arFields['UF_CRM_1476448884'] = ""; //Кол-во комнат
-			$arFields['UF_CRM_1476448585'] = ""; //Этаж
-			$arFields['UF_CRM_1475915490'] = ""; //Общ. площадь
-			$arFields['UF_CRM_1479470711'] = ""; //улица
-			$arFields['UF_CRM_1479470723'] = ""; //дом
-			$arFields['UF_CRM_1479470770'] = ""; //квартира
-			$arFields['UF_CRM_1469597960'] = ""; //Адрес
-		}	
-	}
-}*/
 AddEventHandler('crm', 'OnBeforeCrmLeadUpdate', 'LeadUpdate');
 function LeadUpdate(&$arFields){
 	$dbResult = CCrmLead::GetList(array(),array("ID"=>$arFields["ID"]),array());//Получаем полный вектор полей заявки, не зависимо от того, какие поля сохранялись
@@ -210,5 +159,9 @@ function LeadUpdate(&$arFields){
 	}else{
 		$arFields['TITLE'] = $direction.": ".$name.", (".$source_id.")";
 	}
+}
+AddEventHandler('crm', 'OnBeforeCrmDealUpdate', 'DealUpdate');
+function DealUpdate(&$arFields){
+	if (isset($arFields['STAGE_ID']) && !in_array($arFields['MODIFY_BY_ID'],array(1,24,26))) unset ($arFields['STAGE_ID']);
 }
 ?>
