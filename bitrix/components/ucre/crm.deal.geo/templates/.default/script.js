@@ -1,3 +1,11 @@
+function getCoords(elem) { // кроме IE8-
+  var box = elem.getBoundingClientRect();
+  return {
+    top: box.top + pageYOffset,
+    left: box.left + pageXOffset
+  };
+
+}
 function convert(coords) {
   var projection = myMap.options.get('projection');
   return coords.map(function(el) {
@@ -8,11 +16,13 @@ function convert(coords) {
 
 function mouseDown(e) {
   ctx.clearRect(0, 0, canv.width, canv.height);
+  console.log(canv.width +" "+ canv.height);
   startX = e.pageX /*- e.target.offsetLeft*/;
   startY = e.pageY /*- e.target.offsetTop*/;    
   canv.addEventListener('mouseup', mouseUp);
   canv.addEventListener('mousemove', mouseMove);
   line = [];
+  var myOffset = getCoords(canv);
   line.push({
     x: startX,
     y: startY
@@ -22,12 +32,13 @@ function mouseDown(e) {
 function mouseMove(e) {
   var x = e.pageX /*- e.target.offsetLeft*/,
       y = e.pageY /*- e.target.offsetTop*/;
+  var myOffset = getCoords(canv);
   
   ctx.beginPath();
-  ctx.moveTo(startX, startY - window.pageYOffset);
-  ctx.lineTo(x, y - window.pageYOffset);
+  ctx.moveTo(startX - myOffset.left, startY - myOffset.top);
+  ctx.lineTo(x - myOffset.left, y -  myOffset.top);
   ctx.strokeStyle="#0000FF";
-  ctx.lineWidth = 3;
+  ctx.lineWidth = 1;
   ctx.stroke();
 
   startX = x;
@@ -42,11 +53,11 @@ function mouseUp() {
   canv.removeEventListener('mouseup', mouseUp);
   canv.removeEventListener('mousemove', mouseMove);
   aproximate();
-  $("#toggleDrag").html('Очистить');
   drawButton.data.set("content","Очистить");
   $("#canv").css( "zIndex", -1);
   canv.removeEventListener('mousedown', mouseDown);
   saveButton.state.set("enabled",true);
+  drawButton.state.set("enabled",true);
 }
 function aproximate() {
   ctx.clearRect(0, 0, canv.width, canv.height);
