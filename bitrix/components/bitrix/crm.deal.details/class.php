@@ -843,6 +843,12 @@ class CCrmDealDetailsComponent extends CBitrixComponent
 						'name' => 'Объект недвижимости',
 						'html' =>$html
 					);
+					
+					$this->arResult['TABS'][] = array(
+						'id' => 'tab_avitoLog',
+						'name' => 'Лог Авито',
+						'html' =>"<h2>Здесь будет лог Авито</h2>"
+					);
 				}
 				if ($this->arResult['CATEGORY_ID'] == 2){
 					ob_start();
@@ -850,12 +856,7 @@ class CCrmDealDetailsComponent extends CBitrixComponent
 					$APPLICATION->IncludeComponent(
 						'ucre:crm.deal.geo',
 						'',
-						array(
-							'DEAL_ID' => $this->arResult['ENTITY_ID'],
-							/*'AJAX_MODE' => 'Y',
-							'AJAX_OPTION_SHADOW' => 'Y',
-							'AJAX_OPTION_JUMP' => 'N'*/
-						)
+						array('DEAL_ID' => $this->arResult['ENTITY_ID'])
 					);
 					/*----------------------------------------------------------*/
 					$html = ob_get_contents();
@@ -864,6 +865,18 @@ class CCrmDealDetailsComponent extends CBitrixComponent
 						'id' => 'tab_geo',
 						'name' => 'Область поиска',
 						'html' =>$html
+					);
+					
+					
+					$this->arResult['TABS'][] = array(
+						'id' => 'tab_relevant',
+						'name' => 'Встречные заявки',
+						'html' =>"<h2>Здесь будут встречные заявки</h2>"
+					);
+					$this->arResult['TABS'][] = array(
+						'id' => 'tab_potentials',
+						'name' => 'Потенциальные сделки',
+						'html' =>"<h2>Здесь будут потенциальные сделки</h2>"
 					);
 				}
 				$this->arResult['TABS'][] = array(
