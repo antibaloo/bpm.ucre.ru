@@ -827,12 +827,42 @@ class CCrmDealDetailsComponent extends CBitrixComponent
 			{
 				if ($this->arResult['CATEGORY_ID'] == 0 || $this->arResult['CATEGORY_ID'] == 4){
 					ob_start();
-					echo "<pre>";print_r($this->arResult);echo "</pre>";
+					
+					/*Общий компонент для отображения данных связанного объекта*/
+					$APPLICATION->IncludeComponent(
+						'ucre:crm.deal.ro',
+						'',
+						array('DEAL_ID' => $this->arResult['ENTITY_ID'])
+					);
+					/*----------------------------------------------------------*/
+					//echo "<pre>";print_r($this->arResult);echo "</pre>";
 					$html = ob_get_contents();
 					ob_end_clean();
 					$this->arResult['TABS'][] = array(
 						'id' => 'tab_roObject',
 						'name' => 'Объект недвижимости',
+						'html' =>$html
+					);
+				}
+				if ($this->arResult['CATEGORY_ID'] == 2){
+					ob_start();
+					/*Компонент для редактирования географии поиска для заявок на покупку*/
+					$APPLICATION->IncludeComponent(
+						'ucre:crm.deal.geo',
+						'',
+						array(
+							'DEAL_ID' => $this->arResult['ENTITY_ID'],
+							/*'AJAX_MODE' => 'Y',
+							'AJAX_OPTION_SHADOW' => 'Y',
+							'AJAX_OPTION_JUMP' => 'N'*/
+						)
+					);
+					/*----------------------------------------------------------*/
+					$html = ob_get_contents();
+					ob_end_clean();
+					$this->arResult['TABS'][] = array(
+						'id' => 'tab_geo',
+						'name' => 'Область поиска',
 						'html' =>$html
 					);
 				}
