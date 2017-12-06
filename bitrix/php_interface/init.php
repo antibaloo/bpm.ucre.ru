@@ -160,6 +160,7 @@ function LeadUpdate(&$arFields){
 		$arFields['TITLE'] = $direction.": ".$name.", (".$source_id.")";
 	}
 }
+
 AddEventHandler('crm', 'OnBeforeCrmDealUpdate', 'DealUpdate');
 function DealUpdate(&$arFields){
 	if (isset($arFields['STAGE_ID']) && !in_array($arFields['MODIFY_BY_ID'],array(0,1,24,26))) unset ($arFields['STAGE_ID']);
