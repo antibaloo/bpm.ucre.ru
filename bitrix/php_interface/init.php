@@ -162,6 +162,6 @@ function LeadUpdate(&$arFields){
 }
 AddEventHandler('crm', 'OnBeforeCrmDealUpdate', 'DealUpdate');
 function DealUpdate(&$arFields){
-	if (isset($arFields['STAGE_ID']) && !in_array($arFields['MODIFY_BY_ID'],array(1,24,26))) unset ($arFields['STAGE_ID']);
+	if (isset($arFields['STAGE_ID']) && !in_array($arFields['MODIFY_BY_ID'],array(0,1,24,26))) unset ($arFields['STAGE_ID']);
 }
 ?>
