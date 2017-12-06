@@ -20,6 +20,11 @@ $groupPopupExists = false;
 	</div>
 	<ul class="menu-items" id="left-menu-list">
 		<li class="menu-items-empty-li" id="left-menu-empty-item" style="height: 3px;"></li>
+		<li id="bx_left_menu_quick_link">
+			<input style="margin-left: 34px;" id="ucre_entity_id" type="text" size="5">
+			<span class="menu-item-link-text ucre" data-role="item-text" onclick="location.href=ucre_entity_id.value != ''?'https://bpm.ucre.ru/crm/lead/show/'+ucre_entity_id.value+'/':'#'">Лид</span>&nbsp;
+			<span class="menu-item-link-text ucre" data-role="item-text" onclick="location.href=ucre_entity_id.value != ''?'https://bpm.ucre.ru/crm/deal/show/'+ucre_entity_id.value+'/':'#'">Заявка</span>
+		</li>
 	<?
 	foreach(array("show", "hide") as $status)
 	{
