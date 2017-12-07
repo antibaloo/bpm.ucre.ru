@@ -83,7 +83,7 @@ if(!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED!==true) die();
     closeButton.events.add('click', function(){
       $('#geo').hide();
     });
-    myMap.controls.add(closeButton, {right: 10, top:10});
+    myMap.controls.add(closeButton, {right: 70, top:10});
     closeButton.options.set("selectOnClick",false);
     if ($("#polygonCoords").val()!=""){
       drawButton.data.set("content","Очистить");
