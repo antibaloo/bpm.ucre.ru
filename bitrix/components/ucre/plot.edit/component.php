@@ -13,7 +13,7 @@ $checkFields = array(
   "UF_PLOT_ADDRESS" => array('required' => true, 'regexp' => '/^[А-Я][а-яА-Я\s0-9.,][^a-zA-Z]+/'),
   "UF_LATITUDE" => array('required' => true, 'regexp' => '/^[1-9][0-9]+.[0-9]+/'),
   "UF_LONGITUDE" => array('required' => true, 'regexp' => '/^[1-9][0-9]+.[0-9]+/'),
-  "UF_PLOT_KAD_NUM" => array('required' => true, 'regexp' => '/^[0-9]{2}:[0-9]{2}:[0-9]+:[0-9]+/'),
+  "UF_PLOT_KAD_NUM" => array('required' => true, 'regexp' => '/^[0-9]{2}:[0-9]{2}:[0-9]+:[0-9]+/', 'unique' => true),
   "UF_P_SQUARE" => array('required' => true, 'regexp' => '/^[1-9][0-9.]+[0-9]+/'),
 );
 
@@ -56,6 +56,21 @@ if ($_POST['AJAX_CALL'] == 'Y'){//вызов из формы
       }
       if ($rules['regexp'] !="" && $arResult[$key]!=""){//на формат проверяются непустые поля
         if (preg_match($rules['regexp'],$arResult[$key]) == 0 || preg_match($rules['regexp'],$arResult[$key]) === false) $arResult['errors'][$key] = "поле не соответствует формату";
+      }
+      if ($rules['unique']){
+        $testData = $PlotDataClass::getList(
+          array(
+            "select" => array('*'), //выбираем все поля
+            "filter" => array($key => $arResult[$key]),
+            "order" => array("ID"=>"ASC"), // сортировка по полю ID, будет работать только, если вы завели такое поле в hl'блоке
+          )
+        );
+        if ($testData->getSelectedRowsCount()) {
+          $arResult['errors'][$key] = "Запись не уникальна по полю.";
+          while($arTest = $testData->Fetch()){
+            $arResult['duplicates'][] = $arTest['ID'];
+          }
+        }
       }
     }
     

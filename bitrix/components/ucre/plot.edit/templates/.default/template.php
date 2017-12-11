@@ -59,6 +59,21 @@ $APPLICATION->SetTitle("Заполните параметры участка");
   </div>
 </form>
 <?//echo "<pre>";print_r($arResult);echo "</pre>"?>
+<?
+$APPLICATION->IncludeComponent(
+		'ucre:plot.list',
+		'',
+		array(
+      'NO_MENU' => true,
+      'FILTER' => array("ID" => $arResult['duplicates']),
+			'ON_PAGE' => 20,
+			'AJAX_MODE' => 'Y',
+			'AJAX_OPTION_SHADOW' => 'Y',
+			'AJAX_OPTION_JUMP' => 'N'
+		),
+		$component
+	);
+?>
 <script>
   $(".formButton").click(function (){
     if ($(this).attr("action") == 'cancel'){
