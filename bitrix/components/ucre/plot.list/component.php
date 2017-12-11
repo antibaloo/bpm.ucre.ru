@@ -17,7 +17,7 @@ $rsData = $PlotDataClass::getList(
   array(
     "select" => array('*'), //выбираем все поля
     "filter" => $arResult['FILTER'],
-    "order" => array("ID"=>"ASC"), // сортировка по полю ID, будет работать только, если вы завели такое поле в hl'блоке
+    "order" => array("ID"=>"DESC"), // сортировка по полю ID, будет работать только, если вы завели такое поле в hl'блоке
   )
 );
 
