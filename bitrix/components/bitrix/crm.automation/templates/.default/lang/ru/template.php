@@ -50,8 +50,8 @@ $MESS["CRM_AUTOMATION_CMP_DELAY_BEFORE_HELP"] = "Робот сработает �
 $MESS["CRM_AUTOMATION_CMP_IS_DEMO"] = "(скоро)";
 $MESS["CRM_AUTOMATION_CMP_TITLE_LEAD_VIEW"] = "Текущее состояние лида: «#TITLE#»";
 $MESS["CRM_AUTOMATION_CMP_TITLE_LEAD_EDIT"] = "Настройка роботов для всех лидов";
-$MESS["CRM_AUTOMATION_CMP_TITLE_DEAL_VIEW"] = "Текущее состояние заявки: «#TITLE#»";
-$MESS["CRM_AUTOMATION_CMP_TITLE_DEAL_EDIT"] = "Настройка роботов для всех заявок данного направления";
+$MESS["CRM_AUTOMATION_CMP_TITLE_DEAL_VIEW"] = "Текущее состояние сделки: «#TITLE#»";
+$MESS["CRM_AUTOMATION_CMP_TITLE_DEAL_EDIT"] = "Настройка роботов для всех сделок данного направления";
 $MESS["CRM_AUTOMATION_TRIGGER_WEBFORM_LABEL"] = "Выберите форму";
 $MESS["CRM_AUTOMATION_TRIGGER_OPENLINE_LABEL"] = "Выберите Открытую линию";
 $MESS["CRM_AUTOMATION_TRIGGER_WEBFORM_ANY"] = "все";
@@ -77,4 +77,12 @@ $MESS["CRM_AUTOMATION_CMP_DISK_SELECT_FILE"] = "Найти в Битрикс24";
 $MESS["CRM_AUTOMATION_CMP_DISK_SELECT_FILE_LEGEND"] = "Открыть окно \"Битрикс24.Диск\"";
 $MESS["CRM_AUTOMATION_CMP_DISK_UPLOAD_FILE"] = "Загрузить файл";
 $MESS["CRM_AUTOMATION_CMP_DISK_UPLOAD_FILE_LEGEND"] = "Перетащить с помощью Drag'n'drop";
+$MESS["CRM_AUTOMATION_CMP_EXTERNAL_EDIT_LOCKED"] = "Редактирование роботов в дизайнере бизнес-процессов возможно только для тарифа Компания. <br><br>
+Также на этом тарифе вам будет доступно много других полезных инструментов:<br>
+<ul class=\"hide-features-list\">
+	<li class=\"hide-features-list-item\">Неограниченное число распознаваний визиток и CRM-форм</li>
+	<li class=\"hide-features-list-item\">Учет рабочего времени и рабочие отчеты ваших менеджеров</li>
+	<li class=\"hide-features-list-item\">Создание любого количества сайтов для пополнения клиентской базы</li>
+</ul>
+Подробнее о тарифах и их возможностях вы можете узнать <a href=\"https://www.bitrix24.ru/prices/index.php\">здесь</a>.";
 ?>
