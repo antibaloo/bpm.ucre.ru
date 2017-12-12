@@ -20,7 +20,7 @@ if (!CModule::IncludeModule('crm'))
  * SUPPORTED ACTIONS:
  * 'GET_DEFAULT_SECONDARY_ENTITIES'
  */
-global $DB, $APPLICATION;
+global $DB, $APPLICATION, $USER_FIELD_MANAGER;
 \Bitrix\Main\Localization\Loc::loadMessages(__FILE__);
 if(!function_exists('__CrmDealDetailsEndJsonResonse'))
 {
@@ -265,7 +265,14 @@ elseif($action === 'SAVE')
 				}
 			}
 
-			$totals = \CCrmProductRow::CalculateTotalInfo('D', 0, false, $fields, $productRows);
+			$calculationParams = $fields;
+			if(!isset($calculationParams['CURRENCY_ID']))
+			{
+				$calculationParams['CURRENCY_ID'] = isset($sourceFields['CURRENCY_ID'])
+					? $sourceFields['CURRENCY_ID'] : CCrmCurrency::GetBaseCurrencyID();
+			}
+
+			$totals = \CCrmProductRow::CalculateTotalInfo('D', 0, false, $calculationParams, $productRows);
 			$fields['OPPORTUNITY'] = isset($totals['OPPORTUNITY']) ? $totals['OPPORTUNITY'] : 0.0;
 			$fields['TAX_VALUE'] = isset($totals['TAX_VALUE']) ? $totals['TAX_VALUE'] : 0.0;
 		}
@@ -307,6 +314,9 @@ elseif($action === 'SAVE')
 		|| ($_POST['IS_RECURRING'] === 'Y')
 	)
 	{
+		if (!Recurring\Manager::isAllowedExpose(Recurring\Manager::DEAL))
+			__CrmDealDetailsEndJsonResonse(array('ERROR' => "RECURRING DEALS IS RESTRICTED"));
+
 		$fields['RECURRING'] = $_POST['RECURRING'];
 
 		if (isset($fields['COMMENTS']))
@@ -390,6 +400,15 @@ elseif($action === 'SAVE')
 			else
 			{
 				$dealFields = \CCrmDeal::GetByID($ID);
+
+				$userType = new \CCrmUserType($USER_FIELD_MANAGER, \CCrmDeal::GetUserFieldEntityID());
+				$userFields = $userType->GetEntityFields($ID);
+
+				foreach($userFields as $key => $field)
+				{
+					$dealFields[$key] = $field['VALUE'];
+				}
+
 				$isNew = true;
 			}
 			$result = Recurring\Manager::createEntity($dealFields,	$recurringFields, Recurring\Manager::DEAL);
@@ -427,6 +446,12 @@ elseif($action === 'SAVE')
 		$fields['LEAD_ID'] = $leadID;
 		$conversionWizard = \Bitrix\Crm\Conversion\LeadConversionWizard::load($leadID);
 	}
+	elseif(isset($params['QUOTE_ID']) && $params['QUOTE_ID'] > 0)
+	{
+		$quoteID = (int)$params['QUOTE_ID'];
+		$fields['QUOTE_ID'] = $quoteID;
+		$conversionWizard = \Bitrix\Crm\Conversion\QuoteConversionWizard::load($quoteID);
+	}
 
 	if($conversionWizard !== null)
 	{
@@ -458,15 +483,33 @@ elseif($action === 'SAVE')
 			$entity = new \CCrmDeal(false);
 			if($isNew)
 			{
+				$now = time() + CTimeZone::GetOffset();
 				if(!isset($fields['TYPE_ID']))
 				{
 					$fields['TYPE_ID'] = \CCrmStatus::GetFirstStatusID('DEAL_TYPE');
+				}
+
+				if(!isset($fields['BEGINDATE']))
+				{
+					$fields['BEGINDATE'] = ConvertTimeStamp($now, 'SHORT', SITE_ID);
+				}
+
+				if(!isset($fields['CLOSEDATE']))
+				{
+					$fields['CLOSEDATE'] = ConvertTimeStamp($now + (7 * 86400), 'SHORT', SITE_ID);
 				}
 
 				if(!isset($fields['OPENED']))
 				{
 					$fields['OPENED'] = \Bitrix\Crm\Settings\DealSettings::getCurrent()->getOpenedFlag() ? 'Y' : 'N';
 				}
+
+				if(!isset($fields['CURRENCY_ID']))
+				{
+					$fields['CURRENCY_ID'] = CCrmCurrency::GetBaseCurrencyID();
+				}
+
+				$fields['EXCH_RATE'] = CCrmCurrency::GetExchangeRate($fields['CURRENCY_ID']);
 
 				$ID = $entity->Add($fields, true, array('REGISTER_SONET_EVENT' => true));
 				if ($ID <= 0)
@@ -476,6 +519,23 @@ elseif($action === 'SAVE')
 			}
 			else
 			{
+				if(isset($fields['OPPORTUNITY']) || isset($fields['CURRENCY_ID']))
+				{
+					if(!isset($fields['OPPORTUNITY']))
+					{
+						$fields['OPPORTUNITY'] = isset($sourceFields['OPPORTUNITY'])
+							? $sourceFields['OPPORTUNITY'] : 0.0;
+					}
+
+					if(!isset($fields['CURRENCY_ID']))
+					{
+						$fields['CURRENCY_ID'] = isset($sourceFields['CURRENCY_ID'])
+							? $sourceFields['CURRENCY_ID'] : CCrmCurrency::GetBaseCurrencyID();
+					}
+
+					$fields['EXCH_RATE'] = CCrmCurrency::GetExchangeRate($fields['CURRENCY_ID']);
+				}
+
 				if (!$entity->Update($ID, $fields, true, true, array('REGISTER_SONET_EVENT' => true)))
 				{
 					__CrmDealDetailsEndJsonResonse(array('ERROR' => $entity->LAST_ERROR));
