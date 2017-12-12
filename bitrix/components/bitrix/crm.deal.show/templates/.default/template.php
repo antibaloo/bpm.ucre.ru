@@ -1,10 +1,7 @@
 <?if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) die();
-use \Bitrix\Crm\Category\DealCategory;
+
 use \Bitrix\Crm\Integration\StorageType;
-?>
- <link rel="stylesheet" href="/bitrix/js/baloo/fancyapps/source/jquery.fancybox.css" type="text/css" media="screen" />
- <script type="text/javascript" src="/bitrix/js/baloo/fancyapps/source/jquery.fancybox.pack.js"></script>
-<?
+
 if (!empty($arResult['ERROR_MESSAGE']))
 {
 	ShowError($arResult['ERROR_MESSAGE']);
@@ -24,7 +21,7 @@ if(CCrmActivity::GetDefaultStorageTypeID() === StorageType::Disk)
 	CJSCore::Init(array('uploader', 'file_dialog'));
 }
 $titleCode = $arParams['IS_RECURRING'] === 'Y' ? 'CRM_DEAL_RECUR_SHOW_TITLE' : 'CRM_DEAL_SHOW_TITLE';
-$arResult['CRM_CUSTOM_PAGE_TITLE'] = DealCategory::getName($arResult['CATEGORY_ID']).": ".GetMessage(
+$arResult['CRM_CUSTOM_PAGE_TITLE'] = GetMessage(
 	$titleCode,
 	array(
 		'#ID#' => $arResult['ELEMENT']['ID'],
@@ -97,9 +94,8 @@ if (!empty($arResult['FIELDS']['tab_invoice']))
 	//$invoiceCount = intval($arResult['INVOICE_COUNT']);
 	$arTabs[] = array(
 		'id' => 'tab_invoice',
-		//'name' => GetMessage('CRM_TAB_8')." ($invoiceCount)",
-		'name' => GetMessage('CRM_TAB_8'),
-		'title' => GetMessage('CRM_TAB_8_TITLE'),
+		'name' => GetMessage('CRM_TAB_8_V2'),
+		'title' => GetMessage('CRM_TAB_8_TITLE_V2'),
 		'icon' => '',
 		'fields' => $arResult['FIELDS']['tab_invoice']
 	);
@@ -215,25 +211,7 @@ $APPLICATION->IncludeComponent(
 	$component,
 	array('HIDE_ICONS' => 'Y')
 );
-/*Компонент для редактирования географии поиска для заявок на покупку*/
-$APPLICATION->IncludeComponent(
-	'ucre:crm.deal.buy.geo',
-	'',
-	array('DEAL_ID' => $element['ID'])
-);
-/*Общий компонент для отображения данных объявления Авито для заявок из лидов парсера*/
-$APPLICATION->IncludeComponent(
-	'ucre:crm.deal.avito',
-	'',
-	array('DEAL_ID' => $element['ID'])
-);
-/*Общий компонент для отображения данных связанного объекта*/
-$APPLICATION->IncludeComponent(
-	'ucre:crm.deal.ro',
-	'',
-	array('DEAL_ID' => $element['ID'])
-);
-/*----------------------------------------------------------*/
+
 $APPLICATION->IncludeComponent(
 	'bitrix:crm.interface.form',
 	'show',
