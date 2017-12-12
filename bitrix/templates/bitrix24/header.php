@@ -1,8 +1,16 @@
 <?
 use Bitrix\Intranet\Integration\Templates\Bitrix24\ThemePicker;
+use Bitrix\Main\Config\Option;
+use Bitrix\Main\Loader;
+use Bitrix\Main\Localization\Loc;
+use Bitrix\Main\ModuleManager;
 
-if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true)die();
-CJSCore::Init(array("jquery"));
+if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true)
+{
+	die();
+}
+
+//Ajax Performance Optimization
 if (isset($_GET["RELOAD"]) && $_GET["RELOAD"] == "Y")
 {
 	return; //Live Feed Ajax
@@ -11,8 +19,7 @@ else if (strpos($_SERVER["REQUEST_URI"], "/historyget/") > 0)
 {
 	return;
 }
-else if (
-	(isset($_GET["IFRAME"]) && $_GET["IFRAME"] == "Y") && !isset($_GET["SONET"]))
+else if (isset($_GET["IFRAME"]) && $_GET["IFRAME"] === "Y" && !isset($_GET["SONET"]))
 {
 	//For the task iframe popup
 	$APPLICATION->SetPageProperty("BodyClass", "task-iframe-popup");
@@ -22,6 +29,9 @@ else if (
 }
 
 CModule::IncludeModule("intranet");
+CJSCore::Init("sidepanel_bitrix24");
+
+Loc::loadMessages($_SERVER["DOCUMENT_ROOT"]."/bitrix/templates/".SITE_TEMPLATE_ID."/header.php");
 
 $APPLICATION->GroupModuleJS("timeman","im");
 $APPLICATION->GroupModuleJS("webrtc","im");
@@ -33,11 +43,14 @@ $APPLICATION->SetUniqueJS('bx24', 'template');
 $APPLICATION->SetUniqueCSS('bx24', 'template');
 
 $isCompositeMode = defined("USE_HTML_STATIC_CACHE");
+
 $isIndexPage =
 	$APPLICATION->GetCurPage(true) === SITE_DIR."stream/index.php" ||
 	$APPLICATION->GetCurPage(true) === SITE_DIR."index.php" ||
-	(defined("BITRIX24_INDEX_PAGE") && constant("BITRIX_INDEX_PAGE") === true);
-$isBitrix24Cloud = IsModuleInstalled("bitrix24");
+	(defined("BITRIX24_INDEX_PAGE") && constant("BITRIX_INDEX_PAGE") === true)
+;
+
+$isBitrix24Cloud = ModuleManager::isModuleInstalled("bitrix24");
 
 if ($isIndexPage)
 {
@@ -51,14 +64,6 @@ if ($isIndexPage)
 		define("BITRIX24_INDEX_COMPOSITE", true);
 	}
 }
-
-if ($isCompositeMode)
-{
-	$APPLICATION->SetAdditionalCSS("/bitrix/js/intranet/intranet-common.css");
-}
-
-$APPLICATION->SetAdditionalCSS(SITE_TEMPLATE_PATH."/slider/slider.css");
-$APPLICATION->AddHeadScript(SITE_TEMPLATE_PATH."/slider/slider.js");
 
 function showJsTitle()
 {
@@ -74,7 +79,6 @@ function getJsTitle()
 }
 ?>
 <!DOCTYPE html>
-<?\Bitrix\Main\Localization\Loc::loadMessages($_SERVER["DOCUMENT_ROOT"]."/bitrix/templates/".SITE_TEMPLATE_ID."/header.php");?>
 <html>
 <head>
 <meta name="viewport" content="width=1135">
@@ -92,11 +96,7 @@ $APPLICATION->SetAdditionalCSS(SITE_TEMPLATE_PATH."/interface.css", true);
 $APPLICATION->AddHeadScript(SITE_TEMPLATE_PATH."/bitrix24.js", true);
 
 ThemePicker::getInstance()->showHeadAssets();
-?>
-<title><? if (!$isCompositeMode || $isIndexPage) $APPLICATION->ShowTitle()?></title>
-</head>
 
-<?
 $bodyClass = "template-bitrix24";
 if ($isIndexPage)
 {
@@ -105,7 +105,8 @@ if ($isIndexPage)
 
 $bodyClass .= " bitrix24-".ThemePicker::getInstance()->getCurrentBaseThemeId()."-theme";
 ?>
-
+<title><? if (!$isCompositeMode || $isIndexPage) $APPLICATION->ShowTitle()?></title>
+</head>
 <body class="<?=$bodyClass?>">
 <?
 ThemePicker::getInstance()->showBodyAssets();
@@ -118,7 +119,11 @@ if ($isCompositeMode && !$isIndexPage)
 	$frame->finishDynamicArea();
 }
 
-$isExtranet = isModuleInstalled("extranet") && COption::GetOptionString("extranet", "extranet_site") === SITE_ID;;
+$isExtranet =
+	ModuleManager::isModuleInstalled("extranet") &&
+	COption::GetOptionString("extranet", "extranet_site") === SITE_ID
+;
+
 $APPLICATION->ShowViewContent("im-fullscreen");
 ?>
 <table class="bx-layout-table">
@@ -130,9 +135,9 @@ $APPLICATION->ShowViewContent("im-fullscreen");
 				</div>
 			<? endif ?>
 <?
-if(\Bitrix\Main\ModuleManager::isModuleInstalled('bitrix24'))
+if ($isBitrix24Cloud)
 {
-	if(\Bitrix\Main\Config\Option::get('bitrix24', 'creator_confirmed', 'N') !== 'Y')
+	if (Option::get('bitrix24', 'creator_confirmed', 'N') !== 'Y')
 	{
 		$APPLICATION->IncludeComponent(
 			'bitrix:bitrix24.creatorconfirmed',
@@ -143,9 +148,9 @@ if(\Bitrix\Main\ModuleManager::isModuleInstalled('bitrix24'))
 		);
 	}
 
-	if(
-		\Bitrix\Main\Config\Option::get("bitrix24", "domain_changed", 'N') === 'N'
-		|| is_array(\CUserOptions::GetOption('bitrix24', 'domain_changed', false))
+	if (
+		Option::get("bitrix24", "domain_changed", 'N') === 'N' ||
+		is_array(\CUserOptions::GetOption('bitrix24', 'domain_changed', false))
 	)
 	{
 		CJSCore::Init(array('b24_rename'));
@@ -173,7 +178,7 @@ if(\Bitrix\Main\ModuleManager::isModuleInstalled('bitrix24'))
 
 					if (!$isExtranet)
 					{
-						if (!IsModuleInstalled("timeman") ||
+						if (!ModuleManager::isModuleInstalled("timeman") ||
 							!$APPLICATION->IncludeComponent('bitrix:timeman', 'bitrix24', array(), false, array("HIDE_ICONS" => "Y" ))
 						)
 						{
@@ -242,7 +247,7 @@ if(\Bitrix\Main\ModuleManager::isModuleInstalled('bitrix24'))
 						<span class="header-logo-block-util"></span>
 						<?
 						$clientLogo = COption::GetOptionInt("bitrix24", "client_logo", "");
-						if (\Bitrix\Main\Loader::includeModule("bitrix24"))
+						if (Loader::includeModule("bitrix24"))
 						{
 							$licenseType = CBitrix24::getLicenseType();
 							if (!in_array($licenseType, array("team", "company", "nfr", "edu", "demo")))
@@ -286,19 +291,21 @@ if(\Bitrix\Main\ModuleManager::isModuleInstalled('bitrix24'))
 									<img id="logo_24_img" src="<?if ($clientLogo) echo CFile::GetPath($clientLogo)?>" <?if (!$clientLogo):?>style="display:none;"<?endif?>/>
 								</span>
 								<?
-								if(\Bitrix\Main\Loader::includeModule("bitrix24") && \CBitrix24::IsPortalAdmin($USER->GetID()))
+								if (Loader::includeModule("bitrix24") && \CBitrix24::IsPortalAdmin($USER->GetID()))
 								{
 									if (!\CBitrix24::isDomainChanged()): ?>
 										<div class="header-logo-block-settings header-logo-block-settings-show">
-												<span id="b24_rename_button" class="header-logo-block-settings-item"
-													  onclick="BX.Bitrix24.renamePortal(); return false;"
-													  title="<?=GetMessage('BITRIX24_SETTINGS_TITLE')?>"></span>
+											<span
+												id="b24_rename_button" class="header-logo-block-settings-item"
+												onclick="BX.Bitrix24.renamePortal(); return false;"
+												title="<?=GetMessage('BITRIX24_SETTINGS_TITLE')?>"></span>
 										</div>
 									<?else:?>
 										<div class="header-logo-block-settings">
-												<span id="b24_rename_button" class="header-logo-block-settings-item"
-													  onclick="location.href='<?=CBitrix24::PATH_CONFIGS?>'; return false;"
-													  title="<?=GetMessage('BITRIX24_SETTINGS_TITLE_RENAMED')?>"></span>
+											<span
+												id="b24_rename_button" class="header-logo-block-settings-item"
+												onclick="location.href='<?=CBitrix24::PATH_CONFIGS?>'; return false;"
+												title="<?=GetMessage('BITRIX24_SETTINGS_TITLE_RENAMED')?>"></span>
 										</div>
 									<?endif;
 
