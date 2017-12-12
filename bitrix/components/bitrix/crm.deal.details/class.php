@@ -904,48 +904,76 @@ class CCrmDealDetailsComponent extends CBitrixComponent
 			$personTypeID = $companyID > 0 ? $personTypes['COMPANY'] : $personTypes['CONTACT'];
 		}
 
-		ob_start();
-		$APPLICATION->IncludeComponent('bitrix:crm.product_row.list',
-			'',
-			array(
-				'ID' => $this->arResult['PRODUCT_EDITOR_ID'],
-				'PREFIX' => $this->arResult['PRODUCT_EDITOR_ID'],
-				'FORM_ID' => '',
-				'OWNER_ID' => $this->entityID,
-				'OWNER_TYPE' => 'D',
-				'PERMISSION_TYPE' => $this->arResult['READ_ONLY'] ? 'READ' : 'WRITE',
-				'PERMISSION_ENTITY_TYPE' => $this->arResult['PERMISSION_ENTITY_TYPE'],
-				'PERSON_TYPE_ID' => $personTypeID,
-				'CURRENCY_ID' => $currencyID,
-				'LOCATION_ID' => $bTaxMode && isset($this->entityData['LOCATION_ID']) ? $this->entityData['LOCATION_ID'] : '',
-				'CLIENT_SELECTOR_ID' => '', //TODO: Add Client Selector
-				'PRODUCT_ROWS' =>  isset($this->entityData['PRODUCT_ROWS']) ? $this->entityData['PRODUCT_ROWS'] : null,
-				'HIDE_MODE_BUTTON' => !$this->isEditMode ? 'Y' : 'N',
-				'TOTAL_SUM' => isset($this->entityData['OPPORTUNITY']) ? $this->entityData['OPPORTUNITY'] : null,
-				'TOTAL_TAX' => isset($this->entityData['TAX_VALUE']) ? $this->entityData['TAX_VALUE'] : null,
-				'PRODUCT_DATA_FIELD_NAME' => $this->arResult['PRODUCT_DATA_FIELD_NAME'],
-				'PATH_TO_PRODUCT_EDIT' => $this->arResult['PATH_TO_PRODUCT_EDIT'],
-				'PATH_TO_PRODUCT_SHOW' => $this->arResult['PATH_TO_PRODUCT_SHOW'],
-				'INIT_LAYOUT' => 'N',
-				'INIT_EDITABLE' => $this->arResult['READ_ONLY'] ? 'N' : 'Y',
-				'ENABLE_MODE_CHANGE' => 'N'
-			),
-			false,
-			array('HIDE_ICONS' => 'Y', 'ACTIVE_COMPONENT'=>'Y')
-		);
-		$html = ob_get_contents();
-		ob_end_clean();
-
-		$this->arResult['TABS'][] = array(
-			'id' => 'tab_products',
-			'name' => Loc::getMessage('CRM_DEAL_TAB_PRODUCTS'),
-			'html' => $html
-		);
-
 		if ($this->entityData['IS_RECURRING'] !== "Y")
 		{
 			if($this->entityID > 0)
 			{
+				if ($this->arResult['CATEGORY_ID'] == 0 || $this->arResult['CATEGORY_ID'] == 4){
+					ob_start();
+					
+					/*Общий компонент для отображения данных связанного объекта*/
+					$APPLICATION->IncludeComponent(
+						'ucre:crm.deal.ro',
+						'',
+						array('DEAL_ID' => $this->arResult['ENTITY_ID'])
+					);
+					/*----------------------------------------------------------*/
+					$html = ob_get_contents();
+					ob_end_clean();
+					$this->arResult['TABS'][] = array(
+						'id' => 'tab_roObject',
+						'name' => 'Объект недвижимости',
+						'html' =>$html
+					);
+					ob_start();
+					/*Общий компонент для отображения лога выгрузки на Авито*/
+					$APPLICATION->IncludeComponent(
+						'ucre:crm.avito.log',
+						'',
+						array(
+							'OBJECT_ID' =>$this->arResult['ENTITY_DATA']['UF_CRM_1469534140']['VALUE'],
+							'COUNT' => 42
+						)
+					);
+					/*----------------------------------------------------------*/
+					$html = ob_get_contents();
+					ob_end_clean();
+					$this->arResult['TABS'][] = array(
+						'id' => 'tab_avitoLog',
+						'name' => 'Лог Авито',
+						'html' =>$html
+					);
+				}
+				if ($this->arResult['CATEGORY_ID'] == 2){
+					ob_start();
+					/*Компонент для редактирования географии поиска для заявок на покупку*/
+					$APPLICATION->IncludeComponent(
+						'ucre:crm.deal.geo',
+						'',
+						array('DEAL_ID' => $this->arResult['ENTITY_ID'])
+					);
+					/*----------------------------------------------------------*/
+					$html = ob_get_contents();
+					ob_end_clean();
+					$this->arResult['TABS'][] = array(
+						'id' => 'tab_geo',
+						'name' => 'Область поиска',
+						'html' =>$html
+					);
+					
+					
+					$this->arResult['TABS'][] = array(
+						'id' => 'tab_relevant',
+						'name' => 'Встречные заявки',
+						'html' =>"<h2>Здесь будут встречные заявки</h2>"
+					);
+					$this->arResult['TABS'][] = array(
+						'id' => 'tab_potentials',
+						'name' => 'Потенциальные сделки',
+						'html' =>"<h2>Здесь будут потенциальные сделки</h2>"
+					);
+				}
+				
 				$quoteID = isset($this->entityData['QUOTE_ID']) ? (int)$this->entityData['QUOTE_ID'] : 0;
 				if($quoteID > 0)
 				{
