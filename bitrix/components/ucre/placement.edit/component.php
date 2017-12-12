@@ -10,11 +10,25 @@ use Bitrix\Main\Entity;
 //Структура для проверки формы
 $checkFields = array(
   "1" => array(             //Нежилое
+    "UF_BUILDING_ID" => array('required' => true, 'regexp' => ''),
+    "UF_PLACEMENT_TYPE_ID" => array('required' => true, 'regexp' => ''),
+    "UF_PL_NUMBER" => array('required' => true, 'regexp' => ''),
+    "UF_PL_NUMBER_INT" => array('required' => true, 'regexp' => ''),
   ),
   "2" => array(             //Жилое
     "1" => array(           //Комната
+      "UF_BUILDING_ID" => array('required' => true, 'regexp' => ''),
+      "UF_PLACEMENT_TYPE_ID" => array('required' => true, 'regexp' => ''),
+      "UF_LIVING_TYPE_ID" => array('required' => true, 'regexp' => ''),
+      "UF_PL_NUMBER" => array('required' => true, 'regexp' => ''),
+      "UF_PL_NUMBER_INT" => array('required' => true, 'regexp' => ''),
     ),
     "2" => array(           //Квартира
+      "UF_BUILDING_ID" => array('required' => true, 'regexp' => ''),
+      "UF_PLACEMENT_TYPE_ID" => array('required' => true, 'regexp' => ''),
+      "UF_LIVING_TYPE_ID" => array('required' => true, 'regexp' => ''),
+      "UF_PL_NUMBER" => array('required' => true, 'regexp' => ''),
+      "UF_PL_NUMBER_INT" => array('required' => true, 'regexp' => ''),
     )
   )
 );
@@ -31,7 +45,7 @@ $BuildingDataClass = $Building->getDataClass();
 $template = 'type';//По-умолчанию шаблон выбора типа здания
 if ($_POST['AJAX_CALL'] == 'Y'){//вызов из формы
   foreach ($_POST as $key=>$value) $arResult[$key] = $value;
-  
+  $arResult['UF_PL_NUMBER_INT'] = (int) $arResult['UF_PL_NUMBER'];
 }else{//чистый вызов
   if ($arParams['ELEMENT_ID']>0){
     $row = $PlacementDataClass::getRowById($arParams['ELEMENT_ID']);

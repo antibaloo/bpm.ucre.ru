@@ -63,6 +63,7 @@ echo "<pre>";print_r($arResult);echo "</pre>";
     });
     //myMap.controls.add('zoomControl');
     //myMap.behaviors.enable('scrollZoom');
+    myMap.behaviors.disable('drag');
     myPlacemark = new ymaps.Placemark([$("#UF_LATITUDE").val(), $("#UF_LONGITUDE").val()],{
       hintContent: $("#UF_BUILDING_ADDRESS").val(),
       iconContent: $("#UF_BUILDING_ADDRESS").val().slice(0,55)+"..."
