@@ -1,5 +1,4 @@
 <?
-
 $MESS["MB_LIVE_FEED"] = "Живая лента";
 $MESS["MB_MESSAGES"] = "Чаты";
 $MESS["MB_COMPANY"] = "Сотрудники";
