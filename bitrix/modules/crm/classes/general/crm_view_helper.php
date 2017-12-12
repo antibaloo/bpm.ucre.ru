@@ -652,15 +652,20 @@ class CCrmViewHelper
 		}
 		elseif($allowEdit && !empty($menuItems))
 		{
+			$hintText = GetMessage(
+				isset($arParams['WAITING_ID']) && $arParams['WAITING_ID'] > 0
+					? 'CRM_ENTITY_WAITING'
+					: 'CRM_ENTITY_ADD_ACTIVITY_HINT'
+			);
 			if($useGridExtension)
 			{
-				return '<span class="crm-activity-add-hint">'.htmlspecialcharsbx(GetMessage('CRM_ENTITY_ADD_ACTIVITY_HINT')).'</span>
+				return '<span class="crm-activity-add-hint">'.htmlspecialcharsbx($hintText).'</span>
 				<a class="crm-activity-add" onclick="BX.CrmUIGridExtension.showContextMenu(\''.$menuID.'\', this); return false;">'.htmlspecialcharsbx(GetMessage('CRM_ENTITY_ADD_ACTIVITY')).'</a>
 				<script type="text/javascript">BX.CrmUIGridExtension.createContextMenu("'.$menuID.'", '.CUtil::PhpToJSObject($menuItems).');</script>';
 			}
 			else
 			{
-				return '<span class="crm-activity-add-hint">'.htmlspecialcharsbx(GetMessage('CRM_ENTITY_ADD_ACTIVITY_HINT')).'</span>
+				return '<span class="crm-activity-add-hint">'.htmlspecialcharsbx($hintText).'</span>
 				<a class="crm-activity-add" onclick="BX.CrmInterfaceGridManager.showMenu(\''.$menuID.'\', this); return false;">'.htmlspecialcharsbx(GetMessage('CRM_ENTITY_ADD_ACTIVITY')).'</a>
 				<script type="text/javascript">BX.CrmInterfaceGridManager.createMenu("'.$menuID.'", '.CUtil::PhpToJSObject($menuItems).');</script>';
 			}
@@ -1796,7 +1801,7 @@ class CCrmViewHelper
 
 			if($processed > 0)
 			{
-				echo '<span class="bx-br-separator">&nbsp;</span>';
+				echo '<span class="bx-br-separator"><br/></span>';
 			}
 
 			echo '<span class="fields files">';
@@ -1805,7 +1810,7 @@ class CCrmViewHelper
 
 			if ($file->IsImage($fileInfo['ORIGINAL_NAME'], $fileInfo['CONTENT_TYPE']))
 			{
-				echo '<a class="fancybox" rel="image_gallery" href="https://bpm.ucre.ru'.$fileInfo['SRC'].'" title=""><img src="https://bpm.ucre.ru'.$fileInfo['SRC'].'" width = "auto" height ="50" alt="" /></a>';
+				echo $file->ShowImage($fileInfo, $fileMaxWidth, $fileMaxHeight, '', '', true, false, 0, 0, $fileUrlTemplate);
 			}
 			else
 			{
