@@ -44,10 +44,16 @@ class CCrmDealDetailsComponent extends CBitrixComponent
 	private $isCopyMode = false;
 	/** @var bool */
 	private $isExposeMode = false;
+	/** @var bool */
+	private $isEnableRecurring = true;
 	/** @var \Bitrix\Crm\Conversion\EntityConversionWizard|null  */
 	private $conversionWizard = null;
 	/** @var int */
 	private $leadID = 0;
+	/** @var int */
+	private $quoteID = 0;
+	/** @var array|null */
+	private $defaultFieldValues = null;
 
 	public function __construct($component = null)
 	{
@@ -82,9 +88,9 @@ class CCrmDealDetailsComponent extends CBitrixComponent
 			{
 				$this->arResult['NAME_TEMPLATE'] = $this->arParams['NAME_TEMPLATE'] = $v;
 			}
-			elseif($k === 'LEAD_ID')
+			elseif($k === 'LEAD_ID' || $k === 'QUOTE_ID')
 			{
-				$this->arResult['LEAD_ID'] = $this->arParams['LEAD_ID'] = (int)$v;
+				$this->arResult[$k] = $this->arParams[$k] = (int)$v;
 			}
 		}
 	}
@@ -168,12 +174,28 @@ class CCrmDealDetailsComponent extends CBitrixComponent
 				$this->arResult['EXTERNAL_CONTEXT_ID'] = '';
 			}
 		}
+		$this->isEnableRecurring = \Bitrix\Crm\Recurring\Manager::isAllowedExpose(\Bitrix\Crm\Recurring\Manager::DEAL);
+
+		$this->arResult['ORIGIN_ID'] = $this->request->get('origin_id');
+		if($this->arResult['ORIGIN_ID'] === null)
+		{
+			$this->arResult['ORIGIN_ID'] = '';
+		}
+
+		$this->defaultFieldValues = array();
 		//endregion
 
-		//region Is Editing or Copying?
 		$this->setEntityID($this->arResult['ENTITY_ID']);
+
+		//region Is Editing or Copying?
 		if($this->entityID > 0)
 		{
+			if(!\CCrmDeal::Exists($this->entityID))
+			{
+				ShowError(GetMessage('CRM_DEAL_NOT_FOUND'));
+				return;
+			}
+
 			if($this->request->get('copy') !== null)
 			{
 				$this->isCopyMode = true;
@@ -256,13 +278,9 @@ class CCrmDealDetailsComponent extends CBitrixComponent
 		{
 			$this->leadID = $this->arResult['LEAD_ID'];
 		}
-		else
+		elseif(isset($this->request['lead_id']) && $this->request['lead_id'] > 0)
 		{
-			$leadID = $this->request->getQuery('lead_id');
-			if($leadID > 0)
-			{
-				$this->leadID = $this->arResult['LEAD_ID'] = (int)$leadID;
-			}
+			$this->leadID = $this->arResult['LEAD_ID'] = (int)$this->request['lead_id'];
 		}
 
 		if($this->leadID > 0)
@@ -282,6 +300,24 @@ class CCrmDealDetailsComponent extends CBitrixComponent
 						$this->arResult['CATEGORY_ID'] = $this->categoryID = (int)$initData['categoryId'];
 					}
 				}
+			}
+		}
+
+		if(isset($this->arResult['QUOTE_ID']) && $this->arResult['QUOTE_ID'] > 0)
+		{
+			$this->quoteID = $this->arResult['QUOTE_ID'];
+		}
+		elseif(isset($this->request['conv_quote_id']) && $this->request['conv_quote_id'] > 0)
+		{
+			$this->quoteID = $this->arResult['QUOTE_ID'] = (int)$this->request['conv_quote_id'];
+		}
+
+		if($this->quoteID > 0)
+		{
+			$this->conversionWizard = \Bitrix\Crm\Conversion\QuoteConversionWizard::load($this->quoteID);
+			if($this->conversionWizard !== null)
+			{
+				$this->arResult['CONTEXT_PARAMS']['QUOTE_ID'] = $this->quoteID;
 			}
 		}
 		//endregion
@@ -371,14 +407,14 @@ class CCrmDealDetailsComponent extends CBitrixComponent
 		$this->prepareStageList();
 
 		//region GUID
-		$this->guid = $this->arResult['GUID'] = Bitrix\Crm\Category\DealCategory::prepareFormID(
+		$this->guid = $this->arResult['GUID'] = isset($this->arParams['GUID'])
+			? $this->arParams['GUID'] : "deal_{$this->entityID}_details";
+
+		$this->arResult['EDITOR_CONFIG_ID'] = Bitrix\Crm\Category\DealCategory::prepareFormID(
 			$this->categoryID,
-			isset($this->arParams['GUID']) ? $this->arParams['GUID'] : "deal_{$this->entityID}_details",
+			isset($this->arParams['EDITOR_CONFIG_ID']) ? $this->arParams['EDITOR_CONFIG_ID'] : 'deal_details',
 			false
 		);
-
-		$this->arResult['EDITOR_CONFIG_ID'] = isset($this->arParams['EDITOR_CONFIG_ID'])
-			? $this->arParams['EDITOR_CONFIG_ID'] : 'deal_details';
 		//endregion
 
 		//region Entity Info
@@ -446,7 +482,7 @@ class CCrmDealDetailsComponent extends CBitrixComponent
 				Recurring\Manager::DEAL
 			);
 			$recurringData = $dbResult->fetch();
-			if (strlen($recurringData['NEXT_EXECUTION']) > 0 && $recurringData['ACTIVE'] === 'Y')
+			if (strlen($recurringData['NEXT_EXECUTION']) > 0 && $recurringData['ACTIVE'] === 'Y' && $this->isEnableRecurring)
 			{
 				$recurringViewText =  Loc::getMessage(
 					'CRM_DEAL_FIELD_RECURRING_DATE_NEXT_EXECUTION',
@@ -510,6 +546,29 @@ class CCrmDealDetailsComponent extends CBitrixComponent
 		{
 			$recurringViewText  =  Loc::getMessage("CRM_DEAL_FIELD_RECURRING_NOTHING_SELECTED");
 		}
+		if (!$this->isEnableRecurring)
+		{
+			switch (LANGUAGE_ID)
+			{
+				case "ru":
+				case "kz":
+				case "by":
+					$promoLink = 'https://www.bitrix24.ru/pro/crm.php ';
+					break;
+				case "de":
+					$promoLink = 'https://www.bitrix24.de/pro/crm.php';
+					break;
+				case "ua":
+					$promoLink = 'https://www.bitrix24.ua/pro/crm.php';
+					break;
+				default:
+					$promoLink = 'https://www.bitrix24.com/pro/crm.php';
+			}
+		}
+		else
+		{
+			$promoLink = "";
+		}
 		//endregion
 
 		//region FIELDS
@@ -520,21 +579,34 @@ class CCrmDealDetailsComponent extends CBitrixComponent
 			$primaryEntityTypeName = CCrmOwnerType::ContactName;
 		}
 
-		$stageList = array();
 		$allStages = Bitrix\Crm\Category\DealCategory::getStageList($this->categoryID);
+		$prohibitedStageIDS = array();
 		foreach ($allStages as $stageID => $stageTitle)
 		{
-			$permissionType = $this->isEditMode
-				? \CCrmDeal::GetStageUpdatePermissionType($stageID, $this->userPermissions, $this->categoryID)
-				: \CCrmDeal::GetStageCreatePermissionType($stageID, $this->userPermissions, $this->categoryID);
-
-			if ($permissionType > BX_CRM_PERM_NONE)
+			if($this->arResult['READ_ONLY'])
 			{
-				$stageList[$stageID] = $stageTitle;
+				$prohibitedStageIDS[] = $stageID;
+			}
+			else
+			{
+				$permissionType = $this->isEditMode
+					? \CCrmDeal::GetStageUpdatePermissionType($stageID, $this->userPermissions, $this->categoryID)
+					: \CCrmDeal::GetStageCreatePermissionType($stageID, $this->userPermissions, $this->categoryID);
+
+				if($permissionType == BX_CRM_PERM_NONE)
+				{
+					$prohibitedStageIDS[] = $stageID;
+				}
 			}
 		}
 
 		$this->arResult['ENTITY_FIELDS'] = array(
+			array(
+				'name' => 'ID',
+				'title' => Loc::getMessage('CRM_DEAL_FIELD_ID'),
+				'type' => 'text',
+				'editable' => false
+			),
 			array(
 				'name' => 'TITLE',
 				'title' => Loc::getMessage('CRM_DEAL_FIELD_TITLE'),
@@ -556,7 +628,12 @@ class CCrmDealDetailsComponent extends CBitrixComponent
 				'title' => Loc::getMessage('CRM_DEAL_FIELD_STAGE_ID'),
 				'type' => 'list',
 				'editable' => true,
-				'data' => array('items' => \CCrmInstantEditorHelper::PrepareListOptions($stageList))
+				'data' => array(
+					'items' => \CCrmInstantEditorHelper::PrepareListOptions(
+						$allStages,
+						array('EXCLUDE_FROM_EDIT' => $prohibitedStageIDS)
+					)
+				)
 			),
 			array(
 				'name' => 'OPPORTUNITY_WITH_CURRENCY',
@@ -663,13 +740,16 @@ class CCrmDealDetailsComponent extends CBitrixComponent
 				"name" => "PRODUCT_ROW_SUMMARY",
 				"title" => Loc::getMessage("CRM_DEAL_FIELD_PRODUCTS"),
 				"type" => "product_row_summary",
-				"editable" => false
+				"editable" => false,
+				"transferable" => false
 			),
 			array(
 				"name" => "RECURRING",
 				"title" => Loc::getMessage("CRM_DEAL_FIELD_RECURRING"),
 				"type" => "recurring",
 				"editable" => count($this->arResult['CREATE_CATEGORY_LIST']) > 0,
+				"transferable" => false,
+				"enableRecurring" => $this->isEnableRecurring,
 				"data" => array(
 					'loaders' => array(
 						'action' => 'GET_DEAL_HINT',
@@ -720,7 +800,7 @@ class CCrmDealDetailsComponent extends CBitrixComponent
 									"NAME" => Loc::getMessage("CRM_DEAL_FIELD_RECURRING_WEEK")
 								),
 								Recurring\Calculator::SALE_TYPE_MONTH_OFFSET => array(
-									"VALUE" =>Recurring\Calculator::SALE_TYPE_MONTH_OFFSET,
+									"VALUE" => Recurring\Calculator::SALE_TYPE_MONTH_OFFSET,
 									"NAME" => Loc::getMessage("CRM_DEAL_FIELD_RECURRING_MONTH")
 								)
 							)
@@ -728,6 +808,10 @@ class CCrmDealDetailsComponent extends CBitrixComponent
 						"CATEGORY_LIST" => array(
 							'options' => $this->arResult['CREATE_CATEGORY_LIST']
 						)
+					),
+					"restrictMessage" => array(
+						"title" => !$this->isEnableRecurring ? Loc::getMessage("CRM_RECURRING_DEAL_B24_BLOCK_TITLE") : "",
+						"text" => !$this->isEnableRecurring ? Loc::getMessage("CRM_RECURRING_DEAL_B24_BLOCK_TEXT", array("#LINK#" => $promoLink)) : "",
 					)
 				)
 			),
@@ -820,99 +904,102 @@ class CCrmDealDetailsComponent extends CBitrixComponent
 			$personTypeID = $companyID > 0 ? $personTypes['COMPANY'] : $personTypes['CONTACT'];
 		}
 
-		
+		ob_start();
+		$APPLICATION->IncludeComponent('bitrix:crm.product_row.list',
+			'',
+			array(
+				'ID' => $this->arResult['PRODUCT_EDITOR_ID'],
+				'PREFIX' => $this->arResult['PRODUCT_EDITOR_ID'],
+				'FORM_ID' => '',
+				'OWNER_ID' => $this->entityID,
+				'OWNER_TYPE' => 'D',
+				'PERMISSION_TYPE' => $this->arResult['READ_ONLY'] ? 'READ' : 'WRITE',
+				'PERMISSION_ENTITY_TYPE' => $this->arResult['PERMISSION_ENTITY_TYPE'],
+				'PERSON_TYPE_ID' => $personTypeID,
+				'CURRENCY_ID' => $currencyID,
+				'LOCATION_ID' => $bTaxMode && isset($this->entityData['LOCATION_ID']) ? $this->entityData['LOCATION_ID'] : '',
+				'CLIENT_SELECTOR_ID' => '', //TODO: Add Client Selector
+				'PRODUCT_ROWS' =>  isset($this->entityData['PRODUCT_ROWS']) ? $this->entityData['PRODUCT_ROWS'] : null,
+				'HIDE_MODE_BUTTON' => !$this->isEditMode ? 'Y' : 'N',
+				'TOTAL_SUM' => isset($this->entityData['OPPORTUNITY']) ? $this->entityData['OPPORTUNITY'] : null,
+				'TOTAL_TAX' => isset($this->entityData['TAX_VALUE']) ? $this->entityData['TAX_VALUE'] : null,
+				'PRODUCT_DATA_FIELD_NAME' => $this->arResult['PRODUCT_DATA_FIELD_NAME'],
+				'PATH_TO_PRODUCT_EDIT' => $this->arResult['PATH_TO_PRODUCT_EDIT'],
+				'PATH_TO_PRODUCT_SHOW' => $this->arResult['PATH_TO_PRODUCT_SHOW'],
+				'INIT_LAYOUT' => 'N',
+				'INIT_EDITABLE' => $this->arResult['READ_ONLY'] ? 'N' : 'Y',
+				'ENABLE_MODE_CHANGE' => 'N'
+			),
+			false,
+			array('HIDE_ICONS' => 'Y', 'ACTIVE_COMPONENT'=>'Y')
+		);
+		$html = ob_get_contents();
+		ob_end_clean();
+
+		$this->arResult['TABS'][] = array(
+			'id' => 'tab_products',
+			'name' => Loc::getMessage('CRM_DEAL_TAB_PRODUCTS'),
+			'html' => $html
+		);
+
 		if ($this->entityData['IS_RECURRING'] !== "Y")
 		{
 			if($this->entityID > 0)
 			{
-				if ($this->arResult['CATEGORY_ID'] == 0 || $this->arResult['CATEGORY_ID'] == 4){
-					ob_start();
-					
-					/*Общий компонент для отображения данных связанного объекта*/
-					$APPLICATION->IncludeComponent(
-						'ucre:crm.deal.ro',
-						'',
-						array('DEAL_ID' => $this->arResult['ENTITY_ID'])
+				$quoteID = isset($this->entityData['QUOTE_ID']) ? (int)$this->entityData['QUOTE_ID'] : 0;
+				if($quoteID > 0)
+				{
+					$quoteDbResult = \CCrmQuote::GetList(
+						array(),
+						array('=ID' => $quoteID, 'CHECK_PERMISSIONS' => 'N'),
+						false,
+						false,
+						array('TITLE')
 					);
-					/*----------------------------------------------------------*/
-					$html = ob_get_contents();
-					ob_end_clean();
-					$this->arResult['TABS'][] = array(
-						'id' => 'tab_roObject',
-						'name' => 'Объект недвижимости',
-						'html' =>$html
-					);
-					ob_start();
-					/*Общий компонент для отображения лога выгрузки на Авито*/
-					$APPLICATION->IncludeComponent(
-						'ucre:crm.avito.log',
-						'',
-						array(
-							'OBJECT_ID' =>$this->arResult['ENTITY_DATA']['UF_CRM_1469534140']['VALUE'],
-							'COUNT' => 42
-						)
-					);
-					/*----------------------------------------------------------*/
-					$html = ob_get_contents();
-					ob_end_clean();
-					$this->arResult['TABS'][] = array(
-						'id' => 'tab_avitoLog',
-						'name' => 'Лог Авито',
-						'html' =>$html
-					);
+					$quoteFields = is_object($quoteDbResult) ? $quoteDbResult->Fetch() : null;
+					if (is_array($quoteFields))
+					{
+						$this->arResult['TABS'][] = array(
+							'id' => 'tab_quote',
+							'name' => GetMessage('CRM_DEAL_TAB_QUOTE'),
+							'html' => '<div class="crm-conv-info">'
+								.Loc::getMessage(
+									'CRM_DEAL_QUOTE_LINK',
+									array(
+										'#TITLE#' => htmlspecialcharsbx($quoteFields['TITLE']),
+										'#URL#' => CCrmOwnerType::GetEntityShowPath(CCrmOwnerType::Quote, $quoteID, false)
+									)
+								)
+								.'</div>'
+						);
+					}
 				}
-				if ($this->arResult['CATEGORY_ID'] == 2){
-					ob_start();
-					/*Компонент для редактирования географии поиска для заявок на покупку*/
-					$APPLICATION->IncludeComponent(
-						'ucre:crm.deal.geo',
-						'',
-						array('DEAL_ID' => $this->arResult['ENTITY_ID'])
-					);
-					/*----------------------------------------------------------*/
-					$html = ob_get_contents();
-					ob_end_clean();
+				else
+				{
 					$this->arResult['TABS'][] = array(
-						'id' => 'tab_geo',
-						'name' => 'Область поиска',
-						'html' =>$html
-					);
-					
-					
-					$this->arResult['TABS'][] = array(
-						'id' => 'tab_relevant',
-						'name' => 'Встречные заявки',
-						'html' =>"<h2>Здесь будут встречные заявки</h2>"
-					);
-					$this->arResult['TABS'][] = array(
-						'id' => 'tab_potentials',
-						'name' => 'Потенциальные сделки',
-						'html' =>"<h2>Здесь будут потенциальные сделки</h2>"
-					);
-				}
-				$this->arResult['TABS'][] = array(
-					'id' => 'tab_quote',
-					'name' => Loc::getMessage('CRM_DEAL_TAB_QUOTE'),
-					'loader' => array(
-						'serviceUrl' => '/bitrix/components/bitrix/crm.quote.list/lazyload.ajax.php?&site'.SITE_ID.'&'.bitrix_sessid_get(),
-						'componentData' => array(
-							'template' => '',
-							'params' => array(
-								'QUOTE_COUNT' => '20',
-								'PATH_TO_QUOTE_SHOW' => $this->arResult['PATH_TO_QUOTE_SHOW'],
-								'PATH_TO_QUOTE_EDIT' => $this->arResult['PATH_TO_QUOTE_EDIT'],
-								'INTERNAL_FILTER' => array('DEAL_ID' => $this->entityID),
-								'INTERNAL_CONTEXT' => array('DEAL_ID' => $this->entityID),
-								'GRID_ID_SUFFIX' => 'DEAL_DETAILS',
-								'TAB_ID' => 'tab_quote',
-								'NAME_TEMPLATE' => $this->arResult['NAME_TEMPLATE'],
-								'ENABLE_TOOLBAR' => true,
-								'PRESERVE_HISTORY' => true,
-								'ADD_EVENT_NAME' => 'CrmCreateQuoteFromDeal'
+						'id' => 'tab_quote',
+						'name' => Loc::getMessage('CRM_DEAL_TAB_QUOTE'),
+						'loader' => array(
+							'serviceUrl' => '/bitrix/components/bitrix/crm.quote.list/lazyload.ajax.php?&site'.SITE_ID.'&'.bitrix_sessid_get(),
+							'componentData' => array(
+								'template' => '',
+								'params' => array(
+									'QUOTE_COUNT' => '20',
+									'PATH_TO_QUOTE_SHOW' => $this->arResult['PATH_TO_QUOTE_SHOW'],
+									'PATH_TO_QUOTE_EDIT' => $this->arResult['PATH_TO_QUOTE_EDIT'],
+									'INTERNAL_FILTER' => array('DEAL_ID' => $this->entityID),
+									'INTERNAL_CONTEXT' => array('DEAL_ID' => $this->entityID),
+									'GRID_ID_SUFFIX' => 'DEAL_DETAILS',
+									'TAB_ID' => 'tab_quote',
+									'NAME_TEMPLATE' => $this->arResult['NAME_TEMPLATE'],
+									'ENABLE_TOOLBAR' => true,
+									'PRESERVE_HISTORY' => true,
+									'ADD_EVENT_NAME' => 'CrmCreateQuoteFromDeal'
+								)
 							)
 						)
-					)
-				);
+					);
+				}
 				$this->arResult['TABS'][] = array(
 					'id' => 'tab_invoice',
 					'name' => Loc::getMessage('CRM_DEAL_TAB_INVOICES'),
@@ -1104,6 +1191,11 @@ class CCrmDealDetailsComponent extends CBitrixComponent
 			}
 		}
 		//endregion
+
+		if (!$this->isEnableRecurring && CModule::IncludeModule('bitrix24'))
+		{
+			CBitrix24::initLicenseInfoPopupJS();
+		}
 
 		$this->includeComponentTemplate();
 	}
@@ -1300,9 +1392,14 @@ class CCrmDealDetailsComponent extends CBitrixComponent
 				$this->entityData['CURRENCY_ID'] = \CCrmCurrency::GetBaseCurrencyID();
 			}
 
-			//region Default Stage ID for copy mode
+			//region Default Responsible and Stage ID for copy mode
 			if($this->isCopyMode)
 			{
+				if($this->userID > 0)
+				{
+					$this->entityData['ASSIGNED_BY_ID'] = $this->userID;
+				}
+
 				$stageList = $this->prepareStageList();
 				if(!empty($stageList))
 				{
@@ -1464,7 +1561,11 @@ class CCrmDealDetailsComponent extends CBitrixComponent
 		$contactBindings = array();
 		if($this->entityID > 0)
 		{
-			$contactBindings = $arFields['CONTACT_BINDINGS'] = \Bitrix\Crm\Binding\DealContactTable::getDealBindings($this->entityID);
+			$contactBindings = \Bitrix\Crm\Binding\DealContactTable::getDealBindings($this->entityID);
+		}
+		elseif(isset($this->entityData['CONTACT_BINDINGS']) && is_array($this->entityData['CONTACT_BINDINGS']))
+		{
+			$contactBindings = $this->entityData['CONTACT_BINDINGS'];
 		}
 		elseif(isset($this->entityData['CONTACT_ID']) && $this->entityData['CONTACT_ID'] > 0)
 		{
@@ -1612,7 +1713,7 @@ class CCrmDealDetailsComponent extends CBitrixComponent
 		}
 		//endregion
 		//region Recurring Deals
-		if($this->entityID > 0 && $this->entityData['IS_RECURRING'] === 'Y')
+		if($this->entityID > 0 && $this->entityData['IS_RECURRING'] === 'Y' && $this->isEnableRecurring)
 		{
 			$dbResult = Recurring\Manager::getList(
 				array('filter' => array('=DEAL_ID' => $this->entityID)),
@@ -1684,7 +1785,9 @@ class CCrmDealDetailsComponent extends CBitrixComponent
 			}
 
 			//Is required for phone & email & messenger menu
-			if($typeID === 'PHONE' || $typeID === 'EMAIL' || ($typeID === 'IM' && $valueType === 'OPENLINE'))
+			if($typeID === 'PHONE' || $typeID === 'EMAIL'
+				|| ($typeID === 'IM' && preg_match('/^imol|/', $value) === 1)
+			)
 			{
 				$formattedValue = $typeID === 'PHONE'
 					? Main\PhoneNumber\Parser::getInstance()->parse($value)->format()
@@ -1724,5 +1827,17 @@ class CCrmDealDetailsComponent extends CBitrixComponent
 			}
 		}
 		return $this->stages;
+	}
+
+	protected function tryGetFieldValueFromRequest($name, array &$params)
+	{
+		$value = $this->request->get($name);
+		if($value === null)
+		{
+			return false;
+		}
+
+		$params[$name] = $value;
+		return true;
 	}
 }

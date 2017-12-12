@@ -45,7 +45,7 @@ $MESS["CRM_DEAL_CREATION_PAGE_TITLE"] = "Создание заявки";
 $MESS["CRM_DEAL_COPY_PAGE_TITLE"] = "Копирование заявки";
 $MESS["CRM_DEAL_FIELD_NUM_SIGN"] = "№#DEAL_ID#";
 $MESS["CRM_DEAL_FIELD_CONTACT_LEGEND"] = "Контакты, участвующие в заявке";
-Заявка$MESS["CRM_DEAL_FIELD_ID"] = "ID";
+$MESS["CRM_DEAL_FIELD_ID"] = "ID";
 $MESS["CRM_RECURRING_DEAL_B24_BLOCK_TITLE"] = "Регулярные заявки доступны в тарифах \"Команда\" и \"Компания\"";
 $MESS["CRM_RECURRING_DEAL_B24_BLOCK_TEXT"] = "Создавать заявки в Битрикс24 можно автоматически! 
 	Если вы, например, целый год планируете еженедельно заключать договор с каким-то клиентом, то регулярные заявки сэкономят ваше время. 
