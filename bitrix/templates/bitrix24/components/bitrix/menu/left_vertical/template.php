@@ -20,11 +20,6 @@ $groupPopupExists = false;
 	</div>
 	<ul class="menu-items" id="left-menu-list">
 		<li class="menu-items-empty-li" id="left-menu-empty-item" style="height: 3px;"></li>
-		<li id="bx_left_menu_quick_link">
-			<input style="margin-left: 34px;" id="ucre_entity_id" type="text" size="5">
-			<span class="menu-item-link-text ucre" data-role="item-text" onclick="location.href=ucre_entity_id.value != ''?'https://bpm.ucre.ru/crm/lead/show/'+ucre_entity_id.value+'/':'#'">Лид</span>&nbsp;
-			<span class="menu-item-link-text ucre" data-role="item-text" onclick="location.href=ucre_entity_id.value != ''?'https://bpm.ucre.ru/crm/deal/show/'+ucre_entity_id.value+'/':'#'">Заявка</span>
-		</li>
 	<?
 	foreach(array("show", "hide") as $status)
 	{
@@ -134,8 +129,13 @@ $groupPopupExists = false;
 							<? if (isset($item["PARAMS"]["onclick"])):?>
 								<?=CUtil::JSEscape($item["PARAMS"]["onclick"])?>;
 								return false;
-							<?endif ?>">
-							<span class="menu-item-link-text" data-role="item-text"><?=$item["TEXT"]?></span><?
+							<?endif?>">
+							<span class="menu-item-link-text" data-role="item-text">
+								<?=$item["TEXT"]?>
+								<?if (isset($item["PARAMS"]["is_beta"])):?>
+								<span class="menu-item-link-text-beta">beta</span>
+								<?endif?>
+							</span><?
 							if (strlen($counterId) > 0):
 								$itemCounter = "";
 								$crmAttrs = "";
@@ -221,6 +221,22 @@ $arJSParams = array(
 	"isCustomPresetAvailable" => $arResult["IS_CUSTOM_PRESET_AVAILABLE"] ? "Y" : "N",
 	"customPresetExists" => $arResult["CUSTOM_PRESET_EXISTS"] ? "Y" : "N"
 );
+
+if (\Bitrix\Main\ModuleManager::isModuleInstalled("bitrix24") && \Bitrix\Main\ModuleManager::isModuleInstalled("landing"))
+{
+	$APPLICATION->includeComponent("bitrix:spotlight", "", array(
+		"ID" => "landing-spotlight",
+		"USER_TYPE" => "OLD",
+		"USER_TIMESPAN" => 3600 * 24 * 30,
+		"END_DATE" => gmmktime(8, 30, 0, 12, 13, 2017),
+		"JS_OPTIONS" => array(
+			"targetElement" => "bx_left_menu_menu_sites",
+			"content" => GetMessage("MENU_LANDING_SPOTLIGHT"),
+			"targetVertex" => "middle-center",
+			"left" => -50,
+		)
+	));
+}
 ?>
 
 <script>
@@ -240,7 +256,8 @@ $arJSParams = array(
 		SORT_ITEMS: '<?=GetMessageJS("MENU_SORT_ITEMS")?>',
 		MENU_ADD_SELF_PAGE: '<?=GetMessageJS("MENU_ADD_SELF_PAGE")?>',
 		MENU_EDIT_SELF_PAGE: '<?=GetMessageJS("MENU_EDIT_SELF_PAGE")?>',
-		MENU_SET_DEFAULT: '<?=GetMessageJS("MENU_SET_DEFAULT2")?>',
+		MENU_SET_DEFAULT: '<?=GetMessageJS("MENU_SET_DEFAULT")?>',
+		MENU_SET_DEFAULT2: '<?=GetMessageJS("MENU_SET_DEFAULT2")?>',
 		MENU_ADD_BUTTON: '<?=GetMessageJS("MENU_ADD_BUTTON")?>',
 		MENU_ITEM_NAME: '<?=GetMessageJS("MENU_ITEM_NAME")?>',
 		MENU_ITEM_LINK: '<?=GetMessageJS("MENU_ITEM_LINK")?>',
@@ -284,7 +301,8 @@ $arJSParams = array(
 		MENU_SET_CUSTOM_PRESET: '<?=GetMessageJS("MENU_SET_CUSTOM_PRESET")?>',
 		MENU_CUSTOM_PRESET_SEPARATOR: '<?=GetMessageJS("MENU_CUSTOM_PRESET_SEPARATOR")?>',
 		MENU_DELETE_CUSTOM_PRESET_CONFIRM: '<?=GetMessageJS("MENU_DELETE_CUSTOM_PRESET_CONFIRM")?>',
-		MENU_CUSTOM_PRESET_SUCCESS: '<?=GetMessageJS("MENU_CUSTOM_PRESET_SUCCESS")?>'
+		MENU_CUSTOM_PRESET_SUCCESS: '<?=GetMessageJS("MENU_CUSTOM_PRESET_SUCCESS")?>',
+		MENU_DELETE_CUSTOM_ITEM_FROM_ALL: '<?=GetMessageJS("MENU_DELETE_CUSTOM_ITEM_FROM_ALL")?>'
 	});
 
 	BX.Bitrix24.LeftMenuClass.init(<?=CUtil::PhpToJSObject($arJSParams)?>);
