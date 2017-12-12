@@ -321,7 +321,7 @@ else
 	$beginDate -= $time['tm_sec'];
 
 	$arFields['BEGINDATE'] = ConvertTimeStamp($beginDate, 'FULL', SITE_ID);
-	$arFields['CLOSEDATE'] = ConvertTimeStamp($beginDate + 182 * 86400, 'FULL', SITE_ID);
+	$arFields['CLOSEDATE'] = ConvertTimeStamp($beginDate + 7 * 86400, 'FULL', SITE_ID);
 
 	$extVals =  isset($arParams['~VALUES']) && is_array($arParams['~VALUES']) ? $arParams['~VALUES'] : array();
 	if (count($extVals) > 0)
@@ -738,7 +738,14 @@ else
 					$arResult['ERROR_MESSAGE'] .= GetMessage('UNKNOWN_ERROR');
 			}
 
-			if (($arBizProcParametersValues = $CCrmBizProc->CheckFields($isEditMode ? $arResult['ELEMENT']['ID']: false, false, $arResult['ELEMENT']['ASSIGNED_BY'], $isEditMode ? $arEntityAttr : null)) === false)
+			$arBizProcParametersValues = $CCrmBizProc->CheckFields(
+				$isEditMode ? $arResult['ELEMENT']['ID'] : false,
+				false,
+				$arResult['ELEMENT']['ASSIGNED_BY'],
+				$isEditMode ? $arEntityAttr : null
+			);
+
+			if ($arBizProcParametersValues === false)
 			{
 				$arResult['ERROR_MESSAGE'] .= $CCrmBizProc->LAST_ERROR;
 			}
@@ -752,7 +759,7 @@ else
 				{
 					$bSuccess = $CCrmDeal->Update($arResult['ELEMENT']['ID'], $arFields, true, true, array('REGISTER_SONET_EVENT' => true));
 
-					if ($_POST['RECUR_PARAM']['RECURRING_SWITCHER'] === 'Y')
+					if ($_POST['RECUR_PARAM']['RECURRING_SWITCHER'] === 'Y' && Bitrix\Crm\Recurring\Manager::isAllowedExpose(Bitrix\Crm\Recurring\Manager::DEAL))
 					{
 						if (strlen($_POST['RECUR_PARAM']['START_DATE']) > 0)
 							$recurringList['START_DATE'] = new \Bitrix\Main\Type\Date($_POST['RECUR_PARAM']['START_DATE']);
@@ -803,7 +810,7 @@ else
 							)
 						)->fetch();
 
-						$res = \Bitrix\Crm\Recurring\Manager::update(							
+						$res = \Bitrix\Crm\Recurring\Manager::update(
 							$recur['ID'],
 							$recurringList,
 							\Bitrix\Crm\Recurring\Manager::DEAL
@@ -840,7 +847,7 @@ else
 					}
 					//endregion
 
-					if ($_POST['RECUR_PARAM']['RECURRING_SWITCHER'] === 'Y')
+					if ($_POST['RECUR_PARAM']['RECURRING_SWITCHER'] === 'Y' && Bitrix\Crm\Recurring\Manager::isAllowedExpose(Bitrix\Crm\Recurring\Manager::DEAL))
 					{
 						if (strlen($_POST['RECUR_PARAM']['START_DATE']) > 0)
 							$recurringList['START_DATE'] = new \Bitrix\Main\Type\Date($_POST['RECUR_PARAM']['START_DATE']);
@@ -1128,7 +1135,7 @@ else
 					);
 					if(CModule::IncludeModule('pull'))
 					{
-						CPullStack::AddByUser($USER->GetID(), array(
+						\Bitrix\Pull\Event::add($USER->GetID(), array(
 							'module_id' => 'crm',
 							'command' => 'external_event',
 							'params' =>  $arResult['EXTERNAL_EVENT']
@@ -1418,7 +1425,7 @@ $arResult['FIELDS']['tab_1'][] = array(
 
 //Fix for issue #36848
 $beginDate = isset($arResult['ELEMENT']['BEGINDATE']) ? $arResult['ELEMENT']['BEGINDATE'] : '';
-$closeDate = isset($arResult['ELEMENT']['CLOSEDATE']) ? $arResult['ELEMENT']['CLOSEDATE'] : ConvertTimeStamp(MakeTimeStamp($beginDate) + 182 * 86400, 'FULL', SITE_ID);;
+$closeDate = isset($arResult['ELEMENT']['CLOSEDATE']) ? $arResult['ELEMENT']['CLOSEDATE'] : $beginDate;
 
 $arResult['FIELDS']['tab_1'][] = array(
 	'id' => 'BEGINDATE',
