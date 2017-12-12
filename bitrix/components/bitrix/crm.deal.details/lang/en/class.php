@@ -45,4 +45,17 @@ $MESS["CRM_DEAL_FIELD_NUM_SIGN"] = "##DEAL_ID#";
 $MESS["CRM_DEAL_FIELD_CONTACT_LEGEND"] = "Contacts linked to deal";
 $MESS["CRM_DEAL_TAB_BIZPROC"] = "Workflows";
 $MESS["CRM_DEAL_FIELD_RECURRING_RESTRICTED"] = "Insufficient rights";
+$MESS["CRM_DEAL_NOT_FOUND"] = "Deal was not found.";
+$MESS["CRM_DEAL_FIELD_ID"] = "ID";
+$MESS["CRM_RECURRING_DEAL_B24_BLOCK_TITLE"] = "Recurring deals are available in \"Standard\" and \"Professional\" plans";
+$MESS["CRM_RECURRING_DEAL_B24_BLOCK_TEXT"] = "Let Bitrix24 create deals for you! 
+	Recurring deals will save your time and resources on a number of occasions. For example, if your plan is to sing weekly contracts during the forthcoming year - recurring deals will be your deliverance for sure.
+	Create a recurring deal, and set the schedule and a pipeline. New deals will be created at the specified time, and you will not have to lift a finger.
+		<ul class=\"hide-features-list\">
+			<li class=\"hide-features-list-item\">Auto create deals</li>
+			<li class=\"hide-features-list-item\">Improve performance and efficiency of your employees</li>
+			<li class=\"hide-features-list-item\">Fast access to current recurring deals- <a href=\"#LINK#\" target=\"_blank\" class=\"hide-features-more\">Learn more</a></li>
+		</ul>		
+		<strong>Recurring Deals Are Available in \"Standard\" And \"Professional\" Plans</strong>";
+$MESS["CRM_DEAL_QUOTE_LINK"] = "Deal was created based on the quote <a target='_blank' href='#URL#'>#TITLE#</a>";
 ?>

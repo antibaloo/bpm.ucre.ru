@@ -45,4 +45,18 @@ $MESS["CRM_DEAL_FIELD_NUM_SIGN"] = "##DEAL_ID#";
 $MESS["CRM_DEAL_FIELD_CONTACT_LEGEND"] = "Mit dem Auftrag verknüpfte Kontakte";
 $MESS["CRM_DEAL_TAB_BIZPROC"] = "Workflows";
 $MESS["CRM_DEAL_FIELD_RECURRING_RESTRICTED"] = "Sie haben nicht genügend Rechte";
+$MESS["CRM_DEAL_NOT_FOUND"] = "Auftrag wurde nicht gefunden.";
+$MESS["CRM_DEAL_FIELD_ID"] = "ID";
+$MESS["CRM_RECURRING_DEAL_B24_BLOCK_TITLE"] = "Wiederkehrende Aufträge sind in Tarifen \"Standard\" und \"Professional\" verfügbar";
+$MESS["CRM_RECURRING_DEAL_B24_BLOCK_TEXT"] = "Aufträge in Bitrix24 können automatisch erstellt werden. 
+Wiederkehrende Aufträge sparen Ihnen Zeit und Arbeitsaufwand. Ein Beispiel: Sie haben es vor, im Laufe des ganzen Jahres Standardverträge mit Ihren Kunden regelmäßig abzuschließen, bspw. wöchentlich. In dieser Situation ist ein wiederkehrender Auftrag genau die richtige Lösung für Sie.
+Erstellen Sie einen wiederkehrenden Auftrag, legen Sie einen Zeitplan und eine Pipeline fest. Neue Aufträge werden zum angegebenen Zeitpunkt automatisch erstellt, Sie werden dafür gar nichts mehr tun müssen!
+<ul class=\"hide-features-list\">
+<li class=\"hide-features-list-item\">Aufträge automatisch erstellen</li>
+<li class=\"hide-features-list-item\">Arbeitsleistung Ihrer Mitarbeiter erhöhen</li>
+<li class=\"hide-features-list-item\">Schneller Zugriff auf aktuelle wiederkehrende Aufträge- <a href=\"#LINK#\" target=\"_blank\" class=\"hide-features-more\">Mehr erfahren</a></li>
+</ul> 
+<strong>Wiederkehrende Aufträge sind in Tarifen \"Standard\" und \"Professional\" verfügbar</strong>
+";
+$MESS["CRM_DEAL_QUOTE_LINK"] = "Auftrag wurde aus dem Angebot <a target='_blank' href='#URL#'>#TITLE#</a> erstellt";
 ?>

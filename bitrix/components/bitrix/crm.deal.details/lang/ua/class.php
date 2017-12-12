@@ -44,4 +44,17 @@ $MESS["CRM_DEAL_COPY_PAGE_TITLE"] = "Копіювання угоди";
 $MESS["CRM_DEAL_FIELD_NUM_SIGN"] = "№#DEAL_ID#";
 $MESS["CRM_DEAL_FIELD_CONTACT_LEGEND"] = "Контакти, які беруть участь в угоді";
 $MESS["CRM_DEAL_TAB_BIZPROC"] = "Бізнес процеси";
+$MESS["CRM_DEAL_FIELD_RECURRING_RESTRICTED"] = "Обмежено правами";
+$MESS["CRM_DEAL_NOT_FOUND"] = "Угода не знайдена";
+$MESS["CRM_DEAL_FIELD_ID"] = "ID";
+$MESS["CRM_RECURRING_DEAL_B24_BLOCK_TITLE"] = "Регулярні угоди доступні в тарифах \"Команда\" та \"Компанія\"";
+$MESS["CRM_RECURRING_DEAL_B24_BLOCK_TEXT"] = "Створювати угоди в Бітрікс24 можна автоматично!
+Якщо ви, наприклад, цілий рік плануєте щотижня укладати договір з якимось клієнтом, то регулярні угоди заощадять ваш час.
+Заведіть угоду, вкажіть її регулярність і напрямок. А в зазначений час вона буде створена автоматично без участі менеджера.
+		<ul class=\"hide-features-list\">
+			<li class=\"hide-features-list-item\">Автоматичне створення угод</li>
+			<li class=\"hide-features-list-item\">Підвищення ефективності роботи менеджерів</li>
+			<li class=\"hide-features-list-item\">Швидкий доступ до списку регулярних угод к <a href=\"#LINK#\" target=\"_blank\" class=\"hide-features-more\">Дізнатися детальніше</a></li>
+		</ul>		
+		<strong>Регулярні угоди доступні в тарифах \"Команда\" та \"Компанія\"</strong>";
 ?>
