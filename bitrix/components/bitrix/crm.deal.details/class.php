@@ -835,7 +835,6 @@ class CCrmDealDetailsComponent extends CBitrixComponent
 						array('DEAL_ID' => $this->arResult['ENTITY_ID'])
 					);
 					/*----------------------------------------------------------*/
-					//echo "<pre>";print_r($this->arResult);echo "</pre>";
 					$html = ob_get_contents();
 					ob_end_clean();
 					$this->arResult['TABS'][] = array(
@@ -843,11 +842,23 @@ class CCrmDealDetailsComponent extends CBitrixComponent
 						'name' => 'Объект недвижимости',
 						'html' =>$html
 					);
-					
+					ob_start();
+					/*Общий компонент для отображения лога выгрузки на Авито*/
+					$APPLICATION->IncludeComponent(
+						'ucre:crm.avito.log',
+						'',
+						array(
+							'OBJECT_ID' =>$this->arResult['ENTITY_DATA']['UF_CRM_1469534140']['VALUE'],
+							'COUNT' => 42
+						)
+					);
+					/*----------------------------------------------------------*/
+					$html = ob_get_contents();
+					ob_end_clean();
 					$this->arResult['TABS'][] = array(
 						'id' => 'tab_avitoLog',
 						'name' => 'Лог Авито',
-						'html' =>"<h2>Здесь будет лог Авито</h2>"
+						'html' =>$html
 					);
 				}
 				if ($this->arResult['CATEGORY_ID'] == 2){
