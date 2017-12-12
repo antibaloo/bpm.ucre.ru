@@ -12,6 +12,8 @@ if(!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED!==true) die();
 <div class="clearFloat"></div>
 <?}else{?>
 <hr>
+<center>Дубликаты</center>
+<hr>
 <?}?>
 <form id="plotList" method="POST" action="<?=$_SERVER["REQUEST_URI"]?>" enctype="multipart/formdata">
   <div class="gridWrapper">
