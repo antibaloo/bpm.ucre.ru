@@ -65,6 +65,15 @@ $APPLICATION->IncludeComponent(
 </script><?
 
 //$arResult['READ_ONLY'] = true;
+$editorContext = array(
+	'CATEGORY_ID' => $arResult['CATEGORY_ID'],
+	'PARAMS' => $arResult['CONTEXT_PARAMS']
+);
+
+if(isset($arResult['ORIGIN_ID']) && $arResult['ORIGIN_ID'] !== '')
+{
+	$editorContext['ORIGIN_ID'] = $arResult['ORIGIN_ID'];
+}
 $APPLICATION->IncludeComponent(
 	'bitrix:crm.entity.details',
 	'',
@@ -92,10 +101,7 @@ $APPLICATION->IncludeComponent(
 			'SERVICE_URL' => '/bitrix/components/bitrix/crm.deal.details/ajax.php?'.bitrix_sessid_get(),
 			'EXTERNAL_CONTEXT_ID' => $arResult['EXTERNAL_CONTEXT_ID'],
 			'CONTEXT_ID' => $arResult['CONTEXT_ID'],
-			'CONTEXT' => array(
-				'CATEGORY_ID' => $arResult['CATEGORY_ID'],
-				'PARAMS' => $arResult['CONTEXT_PARAMS']
-			)
+			'CONTEXT' => $editorContext
 		),
 		'TIMELINE' => array(
 			'GUID' => "{$guid}_timeline",
