@@ -46,9 +46,6 @@ if ($_POST['crm_token'] == $megapbx->crm_key){
     case '79228090357':
       $SOURCE_ID = '14';
       break;
-    case '79325360157':
-      $SOURCE_ID = 'WEB';
-      break;
     case '79325360657':
       $SOURCE_ID = '10';
       break;
