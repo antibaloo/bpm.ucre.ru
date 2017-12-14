@@ -58,10 +58,12 @@ if ($_POST['AJAX_CALL'] == 'Y'){//вызов из формы
         if (preg_match($rules['regexp'],$arResult[$key]) == 0 || preg_match($rules['regexp'],$arResult[$key]) === false) $arResult['errors'][$key] = "поле не соответствует формату";
       }
       if ($rules['unique']){
+        $filter = array($key => $arResult[$key]);
+        if ($arResult['ID']>0)  $filter['!ID'] = $arResult['ID'];
         $testData = $PlotDataClass::getList(
           array(
             "select" => array('*'), //выбираем все поля
-            "filter" => array($key => $arResult[$key]),
+            "filter" => $filter,
             "order" => array("ID"=>"ASC"), // сортировка по полю ID, будет работать только, если вы завели такое поле в hl'блоке
           )
         );
