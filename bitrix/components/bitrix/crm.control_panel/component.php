@@ -78,7 +78,7 @@ $arParams['PATH_TO_PRODUCT_MARKETPLACE'] = (isset($arParams['PATH_TO_PRODUCT_MAR
 $arParams['PATH_TO_WEBFORM'] = (isset($arParams['PATH_TO_WEBFORM']) && $arParams['PATH_TO_WEBFORM'] !== '') ? $arParams['PATH_TO_WEBFORM'] : '#SITE_DIR#crm/webform/';
 $arParams['PATH_TO_INVOICING'] = (isset($arParams['PATH_TO_INVOICING']) && $arParams['PATH_TO_INVOICING'] !== '') ? $arParams['PATH_TO_INVOICING'] : '#SITE_DIR#crm/invoicing/';
 $arParams['PATH_TO_BUTTON'] = (isset($arParams['PATH_TO_BUTTON']) && $arParams['PATH_TO_BUTTON'] !== '') ? $arParams['PATH_TO_BUTTON'] : '#SITE_DIR#crm/button/';
-$arParams['PATH_TO_RETAIL'] = (isset($arParams['PATH_TO_RETAIL']) && $arParams['PATH_TO_RETAIL'] !== '') ? $arParams['PATH_TO_RETAIL'] : '#SITE_DIR#crm/retail/';
+$arParams['PATH_TO_CRMPLUS'] = (isset($arParams['PATH_TO_CRMPLUS']) && $arParams['PATH_TO_CRMPLUS'] !== '') ? $arParams['PATH_TO_CRMPLUS'] : '#SITE_DIR#crm/crmplus/';
 
 $currentCategoryID = CUserOptions::GetOption('crm', 'current_deal_category', -1);
 if($currentCategoryID >= 0)
@@ -244,58 +244,7 @@ if($isAdmin || CCrmLead::CheckReadPermission(0, $userPermissions))
 		'IS_DISABLED' => !\Bitrix\Crm\Settings\LeadSettings::isEnabled()
 	);
 }
-if($isAdmin){
-	$stdItems['EXCHANGE'] = array(
- 		'ID' => 'EXCHANGE',
- 		'MENU_ID' => 'menu_exchange',
- 		'NAME' => "Биржа",
- 		'TITLE' => "Биржа",
- 		'URL' => "/crm/exchange/",
- 		'ICON' => 'exchange',
- 		'COUNTER' => $counter->getValue(),
- 		'COUNTER_ID' => $counter->getCode(),
- 		'IS_DISABLED' => !\Bitrix\Crm\Settings\LeadSettings::isEnabled()
- 	);
- }
-$actions = array();
- if($isAdmin){
- 	$createUrl = CComponentEngine::MakePathFromTemplate(
- 				/*$arParams['PATH_TO_LEAD_EDIT']*/'/crm/lead_ucre/edit/#lead_id#/',
- 				array('lead_id' => 0)
- 			);
- 	$actions[] = array('ID' => 'CREATE', 'URL' => $createUrl);
- 	$stdItems['LEAD_UCRE'] = array(
- 		'ID' => 'LEAD_UCRE',
- 		'MENU_ID' => 'menu_crm_lead_ucre',
- 		'NAME' => "Новые лиды",
- 		'TITLE' => "Новые лиды",
- 		'URL' => "/crm/lead_ucre/",
- 		'ICON' => 'lead',
- 		'COUNTER' => $counter->getValue(),
- 		'COUNTER_ID' => $counter->getCode(),
- 		'ACTIONS' => $actions,
- 		'IS_DISABLED' => !\Bitrix\Crm\Settings\LeadSettings::isEnabled()
- 	);
- }
- $actions = array();
- if($isAdmin){
- 	$createUrl = CComponentEngine::MakePathFromTemplate(
- 				/*$arParams['PATH_TO_LEAD_EDIT']*/'/crm/client_deal/edit/#cdeal_id#/',
- 				array('cdeal_id' => 0)
- 			);
- 	$actions[] = array('ID' => 'CREATE', 'URL' => $createUrl);
- 	$stdItems['CDEAL_UCRE'] = array(
- 		'ID' => 'CDEAL_UCRE',
- 		'MENU_ID' => 'menu_crm_cdeal_ucre',
- 		'NAME' => "Сделки",
- 		'TITLE' => "Сделки",
- 		'URL' => "/crm/client_deal/",
- 		'ICON' => 'deal',
- 		'COUNTER' => $counter->getValue(),
- 		'COUNTER_ID' => $counter->getCode(),
- 		'ACTIONS' => $actions
- 	);
- }
+
 
 if($isAdmin || CCrmDeal::CheckReadPermission(0, $userPermissions))
 {
@@ -623,18 +572,14 @@ $stdItems['SETTINGS'] = array(
 
 if (\Bitrix\Main\Loader::includeModule('bitrix24'))
 {
-	$licensePrefix = CBitrix24::getLicensePrefix();
-	if (in_array($licensePrefix, array("ru", "by")))
-	{
-		$stdItems['RETAIL'] = array(
-			'ID' => 'RETAIL',
-			'MENU_ID' => 'menu_crm_retail',
-			'NAME' => GetMessage('CRM_CTRL_PANEL_ITEM_RETAIL'),
-			'TITLE' => GetMessage('CRM_CTRL_PANEL_ITEM_RETAIL'),
-			'URL' => CComponentEngine::MakePathFromTemplate($arParams['PATH_TO_RETAIL']),
-			'ICON' => 'retail'
-		);
-	}
+	$stdItems['CRMPLUS'] = array(
+		'ID' => 'CRMPLUS',
+		'MENU_ID' => 'menu_crm_plus',
+		'NAME' => GetMessage('CRM_CTRL_PANEL_ITEM_CRMPLUS'),
+		'TITLE' => GetMessage('CRM_CTRL_PANEL_ITEM_CRMPLUS'),
+		'URL' => CComponentEngine::MakePathFromTemplate($arParams['PATH_TO_CRMPLUS']),
+		'ICON' => 'crmplus'
+	);
 }
 // <-- Prepere standard items
 
