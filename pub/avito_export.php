@@ -239,7 +239,7 @@ while($aRes = $db_res->Fetch()){
   if ($aRes['PROPERTY_374'] == 1356){
     $rsUser = CUser::GetByID($aRes['PROPERTY_313']);
     $arUser = $rsUser->Fetch();
-    $xml->writeElement("ManagerName",$arUser['LAST_NAME']." ".$arUser['NAME']." ".$arUser['SECOND_NAME']);
+    $xml->writeElement("ManagerName",/*$arUser['LAST_NAME']." ".*/$arUser['NAME']/*." ".$arUser['SECOND_NAME']*/);
     $xml->writeElement("EMail", $arUser['EMAIL']);
     $xml->writeElement("ContactPhone", $arUser['PERSONAL_PHONE']);
   }
