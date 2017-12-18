@@ -30,5 +30,11 @@ $aMenuLinks = array(
 		array(), 
 		array(),
 	),
+	array(
+		"Росреестр API", 
+		"/townbase/api/", 
+		array(), 
+		array(),
+	),
 );
 ?>
