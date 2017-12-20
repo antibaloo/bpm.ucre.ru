@@ -135,6 +135,7 @@ $APPLICATION->ShowViewContent("im-fullscreen");
 				<?$APPLICATION->ShowPanel();?>
 				</div>
 			<? endif ?>
+			<?//$APPLICATION->ShowBanner("INFO", '<div align="center">', '<br></div><br>');?>
 <?
 if ($isBitrix24Cloud)
 {
