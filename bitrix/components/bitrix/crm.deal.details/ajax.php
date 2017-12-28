@@ -240,7 +240,7 @@ elseif($action === 'SAVE')
 	//endregion
 
 	//region PRODUCT ROWS
-	$enableProductRows = array_key_exists('DEAL_PRODUCT_DATA', $_POST);
+	$enableProductRows = !array_key_exists('DEAL_PRODUCT_DATA_INVALIDATE', $_POST) && array_key_exists('DEAL_PRODUCT_DATA', $_POST);
 	$productRows = array();
 	$productRowSettings = array();
 	if($enableProductRows)
