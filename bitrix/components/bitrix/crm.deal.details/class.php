@@ -54,6 +54,9 @@ class CCrmDealDetailsComponent extends CBitrixComponent
 	private $quoteID = 0;
 	/** @var array|null */
 	private $defaultFieldValues = null;
+	/** @var array|null */
+	private $types = null;
+
 
 	public function __construct($component = null)
 	{
@@ -581,7 +584,7 @@ class CCrmDealDetailsComponent extends CBitrixComponent
 
 		$allStages = Bitrix\Crm\Category\DealCategory::getStageList($this->categoryID);
 		$prohibitedStageIDS = array();
-		foreach ($allStages as $stageID => $stageTitle)
+		foreach(array_keys($allStages) as $stageID)
 		{
 			if($this->arResult['READ_ONLY'])
 			{
@@ -621,7 +624,7 @@ class CCrmDealDetailsComponent extends CBitrixComponent
 				'title' => Loc::getMessage('CRM_DEAL_FIELD_TYPE_ID'),
 				'type' => 'list',
 				'editable' => true,
-				'data' => array('items' => \CCrmInstantEditorHelper::PrepareListOptions(CCrmStatus::GetStatusList('DEAL_TYPE')))
+				'data' => array('items' => \CCrmInstantEditorHelper::PrepareListOptions($this->prepareTypeList()))
 			),
 			array(
 				'name' => 'STAGE_ID',
@@ -847,6 +850,7 @@ class CCrmDealDetailsComponent extends CBitrixComponent
 				'elements' =>
 					array_merge(
 						array(
+							array('name' => 'TYPE_ID'),
 							array('name' => 'BEGINDATE'),
 							//array('name' => 'STAGE_ID'),
 							array('name' => 'OPENED'),
@@ -904,76 +908,49 @@ class CCrmDealDetailsComponent extends CBitrixComponent
 			$personTypeID = $companyID > 0 ? $personTypes['COMPANY'] : $personTypes['CONTACT'];
 		}
 
+		ob_start();
+		$APPLICATION->IncludeComponent('bitrix:crm.product_row.list',
+			'',
+			array(
+				'ID' => $this->arResult['PRODUCT_EDITOR_ID'],
+				'PREFIX' => $this->arResult['PRODUCT_EDITOR_ID'],
+				'FORM_ID' => '',
+				'OWNER_ID' => $this->entityID,
+				'OWNER_TYPE' => 'D',
+				'PERMISSION_TYPE' => $this->arResult['READ_ONLY'] ? 'READ' : 'WRITE',
+				'PERMISSION_ENTITY_TYPE' => $this->arResult['PERMISSION_ENTITY_TYPE'],
+				'PERSON_TYPE_ID' => $personTypeID,
+				'CURRENCY_ID' => $currencyID,
+				'LOCATION_ID' => $bTaxMode && isset($this->entityData['LOCATION_ID']) ? $this->entityData['LOCATION_ID'] : '',
+				'CLIENT_SELECTOR_ID' => '', //TODO: Add Client Selector
+				'PRODUCT_ROWS' =>  isset($this->entityData['PRODUCT_ROWS']) ? $this->entityData['PRODUCT_ROWS'] : null,
+				'HIDE_MODE_BUTTON' => !$this->isEditMode ? 'Y' : 'N',
+				'TOTAL_SUM' => isset($this->entityData['OPPORTUNITY']) ? $this->entityData['OPPORTUNITY'] : null,
+				'TOTAL_TAX' => isset($this->entityData['TAX_VALUE']) ? $this->entityData['TAX_VALUE'] : null,
+				'PRODUCT_DATA_FIELD_NAME' => $this->arResult['PRODUCT_DATA_FIELD_NAME'],
+				'PATH_TO_PRODUCT_EDIT' => $this->arResult['PATH_TO_PRODUCT_EDIT'],
+				'PATH_TO_PRODUCT_SHOW' => $this->arResult['PATH_TO_PRODUCT_SHOW'],
+				'INIT_LAYOUT' => 'N',
+				'INIT_EDITABLE' => $this->arResult['READ_ONLY'] ? 'N' : 'Y',
+				'ENABLE_MODE_CHANGE' => 'N',
+				'ENABLE_SUBMIT_WITHOUT_LAYOUT' => 'N'
+			),
+			false,
+			array('HIDE_ICONS' => 'Y', 'ACTIVE_COMPONENT'=>'Y')
+		);
+		$html = ob_get_contents();
+		ob_end_clean();
+
+		$this->arResult['TABS'][] = array(
+			'id' => 'tab_products',
+			'name' => Loc::getMessage('CRM_DEAL_TAB_PRODUCTS'),
+			'html' => $html
+		);
+
 		if ($this->entityData['IS_RECURRING'] !== "Y")
 		{
 			if($this->entityID > 0)
 			{
-				if ($this->arResult['CATEGORY_ID'] == 0 || $this->arResult['CATEGORY_ID'] == 4){
-					ob_start();
-					
-					/*Общий компонент для отображения данных связанного объекта*/
-					$APPLICATION->IncludeComponent(
-						'ucre:crm.deal.ro',
-						'',
-						array('DEAL_ID' => $this->arResult['ENTITY_ID'])
-					);
-					/*----------------------------------------------------------*/
-					$html = ob_get_contents();
-					ob_end_clean();
-					$this->arResult['TABS'][] = array(
-						'id' => 'tab_roObject',
-						'name' => 'Объект недвижимости',
-						'html' =>$html
-					);
-					ob_start();
-					/*Общий компонент для отображения лога выгрузки на Авито*/
-					$APPLICATION->IncludeComponent(
-						'ucre:crm.avito.log',
-						'',
-						array(
-							'OBJECT_ID' =>$this->arResult['ENTITY_DATA']['UF_CRM_1469534140']['VALUE'],
-							'COUNT' => 42
-						)
-					);
-					/*----------------------------------------------------------*/
-					$html = ob_get_contents();
-					ob_end_clean();
-					$this->arResult['TABS'][] = array(
-						'id' => 'tab_avitoLog',
-						'name' => 'Лог Авито',
-						'html' =>$html
-					);
-				}
-				if ($this->arResult['CATEGORY_ID'] == 2){
-					ob_start();
-					/*Компонент для редактирования географии поиска для заявок на покупку*/
-					$APPLICATION->IncludeComponent(
-						'ucre:crm.deal.geo',
-						'',
-						array('DEAL_ID' => $this->arResult['ENTITY_ID'])
-					);
-					/*----------------------------------------------------------*/
-					$html = ob_get_contents();
-					ob_end_clean();
-					$this->arResult['TABS'][] = array(
-						'id' => 'tab_geo',
-						'name' => 'Область поиска',
-						'html' =>$html
-					);
-					
-					
-					$this->arResult['TABS'][] = array(
-						'id' => 'tab_relevant',
-						'name' => 'Встречные заявки',
-						'html' =>"<h2>Здесь будут встречные заявки</h2>"
-					);
-					$this->arResult['TABS'][] = array(
-						'id' => 'tab_potentials',
-						'name' => 'Потенциальные сделки',
-						'html' =>"<h2>Здесь будут потенциальные сделки</h2>"
-					);
-				}
-				
 				$quoteID = isset($this->entityData['QUOTE_ID']) ? (int)$this->entityData['QUOTE_ID'] : 0;
 				if($quoteID > 0)
 				{
@@ -1106,6 +1083,20 @@ class CCrmDealDetailsComponent extends CBitrixComponent
 					);
 				}
 				$this->arResult['TABS'][] = array(
+					'id' => 'tab_tree',
+					'name' => Loc::getMessage('CRM_DEAL_TAB_TREE'),
+					'loader' => array(
+						'serviceUrl' => '/bitrix/components/bitrix/crm.entity.tree/lazyload.ajax.php?&site='.SITE_ID.'&'.bitrix_sessid_get(),
+						'componentData' => array(
+							'template' => '.default',
+							'params' => array(
+								'ENTITY_ID' => $this->entityID,
+								'ENTITY_TYPE_NAME' => CCrmOwnerType::DealName,
+							)
+						)
+					)
+				);
+				$this->arResult['TABS'][] = array(
 					'id' => 'tab_event',
 					'name' => Loc::getMessage('CRM_DEAL_TAB_EVENT'),
 					'loader' => array(
@@ -1217,6 +1208,13 @@ class CCrmDealDetailsComponent extends CBitrixComponent
 						? $userField['EDIT_FORM_LABEL'] : $userField['FIELD_NAME']
 				);
 			}
+		}
+		//endregion
+
+		//region VIEW EVENT
+		if($this->entityID > 0 && \Bitrix\Crm\Settings\HistorySettings::getCurrent()->isViewEventEnabled())
+		{
+			CCrmEvent::RegisterViewEvent(CCrmOwnerType::Deal, $this->entityID, $this->userID);
 		}
 		//endregion
 
@@ -1346,7 +1344,11 @@ class CCrmDealDetailsComponent extends CBitrixComponent
 				}
 			}
 
-			$this->entityData['CURRENCY_ID'] = \CCrmCurrency::GetBaseCurrencyID();
+			if(!isset($this->entityData['CURRENCY_ID']) || $this->entityData['CURRENCY_ID'] === '')
+			{
+				$this->entityData['CURRENCY_ID'] = \CCrmCurrency::GetBaseCurrencyID();
+			}
+
 			$this->entityData['OPENED'] = \Bitrix\Crm\Settings\CompanySettings::getCurrent()->getOpenedFlag() ? 'Y' : 'N';
 		}
 		else if($this->entityID <= 0)
@@ -1377,9 +1379,23 @@ class CCrmDealDetailsComponent extends CBitrixComponent
 			$stageList = $this->prepareStageList();
 			if(!empty($stageList))
 			{
-				$this->entityData['STAGE_ID'] = current(array_keys($stageList));
+				$requestStageId = $this->request->get('stage_id');
+				if (isset($stageList[$requestStageId]))
+				{
+					$this->entityData['STAGE_ID'] = $requestStageId;
+				}
+				else
+				{
+					$this->entityData['STAGE_ID'] = current(array_keys($stageList));
+				}
 			}
 			//endregion
+
+			$typeList = $this->prepareTypeList();
+			if(!empty($typeList))
+			{
+				$this->entityData['TYPE_ID'] = current(array_keys($typeList));
+			}
 
 			$externalCompanyID = $this->request->get('company_id');
 			if($externalCompanyID > 0)
@@ -1665,10 +1681,10 @@ class CCrmDealDetailsComponent extends CBitrixComponent
 			$this->entityData['REQUISITE_BINDING'] = $requisiteLinkInfo;
 		}
 		//endregion
-		
+
 		$this->entityData['MULTIFIELD_DATA'] = $multiFildData;
 		//endregion
-		
+
 		//region Product row
 		$productRowCount = 0;
 		$productRowTotalSum = 0.0;
@@ -1835,6 +1851,15 @@ class CCrmDealDetailsComponent extends CBitrixComponent
 				$data[$typeID][$entityKey][] = $value;
 			}
 		}
+	}
+
+	protected function prepareTypeList()
+	{
+		if($this->types === null)
+		{
+			$this->types = \CCrmStatus::GetStatusList('DEAL_TYPE');
+		}
+		return $this->types;
 	}
 	protected function prepareStageList()
 	{
