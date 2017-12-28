@@ -321,7 +321,7 @@ else
 	$beginDate -= $time['tm_sec'];
 
 	$arFields['BEGINDATE'] = ConvertTimeStamp($beginDate, 'FULL', SITE_ID);
-	$arFields['CLOSEDATE'] = ConvertTimeStamp($beginDate + 182 * 86400, 'FULL', SITE_ID);
+	$arFields['CLOSEDATE'] = ConvertTimeStamp($beginDate + 7 * 86400, 'FULL', SITE_ID);
 
 	$extVals =  isset($arParams['~VALUES']) && is_array($arParams['~VALUES']) ? $arParams['~VALUES'] : array();
 	if (count($extVals) > 0)
@@ -414,7 +414,27 @@ if ($conversionWizard !== null || $isEditMode || $isCopyMode)
 	unset($requisiteEntityList, $requisite, $requisiteInfoLinked);
 }
 
-$isExternal = $isEditMode && isset($arFields['ORIGINATOR_ID']) && isset($arFields['ORIGIN_ID']) && intval($arFields['ORIGINATOR_ID']) > 0 && intval($arFields['ORIGIN_ID']) > 0;
+$isExternal = $isEditMode && isset($arFields['ORIGINATOR_ID']) && isset($arFields['ORIGIN_ID']) && $arFields['ORIGINATOR_ID'] > 0 && $arFields['ORIGIN_ID'] > 0;
+if($isExternal)
+{
+	$dbSalesList = CCrmExternalSale::GetList(
+		array(
+			'NAME' => 'ASC',
+			'SERVER' => 'ASC'
+		),
+		array('ID' => $arFields['ORIGINATOR_ID'])
+	);
+
+	$arExternalSale = $dbSalesList->Fetch();
+	if(is_array($arExternalSale))
+	{
+		$arResult['EXTERNAL_SALE_INFO'] = array(
+			'ID' => $arFields['ORIGINATOR_ID'],
+			'NAME' => $arExternalSale['NAME'],
+			'SERVER' => $arExternalSale['SERVER'],
+		);
+	}
+}
 
 $arResult['ELEMENT'] = is_array($arFields) ? $arFields : null;
 unset($arFields);
@@ -1316,7 +1336,7 @@ if (!$isEditMode)
 }
 else
 {
-	if (intval($arResult['ELEMENT']['ORIGINATOR_ID']) > 0 && intval($arResult['ELEMENT']['ORIGIN_ID']) > 0)
+	if ($isExternal)
 	{
 		$strEditOrderHtml = '<script type="text/javascript">var extSaleGetRemoteFormLocal = {"PRINT":"'.GetMessage("CRM_EXT_SALE_DEJ_PRINT").'","SAVE":"'.GetMessage("CRM_EXT_SALE_DEJ_SAVE").'","ORDER":"'.GetMessage("CRM_EXT_SALE_DEJ_ORDER").'","CLOSE":"'.GetMessage("CRM_EXT_SALE_DEJ_CLOSE").'"};</script>'.
 			'<input type="hidden" name="SYNC_ORDER_ID" id="ID_SYNC_ORDER_ID" value="" />'.
@@ -1328,6 +1348,17 @@ else
 		);
 		if ($arSale = $dbSalesList->GetNext())
 			$strEditOrderHtml .= ($arSale["NAME"] != "" ? $arSale["NAME"] : $arSale["SERVER"]);
+
+		if(isset($arResult['EXTERNAL_SALE_INFO']))
+		{
+			$strEditOrderHtml .= $arResult['EXTERNAL_SALE_INFO']['NAME'] != ''
+				? htmlspecialcharsbx($arResult['EXTERNAL_SALE_INFO']['NAME'])
+				: htmlspecialcharsbx($arResult['EXTERNAL_SALE_INFO']['SERVER']);
+		}
+		else
+		{
+			$strEditOrderHtml .= GetMessage("CRM_EXTERNAL_SALE_NOT_FOUND");
+		}
 
 		$arResult['FIELDS']['tab_1'][] = array(
 			'id' => 'SALE_ORDER',
@@ -1425,7 +1456,7 @@ $arResult['FIELDS']['tab_1'][] = array(
 
 //Fix for issue #36848
 $beginDate = isset($arResult['ELEMENT']['BEGINDATE']) ? $arResult['ELEMENT']['BEGINDATE'] : '';
-$closeDate = isset($arResult['ELEMENT']['CLOSEDATE']) ? $arResult['ELEMENT']['CLOSEDATE'] : ConvertTimeStamp(MakeTimeStamp($beginDate) + 182 * 86400, 'FULL', SITE_ID);
+$closeDate = isset($arResult['ELEMENT']['CLOSEDATE']) ? $arResult['ELEMENT']['CLOSEDATE'] : $beginDate;
 
 $arResult['FIELDS']['tab_1'][] = array(
 	'id' => 'BEGINDATE',
@@ -1642,11 +1673,18 @@ $sProductsHtml = '';
 
 if ($isEditMode)
 {
-	if (intval($arResult['ELEMENT']['ORIGINATOR_ID']) > 0 && intval($arResult['ELEMENT']['ORIGIN_ID']) > 0)
+	if ($isExternal)
 	{
-		$sProductsHtml .= '<span class="webform-small-button webform-small-button-accept" onclick="ExtSaleGetRemoteForm('.$arResult['ELEMENT']['ORIGINATOR_ID'].', \'EDIT\', '.$arResult['ELEMENT']['ORIGIN_ID'].')">'.GetMessage("CRM_EXT_SALE_CD_EDIT").'</span>'.
-			'<span class="webform-small-button webform-small-button-accept" onclick="ExtSaleGetRemoteForm('.$arResult['ELEMENT']['ORIGINATOR_ID'].', \'VIEW\', '.$arResult['ELEMENT']['ORIGIN_ID'].')">'.GetMessage("CRM_EXT_SALE_CD_VIEW").'</span>'.
-			'<span class="webform-small-button webform-small-button-accept" onclick="ExtSaleGetRemoteForm('.$arResult['ELEMENT']['ORIGINATOR_ID'].', \'PRINT\', '.$arResult['ELEMENT']['ORIGIN_ID'].')">'.GetMessage("CRM_EXT_SALE_CD_PRINT").'</span><br/><br/>';
+		if(isset($arResult['EXTERNAL_SALE_INFO']))
+		{
+			$sProductsHtml .= '<span class="webform-small-button webform-small-button-accept" onclick="ExtSaleGetRemoteForm('.$arResult['ELEMENT']['ORIGINATOR_ID'].', \'EDIT\', '.$arResult['ELEMENT']['ORIGIN_ID'].')">'.GetMessage("CRM_EXT_SALE_CD_EDIT").'</span>'.
+				'<span class="webform-small-button webform-small-button-accept" onclick="ExtSaleGetRemoteForm('.$arResult['ELEMENT']['ORIGINATOR_ID'].', \'VIEW\', '.$arResult['ELEMENT']['ORIGIN_ID'].')">'.GetMessage("CRM_EXT_SALE_CD_VIEW").'</span>'.
+				'<span class="webform-small-button webform-small-button-accept" onclick="ExtSaleGetRemoteForm('.$arResult['ELEMENT']['ORIGINATOR_ID'].', \'PRINT\', '.$arResult['ELEMENT']['ORIGIN_ID'].')">'.GetMessage("CRM_EXT_SALE_CD_PRINT").'</span><br/><br/>';
+		}
+		else
+		{
+			$sProductsHtml .= GetMessage("CRM_EXTERNAL_SALE_NOT_FOUND");
+		}
 	}
 }
 else
