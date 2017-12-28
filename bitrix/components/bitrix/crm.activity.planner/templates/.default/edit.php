@@ -221,7 +221,7 @@ $communicationsData = htmlspecialcharsbx(\Bitrix\Main\Web\Json::encode($arResult
 									break;
 								case 'FILE': ?>
 									<div class="crm-activity-popup-info-person-detail-file">
-										<div class="crm-activity-popup-info-person-detail-file-name" data-role="storage-switcher" data-storage-type="3" data-values="<?=$storageValues?>" data-props="<?=$storageProps?>"><?=GetMessage('CRM_ACTIVITY_PLANNER_FILES')?>:</div>
+										<div class="crm-activity-popup-info-person-detail-file-name" data-role="storage-switcher" data-storage-type="<?=(int)$activity['STORAGE_TYPE_ID']?>" data-values="<?=$storageValues?>" data-props="<?=$storageProps?>"><?=GetMessage('CRM_ACTIVITY_PLANNER_FILES')?>:</div>
 										<div data-role="storage-container"></div>
 									</div> <?
 									break;
