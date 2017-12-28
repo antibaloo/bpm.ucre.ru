@@ -1,6 +1,9 @@
 <?
+$MESS["CRM_MODULE_NOT_INSTALLED"] = "Das Modul CRM ist nicht installiert.";
+$MESS["CRM_PERMISSION_DENIED"] = "Zugriff verweigert";
 $MESS["CRM_DEAL_FIELD_TITLE"] = "Name";
 $MESS["CRM_DEAL_FIELD_TYPE_ID"] = "Auftragstyp";
+$MESS["CRM_DEAL_FIELD_STAGE_ID"] = "Phase";
 $MESS["CRM_DEAL_FIELD_OPPORTUNITY_WITH_CURRENCY"] = "Betrag und Währung";
 $MESS["CRM_DEAL_FIELD_CLOSEDATE"] = "Abschlussdatum";
 $MESS["CRM_DEAL_FIELD_BEGINDATE"] = "Anfangsdatum";
@@ -13,23 +16,22 @@ $MESS["CRM_DEAL_FIELD_RECURRING"] = "Wiederholung";
 $MESS["CRM_DEAL_FIELD_CATEGORY_RECURRING"] = "Auftragspipeline";
 $MESS["CRM_DEAL_FIELD_OPPORTUNITY"] = "Betrag";
 $MESS["CRM_DEAL_FIELD_CURRENCY_ID"] = "Währung";
+$MESS["CRM_DEAL_FIELD_PRODUCTS"] = "Produkte";
 $MESS["CRM_DEAL_SECTION_MAIN"] = "Zum Auftrag";
 $MESS["CRM_DEAL_SECTION_ADDITIONAL"] = "Mehr";
 $MESS["CRM_DEAL_SECTION_RECURRING"] = "Wiederkehrender Auftrag";
+$MESS["CRM_DEAL_SECTION_PRODUCTS"] = "Produkte";
 $MESS["CRM_DEAL_TAB_PRODUCTS"] = "Produkte";
+$MESS["CRM_DEAL_TAB_INVOICES"] = "Rechnungen";
+$MESS["CRM_DEAL_TAB_AUTOMATION"] = "Automatisierung";
 $MESS["CRM_DEAL_TAB_EVENT"] = "History";
 $MESS["CRM_DEAL_TAB_QUOTE"] = "Angebote";
-$MESS["CRM_DEAL_TAB_AUTOMATION"] = "Automatisierung";
-$MESS["CRM_MODULE_NOT_INSTALLED"] = "Das Modul CRM ist nicht installiert.";
-$MESS["CRM_PERMISSION_DENIED"] = "Zugriff verweigert";
-$MESS["CRM_DEAL_FIELD_STAGE_ID"] = "Phase";
-$MESS["CRM_DEAL_FIELD_PRODUCTS"] = "Produkte";
-$MESS["CRM_DEAL_SECTION_PRODUCTS"] = "Produkte";
-$MESS["CRM_DEAL_TAB_INVOICES"] = "Rechnungen";
+$MESS["CRM_DEAL_TAB_BIZPROC"] = "Workflows";
 $MESS["CRM_DEAL_FIELD_RECURRING_NOTHING_SELECTED"] = "Nichts ausgewählt";
+$MESS["CRM_DEAL_FIELD_RECURRING_RESTRICTED"] = "Sie haben nicht genügend Rechte";
 $MESS["CRM_DEAL_FIELD_RECURRING_CREATED_FROM_CURRENT"] = "Eine Vorlage wurde für den wiederkehrenden Auftrag ##RECURRING_ID# erstellt";
 $MESS["CRM_DEAL_FIELD_RECURRING_CREATED_MANY_FROM_CURRENT"] = "Vorlagen wurden für die wiederkehrenden Aufträge #RECURRING_LIST# erstellt";
-$MESS["CRM_DEAL_FIELD_RECURRING_DATE_NEXT_EXECUTION"] = "Nächste Erstellung erfolgt am #NEXT_DATE#";
+$MESS["CRM_DEAL_FIELD_RECURRING_DATE_NEXT_EXECUTION"] = "Nächster Auftrag wird erstellt am #NEXT_DATE#";
 $MESS["CRM_DEAL_FIELD_RECURRING_TITLE"] = "Auftragsvorlage: #TITLE#";
 $MESS["CRM_DEAL_FIELD_RECURRING_DAY"] = "Tage";
 $MESS["CRM_DEAL_FIELD_RECURRING_WEEK"] = "Wochen";
@@ -43,8 +45,6 @@ $MESS["CRM_DEAL_CREATION_PAGE_TITLE"] = "Neuer Auftrag";
 $MESS["CRM_DEAL_COPY_PAGE_TITLE"] = "Auftrag kopieren";
 $MESS["CRM_DEAL_FIELD_NUM_SIGN"] = "##DEAL_ID#";
 $MESS["CRM_DEAL_FIELD_CONTACT_LEGEND"] = "Mit dem Auftrag verknüpfte Kontakte";
-$MESS["CRM_DEAL_TAB_BIZPROC"] = "Workflows";
-$MESS["CRM_DEAL_FIELD_RECURRING_RESTRICTED"] = "Sie haben nicht genügend Rechte";
 $MESS["CRM_DEAL_NOT_FOUND"] = "Auftrag wurde nicht gefunden.";
 $MESS["CRM_DEAL_FIELD_ID"] = "ID";
 $MESS["CRM_RECURRING_DEAL_B24_BLOCK_TITLE"] = "Wiederkehrende Aufträge sind in Tarifen \"Standard\" und \"Professional\" verfügbar";
@@ -59,4 +59,5 @@ Erstellen Sie einen wiederkehrenden Auftrag, legen Sie einen Zeitplan und eine P
 <strong>Wiederkehrende Aufträge sind in Tarifen \"Standard\" und \"Professional\" verfügbar</strong>
 ";
 $MESS["CRM_DEAL_QUOTE_LINK"] = "Auftrag wurde aus dem Angebot <a target='_blank' href='#URL#'>#TITLE#</a> erstellt";
+$MESS["CRM_DEAL_TAB_TREE"] = "Abhängigkeiten";
 ?>
