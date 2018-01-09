@@ -1,0 +1,66 @@
+.paramsWrapper{
+  margin-top: 10px;
+  display: grid;
+  grid-template-rows: 30px;
+  grid-template-columns: 3fr 3fr 3fr 3fr 1fr 1fr;
+  grid-gap: 20px;
+}
+.label{
+  text-align: right;
+  font-weight: bold;
+  padding-right: 5px;
+}
+.param{
+  text-align: left;
+  padding-left: 5px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.searchButton{
+  text-align: center;
+  color:  white;
+  font-weight: bold;
+  background: #66A1D2;
+}
+.searchButton:hover{
+  background: #3F8FD2;
+  cursor: pointer;
+}
+.addressBox{
+  height: 25px;
+  line-height: 25px;
+}
+.paramBox{
+  height: 30px;
+  line-height: 30px;
+}
+.block-input {
+  display: block;
+  width: 100%;
+  height: 25px;
+  line-height: 25px;
+}
+.buttonWrapper{
+  margin-top: 10px;
+  display: grid;
+  grid-template-rows: 25px;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-gap: 20px;
+}
+.formButton{
+  height: 25px;
+  line-height: 25px;
+  text-align: center;
+  color:  white;
+  font-weight: bold;
+  background: #5CCCCC;
+}
+.formButton:hover{
+  background: #009999;
+  cursor: pointer;
+}
+.selectList{width:100%}
+.fieldError{
+  border: 1px solid red;
+}
