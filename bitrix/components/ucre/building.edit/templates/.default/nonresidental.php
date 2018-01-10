@@ -232,6 +232,7 @@ $APPLICATION->SetTitle("Заполните параметры здания");
         center: [$("#UF_LATITUDE").val(), $("#UF_LONGITUDE").val()], 
         zoom: 16
       });
+      myMap.controls.add(new ymaps.control.TypeSelector(['yandex#map', 'yandex#satellite', 'yandex#hybrid']));
       myMap.controls.add('zoomControl');
       myMap.behaviors.enable('scrollZoom');
       myPlacemark = new ymaps.Placemark([$("#UF_LATITUDE").val(), $("#UF_LONGITUDE").val()],{
@@ -249,6 +250,7 @@ $APPLICATION->SetTitle("Заполните параметры здания");
         center: [51.779700, 55.116868], 
         zoom: 13
       });
+      myMap.controls.add(new ymaps.control.TypeSelector(['yandex#map', 'yandex#satellite', 'yandex#hybrid']));
       myMap.controls.add('zoomControl');
       myMap.behaviors.enable('scrollZoom');
     }
