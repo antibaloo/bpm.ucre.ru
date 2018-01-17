@@ -163,6 +163,7 @@ function LeadUpdate(&$arFields){
 
 AddEventHandler('crm', 'OnBeforeCrmDealUpdate', 'DealUpdate');
 function DealUpdate(&$arFields){
-	if (isset($arFields['STAGE_ID']) && !in_array($arFields['MODIFY_BY_ID'],array(0,1,24,26))) unset ($arFields['STAGE_ID']);
+	//Bitrix\Main\Diag\Debug::writeToFile(array('category' => CCrmDeal::GetCategoryID($arFields['ID']),'fields'=>$arFields ),"","deal_update.txt");
+	if (CCrmDeal::GetCategoryID($arFields['ID']) == 0 && isset($arFields['STAGE_ID']) && !in_array($arFields['MODIFY_BY_ID'],array(0,1,24,26))) unset ($arFields['STAGE_ID']);
 }
 ?>
