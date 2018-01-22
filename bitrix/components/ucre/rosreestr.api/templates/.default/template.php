@@ -14,7 +14,7 @@ if(!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED!==true) die();
   </div>
   <div class="paramsWrapper">
     <div class="param paramBox"><select class="selectList" id="macroRegionList" name="macroRegionId"></select></div>
-    <div class="param paramBox"><select class="selectList" id="regionList" name="regionId"></select></div>
+    <div class="param paramBox"><select class="selectList" id="regionList" name="RegionId"></select></div>
     <div class="param paramBox"><select class="selectList" id="settlementList" name="settlementId"></select></div>
     <div class="param paramBox"><input class="block-input" type="search" id="street" name="street" value="<?=$arResult['street']?>"></div>
     <div class="param paramBox"><input class="block-input" type="search" id="house" name="house" value="<?=$arResult['house']?>"></div>
@@ -24,7 +24,7 @@ if(!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED!==true) die();
   <input id="page" name="page" type="hidden" value="<?=$arResult['ACTIVE_PAGE']?>">
   <!--
   <input id="page" name="macroRegionId" type="hidden" value="<?=$arResult['macroRegionId']?>">
-  <input id="page" name="regionId" type="hidden" value="<?=$arResult['regionId']?>">
+  <input id="page" name="RegionId" type="hidden" value="<?=$arResult['RegionId']?>">
   <input id="page" name="settlementId" type="hidden" value="<?=$arResult['settlementId']?>">
 -->
   <input id="action" name="action" type="hidden" value="">
