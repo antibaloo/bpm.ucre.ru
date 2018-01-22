@@ -353,6 +353,8 @@ class CCrmDealDetailsComponent extends CBitrixComponent
 				ShowError(GetMessage('CRM_PERMISSION_DENIED'));
 				return;
 			}
+
+			$this->arResult['CATEGORY_ID'] = $this->categoryID = (int)$recurring['CATEGORY_ID'];
 		}
 		elseif($this->isEditMode)
 		{
@@ -933,7 +935,7 @@ class CCrmDealDetailsComponent extends CBitrixComponent
 				'INIT_LAYOUT' => 'N',
 				'INIT_EDITABLE' => $this->arResult['READ_ONLY'] ? 'N' : 'Y',
 				'ENABLE_MODE_CHANGE' => 'N',
-				'ENABLE_SUBMIT_WITHOUT_LAYOUT' => 'N'
+				'ENABLE_SUBMIT_WITHOUT_LAYOUT' => $this->conversionWizard !== null ? 'Y' : 'N'
 			),
 			false,
 			array('HIDE_ICONS' => 'Y', 'ACTIVE_COMPONENT'=>'Y')
@@ -951,71 +953,6 @@ class CCrmDealDetailsComponent extends CBitrixComponent
 		{
 			if($this->entityID > 0)
 			{
-				if ($this->arResult['CATEGORY_ID'] == 0 || $this->arResult['CATEGORY_ID'] == 4){		
- 					ob_start();		
- 							
- 					/*Общий компонент для отображения данных связанного объекта*/		
- 					$APPLICATION->IncludeComponent(		
- 						'ucre:crm.deal.ro',		
- 						'',		
- 						array('DEAL_ID' => $this->arResult['ENTITY_ID'])		
- 					);		
- 					/*----------------------------------------------------------*/		
- 					$html = ob_get_contents();		
- 					ob_end_clean();		
- 					$this->arResult['TABS'][] = array(		
- 						'id' => 'tab_roObject',		
- 						'name' => 'Объект недвижимости',		
- 						'html' =>$html		
- 					);		
- 					ob_start();		
- 					/*Общий компонент для отображения лога выгрузки на Авито*/		
- 					$APPLICATION->IncludeComponent(		
- 						'ucre:crm.avito.log',		
- 						'',		
- 						array(		
- 							'OBJECT_ID' =>$this->arResult['ENTITY_DATA']['UF_CRM_1469534140']['VALUE'],		
- 							'COUNT' => 42		
- 						)		
- 					);		
- 					/*----------------------------------------------------------*/		
- 					$html = ob_get_contents();		
- 					ob_end_clean();		
- 					$this->arResult['TABS'][] = array(		
- 						'id' => 'tab_avitoLog',		
- 						'name' => 'Лог Авито',		
- 						'html' =>$html		
- 					);		
- 				}		
- 				if ($this->arResult['CATEGORY_ID'] == 2){		
- 					ob_start();		
- 					/*Компонент для редактирования географии поиска для заявок на покупку*/		
- 					$APPLICATION->IncludeComponent(		
- 						'ucre:crm.deal.geo',		
- 						'',		
- 						array('DEAL_ID' => $this->arResult['ENTITY_ID'])		
- 					);		
- 					/*----------------------------------------------------------*/		
- 					$html = ob_get_contents();		
- 					ob_end_clean();		
- 					$this->arResult['TABS'][] = array(		
- 						'id' => 'tab_geo',		
- 						'name' => 'Область поиска',		
- 						'html' =>$html		
- 					);		
- 							
- 							
- 					$this->arResult['TABS'][] = array(		
- 						'id' => 'tab_relevant',		
- 						'name' => 'Встречные заявки',		
- 						'html' =>"<h2>Здесь будут встречные заявки</h2>"		
- 					);		
- 					$this->arResult['TABS'][] = array(		
- 						'id' => 'tab_potentials',		
- 						'name' => 'Потенциальные сделки',		
- 						'html' =>"<h2>Здесь будут потенциальные сделки</h2>"		
- 					);		
- 				}
 				$quoteID = isset($this->entityData['QUOTE_ID']) ? (int)$this->entityData['QUOTE_ID'] : 0;
 				if($quoteID > 0)
 				{
