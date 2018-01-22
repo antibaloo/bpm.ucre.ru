@@ -21,7 +21,7 @@ if ($_POST['AJAX_CALL'] == 'Y'){//вызов из формы
   $arResult['regionList'] = "[".implode(",",$arResult['regionList'])."]";
   
   $settlements = json_decode(file_get_contents('http://rosreestr.ru/api/online/regions/'.$arResult['RegionId']),true);
-  if (!$arResult['settlementId']) $arResult['settlementList'] =  array("{id : '', text: 'выберите населенный пункт или его район'}");
+  /*if (!$arResult['settlementId'])*/ $arResult['settlementList'] =  array("{id : '', text: 'выберите населенный пункт или его район'}");
   foreach($settlements as $settlement){
     if ($settlement['id'] == $arResult['settlementId'] ) $arResult['settlementList'][] = "{id: ".$settlement['id'].", text: '".$settlement['name']."', selected: true}";
     else $arResult['settlementList'][] = "{id: ".$settlement['id'].", text: '".$settlement['name']."'}";
