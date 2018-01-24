@@ -241,7 +241,7 @@ while($aRes = $db_res->Fetch()){
     $arUser = $rsUser->Fetch();
     $xml->writeElement("ManagerName",/*$arUser['LAST_NAME']." ".*/$arUser['NAME']/*." ".$arUser['SECOND_NAME']*/);
     $xml->writeElement("EMail", $arUser['EMAIL']);
-    $xml->writeElement("ContactPhone", $arUser['PERSONAL_PHONE']);
+    $xml->writeElement("ContactPhone", $arUser['WORK_PHONE']);
   }
   if ($aRes['PROPERTY_374'] == 1357){
     $xml->writeElement("ManagerName", "Менеджер по работе с клиентами");
