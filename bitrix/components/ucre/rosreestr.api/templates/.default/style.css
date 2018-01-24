@@ -2,7 +2,7 @@
   margin-top: 10px;
   display: grid;
   grid-template-rows: 30px;
-  grid-template-columns: 3fr 3fr 3fr 3fr 1fr 1fr;
+  grid-template-columns: 3fr 3fr 3fr 3fr 1fr 1fr 1fr 1fr;
   grid-gap: 20px;
 }
 .label{

@@ -1,6 +1,6 @@
 <?
 # Инициализируем профайлер
-xhprof_enable(XHPROF_FLAGS_CPU + XHPROF_FLAGS_MEMORY);
+//xhprof_enable(XHPROF_FLAGS_CPU + XHPROF_FLAGS_MEMORY);
 
 if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED!==true)die();
 $macroRegions = json_decode(file_get_contents('http://rosreestr.ru/api/online/macro_regions'),true);
@@ -45,9 +45,24 @@ if ($_POST['AJAX_CALL'] == 'Y'){//вызов из формы
     if ($arResult['house']) $arResult['params']['house'] = $arResult['house'];
     else $arResult['errors'][] = 'Не задан номер дома';
     
+    if ($arResult['building']) $arResult['params']['building'] = $arResult['building'];
+    else $arResult['errors'][] = 'Не задан корпус';
+    
+    if ($arResult['structure']) $arResult['params']['structure'] = $arResult['structure'];
+    else $arResult['errors'][] = 'Не задано строение';
+    
     if ($arResult['apartment']) $arResult['params']['apartment'] = $arResult['apartment'];
     else $arResult['errors'][] = 'Не задан номер квартиры';
     $arResult['request'] = 'http://rosreestr.ru/api/online/address/fir_objects?'.http_build_query($arResult['params']);
+    /*
+    $arResult['request'] = 'http://rosreestr.ru/api/online/address/fir_objects?';
+    $count = 0;
+    foreach ($arResult['params'] as $key=>$param){
+      if ($count) $arResult['request'] .= "&".$key."=".$param;
+      else $arResult['request'] .= $key."=".$param;
+      $count++;
+    }
+    */
     $arResult['objects'] = json_decode(file_get_contents($arResult['request']));
 
     
@@ -76,10 +91,10 @@ if ($_POST['AJAX_CALL'] == 'Y'){//вызов из формы
 
 //echo "<pre>";print_r($_POST);echo "</pre>";
 $this->IncludeComponentTemplate();
-
+/*
 $xhprof_data = xhprof_disable();
 include_once "/home/bitrix/xhprof-0.9.4/xhprof_lib/utils/xhprof_lib.php";
 include_once "/home/bitrix/xhprof-0.9.4/xhprof_lib/utils/xhprof_runs.php";
 $xhprof_runs = new XHProfRuns_Default();
-$run_id = $xhprof_runs->save_run($xhprof_data, "rosreest");
+$run_id = $xhprof_runs->save_run($xhprof_data, "rosreest");*/
 ?>

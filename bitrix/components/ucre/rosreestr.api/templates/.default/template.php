@@ -10,6 +10,8 @@ if(!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED!==true) die();
     <div class="label paramBox">НП/Район НП</div>
     <div class="label paramBox">улица</div>
     <div class="label paramBox">дом</div>
+    <div class="label paramBox">корпус</div>
+    <div class="label paramBox">строение</div>
     <div class="label paramBox">помещение</div>
   </div>
   <div class="paramsWrapper">
@@ -18,6 +20,8 @@ if(!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED!==true) die();
     <div class="param paramBox"><select class="selectList" id="settlementList" name="settlementId"></select></div>
     <div class="param paramBox"><input class="block-input" type="search" id="street" name="street" value="<?=$arResult['street']?>"></div>
     <div class="param paramBox"><input class="block-input" type="search" id="house" name="house" value="<?=$arResult['house']?>"></div>
+    <div class="param paramBox"><input class="block-input" type="search" id="building" name="building" value="<?=$arResult['building']?>"></div>
+    <div class="param paramBox"><input class="block-input" type="search" id="structure" name="structure" value="<?=$arResult['structure']?>"></div>
     <div class="param paramBox"><input class="block-input" type="search" id="apartment" name="apartment" value="<?=$arResult['apartment']?>"></div>
   </div>
   
