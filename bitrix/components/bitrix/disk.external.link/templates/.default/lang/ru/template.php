@@ -1,13 +1,13 @@
 <?
 $MESS["DISK_EXT_LINK_TITLE"] = "Скачать файл";
-$MESS["DISK_EXT_LINK_B24"] = "<span>Единый центр недвижимости</span>";
+$MESS["DISK_EXT_LINK_B24"] = "Битрикс<span>24</span>";
 $MESS["DISK_EXT_LINK_FILE_SIZE"] = "Размер";
 $MESS["DISK_EXT_LINK_FILE_UPDATE_TIME"] = "Изменен";
 $MESS["DISK_EXT_LINK_FILE_DOWNLOAD"] = "Скачать";
 $MESS["DISK_EXT_LINK_FOLDER_DOWNLOAD"] = "Скачать как архив";
 $MESS["DISK_EXT_LINK_FILE_COPY_LINK"] = "Поделиться ссылкой";
 $MESS["DISK_EXT_LINK_B24_ADV_TEXT"] = "Полный комплект инструментов для организации работы компании";
-$MESS["DISK_EXT_LINK_B24_ADV_1"] = "Задачи и проекты";
+$MESS["DISK_EXT_LINK_B24_ADV_1"] = "Задачи и Проекты";
 $MESS["DISK_EXT_LINK_B24_ADV_2"] = "CRM";
 $MESS["DISK_EXT_LINK_B24_ADV_3"] = "Бизнес-чат";
 $MESS["DISK_EXT_LINK_B24_ADV_4"] = "Документы";
