@@ -1,6 +1,6 @@
 <?
 $MESS["DISK_EXT_LINK_TITLE"] = "Скачать файл";
-$MESS["DISK_EXT_LINK_B24"] = "Битрикс<span>24</span>";
+$MESS["DISK_EXT_LINK_B24"] = "<span>Единый центр недвижимости</span>";
 $MESS["DISK_EXT_LINK_FILE_SIZE"] = "Размер";
 $MESS["DISK_EXT_LINK_FILE_UPDATE_TIME"] = "Изменен";
 $MESS["DISK_EXT_LINK_FILE_DOWNLOAD"] = "Скачать";
