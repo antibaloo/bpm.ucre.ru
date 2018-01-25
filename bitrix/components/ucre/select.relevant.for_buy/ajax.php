@@ -114,7 +114,8 @@ if (strripos ($_SERVER['HTTP_REFERER'], 'bpm.ucre.ru')!==false){
   if (count($arrayPotentials)){
     $sql_string .= " AND b_crm_deal.ID NOT IN(".implode(",",$arrayPotentials).")";
   }
-  $sql_string .= " ORDER BY DATE_MODIFY DESC";
+  if ($_POST['groupbyassigned'] == 'no') $sql_string .= " ORDER BY DATE_MODIFY DESC";
+  else $sql_string .= " ORDER BY ASSIGNED_BY_ID ASC, DATE_MODIFY DESC";
 
   $rsData = $DB->Query($sql_string);
   
@@ -155,10 +156,21 @@ if (strripos ($_SERVER['HTTP_REFERER'], 'bpm.ucre.ru')!==false){
   
   $currentUserCount = $DB->Query("select * from b_crm_relevant_search where deal_id=".$_POST['deal_id']." AND user_id=".$USER->GetID())->SelectedRowsCount();
   $allUsersCount = $DB->Query("select * from b_crm_relevant_search where deal_id=".$_POST['deal_id'])->SelectedRowsCount();
+?>
+<table style="width:100%;border: 1px solid black;border-collapse: collapse;margin-bottom:15px;font-size: 13px;table-layout:fixed;">
+  <tr>
+<?
+  foreach($stageId as $stage){
+    echo "<td style='border: 1px solid black;text-align:center;background-color:".$stage['color'].";'>".$stage['long']."</td>";
+  }
+?>
+  </tr>
+</table>
+<?
   //Вывод статистики использования инструмента
   echo "Запрос по встречным заявкам текущий пользователь произвел ".$currentUserCount." раз. Всего запросов по заявке ".$allUsersCount."<br><br>";
   echo '<div id="resultAdd"></div>';//Результаты переноса заявки в потенциальные сделки
-  $rows = 20;
+  $rows = 40;
   $pages = ($count % $rows)?intval($count/$rows)+1:$count/$rows;
   for ($i=1;$i<=$pages;$i++){
 ?>
@@ -168,7 +180,6 @@ if (strripos ($_SERVER['HTTP_REFERER'], 'bpm.ucre.ru')!==false){
       <th></th>
       <th width="5%">id</th>
       <th width="30%">Название заявки</th>
-      <th></th>
       <th width="8%">Цена, руб.</th>
       <th width="20%">Адрес объекта</th>
       <th>N<sub>комнат</sub></th>
@@ -195,9 +206,8 @@ if (strripos ($_SERVER['HTTP_REFERER'], 'bpm.ucre.ru')!==false){
 ?>
     <tr id="R<?=$aRes['ID']?>" class="row" style="background-color:<?=$stageId[$aRes['STAGE_ID']]['color']?>">
       <td><?=($_POST['assigned_by_id'] == $USER->GetID() || $USER->IsAdmin())?"<a href='javascript:addpotential(".$aRes['ID'].")'><span style='color:green;font-weight: bold'>+</span></a>":""?></td>
-      <td><?=$aRes['ID']?></td>
+      <td title="<?=$stageId[$aRes['STAGE_ID']]['long']?>"><?=$aRes['ID']?></td>
       <td style="text-align: left; padding-left: 5px;" title="<?=$aRes['TITLE']?>"><a href="/crm/deal/show/<?=$aRes['ID']?>/" target="_blank"><?=$aRes['TITLE']?></a></td>
-      <td title="<?=$stageId[$aRes['STAGE_ID']]['long']?>"><?=$stageId[$aRes['STAGE_ID']]['short']?></td>
       <td style="text-align: right; padding-right: 5px;" title="<?=($aRes['UF_CRM_58958B5734602'])?number_format($aRes['UF_CRM_58958B5734602'],0,"."," "):"цена не указана"?>"><?=($aRes['UF_CRM_58958B5734602'])?number_format($aRes['UF_CRM_58958B5734602'],0,"."," "):"<span style='color:red;'>цена не указана</span>"?></td>
       <td style="text-align: left; padding-left: 5px;" title="<?=$aRes['PROPERTY_209']?>"><?=$shortAddress?></td>
       <td><?=($aRes['PROPERTY_229'])?intval($aRes['PROPERTY_229']):"-"?></td>
