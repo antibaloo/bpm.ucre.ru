@@ -967,53 +967,65 @@ class CCrmDealDetailsComponent extends CBitrixComponent
 					$this->arResult['TABS'][] = array(
 						'id' => 'tab_roObject',
 						'name' => 'Объект недвижимости',
-						'html' =>$html					
-					);				
-					ob_start();				
-					/*Общий компонент для отображения лога выгрузки на Авито*/				
-					$APPLICATION->IncludeComponent(				
-						'ucre:crm.avito.log',				
-						'',				
-						array(				
-							'OBJECT_ID' =>$this->arResult['ENTITY_DATA']['UF_CRM_1469534140']['VALUE'],				
-							'COUNT' => 42				
-						)				
-					);				
-					/*----------------------------------------------------------*/				
-					$html = ob_get_contents();				
-					ob_end_clean();				
-					$this->arResult['TABS'][] = array(				
-						'id' => 'tab_avitoLog',				
-						'name' => 'Лог Авито',				
-						'html' =>$html				
-					);				
-				}				
-				if ($this->arResult['CATEGORY_ID'] == 2){				
-					ob_start();				
-					/*Компонент для редактирования географии поиска для заявок на покупку*/		      		
-					$APPLICATION->IncludeComponent(				
-						'ucre:crm.deal.geo',				
-						'',				
-						array('DEAL_ID' => $this->arResult['ENTITY_ID'])				
-					);				
-					/*----------------------------------------------------------*/				
-					$html = ob_get_contents();				
-					ob_end_clean();				
-					$this->arResult['TABS'][] = array(				
-						'id' => 'tab_geo',				
-						'name' => 'Область поиска',				
-						'html' =>$html				
+						'html' =>$html
 					);
-					$this->arResult['TABS'][] = array(				
-						'id' => 'tab_relevant',				
-						'name' => 'Встречные заявки',				
-						'html' =>"<h2>Здесь будут встречные заявки</h2>"				
-					);				
-					$this->arResult['TABS'][] = array(				
-						'id' => 'tab_potentials',				
-						'name' => 'Потенциальные сделки',				
-						'html' =>"<h2>Здесь будут потенциальные сделки</h2>"				
-					);				
+					ob_start();
+					/*Общий компонент для отображения лога выгрузки на Авито*/
+					$APPLICATION->IncludeComponent(
+						'ucre:crm.avito.log',
+						'',
+						array(
+							'OBJECT_ID' =>$this->arResult['ENTITY_DATA']['UF_CRM_1469534140']['VALUE'],
+							'COUNT' => 42
+						)
+					);
+					/*----------------------------------------------------------*/
+					$html = ob_get_contents();
+					ob_end_clean();
+					$this->arResult['TABS'][] = array(
+						'id' => 'tab_avitoLog',
+						'name' => 'Лог Авито',
+						'html' =>$html
+					);
+				}
+				if ($this->arResult['CATEGORY_ID'] == 2){
+					ob_start();
+					/*Компонент для редактирования географии поиска для заявок на покупку*/
+					$APPLICATION->IncludeComponent(
+						'ucre:crm.deal.geo',
+						'',
+						array('DEAL_ID' => $this->arResult['ENTITY_ID'])
+					);
+					/*----------------------------------------------------------*/
+					$html = ob_get_contents();
+					ob_end_clean();
+					$this->arResult['TABS'][] = array(
+						'id' => 'tab_geo',
+						'name' => 'Область поиска',
+						'html' =>$html
+					);
+					ob_start();
+					/*Компонент для отображения информации по встречным заявкам*/
+					$APPLICATION->IncludeComponent(
+						"ucre:select.relevant.for_buy",
+						"",
+						array('ID' => $this->arResult['ENTITY_ID']),
+						false
+					);
+					/*----------------------------------------------------------*/
+					$html = ob_get_contents();
+					ob_end_clean();
+					$this->arResult['TABS'][] = array(
+						'id' => 'tab_relevant',
+						'name' => 'Встречные заявки',
+						'html' => $html
+					);
+					
+					$this->arResult['TABS'][] = array(
+						'id' => 'tab_potentials',
+						'name' => 'Потенциальные сделки',
+						'html' =>"<h2>Здесь будут потенциальные сделки</h2>"
+					);
 				}
 				$quoteID = isset($this->entityData['QUOTE_ID']) ? (int)$this->entityData['QUOTE_ID'] : 0;
 				if($quoteID > 0)
