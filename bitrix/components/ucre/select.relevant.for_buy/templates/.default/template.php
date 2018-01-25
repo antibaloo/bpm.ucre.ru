@@ -53,6 +53,8 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED!==true)die();
         <td colspan="3" style="text-align:left;width:75%"><?=$arResult['SELECT_PARAMS']['STREETS']?></td>
       </tr>
     </table>
+    <center><input name="groupbyassigned" type="radio" value="no" checked> Не группировать по ответственным <input name="groupbyassigned" type="radio" value="yes"> Группировать по ответственным </center>
+    <br>
     <center><input id="submit" type="button" value="Искать"></center>
     
     <input type="hidden" name="sql" value="<?=bin2hex($arResult['SQL_STRING'])?>">
