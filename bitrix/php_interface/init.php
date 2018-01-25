@@ -95,6 +95,7 @@ function myDealUpdate (&$arFields){
 }
 
 AddEventHandler('crm', 'OnBeforeCrmLeadUpdate', 'LeadUpdate');
+AddEventHandler('crm', 'OnBeforeCrmLeadAdd', 'LeadUpdate');
 function LeadUpdate(&$arFields){
 	$dbResult = CCrmLead::GetList(array(),array("ID"=>$arFields["ID"]),array());//Получаем полный вектор полей заявки, не зависимо от того, какие поля сохранялись
 	$existFields = $dbResult->Fetch();
@@ -122,15 +123,18 @@ function LeadUpdate(&$arFields){
 			break;
 		case 2:
 			$type = "квартира";
-			$rooms = ($arFields["UF_CRM_1486191523"]>0)?$arFields["UF_CRM_1486191523"]."-к":"количество комнат неизвестно";
+			if (isset($arFields['UF_CRM_1486191523'])) $rooms = ($arFields["UF_CRM_1486191523"]>0)?$arFields["UF_CRM_1486191523"]."-к":"количество комнат неизвестно";
+			else $rooms = ($existFields["UF_CRM_1486191523"]>0)?$existFields["UF_CRM_1486191523"]."-к":"количество комнат неизвестно";
 			break;
 		case 3:
 			$type = "дом";
-			$rooms = ($arFields["UF_CRM_1486191523"]>0)?$arFields["UF_CRM_1486191523"]."-к":"количество комнат неизвестно";
+			if (isset($arFields['UF_CRM_1486191523'])) $rooms = ($arFields["UF_CRM_1486191523"]>0)?$arFields["UF_CRM_1486191523"]."-к":"количество комнат неизвестно";
+			else $rooms = ($existFields["UF_CRM_1486191523"]>0)?$existFields["UF_CRM_1486191523"]."-к":"количество комнат неизвестно";
 			break;
 		case 4:
 			$type = "таунхаус";
-			$rooms = ($arFields["UF_CRM_1486191523"]>0)?$arFields["UF_CRM_1486191523"]."-к":"количество комнат неизвестно";
+			if (isset($arFields['UF_CRM_1486191523'])) $rooms = ($arFields["UF_CRM_1486191523"]>0)?$arFields["UF_CRM_1486191523"]."-к":"количество комнат неизвестно";
+			else $rooms = ($existFields["UF_CRM_1486191523"]>0)?$existFields["UF_CRM_1486191523"]."-к":"количество комнат неизвестно";
 			break;
 		case 5:
 			$type = "дача";
