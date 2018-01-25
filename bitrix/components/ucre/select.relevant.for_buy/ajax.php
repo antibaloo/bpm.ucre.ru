@@ -95,6 +95,14 @@ if (strripos ($_SERVER['HTTP_REFERER'], 'bpm.ucre.ru')!==false){
     '424' => '<span title="сэндвич">С</span>',
     '425' => '<span title="шлакоблок">Ш</span>'
   );
+  $stageId = array(
+    '10' => array('short' => "ОС", 'long' => "Объект создан", 'color' => "#5CD1DF"),
+    'PROPOSAL' => array('short' => "КП", 'long' => "Контроль пройден", 'color' => "#FFED9A"),
+    '13' => array('short' => "ЗП", 'long' => "Заявка подписана", 'color' => "#FFDD99"),
+    '1' => array('short' => "ДП", 'long' => "Договор подписан", 'color' => "#FDC68C"),
+    'C4:1' => array('short' => "А", 'long' => "Активная", 'color' => "#4C99DA"),
+    'C4:PROPOSAL' => array('short' => "П", 'long' => "Предложение", 'color' => "#00BFF3"),
+  );
   $sql_string = hex2bin($_POST['sql']);
   
   //Фильтр по уже имеющимся в потенциальных
@@ -160,6 +168,7 @@ if (strripos ($_SERVER['HTTP_REFERER'], 'bpm.ucre.ru')!==false){
       <th></th>
       <th width="5%">id</th>
       <th width="30%">Название заявки</th>
+      <th></th>
       <th width="8%">Цена, руб.</th>
       <th width="20%">Адрес объекта</th>
       <th>N<sub>комнат</sub></th>
@@ -184,16 +193,17 @@ if (strripos ($_SERVER['HTTP_REFERER'], 'bpm.ucre.ru')!==false){
         if ($aRes['PROPERTY_216']) $shortAddress.=", ".$aRes['PROPERTY_216'];
         $shortAddress.=")";
 ?>
-    <tr id="R<?=$aRes['ID']?>" class="row">
+    <tr id="R<?=$aRes['ID']?>" class="row" style="background-color:<?=$stageId[$aRes['STAGE_ID']]['color']?>">
       <td><?=($_POST['assigned_by_id'] == $USER->GetID() || $USER->IsAdmin())?"<a href='javascript:addpotential(".$aRes['ID'].")'><span style='color:green;font-weight: bold'>+</span></a>":""?></td>
       <td><?=$aRes['ID']?></td>
       <td style="text-align: left; padding-left: 5px;" title="<?=$aRes['TITLE']?>"><a href="/crm/deal/show/<?=$aRes['ID']?>/" target="_blank"><?=$aRes['TITLE']?></a></td>
+      <td title="<?=$stageId[$aRes['STAGE_ID']]['long']?>"><?=$stageId[$aRes['STAGE_ID']]['short']?></td>
       <td style="text-align: right; padding-right: 5px;" title="<?=($aRes['UF_CRM_58958B5734602'])?number_format($aRes['UF_CRM_58958B5734602'],0,"."," "):"цена не указана"?>"><?=($aRes['UF_CRM_58958B5734602'])?number_format($aRes['UF_CRM_58958B5734602'],0,"."," "):"<span style='color:red;'>цена не указана</span>"?></td>
       <td style="text-align: left; padding-left: 5px;" title="<?=$aRes['PROPERTY_209']?>"><?=$shortAddress?></td>
       <td><?=($aRes['PROPERTY_229'])?intval($aRes['PROPERTY_229']):"-"?></td>
       <td style="text-align: right; padding-right: 5px;"><?=($square)?number_format($square,2):"-"?></td>
       <td style="text-align: right; padding-right: 5px;"><?=($aRes['PROPERTY_226'])?number_format($aRes['PROPERTY_226'],2):"-"?></td>
-      <?if ($aRes['PROPERTY_210'] == 381 || $aRes['PROPERTY_210'] == 382){?>
+      <?if ($aRes['PROPERTY_210'] == 381 || $aRes['PROPERTY_210'] == 382 || $aRes['PROPERTY_210'] == 384){?>
       <td><?=$balkon[$aRes['PROPERTY_241']]?></td>
       <?}?>
       <?if ($aRes['PROPERTY_210'] != 386 && $aRes['PROPERTY_210'] != 387){?>
