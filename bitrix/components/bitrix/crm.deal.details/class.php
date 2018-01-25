@@ -1002,7 +1002,7 @@ class CCrmDealDetailsComponent extends CBitrixComponent
 					$this->arResult['TABS'][] = array(
 						'id' => 'tab_geo',
 						'name' => 'Область поиска',
-						'html' =>$html
+						'html' => $html
 					);
 					ob_start();
 					/*Компонент для отображения информации по встречным заявкам*/
@@ -1020,11 +1020,21 @@ class CCrmDealDetailsComponent extends CBitrixComponent
 						'name' => 'Встречные заявки',
 						'html' => $html
 					);
-					
+					ob_start();
+					/*Компонент для отображения информации по потенциальным сделкам*/
+					$APPLICATION->IncludeComponent(
+						"ucre:deals.potential.for_buy",
+						"",
+						array('ID' => $this->arResult['ENTITY_ID']),
+						false
+					);
+					/*----------------------------------------------------------*/
+					$html = ob_get_contents();
+					ob_end_clean();
 					$this->arResult['TABS'][] = array(
 						'id' => 'tab_potentials',
 						'name' => 'Потенциальные сделки',
-						'html' =>"<h2>Здесь будут потенциальные сделки</h2>"
+						'html' => $html
 					);
 				}
 				$quoteID = isset($this->entityData['QUOTE_ID']) ? (int)$this->entityData['QUOTE_ID'] : 0;
