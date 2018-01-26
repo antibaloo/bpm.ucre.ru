@@ -1,13 +1,18 @@
 <?php
 if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)die();
-
+?>
+<script type='text/javascript' src='/include/unitegallery/js/unitegallery.min.js'></script> 
+<link rel='stylesheet' href='/include/unitegallery/css/unite-gallery.css' type='text/css' /> 
+<script type='text/javascript' src='/include/unitegallery/themes/default/ug-theme-default.js'></script> 
+<link rel='stylesheet' href='/include/unitegallery/themes/default/ug-theme-default.css' type='text/css' /> 
+<?
 /** @var array $arParams */
 /** @var array $arResult */
 /** @global CMain $APPLICATION */
 /** @global CDatabase $DB */
 /** @var CBitrixComponentTemplate $this */
 /** @var CCrmEntityProgressBarComponent $component */
-
+//if (CUSER::GetID() == 24){	echo "<pre>";print_r($arResult);echo "</pre>";}
 $guid = $arResult['GUID'];
 $prefix = strtolower($guid);
 $activityEditorID = "{$prefix}_editor";
