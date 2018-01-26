@@ -969,6 +969,19 @@ class CCrmDealDetailsComponent extends CBitrixComponent
 						'name' => 'Объект недвижимости',
 						'html' =>$html
 					);
+					
+					$this->arResult['TABS'][] = array(
+						'id' => 'tab_photo',
+						'name' => 'Фотографии',
+						'html' =>"<h2>Здесь будет галерея фотографий</h2>"
+					);
+					
+					$this->arResult['TABS'][] = array(
+						'id' => 'tab_docs',
+						'name' => 'Документы',
+						'html' =>"<h2>Здесь будет галерея документов</h2>"
+					);
+					
 					ob_start();
 					/*Общий компонент для отображения лога выгрузки на Авито*/
 					$APPLICATION->IncludeComponent(
