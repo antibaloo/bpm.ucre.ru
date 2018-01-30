@@ -11,7 +11,6 @@ if(!Main\Loader::includeModule('crm'))
 	ShowError(GetMessage('CRM_MODULE_NOT_INSTALLED'));
 	return;
 }
-
 Loc::loadMessages(__FILE__);
 
 class CCrmDealDetailsComponent extends CBitrixComponent
@@ -970,16 +969,50 @@ class CCrmDealDetailsComponent extends CBitrixComponent
 						'html' =>$html
 					);
 					
+					ob_start();
+					/*Общий компонент для отображения галереи изображений из обозначенных полей*/
+					$APPLICATION->IncludeComponent(
+						'ucre:gallery',
+						'',
+						array('ENTITY' => $this->arResult['ENTITY_DATA'],
+									'FIELDS' => array(
+										'Фотографии' => 'UF_CRM_1472038962',
+										'Планировки' => 'UF_CRM_1476517423',
+										'Фото для внутреннего пользования' => 'UF_CRM_1513322128',
+									)
+								 )
+					);
+					/*----------------------------------------------------------*/
+					$html = ob_get_contents();
+					ob_end_clean();
+					
 					$this->arResult['TABS'][] = array(
 						'id' => 'tab_photo',
 						'name' => 'Фотографии',
-						'html' =>"<h2>Здесь будет галерея фотографий</h2>"
+						'html' =>$html
 					);
+					
+					ob_start();
+					/*Общий компонент для отображения галереи изображений из обозначенных полей*/
+					$APPLICATION->IncludeComponent(
+						'ucre:gallery',
+						'',
+						array('ENTITY' => $this->arResult['ENTITY_DATA'],
+									'FIELDS' => array(
+										'Документы по заявке' => 'UF_CRM_1472704376',
+										'Подписанная заявка' => 'UF_CRM_1512462544',
+										'Скан агентского договора' => 'UF_CRM_1512462594',
+									)
+								 )
+					);
+					/*----------------------------------------------------------*/
+					$html = ob_get_contents();
+					ob_end_clean();
 					
 					$this->arResult['TABS'][] = array(
 						'id' => 'tab_docs',
 						'name' => 'Документы',
-						'html' =>"<h2>Здесь будет галерея документов</h2>"
+						'html' => $html
 					);
 					
 					ob_start();
