@@ -5,6 +5,8 @@ if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)die();
 <link rel='stylesheet' href='/include/unitegallery/css/unite-gallery.css' type='text/css' /> 
 <script type='text/javascript' src='/include/unitegallery/themes/default/ug-theme-default.js'></script> 
 <link rel='stylesheet' href='/include/unitegallery/themes/default/ug-theme-default.css' type='text/css' /> 
+<script src='/include/unitegallery/themes/carousel/ug-theme-carousel.js' type='text/javascript'></script>
+<script src='/include/unitegallery/themes/tilesgrid/ug-theme-tilesgrid.js' type='text/javascript'></script>
 <?
 /** @var array $arParams */
 /** @var array $arResult */
