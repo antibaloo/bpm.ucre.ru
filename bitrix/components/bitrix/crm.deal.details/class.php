@@ -975,6 +975,7 @@ class CCrmDealDetailsComponent extends CBitrixComponent
 						'ucre:gallery',
 						'',
 						array('ENTITY' => $this->arResult['ENTITY_DATA'],
+									'TAB_ID' => "ucrePhoto",
 									'FIELDS' => array(
 										'Фотографии' => 'UF_CRM_1472038962',
 										'Планировки' => 'UF_CRM_1476517423',
@@ -998,6 +999,7 @@ class CCrmDealDetailsComponent extends CBitrixComponent
 						'ucre:gallery',
 						'',
 						array('ENTITY' => $this->arResult['ENTITY_DATA'],
+									'TAB_ID' => "ucreDocs",
 									'FIELDS' => array(
 										'Документы по заявке' => 'UF_CRM_1472704376',
 										'Подписанная заявка' => 'UF_CRM_1512462544',
