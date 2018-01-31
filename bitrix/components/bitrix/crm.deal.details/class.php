@@ -1391,6 +1391,7 @@ class CCrmDealDetailsComponent extends CBitrixComponent
 		$enumerationFields = array();
 		foreach($userFields as $userField)
 		{
+			//if ($userField['USER_TYPE_ID'] === 'file') continue;
 			$fieldName = $userField['FIELD_NAME'];
 			$fieldInfo = array(
 				'USER_TYPE_ID' => $userField['USER_TYPE_ID'],
