@@ -2,10 +2,6 @@
 if(!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED!==true) die();
 //echo "<pre>";print_r($arResult);echo "</pre>";
 ?>
-<div id="<?=$arResult['TAB_ID']?>">
-<?if (CUSER::GetID() == 24){?>
-<center><input id="edit_<?=$arResult['TAB_ID']?>" type="button" value="Редактировать"></center>
-<?}?>
 <!-- Собственно структура галереи -->
 <?foreach ($arResult['FIELDS'] as $header=>$field){
   if (count($arResult[$field])){?>
@@ -19,7 +15,6 @@ if(!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED!==true) die();
 </div>
 <?}
 }?>
-</div>  
 
 <!-- Инициирующий js -->
 <script type="text/javascript">
@@ -30,19 +25,4 @@ $(document).ready(function(){
 <?}
 }?>
 });
-  $("#edit_<?=$arResult['TAB_ID']?>").click(function () {
-    var data = "!!!!!";
-    $.ajax({
-      url: "<?=$arResult['COMPONENT_PATH']?>/ajax.php",
-      type: "POST",
-      data: data,
-      dataType: "text",
-      success: function (html) {
-        $("#<?=$arResult['TAB_ID']?>").html(html);
-      },
-      error: function (html) {
-        $('#<?=$arResult['TAB_ID']?>').html("Технические неполадки! В ближайшее время все будет исправлено!");
-      },
-    });
-  });  
 </script>
