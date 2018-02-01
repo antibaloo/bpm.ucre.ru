@@ -965,7 +965,7 @@ class CCrmDealDetailsComponent extends CBitrixComponent
 					ob_end_clean();
 					$this->arResult['TABS'][] = array(
 						'id' => 'tab_roObject',
-						'name' => 'Объект недвижимости',
+						'name' => 'Объект',
 						'html' =>$html
 					);
 					
@@ -983,36 +983,35 @@ class CCrmDealDetailsComponent extends CBitrixComponent
 								 )
 					);
 					/*----------------------------------------------------------*/
-					$html = ob_get_contents();
-					ob_end_clean();
-					
-					$this->arResult['TABS'][] = array(
-						'id' => 'tab_photo',
-						'name' => 'Фотографии',
-						'html' =>$html
-					);
-					
-					ob_start();
 					/*Общий компонент для отображения галереи изображений из обозначенных полей*/
-					$APPLICATION->IncludeComponent(
-						'ucre:gallery',
-						'',
-						array('ENTITY' => $this->arResult['ENTITY_DATA'],
-									'FIELDS' => array(
-										'Документы по заявке' => 'UF_CRM_1472704376',
-										'Подписанная заявка' => 'UF_CRM_1512462544',
-										'Скан агентского договора' => 'UF_CRM_1512462594',
-									)
-								 )
-					);
+					$rsUser = CUser::GetByID(CUser::GetID()); $arUser = $rsUser->Fetch();
+					if (CUser::IsAdmin() || $arUser['WORK_DEPARTMENT'] == 'АУП' || CUser::GetID() == $this->arResult['ENTITY_DATA']['ASSIGNED_BY_ID']){
+						$APPLICATION->IncludeComponent(
+							'ucre:gallery',
+							'',
+							array('ENTITY' => $this->arResult['ENTITY_DATA'],
+										'FIELDS' => array(
+											'Документы по заявке' => 'UF_CRM_1472704376',
+											'Подписанная заявка' => 'UF_CRM_1512462544',
+											'Скан агентского договора' => 'UF_CRM_1512462594',
+										)
+									 )
+						);
+					}
 					/*----------------------------------------------------------*/
 					$html = ob_get_contents();
 					ob_end_clean();
 					
 					$this->arResult['TABS'][] = array(
-						'id' => 'tab_docs',
-						'name' => 'Документы',
-						'html' => $html
+						'id' => 'tabImg',
+						'name' => 'Изображения',
+						'html' =>$html
+					);
+					
+					$this->arResult['TABS'][] = array(
+						'id' => 'tabImagEdit',
+						'name' => 'Загрузка',
+						'html' => "<h2>Будет загрузка изображений</h2>"
 					);
 					
 					ob_start();
