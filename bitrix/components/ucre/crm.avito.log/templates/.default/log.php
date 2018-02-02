@@ -1,6 +1,6 @@
 <?php
 if(!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED!==true) die();
-echo $arResult['CONTENT'];
+echo $arResult['DATE']."<br>".$arResult['VIEWS'];
 ?>
 <div style="background-color: white; padding: 5px;">
   <div class="gridWrapper">

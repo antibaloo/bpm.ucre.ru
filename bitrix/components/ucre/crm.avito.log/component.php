@@ -1,5 +1,7 @@
 <?
 if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED!==true)die();
+require($_SERVER['DOCUMENT_ROOT'].'/include/htmlSQL/htmlsql.class.php');
+require($_SERVER['DOCUMENT_ROOT'].'/include/htmlSQL/snoopy.class.php');
 // подключаем модули
 CModule::IncludeModule('iblock');
 CModule::IncludeModule('highloadblock');
@@ -30,7 +32,6 @@ if ($arParams['OBJECT_ID']>0) {//Если передан ID объекта в к
   $arResult['DATA'] = array_slice ($rsData->FetchAll(),0,$arParams['COUNT']);//Вырезаем часть результата в соответствии с активной страницей и кол-вом записей на странице
   $link = $arResult['DATA'][0]['UF_AVITO_LINK'];
   $item = substr(strrchr($link,"_"),1);
-  echo $link."                 ".$item;
   if( $curl = curl_init() ) {
     curl_setopt($curl, CURLOPT_URL, "https://www.avito.ru/items/stat/".$item);
     curl_setopt($curl, CURLOPT_RETURNTRANSFER,true);
@@ -42,7 +43,13 @@ if ($arParams['OBJECT_ID']>0) {//Если передан ID объекта в к
     $content = curl_exec($curl);
     curl_close($curl);
   }
-  $arResult['CONTENT'] = $content;
+  $wsql = new htmlsql();
+  $wsql->connect('string', $content);
+  $wsql->query('SELECT * FROM div');
+  $divs = $wsql->fetch_array();
+  $arResult['DATE'] = substr($divs[0]['text'], strpos($divs[0]['text'],"Дата"));
+  $arResult['VIEWS'] = "Всего: ".$divs[1]['text'];
+   
   foreach ($arResult['DATA'] as $key => $logItem){//Получаем время загрузки объекта на Авито
     $rsData = $AvitoLogDataClass::getList(
       array(
