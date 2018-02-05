@@ -53,7 +53,7 @@ if (strripos ($_SERVER['HTTP_REFERER'], 'bpm.ucre.ru')!==false){
 <div class="page<?=($i == 1)?" active":""?>" id="page<?=$i?>">
   <table>
     <tr>
-      <th rowspan="2"></th>
+      <th width="4%" rowspan="2"></th>
       <th rowspan="2" width="4%">id</th>
       <th width="45%" rowspan="2">Резюме заявки</th>
       <th rowspan="2" width="8%">Цена, руб.</th>
