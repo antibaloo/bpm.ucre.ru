@@ -207,7 +207,7 @@ if (strripos ($_SERVER['HTTP_REFERER'], 'bpm.ucre.ru')!==false){
     <tr id="R<?=$aRes['ID']?>" class="row" style="background-color:<?=$stageId[$aRes['STAGE_ID']]['color']?>">
       <td><?=($_POST['assigned_by_id'] == $USER->GetID() || $USER->IsAdmin())?"<a href='javascript:addpotential(".$aRes['ID'].")'><span style='color:green;font-weight: bold'>+</span></a>":""?></td>
       <td title="<?=$stageId[$aRes['STAGE_ID']]['long']?>"><?=$aRes['ID']?></td>
-      <td style="text-align: left; padding-left: 5px;" title="<?=$aRes['TITLE']?>"><a href="/crm/deal/show/<?=$aRes['ID']?>/" target="_blank"><?=$aRes['TITLE']?></a></td>
+      <td style="text-align: left; padding-left: 5px;" title="<?=$aRes['TITLE']?>"><?=($aRes['UF_CRM_1512621495'])?'&#8987;':''?> <a href="/crm/deal/show/<?=$aRes['ID']?>/" target="_blank"><?=$aRes['TITLE']?></a></td>
       <td style="text-align: right; padding-right: 5px;" title="<?=($aRes['UF_CRM_58958B5734602'])?number_format($aRes['UF_CRM_58958B5734602'],0,"."," "):"цена не указана"?>"><?=($aRes['UF_CRM_58958B5734602'])?number_format($aRes['UF_CRM_58958B5734602'],0,"."," "):"<span style='color:red;'>цена не указана</span>"?></td>
       <td style="text-align: left; padding-left: 5px;" title="<?=$aRes['PROPERTY_209']?>"><?=$shortAddress?></td>
       <td><?=($aRes['PROPERTY_229'])?intval($aRes['PROPERTY_229']):"-"?></td>
