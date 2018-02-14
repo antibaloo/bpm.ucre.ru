@@ -176,9 +176,9 @@ $MESS["CRM_RECURRING_DEAL_B24_BLOCK_TEXT"] = "Создавать заявки в
 	Если вы, например, целый год планируете еженедельно заключать договор с каким-то клиентом, то регулярные заявки сэкономят ваше время. 
 	Заведите заявку, укажите ее регулярность и направление. А в указанное время она будет создана автоматически без участия менеджера.
 		<ul class=\"hide-features-list\">
-			<li class=\"hide-features-list-item\">Автоматическое создание сделок</li>
+			<li class=\"hide-features-list-item\">Автоматическое созданиезаяввок</li>
 			<li class=\"hide-features-list-item\">Повышение эффективности работы менеджеров</li>
-			<li class=\"hide-features-list-item\">Быстрый доступ к списку регулярных сделок <a href=\"#LINK#\" target=\"_blank\" class=\"hide-features-more\">Узнать подробнее</a></li>
+			<li class=\"hide-features-list-item\">Быстрый доступ к списку регулярных заявок <a href=\"#LINK#\" target=\"_blank\" class=\"hide-features-more\">Узнать подробнее</a></li>
 		</ul>		
 		<strong>Регулярные заявки доступны в тарифах \"Команда\" и \"Компания\"</strong>";
 $MESS["CRM_RECURRING_DEAL_B24_BLOCK_TITLE"] = "Регулярные заявки доступны в тарифах \"Команда\" и \"Компания\"";
