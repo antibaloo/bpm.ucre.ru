@@ -57,4 +57,6 @@ $MESS["CRM_RECURRING_DEAL_B24_BLOCK_TEXT"] = "Створювати угоди в
 			<li class=\"hide-features-list-item\">Швидкий доступ до списку регулярних угод к <a href=\"#LINK#\" target=\"_blank\" class=\"hide-features-more\">Дізнатися детальніше</a></li>
 		</ul>		
 		<strong>Регулярні угоди доступні в тарифах \"Команда\" та \"Компанія\"</strong>";
+$MESS["CRM_DEAL_QUOTE_LINK"] = "Угода створена на підставі пропозиції <a target='_blank' href='#URL#'>#TITLE#</a>";
+$MESS["CRM_DEAL_TAB_TREE"] = "Зв'язки";
 ?>
