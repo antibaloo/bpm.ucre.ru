@@ -1005,7 +1005,7 @@ class CCrmDealDetailsComponent extends CBitrixComponent
 					$this->arResult['TABS'][] = array(
 						'id' => 'tabImg',
 						'name' => 'Изображения',
-						'html' =>$html
+						'html' =>'<div id="ucreImageDiv">'.$html.'</div>'
 					);
 					
 					//Вкладка загрузки отображается только для админов, АУП и ответственных
