@@ -20,11 +20,6 @@ $groupPopupExists = false;
 	</div>
 	<ul class="menu-items" id="left-menu-list">
 		<li class="menu-items-empty-li" id="left-menu-empty-item" style="height: 3px;"></li>
-		<li id="bx_left_menu_quick_link">
-			<input style="margin-left: 34px;" id="ucre_entity_id" type="text" size="5">
-			<span class="menu-item-link-text ucre" data-role="item-text" onclick="location.href=ucre_entity_id.value != ''?'https://bpm.ucre.ru/crm/lead/show/'+ucre_entity_id.value+'/':'#'">Лид</span>&nbsp;
-			<span class="menu-item-link-text ucre" data-role="item-text" onclick="location.href=ucre_entity_id.value != ''?'https://bpm.ucre.ru/crm/deal/show/'+ucre_entity_id.value+'/':'#'">Заявка</span>
-		</li>
 	<?
 	foreach(array("show", "hide") as $status)
 	{
@@ -298,15 +293,15 @@ if (\Bitrix\Main\ModuleManager::isModuleInstalled("bitrix24") && \Bitrix\Main\Mo
 		MENU_DELETE_FROM_LEFT_MENU: '<?=GetMessageJS("MENU_DELETE_FROM_LEFT_MENU")?>',
 		MENU_ITEM_MAIN_SECTION_PAGE: '<?=GetMessageJS("MENU_ITEM_MAIN_SECTION_PAGE")?>',
 		MENU_TOP_ITEM_LAST_HIDDEN: '<?=GetMessageJS("MENU_TOP_ITEM_LAST_HIDDEN")?>',
-		MENU_SAVE_CUSTOM_PRESET: '<?=GetMessageJS("MENU_SAVE_CUSTOM_PRESET")?>',
+		MENU_SAVE_CUSTOM_PRESET: '<?=GetMessageJS("MENU_SAVE_CUSTOM_PRESET2")?>',
 		MENU_DELETE_CUSTOM_PRESET: '<?=GetMessageJS("MENU_DELETE_CUSTOM_PRESET")?>',
-		MENU_CUSTOM_PRESET_POPUP_TITLE: '<?=GetMessageJS("MENU_CUSTOM_PRESET_POPUP_TITLE")?>',
+		MENU_CUSTOM_PRESET_POPUP_TITLE: '<?=GetMessageJS("MENU_CUSTOM_PRESET_POPUP_TITLE2")?>',
 		MENU_CUSTOM_PRESET_CURRENT_USER: '<?=GetMessageJS("MENU_CUSTOM_PRESET_CURRENT_USER")?>',
 		MENU_CUSTOM_PRESET_NEW_USER: '<?=GetMessageJS("MENU_CUSTOM_PRESET_NEW_USER")?>',
 		MENU_SET_CUSTOM_PRESET: '<?=GetMessageJS("MENU_SET_CUSTOM_PRESET")?>',
 		MENU_CUSTOM_PRESET_SEPARATOR: '<?=GetMessageJS("MENU_CUSTOM_PRESET_SEPARATOR")?>',
 		MENU_DELETE_CUSTOM_PRESET_CONFIRM: '<?=GetMessageJS("MENU_DELETE_CUSTOM_PRESET_CONFIRM")?>',
-		MENU_CUSTOM_PRESET_SUCCESS: '<?=GetMessageJS("MENU_CUSTOM_PRESET_SUCCESS")?>',
+		MENU_CUSTOM_PRESET_SUCCESS: '<?=GetMessageJS("MENU_CUSTOM_PRESET_SUCCESS2")?>',
 		MENU_DELETE_CUSTOM_ITEM_FROM_ALL: '<?=GetMessageJS("MENU_DELETE_CUSTOM_ITEM_FROM_ALL")?>'
 	});
 
