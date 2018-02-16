@@ -9,7 +9,6 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true)
 {
 	die();
 }
-CJSCore::Init(array("jquery"));
 
 //Ajax Performance Optimization
 if (isset($_GET["RELOAD"]) && $_GET["RELOAD"] == "Y")
@@ -135,7 +134,6 @@ $APPLICATION->ShowViewContent("im-fullscreen");
 				<?$APPLICATION->ShowPanel();?>
 				</div>
 			<? endif ?>
-			<?//$APPLICATION->ShowBanner("INFO", '<div align="center">', '<br></div><br>');?>
 <?
 if ($isBitrix24Cloud)
 {
@@ -295,11 +293,13 @@ if ($isBitrix24Cloud)
 								<?
 								if (Loader::includeModule("bitrix24") && \CBitrix24::IsPortalAdmin($USER->GetID()))
 								{
-									if (!\CBitrix24::isDomainChanged()): ?>
+									if (!\CBitrix24::isDomainChanged()):
+										CJSCore::Init("spotlight");
+									?>
 										<div class="header-logo-block-settings header-logo-block-settings-show">
 											<span
 												id="b24_rename_button" class="header-logo-block-settings-item"
-												onclick="BX.Bitrix24.renamePortal(); return false;"
+												onclick="BX.Bitrix24.renamePortal(BX('b24_rename_button')); return false;"
 												title="<?=GetMessage('BITRIX24_SETTINGS_TITLE')?>"></span>
 										</div>
 									<?else:?>
@@ -311,7 +311,14 @@ if ($isBitrix24Cloud)
 										</div>
 									<?endif;
 
-									if (isset($_SESSION['B24_SHOW_RENAME_POPUP_HINT'])):
+									$showDomainSpotLite = CUserOptions::GetOption("bitrix24", "show_domain_spotlight");
+									if (
+										!\CBitrix24::isDomainChanged()
+										&& (
+											isset($_SESSION['B24_SHOW_RENAME_POPUP_HINT'])
+											|| isset($showDomainSpotLiteOption["time"]) && time() > $showDomainSpotLiteOption["time"]
+										)
+									):
 										unset($_SESSION['B24_SHOW_RENAME_POPUP_HINT']);
 									?>
 										<script>
@@ -319,7 +326,7 @@ if ($isBitrix24Cloud)
 											{
 												if (!!BX.Bitrix24 && !!BX.Bitrix24.renamePortal)
 												{
-													BX.Bitrix24.renamePortal.showNotify()
+													BX.Bitrix24.renamePortal.showNotify(BX("b24_rename_button"))
 												}
 											})
 										</script>
