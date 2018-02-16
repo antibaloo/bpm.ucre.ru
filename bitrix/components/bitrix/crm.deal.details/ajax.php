@@ -141,6 +141,8 @@ elseif($action === 'SAVE')
 	//TODO: Implement external mode
 	$isExternal = false;
 
+	$previousFields = !$isNew ? \CCrmDeal::GetByID($ID, false) : null;
+
 	$fields = array();
 	$fieldsInfo = \CCrmDeal::GetFieldsInfo();
 	$userType = new \CCrmUserType($GLOBALS['USER_FIELD_MANAGER'], \CCrmDeal::GetUserFieldEntityID());
@@ -268,8 +270,18 @@ elseif($action === 'SAVE')
 			$calculationParams = $fields;
 			if(!isset($calculationParams['CURRENCY_ID']))
 			{
-				$calculationParams['CURRENCY_ID'] = isset($sourceFields['CURRENCY_ID'])
-					? $sourceFields['CURRENCY_ID'] : CCrmCurrency::GetBaseCurrencyID();
+				if(is_array($previousFields) && isset($previousFields['CURRENCY_ID']))
+				{
+					$calculationParams['CURRENCY_ID'] = $previousFields['CURRENCY_ID'];
+				}
+				elseif(isset($sourceFields['CURRENCY_ID']))
+				{
+					$calculationParams['CURRENCY_ID'] = $sourceFields['CURRENCY_ID'];
+				}
+				else
+				{
+					$calculationParams['CURRENCY_ID'] = CCrmCurrency::GetBaseCurrencyID();
+				}
 			}
 
 			$totals = \CCrmProductRow::CalculateTotalInfo('D', 0, false, $calculationParams, $productRows);
@@ -371,7 +383,15 @@ elseif($action === 'SAVE')
 			$startDate = new \Bitrix\Main\Type\Date();
 		}
 
-		$categoryId = isset($fields['RECURRING']['CATEGORY_ID']) ? (int)$fields['RECURRING']['CATEGORY_ID'] : 0;
+		$categoryId = 0;
+		if (isset($fields['RECURRING']['CATEGORY_ID']))
+		{
+			$categoryId = (int)$fields['RECURRING']['CATEGORY_ID'];
+		}
+		elseif ($categoryID > 0)
+		{
+			$categoryId = (int)$categoryID;
+		}
 		$categoryId = max($categoryId, 0);
 
 		// RECURRING_SWITCHER is used for old deal edit template
@@ -461,9 +481,13 @@ elseif($action === 'SAVE')
 
 	if(!empty($fields) || $enableProductRows)
 	{
-		$previousFields = !$isNew ? \CCrmDeal::GetByID($ID, false) : null;
 		if (!empty($fields) && !isset($isRecurringSaving))
 		{
+			if(isset($fields['ASSIGNED_BY_ID']) && $fields['ASSIGNED_BY_ID'] > 0)
+			{
+				\Bitrix\Crm\Entity\EntityEditor::registerSelectedUser($fields['ASSIGNED_BY_ID']);
+			}
+
 			if($isCopyMode)
 			{
 				if(!isset($fields['ASSIGNED_BY_ID']))
@@ -523,14 +547,30 @@ elseif($action === 'SAVE')
 				{
 					if(!isset($fields['OPPORTUNITY']))
 					{
-						$fields['OPPORTUNITY'] = isset($sourceFields['OPPORTUNITY'])
-							? $sourceFields['OPPORTUNITY'] : 0.0;
+						if(is_array($previousFields) && isset($previousFields['OPPORTUNITY']))
+						{
+							$fields['OPPORTUNITY'] = $previousFields['OPPORTUNITY'];
+						}
+						elseif(isset($sourceFields['OPPORTUNITY']))
+						{
+							$fields['OPPORTUNITY'] = $sourceFields['OPPORTUNITY'];
+						}
 					}
 
 					if(!isset($fields['CURRENCY_ID']))
 					{
-						$fields['CURRENCY_ID'] = isset($sourceFields['CURRENCY_ID'])
-							? $sourceFields['CURRENCY_ID'] : CCrmCurrency::GetBaseCurrencyID();
+						if(is_array($previousFields) && isset($previousFields['CURRENCY_ID']))
+						{
+							$fields['CURRENCY_ID'] = $previousFields['CURRENCY_ID'];
+						}
+						elseif(isset($sourceFields['CURRENCY_ID']))
+						{
+							$fields['CURRENCY_ID'] = $sourceFields['CURRENCY_ID'];
+						}
+						else
+						{
+							$fields['CURRENCY_ID'] = CCrmCurrency::GetBaseCurrencyID();
+						}
 					}
 
 					$fields['EXCH_RATE'] = CCrmCurrency::GetExchangeRate($fields['CURRENCY_ID']);
@@ -619,7 +659,7 @@ elseif($action === 'SAVE')
 
 		if($conversionWizard !== null)
 		{
-			$conversionWizard->execute(array(CCrmOwnerType::DealName => $ID));
+			$conversionWizard->attachNewlyCreatedEntity(\CCrmOwnerType::DealName, $ID);
 			$url = $conversionWizard->getRedirectUrl();
 			if($url !== '')
 			{
