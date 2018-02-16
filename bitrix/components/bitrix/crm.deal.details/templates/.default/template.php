@@ -7,7 +7,7 @@ if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)die();
 /** @global CDatabase $DB */
 /** @var CBitrixComponentTemplate $this */
 /** @var CCrmEntityProgressBarComponent $component */
-//if (CUSER::GetID() == 24){	echo "<pre>";print_r($arResult);echo "</pre>";}
+
 $guid = $arResult['GUID'];
 $prefix = strtolower($guid);
 $activityEditorID = "{$prefix}_editor";
@@ -147,6 +147,7 @@ if($arResult['CONVERSION_PERMITTED'] && $arResult['CAN_CONVERT'] && isset($arRes
 					config: <?=CUtil::PhpToJSObject($arResult['CONVERSION_CONFIG']->toJavaScript())?>
 				};
 				BX.CrmEntityType.setCaptions(<?=CUtil::PhpToJSObject(CCrmOwnerType::GetJavascriptDescriptions())?>);
+				BX.onCustomEvent(window, "BX.CrmEntityConverter:applyPermissions", [BX.CrmEntityType.names.deal]);
 			}
 		);
 	</script><?
