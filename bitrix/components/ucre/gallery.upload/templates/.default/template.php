@@ -2,9 +2,12 @@
 if(!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED!==true) die();
 //echo "<pre>";print_r($arResult);echo "</pre>";
 ?>
-<?foreach($arResult['FIELDS'] as $header=>$field){?>
-<center><h2><?=$header?></h2></center>
+<form>
+  
+
 <?
+foreach($arResult['FIELDS'] as $header=>$field){
+  echo "<center><h2><?=$header?></h2></center>";
   if (class_exists('\Bitrix\Main\UI\FileInput', true)){
     echo \Bitrix\Main\UI\FileInput::createInstance(array(
       "name" => $field."[#IND#]",
@@ -39,5 +42,19 @@ if(!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED!==true) die();
                           )
                          );
   }
+}
 ?>
-<?}?>
+  <div id="saveResults"></div>
+  <div class="buttonWrapper">
+    <div class="empty"></div>
+    <div class="empty"></div>
+    <div class="empty"></div>
+    <div class="empty"></div>
+    <div class="saveButton formButton" action="save">Сохранить</div>
+    <div class="cancelButton formButton" action="cancel">Отмена</div>
+    <div class="empty"></div>
+    <div class="empty"></div>
+    <div class="empty"></div>
+    <div class="empty"></div>
+  </div>
+</form>

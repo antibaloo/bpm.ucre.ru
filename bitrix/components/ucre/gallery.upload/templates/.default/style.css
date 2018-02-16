@@ -1,0 +1,39 @@
+.buttonWrapper{
+  margin-top: 10px;
+  display: grid;
+  grid-template-rows: 40px;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-gap: 20px;
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 900;
+  background: white;
+  padding-bottom: 10px;
+  padding-top: 10px;
+}
+.formButton{
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  font-weight: bold;
+}
+.saveButton{
+  color:black;
+  background:#b2e232;
+}
+.saveButton:hover{
+  color:black;
+  background:#d2f95f;
+  cursor: pointer;
+}
+.cancelButton{
+  color:black;
+  background:#d6f1fb;
+}
+.cancelButton:hover{
+  color:black;
+  background:#f6f8f9;
+  cursor: pointer;
+}
