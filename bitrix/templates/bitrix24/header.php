@@ -9,7 +9,7 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true)
 {
 	die();
 }
-
+CJSCore::Init(array("jquery"));
 //Ajax Performance Optimization
 if (isset($_GET["RELOAD"]) && $_GET["RELOAD"] == "Y")
 {
