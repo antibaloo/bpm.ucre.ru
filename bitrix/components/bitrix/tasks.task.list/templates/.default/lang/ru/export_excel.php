@@ -44,4 +44,4 @@ $MESS["TASKS_ELAPSED_M"] = "м";
 $MESS["TASKS_LIST_CRM_TYPE_CO"] = "Компания";
 $MESS["TASKS_LIST_CRM_TYPE_C"] = "Контакт";
 $MESS["TASKS_LIST_CRM_TYPE_L"] = "Лид";
-$MESS["TASKS_LIST_CRM_TYPE_D"] = "Сделка";
+$MESS["TASKS_LIST_CRM_TYPE_D"] = "Заявка";
