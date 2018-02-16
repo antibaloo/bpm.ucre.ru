@@ -31,6 +31,7 @@ $MESS["TASKS_EXCEL_MARK"] = "Оценка";
 $MESS["TASKS_EXCEL_ADD_IN_REPORT"] = "В отчете";
 $MESS["TASKS_EXCEL_GROUP_ID"] = "Проект";
 $MESS["TASKS_EXCEL_GROUP_NAME"] = "Проект";
+$MESS["TASKS_EXCEL_TAG"] = "Тэги";
 
 $MESS["TASKS_EXCEL_CHANGED_DATE"] = "Дата изменения";
 $MESS["TASKS_EXCEL_ALLOW_TIME_TRACKING"] = "Учитывать рабочее время";
@@ -43,4 +44,4 @@ $MESS["TASKS_ELAPSED_M"] = "м";
 $MESS["TASKS_LIST_CRM_TYPE_CO"] = "Компания";
 $MESS["TASKS_LIST_CRM_TYPE_C"] = "Контакт";
 $MESS["TASKS_LIST_CRM_TYPE_L"] = "Лид";
-$MESS["TASKS_LIST_CRM_TYPE_D"] = "Заявка";
+$MESS["TASKS_LIST_CRM_TYPE_D"] = "Сделка";
