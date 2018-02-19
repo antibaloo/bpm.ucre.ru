@@ -1011,7 +1011,7 @@ class CCrmDealDetailsComponent extends CBitrixComponent
 					);
 					
 					//Вкладка загрузки отображается только для админов, АУП и ответственных
-					if (CUser::IsAdmin() || $arUser['WORK_DEPARTMENT'] == 'АУП' || CUser::GetID() == $this->arResult['ENTITY_DATA']['ASSIGNED_BY_ID']){
+					if (CUser::IsAdmin() /*|| $arUser['WORK_DEPARTMENT'] == 'АУП' || CUser::GetID() == $this->arResult['ENTITY_DATA']['ASSIGNED_BY_ID']*/){
 						ob_start();
 						/*Общий компонент для загрузки и редактирования галереи изображений из обозначенных полей*/
 						
