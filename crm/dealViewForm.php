@@ -14,14 +14,15 @@ if (strripos ($_SERVER['HTTP_REFERER'], 'bpm.ucre.ru')!==false && $_REQUEST['buy
   $arUser = $USER->GetById($USER->GetID())->Fetch();
   
   $arDeal = CCrmDeal::GetByID($_REQUEST['buy_id']);
-  $arContact = CCrmContact::GetByID($arDeal['CONTACT_ID']);
-  $phoneData = $DB->Query("SELECT * FROM bpm_ucre.b_crm_field_multi WHERE TYPE_ID='PHONE' AND ENTITY_ID='CONTACT' AND ELEMENT_ID=".$arDeal['CONTACT_ID']);
-  while($arPhone = $phoneData->Fetch()){
-    $phones[] = $arPhone['VALUE'];
+  if ($arDeal['CONTACT_ID'] >0){
+    $arContact = CCrmContact::GetByID($arDeal['CONTACT_ID']);
+    //echo "<pre>";  print_r($arContact);  echo "</pre>";
+    $phoneData = $DB->Query("SELECT * FROM bpm_ucre.b_crm_field_multi WHERE TYPE_ID='PHONE' AND ENTITY_ID='CONTACT' AND ELEMENT_ID=".$arDeal['CONTACT_ID']);
+    while($arPhone = $phoneData->Fetch()){$phones[] = $arPhone['VALUE'];}
+  }else {
+    $arContact['FULL_NAME'] = "Заявка не связана с контактом";
   }
-  /*echo "<pre>";
-  print_r($arContact);
-  echo "</pre>";*/
+  
 ?>
 <div class="page active">
   <div>
@@ -48,10 +49,10 @@ if (strripos ($_SERVER['HTTP_REFERER'], 'bpm.ucre.ru')!==false && $_REQUEST['buy
   
   <table>
     <tr>
-      <th width="3%" rowspan="2">id</th>
+      <th width="auto" rowspan="2">id</th>
       <th width="40%" rowspan="2">Резюме объекта недвижимости</th>
       <th rowspan="2" width="10%">Цена, руб.</th>
-      <th colspan="5">Оценки по параметрам (+/-)</th>
+      <th colspan="5">Оценки по параметрам (+/-)</th>3%
       <th width="22%" rowspan="2">Комментарий</th>
     </tr>
     <tr>
@@ -60,7 +61,7 @@ if (strripos ($_SERVER['HTTP_REFERER'], 'bpm.ucre.ru')!==false && $_REQUEST['buy
       <th width="4%">Подъезд</th>
       <th width="4%">Двор</th>
       <th width="4%">Инф-ра</th>
-    </tr>
+    </tr>3%
  <?
     while ($aRes = $rsData->Fetch()){
       $result_array[] = $aRes['sell_deal_id'];
@@ -110,7 +111,7 @@ if (strripos ($_SERVER['HTTP_REFERER'], 'bpm.ucre.ru')!==false && $_REQUEST['buy
 ?>
     <tr style="page-break-inside: avoid;" class="row">
       <td><?=$aRes['sell_deal_id']?></td>
-      <td style="text-align: left; padding-right: 5px;"><?=$resume?></td>
+      <td style="text-align: left; padding-right: 5px;white-space: normal;"><?=$resume?></td>
       <td style="text-align: right; padding-right: 5px;"><?=($aRes['UF_CRM_58958B5734602'])?$aRes['UF_CRM_58958B5734602']:"<span style='color:red'>нет</span>"?></td>
       <td></td>
       <td></td>
