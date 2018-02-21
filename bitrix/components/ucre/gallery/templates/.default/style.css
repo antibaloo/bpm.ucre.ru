@@ -1,0 +1,29 @@
+.galleryUploadWrapper{
+  margin-top: 10px;
+  display: grid;
+  grid-template-rows: 40px;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-gap: 20px;
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 900;
+  background: white;
+  padding-bottom: 10px;
+  padding-top: 10px;
+}
+
+#galleryUpload{
+  color:black;
+  background:#b2e232;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  font-weight: bold;
+}
+#galleryUpload:hover{
+  color:black;
+  background:#d2f95f;
+  cursor: pointer;
+}

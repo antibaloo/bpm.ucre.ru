@@ -24,11 +24,14 @@ if(!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED!==true) die();
 
 <!-- Инициирующий js -->
 <script type="text/javascript">
-$(document).ready(function(){
-<?foreach ($arResult['FIELDS'] as $header=>$field){
-  if (count($arResult[$field])){?>
- $("#<?=$field?>").unitegallery({gallery_theme: "tilesgrid"}); 
-<?}
-}?>
-});
+  $(".formButton").click(function () {
+    
+  });
+  $(document).ready(function(){
+    <?foreach ($arResult['FIELDS'] as $header=>$field){
+        if (count($arResult[$field])){?>
+          $("#<?=$field?>").unitegallery({gallery_theme: "tilesgrid"}); 
+        <?}
+    }?>
+  });
 </script>
