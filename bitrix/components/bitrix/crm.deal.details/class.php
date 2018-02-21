@@ -1005,7 +1005,7 @@ class CCrmDealDetailsComponent extends CBitrixComponent
 					ob_end_clean();
 					
 					//Добавление кнопки редактировать по условию
-					$edit = CUser::IsAdmin()?'<div class="galleryUploadWrapper"><div></div><div></div><div></div><div id="galleryUpload">Редактировать</div><div></div><div></div><div></div></div>':"";
+					$edit = CCrmDeal::CheckUpdatePermission($this->arResult['ENTITY_ID'], CCrmPerms::GetUserPermissions(CUser::GetID()))?'<div class="galleryUploadWrapper"><div></div><div></div><div></div><div id="galleryUpload">Редактировать</div><div></div><div></div><div></div></div>':"";
 					
 					$this->arResult['TABS'][] = array(
 						'id' => 'tabImg',
@@ -1014,7 +1014,7 @@ class CCrmDealDetailsComponent extends CBitrixComponent
 					);
 					
 					//Вкладка загрузки отображается только для админов, АУП и ответственных
-					if (CUser::IsAdmin() /*|| $arUser['WORK_DEPARTMENT'] == 'АУП' || CUser::GetID() == $this->arResult['ENTITY_DATA']['ASSIGNED_BY_ID']*/){
+					if (CCrmDeal::CheckUpdatePermission($this->arResult['ENTITY_ID'], CCrmPerms::GetUserPermissions(CUser::GetID()))){
 						ob_start();
 						/*Общий компонент для загрузки и редактирования галереи изображений из обозначенных полей*/
 						
