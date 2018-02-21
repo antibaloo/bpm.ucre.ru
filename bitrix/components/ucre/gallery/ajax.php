@@ -2,7 +2,6 @@
 require_once($_SERVER['DOCUMENT_ROOT'] . "/bitrix/modules/main/include/prolog_before.php");
 CModule::IncludeModule('crm');
 if (strripos ($_SERVER['HTTP_REFERER'], 'bpm.ucre.ru')!==false){
-  //echo "<pre>";print_r($_POST);echo "</pre>";
   $deal = new CCrmDeal;
   $entity = $deal->GetListEx(
     array(), 
@@ -16,7 +15,6 @@ if (strripos ($_SERVER['HTTP_REFERER'], 'bpm.ucre.ru')!==false){
   foreach($entity as $fileldName=>$value){$entity[$fileldName] = array('VALUE' => $value);}//Приводим параметр к виду понятному вызываемому компоненту
   $entity['ID'] = $entity['ID']['VALUE'];//Микрокостыль, это поле должно выглядеть нормально
   $entity['ASSIGNED_BY_ID'] = $entity['ASSIGNED_BY_ID']['VALUE'];//Микрокостыль, это поле должно выглядеть нормально
-  //echo "<pre>";print_r($entity);echo "</pre>";
   
   /*Общий компонент для загрузки и редактирования галереи изображений из обозначенных полей*/
   $APPLICATION->IncludeComponent(

@@ -1,6 +1,5 @@
 <?php
 if(!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED!==true) die();
-echo "<pre>";print_r($arResult);echo "</pre>";
 ?>
 <form id="saveImgForm">
   <input type='hidden' name='deal_id' value='<?=$arResult['DEAL_ID']?>'>
@@ -47,7 +46,6 @@ foreach($arResult['FIELDS'] as $header=>$field){
   }
 }
 ?>
-  <div id="saveResults"></div>
   <div class="buttonWrapper">
     <div class="empty"></div>
     <div class="empty"></div>
@@ -71,10 +69,10 @@ foreach($arResult['FIELDS'] as $header=>$field){
         type: "POST",
         data: $("#saveImgForm").serialize(),
         success: function (html) {
-          $("#saveResults").html(html);
+          $("#ucreImageDiv").html(html);
         },
         error: function (html) {
-          $("#saveResults").html("Технические неполадки! В ближайшее время все будет исправлено!");
+          $("#ucreImageDiv").html("Технические неполадки! В ближайшее время все будет исправлено!");
         },
       });
     }

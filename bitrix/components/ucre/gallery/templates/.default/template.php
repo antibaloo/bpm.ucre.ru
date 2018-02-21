@@ -1,6 +1,5 @@
 <?php
 if(!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED!==true) die();
-//echo "<pre>";print_r($arResult);echo "</pre>";
 ?>
 <script type='text/javascript' src='/include/unitegallery/js/unitegallery.min.js'></script> 
 <link rel='stylesheet' href='/include/unitegallery/css/unite-gallery.css' type='text/css' /> 

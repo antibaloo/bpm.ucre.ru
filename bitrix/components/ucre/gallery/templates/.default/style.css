@@ -1,5 +1,7 @@
 .galleryUploadWrapper{
   margin-top: 10px;
+  margin-right: 63px;
+  margin-left: 240px;
   display: grid;
   grid-template-rows: 40px;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
