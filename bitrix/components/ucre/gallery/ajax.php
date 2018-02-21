@@ -17,9 +17,8 @@ if (strripos ($_SERVER['HTTP_REFERER'], 'bpm.ucre.ru')!==false){
   $entity['ID'] = $entity['ID']['VALUE'];//Микрокостыль, это поле должно выглядеть нормально
   $entity['ASSIGNED_BY_ID'] = $entity['ASSIGNED_BY_ID']['VALUE'];//Микрокостыль, это поле должно выглядеть нормально
   //echo "<pre>";print_r($entity);echo "</pre>";
-  //ob_start();
-  /*Общий компонент для загрузки и редактирования галереи изображений из обозначенных полей*/
   
+  /*Общий компонент для загрузки и редактирования галереи изображений из обозначенных полей*/
   $APPLICATION->IncludeComponent(
     'ucre:gallery.upload',
     '',
@@ -36,8 +35,5 @@ if (strripos ($_SERVER['HTTP_REFERER'], 'bpm.ucre.ru')!==false){
   );
   
   /*--------------------------------------------------------------------------*/
-  //$html = ob_get_contents();
-  //ob_end_clean();
-  //echo $html;
 }
 ?>
