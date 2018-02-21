@@ -24,9 +24,20 @@ if(!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED!==true) die();
 
 <!-- Инициирующий js -->
 <script type="text/javascript">
-  $(".formButton").click(function () {
-    
+  $("#galleryUpload").click(function () {
+    $.ajax({
+      url:'<?=$arResult['COMPONENT_PATH']?>/ajax.php',
+      type: "POST",
+      data: {id: '<?=$arResult['DEAL_ID']?>'},
+      success: function (html) {
+        $("#ucreImageDiv").html(html);
+      },
+      error: function (html) {
+        $("#ucreImageDiv").html("Технические неполадки! В ближайшее время все будет исправлено!");
+      },
+    });
   });
+  
   $(document).ready(function(){
     <?foreach ($arResult['FIELDS'] as $header=>$field){
         if (count($arResult[$field])){?>
