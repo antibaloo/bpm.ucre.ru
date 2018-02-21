@@ -1004,10 +1004,13 @@ class CCrmDealDetailsComponent extends CBitrixComponent
 					$html = ob_get_contents();
 					ob_end_clean();
 					
+					//Добавление кнопки редактировать по условию
+					$edit = CUser::IsAdmin()?'<div class="galleryUploadWrapper"><div></div><div></div><div></div><div id="galleryUpload">Редактировать</div><div></div><div></div><div></div></div>':"";
+					
 					$this->arResult['TABS'][] = array(
 						'id' => 'tabImg',
 						'name' => 'Изображения',
-						'html' =>'<div id="ucreImageDiv">'.$html.'</div>'
+						'html' =>'<div id="ucreImageDiv">'.$edit.$html.'</div>'
 					);
 					
 					//Вкладка загрузки отображается только для админов, АУП и ответственных
