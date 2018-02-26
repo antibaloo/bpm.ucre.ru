@@ -1013,6 +1013,40 @@ class CCrmDealDetailsComponent extends CBitrixComponent
 						'html' =>'<div id="ucreImageDiv">'.$edit.$html.'</div>'
 					);
 					
+					//Вкладка загрузки отображается только для админов, АУП и ответственных
+					
+ 					if (CCrmDeal::CheckUpdatePermission($this->arResult['ENTITY_ID'], CCrmPerms::GetUserPermissions(CUser::GetID()))){		
+ 						ob_start();		
+
+ 						$APPLICATION->IncludeComponent(		
+ 							'ucre:gallery.upload',		
+ 							'',		
+ 							array('ENTITY' => $this->arResult['ENTITY_DATA'],		
+ 										'FIELDS' => array(		
+ 											'Фотографии' => 'UF_CRM_1472038962',		
+ 											'Планировки' => 'UF_CRM_1476517423',		
+ 											'Фото для внутреннего пользования' => 'UF_CRM_1513322128',		
+ 											'Документы по заявке' => 'UF_CRM_1472704376',		
+ 											'Подписанная заявка' => 'UF_CRM_1512462544',		
+ 											'Скан агентского договора' => 'UF_CRM_1512462594',		
+ 										)		
+ 									 )		
+ 						);		
+
+ 						$html = ob_get_contents();		
+ 						ob_end_clean();		
+ 						/*		
+ 						$this->arResult['TABS'][] = array(		
+ 							'id' => 'tabImgEdit',		
+ 							'name' => 'Загрузка',		
+ 							'html' => $html		
+ 						);		*/
+ 					}		
+
+					
+					
+					
+					
 					ob_start();
 					/*Общий компонент для отображения лога выгрузки на Авито*/
 					$APPLICATION->IncludeComponent(
