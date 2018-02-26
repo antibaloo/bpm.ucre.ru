@@ -1013,7 +1013,7 @@ class CCrmDealDetailsComponent extends CBitrixComponent
 						'html' =>'<div id="ucreImageDiv">'.$edit.$html.'</div>'
 					);
 					
-					//Вкладка загрузки отображается только для админов, АУП и ответственных
+					//Фиктивный вызов без отображения. Вкладка загрузки отображается только для админов, АУП и ответственных
 					
  					if (CCrmDeal::CheckUpdatePermission($this->arResult['ENTITY_ID'], CCrmPerms::GetUserPermissions(CUser::GetID()))){		
  						ob_start();		
