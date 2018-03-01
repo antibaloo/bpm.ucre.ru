@@ -1062,7 +1062,7 @@ class CCrmDealDetailsComponent extends CBitrixComponent
 						'html' =>$html
 					);
 				}
-				if ($this->arResult['CATEGORY_ID'] == 3){
+				if ($this->arResult['CATEGORY_ID'] == 3 || $this->arResult['CATEGORY_ID'] == 9){
 					ob_start();
 					/*Общий компонент для отображения галереи изображений из обозначенных полей*/
 					$APPLICATION->IncludeComponent(
