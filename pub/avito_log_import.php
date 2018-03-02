@@ -12,7 +12,7 @@ curl_setopt($ch, CURLOPT_REFERER, "http://avito.ru/profile");
 curl_setopt($ch, CURLOPT_POSTFIELDS, "login=".$avito->login."&password=".$avito->password."&submit=logon");
 $result = curl_exec($ch);
 
-curl_setopt($ch, CURLOPT_URL,"https://www.avito.ru/profile/upload/api/2/reports/?page=1&offset=0&limit=1000&order=-1&order_by=created&created_start=".date("Y-m-d", strtotime("-1 days")));
+curl_setopt($ch, CURLOPT_URL,"https://www.avito.ru/profile/upload/api/3/reports/?page=1&offset=0&limit=50&order=-1&order_by=created&created_start=".date("Y-m-d", strtotime("-1 days")));
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
 curl_setopt($ch, CURLOPT_COOKIEJAR, $_SERVER['DOCUMENT_ROOT'].'/cookie.txt');
@@ -24,7 +24,7 @@ $logs = json_decode($json, true);
 $num_logs = 0;
 $ignore_logs =0;
 foreach ($logs['data'] as $log){
-  curl_setopt($ch, CURLOPT_URL,"https://www.avito.ru/profile/upload/api/2/report/".$log['log_id']);
+  curl_setopt($ch, CURLOPT_URL,"https://www.avito.ru/profile/upload/api/3/reports/".$log['log_id']);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, "Opera/10.0 (Windows NT 5.1; U; en");
@@ -39,7 +39,7 @@ foreach ($logs['data'] as $log){
     $rsData = $DB->Query($query);
     if ($avitolog = $rsData->Fetch()){ //Если запись с таким AVITO_ID есть
       $ignore_logs++;
-      echo $ignore_logs.". Лог с id ".$log['log_id'].", по ссылке https://www.avito.ru/profile/upload/api/2/report/".$log['log_id']." уже был загружен.<br>";
+      echo $ignore_logs.". Лог с id ".$log['log_id'].", по ссылке https://www.avito.ru/profile/upload/api/3/report/".$log['log_id']." уже был загружен.<br>";
     } else {
       $num_logs++;
       $DB->PrepareFields("ucre_avito_log");
@@ -48,7 +48,7 @@ foreach ($logs['data'] as $log){
         'UF_AVITO_ID' =>  "'".$log['log_id']."'", //ID Лога на Авито
         'UF_STATUS'   =>  "'".utf8_decode($_params->item(0)->childNodes->item(2)->nodeValue)."'", //Общий статус загрузки
         'UF_LINK'     =>  "'http://avito.ru".$_params->item(1)->childNodes->item(2)->childNodes->item(1)->getAttributeNode("href")->nodeValue."'", //Ссылка xml фид загрузки
-        'UF_LOG_LINK' =>  "'https://www.avito.ru/profile/upload/api/2/report/".$log['log_id']."'",
+        'UF_LOG_LINK' =>  "'https://www.avito.ru/profile/upload/api/3/reports/".$log['log_id']."'",
         'UF_TIME'     =>  $DB->CharToDateFunction($_params->item(2)->childNodes->item(2)->nodeValue)  //Время обработки фида
       );
       $DB->StartTransaction();
@@ -74,7 +74,7 @@ foreach ($logs['data'] as $log){
             'UF_STATUS'       =>  "'".utf8_decode($children->item(4)->childNodes->item(1)->nodeValue)."'",
             'UF_STATUS_MORE'  =>  "'".utf8_decode($children->item(4)->childNodes->item(4)->nodeValue)."'",
             'UF_TILL'         =>  $DB->CharToDateFunction($children->item(6)->childNodes->item(1)->nodeValue),
-            'UF_MESSAGE'      =>  "'".utf8_decode($children->item(8)->nodeValue)."'"
+            'UF_MESSAGE'      =>  "'".str_replace("'",'"',utf8_decode($children->item(8)->nodeValue))."'"
           );
         }
         if ($children->length == 8){
@@ -85,7 +85,7 @@ foreach ($logs['data'] as $log){
             'UF_STATUS'       =>  "'".utf8_decode($children->item(4)->childNodes->item(1)->nodeValue)."'",
             'UF_STATUS_MORE'  =>  "'".utf8_decode($children->item(4)->childNodes->item(4)->nodeValue)."'",
             'UF_TILL'         =>  "",
-            'UF_MESSAGE'      =>  "'".utf8_decode($children->item(6)->nodeValue)."'"
+            'UF_MESSAGE'      =>  "'".str_replace("'",'"',utf8_decode($children->item(6)->nodeValue))."'"
           );
         }
         $DB->StartTransaction();
