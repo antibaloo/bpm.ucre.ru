@@ -1,4 +1,4 @@
-<link href="/include/custom_css/custom_paging.css?<?=time();?>" rel="stylesheet">
+<!--<link href="/include/custom_css/custom_paging.css?<?=time();?>" rel="stylesheet">-->
 <?php
 require_once($_SERVER['DOCUMENT_ROOT'] . "/bitrix/modules/main/include/prolog_before.php");
 CModule::IncludeModule("crm");
@@ -24,35 +24,55 @@ if (strripos ($_SERVER['HTTP_REFERER'], 'bpm.ucre.ru')!==false && $_REQUEST['buy
   }
   
 ?>
-<div class="page active">
-  <div>
-    <div style="float:left">
-      <img src="/include/ucre_g.png">
-    </div>
-    <div style="float:left; padding-left: 25px;">
-      ООО "Единый центр недвижимости"<br>г. Оренбург, ул. Советская, 46, 3 эт.<br>+7(922) 829-90-57, 8 (3532) 90-90-57<br>без выходных, 9:00 - 21:00</div>
-    <div style="float:right">
-      <ul style="margin-top:0px">
-        <li>подбор по заявке №<?=$_REQUEST['buy_id']?>, создан в <?=date("H:i:s")?></li>
-        <li><?=$arContact['FULL_NAME']?>: <?=(count($phones))?implode(",",$phones):"нет номеров телефонов"?></li>
-        <li>Агент: <?=$arUser['LAST_NAME']." ".$arUser['NAME']." ".$arUser['SECOND_NAME']?></li>
-        <li>отдел: <?=$arUser['WORK_DEPARTMENT']?></li>
-        <li>должность: <?=$arUser['WORK_POSITION']?></li>
-        <li>телефон: <?=$arUser['WORK_PHONE']?></li>
-        <li>эл. почта: <?=$arUser['EMAIL']?></li>
-      </ul>
-    </div>
-  </div>
-  <div style="clear:both">
-    <center><h2>Результат подбора заявок от <?=date("d.m.Y")?> : </h2></center>
-  </div>
+<style>
+  table.potentials{
+    width:100%;
+    border: 1px solid black;
+    border-collapse: collapse;
+    margin-bottom:15px;
+    font-size: 13px;
+    table-layout:fixed;
+  }
   
-  <table>
-    <tr>
-      <th width="auto" rowspan="2">id</th>
-      <th width="40%" rowspan="2">Резюме объекта недвижимости</th>
-      <th rowspan="2" width="10%">Цена, руб.</th>
-      <th colspan="5">Оценки по параметрам (+/-)</th>3%
+  table.potentials > tbody > tr > th{
+    border: 1px solid black;
+    background-color: #b0e0e6;
+    text-align:center;
+    font-weight: normal;
+  }
+  table.potentials > tbody > tr > td{
+    border: 1px solid black;
+    text-align:center;
+    padding-left: 5px; 
+    padding-right: 5px;
+  }
+</style>
+<div>
+  <div style="float:left"><img src="/include/ucre_g.png"></div>
+  <div style="float:left; padding-left: 25px;">
+    ООО "Единый центр недвижимости"<br>г. Оренбург, ул. Советская, 46, 3 эт.<br>+7(922) 829-90-57, 8 (3532) 90-90-57<br>без выходных, 9:00 - 21:00</div>
+  <div style="float:right">
+    <ul style="margin-top:0px">
+      <li>подбор по заявке №<?=$_REQUEST['buy_id']?>, создан в <?=date("H:i:s")?></li>
+      <li><?=$arContact['FULL_NAME']?>: <?=(count($phones))?implode(",",$phones):"нет номеров телефонов"?></li>
+      <li>Агент: <?=$arUser['LAST_NAME']." ".$arUser['NAME']." ".$arUser['SECOND_NAME']?></li>
+      <li>отдел: <?=$arUser['WORK_DEPARTMENT']?></li>
+      <li>должность: <?=$arUser['WORK_POSITION']?></li>
+      <li>телефон: <?=$arUser['WORK_PHONE']?></li>
+      <li>эл. почта: <?=$arUser['EMAIL']?></li>
+    </ul>
+  </div>
+</div>
+<div style="clear:both">
+  <center><h2>Результат подбора заявок от <?=date("d.m.Y")?> : </h2></center>
+</div>
+
+<table class="potentials">
+  <tr>
+    <th width="4%" rowspan="2">id</th>
+    <th width="40%" rowspan="2">Резюме объекта недвижимости</th>
+    <th rowspan="2" width="10%">Цена, руб.</th>
+      <th colspan="5">Оценки по параметрам (+/-)</th>
       <th width="22%" rowspan="2">Комментарий</th>
     </tr>
     <tr>
@@ -61,7 +81,7 @@ if (strripos ($_SERVER['HTTP_REFERER'], 'bpm.ucre.ru')!==false && $_REQUEST['buy
       <th width="4%">Подъезд</th>
       <th width="4%">Двор</th>
       <th width="4%">Инф-ра</th>
-    </tr>3%
+    </tr>
  <?
     while ($aRes = $rsData->Fetch()){
       $result_array[] = $aRes['sell_deal_id'];
@@ -110,7 +130,7 @@ if (strripos ($_SERVER['HTTP_REFERER'], 'bpm.ucre.ru')!==false && $_REQUEST['buy
       }
 ?>
     <tr style="page-break-inside: avoid;" class="row">
-      <td><?=$aRes['sell_deal_id']?></td>
+      <td style="text-align: left; padding-right: 5px;white-space: normal"><?=$aRes['sell_deal_id']?></td>
       <td style="text-align: left; padding-right: 5px;white-space: normal;"><?=$resume?></td>
       <td style="text-align: right; padding-right: 5px;"><?=($aRes['UF_CRM_58958B5734602'])?$aRes['UF_CRM_58958B5734602']:"<span style='color:red'>нет</span>"?></td>
       <td></td>
@@ -125,7 +145,6 @@ if (strripos ($_SERVER['HTTP_REFERER'], 'bpm.ucre.ru')!==false && $_REQUEST['buy
  ?>
     
   </table>
-</div>
 <table style="width:100%;border: 1px solid black;border-collapse: collapse;margin-bottom:15px;font-size: 14px;font-weight: bold;">
   <tr>
     <td style="border: 1px solid black;text-align:center;" width="4%"><b>Всего:</b></td>
