@@ -18,6 +18,7 @@ div.page > table > tbody > tr > td{
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
 div.page > table > tbody > tr > td:first-child{
   width: 4%;
   padding: 0px;
