@@ -54,7 +54,7 @@ if (strripos ($_SERVER['HTTP_REFERER'], 'bpm.ucre.ru')!==false){
   <table>
     <tr>
       <th width="4%" rowspan="2"></th>
-      <th rowspan="2" width="4%">id</th>
+      <th rowspan="2" width="5%">id</th>
       <th width="45%" rowspan="2">Резюме заявки</th>
       <th rowspan="2" width="8%">Цена, руб.</th>
       <th colspan="5">Оценки по параметрам, +/-</th>
@@ -118,7 +118,7 @@ if (strripos ($_SERVER['HTTP_REFERER'], 'bpm.ucre.ru')!==false){
         }
 ?>
     <tr id="P<?=$aRes['sell_deal_id']?>" class="rowP">
-      <td >
+      <td>
         <?=(($_POST['assigned_by_id'] == $USER->GetID() || $USER->IsAdmin()) && $_POST['filter']!='yes')?'<a href="javascript:showDialog('.$aRes['sell_deal_id'].',	&#34;plus&#34;)" title="Оценить положительно."><span style="color:green;font-weight: bold">+</span></a>':''?>&nbsp;
         <?=(($_POST['assigned_by_id'] == $USER->GetID() || $USER->IsAdmin()) && $_POST['filter']!='no')?'<a href="javascript:showDialog('.$aRes['sell_deal_id'].', &#34;minus&#34;)" title="Оценить отрицательно."><span style="color:blue;font-weight: bold">-</span></a>':''?>&nbsp;
         <?=(($_POST['assigned_by_id'] == $USER->GetID() || $USER->IsAdmin()) && $_POST['filter']=='new')?'<a href="javascript:showDialog('.$aRes['sell_deal_id'].', &#34;delete&#34;)" title="Удалить из потенциальных."><span style="color:red;font-weight: bold">x</span></a>':''?>
