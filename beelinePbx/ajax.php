@@ -21,6 +21,26 @@ if ($_SERVER['HTTP_REFERER'] == 'https://bpm.ucre.ru/beelinePbx/settings.php'){
       echo "</pre>";
       $DB->Query("update b_beelinepbx_config set value='".$result['subscriptionId']."' where param = 'subscriptionId'");
       break;
+    case "save":
+      $params = array();
+      parse_str($_POST['table'], $params);
+      //echo "<pre>";print_r($params);echo "</pre>";
+      $DB->Query("TRUNCATE TABLE b_beelinepbx_users");
+      foreach($params['assocUsers'] as $key=>$user){
+        if (strlen($user)){
+          $DB->PrepareFields("b_beelinepbx_users");
+          $arFields = array(
+            'bitrix_user' => $key,
+            'beeline_user' => "'".$user."'"
+          );
+          $DB->StartTransaction();
+          $ID = $DB->Insert("b_beelinepbx_users", $arFields, $err_mess.__LINE__);
+          $ID = intval($ID);
+          if (strlen($strError)<=0) $DB->Commit();
+          else $DB->Rollback();
+        }
+      }
+      break;
   }
 }else{
   echo "<br><center>Мимо кассы!</center>";
