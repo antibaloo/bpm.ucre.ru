@@ -85,6 +85,8 @@ $addressOfRecord = str_replace("'","",$beelineCall['addressOfRecord']);
 
 
 
+
+
 //Разбор сообщения
 
 $assignedById = getUserByTargetId($targetId); //Определяем ответственного
@@ -108,6 +110,10 @@ switch ($eventType){
   case "xsi:CallOriginatedEvent":
     $callDirection = 1;
     $callDirectionText = 'исходящему звонку на номер ';
+    break;
+  case "xsi:SubscriptionTerminatedEvent":
+    $responce = `curl -X PUT --header 'X-MPBX-API-AUTH-TOKEN: {$config['token']}' --header 'Content-Type: application/json' -d ' { "expires" : 90000, "subscriptionType" : "BASIC_CALL", "url" : "http://bpm.ucre.ru/beelinePbx" } ' 'https://cloudpbx.beeline.ru/apis/portal/subscription'`;
+    $DB->Query("update b_beelinepbx_config set value='".$result['subscriptionId']."' where param = 'subscriptionId'");
     break;
 }
 switch (substr($source,5)){
