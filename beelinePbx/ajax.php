@@ -30,7 +30,7 @@ if ($_SERVER['HTTP_REFERER'] == 'https://bpm.ucre.ru/beelinePbx/settings.php'){
         if (strlen($user)){
           $DB->PrepareFields("b_beelinepbx_users");
           $arFields = array(
-            'bitrix_user' => $key,
+            'bitrix_user' => substr($key,0,stripos($key,"_")),
             'beeline_user' => "'".$user."'"
           );
           $DB->StartTransaction();

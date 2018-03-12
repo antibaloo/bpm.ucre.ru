@@ -57,7 +57,6 @@ echo "<pre>";print_r($config);echo "</pre>";
   <div class="formButton" action="create">Создать новую подписку</div>
   <div class="empty"></div>
 </div>
-
 <div id="subcriptionResult"></div>
 <?
 //Список пользователей портала, авктивных сотрудников
@@ -74,20 +73,41 @@ foreach($arUsers as $arUser){
 
 //Ассоциированный список пользователей системы и АТС
 $rsAssoc = $DB->Query("select * from b_beelinepbx_users");
-while ($arAssoc = $rsAssoc->Fetch()){$assoc[$arAssoc['bitrix_user']] = $arAssoc['beeline_user'];}
+while ($arAssoc = $rsAssoc->Fetch()){$assoc[$arAssoc['id']] = array('bitrix_user' => $arAssoc['bitrix_user'],'beeline_user' => $arAssoc['beeline_user']);}
 //echo "<pre>";print_r($assoc);echo "</pre>";
 ?>
 <form id="usersTable">
   <div class="usersWrapper">
     <div class="usersHeader">Сотрудник компании</div>
     <div class="usersHeader">Пользователь АТС</div>
-    <?foreach($users as $key=>$user){?>
-    <div class="usersRow"><?=$user['FULL_NAME']?></div>
+    <?foreach ($assoc as $assocUser/*$id=>$userId*/){?>
+    
     <div class="usersRow">
-      <select id="userChange" name="assocUsers[<?=$key?>]">
+      <?=$users[$assocUser['bitrix_user']]['FULL_NAME']?>
+    </div>
+    <div class="usersRow">
+      <select name="assocUsers[<?=$assocUser['bitrix_user']?>_<?=rand(100,1000)?>]">
         <option value="">Не выбран</option>
-        <?foreach($bUsers as $subkey=>$bUser){?>
-        <option value="<?=$subkey?>" <?=($assoc[$key] == $subkey)?"selected":""?>><?=$bUser['lastName']." ".$bUser['firstName']." (".$bUser['department']."): +7".$bUser['phone']?></option>
+        <?foreach($bUsers as $key=>$bUser){?>
+        <option value="<?=$key?>" <?=($key==$assocUser['beeline_user'])?"selected":""?>><?=$bUser['lastName']." ".$bUser['firstName']." (".$bUser['department']."): +7".$bUser['phone']?></option>
+        <?}?>
+      </select>
+    </div>
+    <?}?>
+    <?foreach($users as $key=>$user){?>
+    <div class="usersRow">
+      <select class="bitrix" id-data="<?=$key?>">
+        <option value="">Не выбран</option>
+        <?foreach($users as $key1=>$user1){?>
+        <option value="<?=$key1?>"><?=$user1['FULL_NAME']?></option>
+        <?}?>
+      </select>
+    </div>
+    <div class="usersRow">
+      <select id="beeline<?=$key?>">
+        <option value="">Не выбран</option>
+        <?foreach($bUsers as $key2=>$bUser){?>
+        <option value="<?=$key2?>"><?=$bUser['lastName']." ".$bUser['firstName']." (".$bUser['department']."): +7".$bUser['phone']?></option>
         <?}?>
       </select>
     </div>
@@ -104,9 +124,15 @@ while ($arAssoc = $rsAssoc->Fetch()){$assoc[$arAssoc['bitrix_user']] = $arAssoc[
   </div>
 </form>
 <div id="saveResult"></div>
-
-
 <script>
+   function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min)) + min;
+  }
+  $(".bitrix").change(function (){
+    console.log($(this).attr("id-data"));
+    console.log($(this).val());
+    $("#beeline"+$(this).attr("id-data")).attr("name", "assocUsers["+$(this).val()+"_"+getRandomInt(2000,20000)+"]");
+  });
   $(".formButton").click(function (){
     var action = $(this).attr("action");
     if (action != 'save'){
