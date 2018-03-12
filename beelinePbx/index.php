@@ -8,6 +8,8 @@ CModule::IncludeModule('crm');
 CModule::IncludeModule('search');
 include('../include/beeline/functions.php');
 if ($_SERVER['CONTENT_TYPE'] != 'application/xml; charset=UTF-8') exit;
+$rsConfig = $DB->Query("select * from b_beelinepbx_config");
+while ($arConfig = $rsConfig->Fetch()){$config[$arConfig['param']] = $arConfig['value'];}
 $xml = file_get_contents("php://input");
 //Bitrix\Main\Diag\Debug::writeToFile(array('DATE' => date("c"),'$_SERVER' => $_SERVER, '$_POST' => $_POST), "","/beelinePbx/beeline.log");
 //Bitrix\Main\Diag\Debug::writeToFile(array('DATE' => date("c"),'xml' => $xml), "","/beelinePbx/beeline.log");
@@ -97,7 +99,7 @@ if ($remotePartyCallType == 'Group'){
     'EMLOYEE'  => array('ID' =>  getUserByTargetId($remotePartyUserId))
   );
 }else{
-  $phone_res = findByPhoneNumber(substr($remotePartyAddress,5));
+  if ($remotePartyAddress !="") $phone_res = findByPhoneNumber(substr($remotePartyAddress,5));
 }
 
 

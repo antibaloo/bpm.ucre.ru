@@ -25,7 +25,7 @@ if (strripos ($_SERVER['HTTP_REFERER'], 'bpm.ucre.ru')!==false){
           }else{ 
             $images2save[$fieldName][] = $image;
           }
-          unset($_POST[$fieldName."_old"][$key-1]);//-1 необходим для компенсации костыля в component.php
+          if (isset($_POST[$fieldName."_old"][$key-1])) unset($_POST[$fieldName."_old"][$key-1]);//-1 необходим для компенсации костыля в component.php
         }
       }
     }

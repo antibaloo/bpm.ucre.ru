@@ -39,12 +39,6 @@ function getUserByTargetId($targetId){
 }
 
 function findByPhoneNumber($number, $params = array()){
-  if (!is_string($number)){
-    throw new \Bitrix\Main\ArgumentTypeException('number', 'string');
-  }
-  if ($number === ''){
-    throw new \Bitrix\Main\ArgumentException('Is empty', 'number');
-  }
   if (!is_array($params)){
     $params = array();
   }
