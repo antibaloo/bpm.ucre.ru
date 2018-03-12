@@ -113,6 +113,7 @@ switch ($eventType){
     break;
   case "xsi:SubscriptionTerminatedEvent":
     $responce = `curl -X PUT --header 'X-MPBX-API-AUTH-TOKEN: {$config['token']}' --header 'Content-Type: application/json' -d ' { "expires" : 90000, "subscriptionType" : "BASIC_CALL", "url" : "http://bpm.ucre.ru/beelinePbx" } ' 'https://cloudpbx.beeline.ru/apis/portal/subscription'`;
+    $result = json_decode($responce,true);
     $DB->Query("update b_beelinepbx_config set value='".$result['subscriptionId']."' where param = 'subscriptionId'");
     break;
 }
