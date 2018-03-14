@@ -1,10 +1,10 @@
 <?
 require ($_SERVER['DOCUMENT_ROOT'] . "/bitrix/modules/main/include/prolog_before.php");
 CModule::IncludeModule('voximplant');
-if ($_POST['count'] > 0){
+if ($_GET['count'] > 0){
   $rsConfig = $DB->Query("select * from b_beelinepbx_config");
   while ($arConfig = $rsConfig->Fetch()){$config[$arConfig['param']] = $arConfig['value'];}
-  $rsRecords = $DB->Query("select * from b_beeline_record_log where recordState = 'RecordNotFound' order by id DESC LIMIT ".$_POST['count']);
+  $rsRecords = $DB->Query("select * from b_beeline_record_log where recordState = 'RecordNotFound' order by id DESC LIMIT ".$_GET['count']);
   while ($arRecord = $rsRecords->Fetch()){
     $client = curl_init('https://cloudpbx.beeline.ru/apis/portal/v2/records/'.$arRecord['extTrackingId'].'/'.$arRecord['targetId'].'/download');
     curl_setopt($client, CURLOPT_CUSTOMREQUEST, "GET");
