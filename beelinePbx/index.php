@@ -90,6 +90,12 @@ $recordingState = str_replace("'","",$beelineCall['recordingState']);
 
 
 $restHelper = new \Bitrix\Voximplant\Rest\Helper;
+
+if ($eventType == 'xsi:SubscriptionTerminatedEvent'){
+  $responce = `curl -X PUT --header 'X-MPBX-API-AUTH-TOKEN: {$config['token']}' --header 'Content-Type: application/json' -d ' { "expires" : 86400, "subscriptionType" : "BASIC_CALL", "url" : "http://bpm.ucre.ru/beelinePbx" } ' 'https://cloudpbx.beeline.ru/apis/portal/subscription'`;
+  $result = json_decode($responce,true);
+  $DB->Query("update b_beelinepbx_config set value='".$result['subscriptionId']."' where param = 'subscriptionId'");
+}
 //Разбор сообщения
 if ($eventType == 'xsi:CallOriginatedEvent' || $eventType == 'xsi:CallReceivedEvent') {
   $assignedById = getUserByTargetId($targetId); //Определяем ответственного
@@ -114,12 +120,6 @@ if ($eventType == 'xsi:CallOriginatedEvent' || $eventType == 'xsi:CallReceivedEv
       $callDirection = 1;
       $callDirectionText = 'исходящему звонку на номер ';
       break;
-      /*
-      case "xsi:SubscriptionTerminatedEvent":
-      $responce = `curl -X PUT --header 'X-MPBX-API-AUTH-TOKEN: {$config['token']}' --header 'Content-Type: application/json' -d ' { "expires" : 90000, "subscriptionType" : "BASIC_CALL", "url" : "http://bpm.ucre.ru/beelinePbx" } ' 'https://cloudpbx.beeline.ru/apis/portal/subscription'`;
-      $result = json_decode($responce,true);
-      $DB->Query("update b_beelinepbx_config set value='".$result['subscriptionId']."' where param = 'subscriptionId'");
-      break;*/
   }
   switch (substr($source,5)){
     case '79325360157':
