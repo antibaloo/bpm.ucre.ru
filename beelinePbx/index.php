@@ -84,7 +84,7 @@ $startTime = str_replace("'","",$beelineCall['startTime']);
 $answerTime = str_replace("'","",$beelineCall['answerTime']);
 $releaseTime = str_replace("'","",$beelineCall['releaseTime']);
 $addressOfRecord = str_replace("'","",$beelineCall['addressOfRecord']);
-
+$recordingState = str_replace("'","",$beelineCall['recordingState']);
 
 
 
@@ -272,7 +272,7 @@ if ($eventType == 'xsi:CallReleasedEvent') {
   
   //Bitrix\Main\Diag\Debug::writeToFile(array('DATE' => date("c"), 'targetId' => $targetId,'recordStatus' => $recordStatus), "","/beelinePbx/beeline.log");
   
-  if ($statusCode == 200 && $recordStatus == 'ON'){
+  if ($statusCode == 200 && $recordStatus == 'ON' && $recordingState != 'Failed'){
     //Пишем лог записи разговоров АТС
     $DB->PrepareFields("b_beeline_record_log");
     $beelineRecordLog = array(
