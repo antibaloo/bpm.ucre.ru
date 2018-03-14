@@ -73,6 +73,7 @@ else $DB->Rollback();
 
 $callId = str_replace("'","",$beelineCall['callId']);
 $targetId = str_replace("'","",$beelineCall['targetId']);
+$extTrackingId = str_replace("'","",$beelineCall['extTrackingId']);
 $remotePartyCallType = str_replace("'","",$beelineCall['remotePartyCallType']);
 $remotePartyUserId = str_replace("'","",$beelineCall['remotePartyUserId']);
 $remotePartyAddress = str_replace("'","",$beelineCall['remotePartyAddress']);
@@ -88,61 +89,62 @@ $addressOfRecord = str_replace("'","",$beelineCall['addressOfRecord']);
 
 
 
-
+$restHelper = new \Bitrix\Voximplant\Rest\Helper;
 //Разбор сообщения
-
-$assignedById = getUserByTargetId($targetId); //Определяем ответственного
-
-if ($remotePartyCallType == 'Group'){
-  $phone_res = array(
-    'FOUND'    => 'Y',
-    'EMLOYEE'  => array('ID' =>  getUserByTargetId($remotePartyUserId))
-  );
-}else{
-  if ($remotePartyAddress !="") $phone_res = findByPhoneNumber(substr($remotePartyAddress,5));
-}
-
-
-
-switch ($eventType){
-  case "xsi:CallReceivedEvent":
-    $callDirection = 2;
-    $callDirectionText = 'входящему звонку с номера ';
-    break;
-  case "xsi:CallOriginatedEvent":
-    $callDirection = 1;
-    $callDirectionText = 'исходящему звонку на номер ';
-    break;
-  case "xsi:SubscriptionTerminatedEvent":
-    $responce = `curl -X PUT --header 'X-MPBX-API-AUTH-TOKEN: {$config['token']}' --header 'Content-Type: application/json' -d ' { "expires" : 90000, "subscriptionType" : "BASIC_CALL", "url" : "http://bpm.ucre.ru/beelinePbx" } ' 'https://cloudpbx.beeline.ru/apis/portal/subscription'`;
-    $result = json_decode($responce,true);
-    $DB->Query("update b_beelinepbx_config set value='".$result['subscriptionId']."' where param = 'subscriptionId'");
-    break;
-}
-switch (substr($source,5)){
-  case '79325360157':
-    $SOURCE_ID = '79325360157';
-    break;
-  case '79228090357':
-    $SOURCE_ID = '79228090357';
-    break;
-  case '79325360657':
-    $SOURCE_ID = '79325360657';
-    break;
-  case '79877959090':
-    $SOURCE_ID = '79877959090';
-    break;
-  case '532675700':
-  case '79619475700':
-    $SOURCE_ID = '79619475700';
-    break;
-  case '79878473434':
-    $SOURCE_ID = '79878473434';
-    break;
-  case '79878479292':
-    $SOURCE_ID = '79878479292';
-    break;
-  default:
+if ($eventType == 'xsi:CallOriginatedEvent' || $eventType == 'xsi:CallReceivedEvent') {
+  $assignedById = getUserByTargetId($targetId); //Определяем ответственного
+  
+  if ($remotePartyCallType == 'Group'){
+    $phone_res = array(
+      'FOUND'    => 'Y',
+      'EMLOYEE'  => array('ID' =>  getUserByTargetId($remotePartyUserId))
+    );
+  }else{
+    if ($remotePartyAddress !="") $phone_res = findByPhoneNumber(substr($remotePartyAddress,5));
+  }
+  
+  
+  
+  switch ($eventType){
+    case "xsi:CallReceivedEvent":
+      $callDirection = 2;
+      $callDirectionText = 'входящему звонку с номера ';
+      break;
+    case "xsi:CallOriginatedEvent":
+      $callDirection = 1;
+      $callDirectionText = 'исходящему звонку на номер ';
+      break;
+      /*
+      case "xsi:SubscriptionTerminatedEvent":
+      $responce = `curl -X PUT --header 'X-MPBX-API-AUTH-TOKEN: {$config['token']}' --header 'Content-Type: application/json' -d ' { "expires" : 90000, "subscriptionType" : "BASIC_CALL", "url" : "http://bpm.ucre.ru/beelinePbx" } ' 'https://cloudpbx.beeline.ru/apis/portal/subscription'`;
+      $result = json_decode($responce,true);
+      $DB->Query("update b_beelinepbx_config set value='".$result['subscriptionId']."' where param = 'subscriptionId'");
+      break;*/
+  }
+  switch (substr($source,5)){
+    case '79325360157':
+      $SOURCE_ID = '79325360157';
+      break;
+    case '79228090357':
+      $SOURCE_ID = '79228090357';
+      break;
+    case '79325360657':
+      $SOURCE_ID = '79325360657';
+      break;
+    case '79877959090':
+      $SOURCE_ID = '79877959090';
+      break;
+    case '532675700':
+    case '79619475700':
+      $SOURCE_ID = '79619475700';
+      break;
+    case '79878473434':
+      $SOURCE_ID = '79878473434';
+      break;
+    case '79878479292':
+      $SOURCE_ID = '79878479292';
+      break;
+    default:
     default:
       if ($eventType =="xsi:CallOriginatedEvent"){
         $SOURCE_ID = "3";
@@ -150,80 +152,82 @@ switch (substr($source,5)){
         $SOURCE_ID = "CALL";
       }
       break;
-}
-
-if ($phone_res['FOUND'] == 'N'){//Если не найдена сущность, то ее надо создать
-  $entityType = 'LEAD';
-  $oLead = new CCrmLead;
-  $arFields = array(
-    "TITLE" => "Название лида",
-    "NAME" => "Переименовать",
-    "COMMENTS" => "Лид по ".$callDirectionText."+".substr($remotePartyAddress,5,1)."(".substr($remotePartyAddress,6,3).")".substr($remotePartyAddress,9,3)."-".substr($remotePartyAddress,12,2)."-".substr($remotePartyAddress,14)." на ВАТС Билайн",
-    "SOURCE_ID" => $SOURCE_ID,
-    "OPPORTUNITY" =>0,
-    "CURRENCY_ID" => "RUB",
-    "OPPORTUNITY_ACCOUNT" => 0,
-    "ACCOUNT_CURRENCY_ID" => "RUB",
-    "LAST_NAME" => "",
-    "SECOND_NAME" => "",
-    "COMPANY_TITLE" => "",
-    "POST" => "",
-    "SOURCE_DESCRIPTION" =>"Создан модулем сопряжения ВАТС Билайн",
-    "STATUS_ID" => "NEW",
-    "UF_CRM_1486022615" => 1317,
-    "ASSIGNED_BY_ID" => $assignedById,
-    "FM" => array(
-      "PHONE" => array(
-        "n0" => array(
-          "VALUE" => "+".substr($remotePartyAddress,5,1)."(".substr($remotePartyAddress,6,3).")".substr($remotePartyAddress,9,3)."-".substr($remotePartyAddress,12,2)."-".substr($remotePartyAddress,14),
-          "VALUE_TYPE" => "OTHER"
-        )
-      )
-    ),
-  );
-  $entityId = $oLead->Add($arFields, true, array('CURRENT_USER' => 24));
-}else{//А если найдена, запоминаем тип и идентификатор
-  if ($phone_res['LEAD']['ID'] > 0) {
+  }
+  
+  if ($phone_res['FOUND'] == 'N'){//Если не найдена сущность, то ее надо создать
     $entityType = 'LEAD';
-    $entityId = $phone_res['LEAD']['ID'];
-  }elseif ($phone_res['CONTACT']['ID'] > 0){
-    $entityType = 'CONTACT';
-    $entityId = $phone_res['CONTACT']['ID'];
-  }elseif ($phone_res['COMPANY']['ID'] > 0){
-    $entityType = 'COMPANY';
-    $entityId = $phone_res['COMPANY']['ID'];
+    $oLead = new CCrmLead;
+    $arFields = array(
+      "TITLE" => "Название лида",
+      "NAME" => "Переименовать",
+      "COMMENTS" => "Лид по ".$callDirectionText."+".substr($remotePartyAddress,5,1)."(".substr($remotePartyAddress,6,3).")".substr($remotePartyAddress,9,3)."-".substr($remotePartyAddress,12,2)."-".substr($remotePartyAddress,14)." на ВАТС Билайн",
+      "SOURCE_ID" => $SOURCE_ID,
+      "OPPORTUNITY" =>0,
+      "CURRENCY_ID" => "RUB",
+      "OPPORTUNITY_ACCOUNT" => 0,
+      "ACCOUNT_CURRENCY_ID" => "RUB",
+      "LAST_NAME" => "",
+      "SECOND_NAME" => "",
+      "COMPANY_TITLE" => "",
+      "POST" => "",
+      "SOURCE_DESCRIPTION" =>"Создан модулем сопряжения ВАТС Билайн",
+      "STATUS_ID" => "NEW",
+      "UF_CRM_1486022615" => 1317,
+      "ASSIGNED_BY_ID" => $assignedById,
+      "FM" => array(
+        "PHONE" => array(
+          "n0" => array(
+            "VALUE" => "+".substr($remotePartyAddress,5,1)."(".substr($remotePartyAddress,6,3).")".substr($remotePartyAddress,9,3)."-".substr($remotePartyAddress,12,2)."-".substr($remotePartyAddress,14),
+            "VALUE_TYPE" => "OTHER"
+          )
+        )
+      ),
+    );
+    $entityId = $oLead->Add($arFields, true, array('CURRENT_USER' => 24));
+  }else{//А если найдена, запоминаем тип и идентификатор
+    if ($phone_res['LEAD']['ID'] > 0) {
+      $entityType = 'LEAD';
+      $entityId = $phone_res['LEAD']['ID'];
+    }elseif ($phone_res['CONTACT']['ID'] > 0){
+      $entityType = 'CONTACT';
+      $entityId = $phone_res['CONTACT']['ID'];
+    }elseif ($phone_res['COMPANY']['ID'] > 0){
+      $entityType = 'COMPANY';
+      $entityId = $phone_res['COMPANY']['ID'];
+    }
+  }
+  
+  //Bitrix\Main\Diag\Debug::writeToFile(array('DATE' => date("c"),'eventType' => $eventType, 'targetId' => $targetId, 'remotePartyAddress' =>$remotePartyAddress, 'remotePartyCallType' => $remotePartyCallType,'assignedById' => $assignedById,'phone_res' => $phone_res, 'entityType' => $entityType, 'entityId' => $entityId), "","/beelinePbx/beeline.log");
+  
+  
+  
+  if (!getBitrixByBeelinepbx($callId)){//Если не найдено соответствие, то регистрируем звонок
+    if ($remotePartyCallType == 'Group'){
+      $callParams = array(
+        'USER_ID' =>$assignedById,
+        'PHONE_NUMBER'   => substr($remotePartyAddress,4),
+        'CRM_CREATE' => false,
+        'TYPE' => $callDirection,
+        'SHOW' => false,
+      );
+    }else{
+      $callParams = array(
+        'USER_ID' =>$assignedById,
+        'PHONE_NUMBER'   => substr($remotePartyAddress,5),
+        'CRM_ENTITY_TYPE' => $entityType,
+        'CRM_ENTITY_ID' => $entityId,
+        'CRM_CREATE' => true,
+        'TYPE' => $callDirection,
+        'CRM_SOURCE' => $SOURCE_ID,
+        'SHOW' => true,
+      );
+    }
+    $registerResults = $restHelper-> registerExternalCall($callParams);
+    $registerData = $registerResults->getData();
+    if($registerData['CALL_ID']) linkCallIds($callId,$registerData['CALL_ID']);//Запоминаем соответствие callid
   }
 }
 
-//Bitrix\Main\Diag\Debug::writeToFile(array('DATE' => date("c"),'eventType' => $eventType, 'targetId' => $targetId, 'remotePartyAddress' =>$remotePartyAddress, 'remotePartyCallType' => $remotePartyCallType,'assignedById' => $assignedById,'phone_res' => $phone_res, 'entityType' => $entityType, 'entityId' => $entityId), "","/beelinePbx/beeline.log");
-
-$restHelper = new \Bitrix\Voximplant\Rest\Helper;
-
-if (!getBitrixByBeelinepbx($callId)){//Если не найдено соответствие, то регистрируем звонок
-  if ($remotePartyCallType == 'Group'){
-    $callParams = array(
-      'USER_ID' =>$assignedById,
-      'PHONE_NUMBER'   => substr($remotePartyAddress,4),
-      'CRM_CREATE' => false,
-      'TYPE' => $callDirection,
-      'SHOW' => false,
-    );
-  }else{
-    $callParams = array(
-      'USER_ID' =>$assignedById,
-      'PHONE_NUMBER'   => substr($remotePartyAddress,5),
-      'CRM_ENTITY_TYPE' => $entityType,
-      'CRM_ENTITY_ID' => $entityId,
-      'CRM_CREATE' => true,
-      'TYPE' => $callDirection,
-      'CRM_SOURCE' => $SOURCE_ID,
-      'SHOW' => true,
-    );
-  }
-  $registerResults = $restHelper-> registerExternalCall($callParams);
-  $registerData = $registerResults->getData();
-  if($registerData['CALL_ID']) linkCallIds($callId,$registerData['CALL_ID']);//Запоминаем соответствие callid
-}
 if ($eventType == 'xsi:CallReleasedEvent') {
   switch ($internalReleaseCause){
     case "Busy":
@@ -258,6 +262,32 @@ if ($eventType == 'xsi:CallReleasedEvent') {
   );
   $finishResults = $restHelper->finishExternalCall($callParams);
   $finishData = $finishResults->getData();
+  
+  $client = curl_init('https://cloudpbx.beeline.ru/apis/portal/abonents/'.$targetId.'/recording');
+  curl_setopt($client, CURLOPT_CUSTOMREQUEST, "GET");
+  curl_setopt($client, CURLOPT_HTTPHEADER, array('X-MPBX-API-AUTH-TOKEN: '.$config['token']));
+  curl_setopt($client, CURLOPT_RETURNTRANSFER, 1);
+  $responce = curl_exec($client);
+  $recordStatus = str_replace('"','',$responce);
+  
+  //Bitrix\Main\Diag\Debug::writeToFile(array('DATE' => date("c"), 'targetId' => $targetId,'recordStatus' => $recordStatus), "","/beelinePbx/beeline.log");
+  
+  if ($statusCode == 200 && $recordStatus == 'ON'){
+    //Пишем лог записи разговоров АТС
+    $DB->PrepareFields("b_beeline_record_log");
+    $beelineRecordLog = array(
+      "logTime"       => $DB->GetNowFunction(),
+      "extTrackingId" => "'".$extTrackingId."'",
+      "bitrixCallId"  => "'".$callParams['CALL_ID']."'",
+      "targetId"      => "'".$targetId."'",
+      "recordState"   => "'RecordNotFound'"
+    );
+    $DB->StartTransaction();
+    $ID = $DB->Insert("b_beeline_record_log", $beelineRecordLog, $err_mess.__LINE__);
+    $ID = intval($ID);
+    if (strlen($strError)<=0) $DB->Commit();
+    else $DB->Rollback();
+  }
   if ($statusCode != 200){
     $oActivity = new CCrmActivity;
     $acFields = array('COMPLETED' => 'N');
