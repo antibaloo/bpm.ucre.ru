@@ -22,7 +22,7 @@
     margin-top: 10px;
     display: grid;
     grid-template-rows: 30px;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 4fr 4fr 1fr;
     grid-gap: 2px;
   }
   .usersHeader{
@@ -80,6 +80,7 @@ while ($arAssoc = $rsAssoc->Fetch()){$assoc[$arAssoc['id']] = array('bitrix_user
   <div class="usersWrapper">
     <div class="usersHeader">Сотрудник компании</div>
     <div class="usersHeader">Пользователь АТС</div>
+    <div class="usersHeader">Не создавать лиды</div>
     <?foreach ($assoc as $assocUser/*$id=>$userId*/){?>
     
     <div class="usersRow">
@@ -93,6 +94,7 @@ while ($arAssoc = $rsAssoc->Fetch()){$assoc[$arAssoc['id']] = array('bitrix_user
         <?}?>
       </select>
     </div>
+    <div class="usersRow"></div>
     <?}?>
     <?foreach($users as $key=>$user){?>
     <div class="usersRow">
@@ -111,6 +113,7 @@ while ($arAssoc = $rsAssoc->Fetch()){$assoc[$arAssoc['id']] = array('bitrix_user
         <?}?>
       </select>
     </div>
+    <div class="usersRow"></div>
     <?}?>
   </div>
   <div class="buttonWrapper">
