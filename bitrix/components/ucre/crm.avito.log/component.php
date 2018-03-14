@@ -25,7 +25,7 @@ if ($arParams['OBJECT_ID']>0) {//Если передан ID объекта в к
     array(
       "select" => array('*'), //выбираем все поля
       "filter" =>  array('UF_CRM_ID' => $elementID),
-      "order" => array("UF_AVITO_LOG_ID"=>"DESC"), // сортировка по полю UF_AVITO_LOG_ID, будет работать только, если вы завели такое поле в hl'блоке
+      "order" => array("ID"=>"DESC"), // сортировка по полю UF_AVITO_LOG_ID, будет работать только, если вы завели такое поле в hl'блоке
     )
   );
   $arResult['COUNT'] = $rsData->getSelectedRowsCount();
