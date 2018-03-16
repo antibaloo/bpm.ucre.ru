@@ -6,6 +6,7 @@ define('DisableEventsCheck', true);
 
 require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_before.php');
 
+use Bitrix\Crm\Security\EntityAuthorization;
 use Bitrix\Crm\Synchronization\UserFieldSynchronizer;
 use Bitrix\Crm\Conversion\DealConversionConfig;
 use Bitrix\Crm\Conversion\DealConversionWizard;
@@ -291,9 +292,17 @@ elseif($action === 'SAVE')
 		else
 		{
 			$fields['TAX_VALUE'] = 0.0;
-			if(!isset($fields['OPPORTUNITY']) && $isNew)
+			if($isNew)
 			{
 				$fields['OPPORTUNITY'] = 0.0;
+			}
+			elseif(!isset($fields['OPPORTUNITY']))
+			{
+				$originalProductRows = \CCrmDeal::LoadProductRows($ID);
+				if(!empty($originalProductRows))
+				{
+					$fields['OPPORTUNITY'] = 0.0;
+				}
 			}
 		}
 
@@ -496,7 +505,13 @@ elseif($action === 'SAVE')
 				}
 
 				$merger = new \Bitrix\Crm\Merger\DealMerger($currentUserID, false);
-				$merger->mergeFields($sourceFields, $fields, true);
+				//Merge with disabling of multiple user fields (SKIP_MULTIPLE_USER_FIELDS = TRUE)
+				$merger->mergeFields(
+					$sourceFields,
+					$fields,
+					true,
+					array('SKIP_MULTIPLE_USER_FIELDS' => true)
+				);
 			}
 
 			if (isset($fields['COMMENTS']))
@@ -736,9 +751,8 @@ elseif($action === 'CONVERT')
 		$syncFieldNames = array();
 		foreach($entityConfigs as $entityTypeID => $entityConfig)
 		{
-			$entityTypeName = CCrmOwnerType::ResolveName($entityTypeID);
-			if(!CCrmAuthorizationHelper::CheckCreatePermission($entityTypeName, $currentUserPermissions)
-				&& !CCrmAuthorizationHelper::CheckUpdatePermission($entityTypeName, 0, $currentUserPermissions))
+			if(!EntityAuthorization::checkCreatePermission($entityTypeID, $currentUserPermissions)
+				&& !EntityAuthorization::checkUpdatePermission($entityTypeID, 0, $currentUserPermissions))
 			{
 				continue;
 			}
@@ -781,9 +795,8 @@ elseif($action === 'CONVERT')
 		$entityConfigs = $config->getItems();
 		foreach($entityConfigs as $entityTypeID => $entityConfig)
 		{
-			$entityTypeName = CCrmOwnerType::ResolveName($entityTypeID);
-			if(!CCrmAuthorizationHelper::CheckCreatePermission($entityTypeName, $currentUserPermissions)
-				&& !CCrmAuthorizationHelper::CheckUpdatePermission($entityTypeName, 0, $currentUserPermissions))
+			if(!EntityAuthorization::checkCreatePermission($entityTypeID, $currentUserPermissions)
+				&& !EntityAuthorization::checkUpdatePermission($entityTypeID, 0, $currentUserPermissions))
 			{
 				continue;
 			}
@@ -812,6 +825,7 @@ elseif($action === 'CONVERT')
 	DealConversionWizard::remove($entityID);
 	$wizard = new DealConversionWizard($entityID, $config);
 	$wizard->setOriginUrl(isset($_POST['ORIGIN_URL']) ? $_POST['ORIGIN_URL'] : '');
+
 	$wizard->setSliderEnabled(true);
 
 	if($wizard->execute())
