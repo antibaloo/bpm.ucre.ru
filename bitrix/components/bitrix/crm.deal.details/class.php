@@ -3,7 +3,7 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED!==true)die();
 
 use Bitrix\Main;
 use Bitrix\Main\Localization\Loc;
-use  Bitrix\Crm\Category\DealCategory;
+use Bitrix\Crm\Category\DealCategory;
 use Bitrix\Crm\Recurring;
 
 if(!Main\Loader::includeModule('crm'))
@@ -46,6 +46,8 @@ class CCrmDealDetailsComponent extends CBitrixComponent
 	private $isExposeMode = false;
 	/** @var bool */
 	private $isEnableRecurring = true;
+	/** @var bool */
+	private $isTaxMode = false;
 	/** @var \Bitrix\Crm\Conversion\EntityConversionWizard|null  */
 	private $conversionWizard = null;
 	/** @var int */
@@ -56,7 +58,6 @@ class CCrmDealDetailsComponent extends CBitrixComponent
 	private $defaultFieldValues = null;
 	/** @var array|null */
 	private $types = null;
-
 
 	public function __construct($component = null)
 	{
@@ -69,6 +70,8 @@ class CCrmDealDetailsComponent extends CBitrixComponent
 		$this->userPermissions = CCrmPerms::GetCurrentUserPermissions();
 		$this->userType = new \CCrmUserType($USER_FIELD_MANAGER, \CCrmDeal::GetUserFieldEntityID());
 		$this->userFieldDispatcher = \Bitrix\Main\UserField\Dispatcher::instance();
+
+		$this->isTaxMode = \CCrmTax::isTaxMode();
 	}
 	public function initializeParams(array $params)
 	{
@@ -276,7 +279,20 @@ class CCrmDealDetailsComponent extends CBitrixComponent
 		$this->arResult['CATEGORY_ID'] = $this->categoryID = max($categoryID, 0);
 		//endregion
 
-		//region Conversion Scheme
+		//region Conversion & Conversion Scheme
+		$this->arResult['PERMISSION_ENTITY_TYPE'] = DealCategory::convertToPermissionEntityType($this->categoryID);
+		CCrmDeal::PrepareConversionPermissionFlags($this->entityID, $this->arResult, $this->userPermissions);
+		if($this->arResult['CAN_CONVERT'])
+		{
+			$config = \Bitrix\Crm\Conversion\DealConversionConfig::load();
+			if($config === null)
+			{
+				$config = \Bitrix\Crm\Conversion\DealConversionConfig::getDefault();
+			}
+
+			$this->arResult['CONVERSION_CONFIG'] = $config;
+		}
+
 		if(isset($this->arResult['LEAD_ID']) && $this->arResult['LEAD_ID'] > 0)
 		{
 			$this->leadID = $this->arResult['LEAD_ID'];
@@ -465,20 +481,6 @@ class CCrmDealDetailsComponent extends CBitrixComponent
 		}
 		//endregion
 
-		//region Conversion
-		$this->arResult['PERMISSION_ENTITY_TYPE'] = DealCategory::convertToPermissionEntityType($this->categoryID);
-		CCrmDeal::PrepareConversionPermissionFlags($this->entityID, $this->arResult, $this->userPermissions);
-		if($this->arResult['CAN_CONVERT'])
-		{
-			$config = \Bitrix\Crm\Conversion\DealConversionConfig::load();
-			if($config === null)
-			{
-				$config = \Bitrix\Crm\Conversion\DealConversionConfig::getDefault();
-			}
-
-			$this->arResult['CONVERSION_CONFIG'] = $config;
-		}
-		//endregion
 		//region Recurring Deals
 		if ($this->entityData['IS_RECURRING'] === 'Y')
 		{
@@ -632,7 +634,7 @@ class CCrmDealDetailsComponent extends CBitrixComponent
 				'name' => 'STAGE_ID',
 				'title' => Loc::getMessage('CRM_DEAL_FIELD_STAGE_ID'),
 				'type' => 'list',
-				'editable' => true,
+				'editable' => ($this->entityData['IS_RECURRING'] !== "Y"),
 				'data' => array(
 					'items' => \CCrmInstantEditorHelper::PrepareListOptions(
 						$allStages,
@@ -821,6 +823,33 @@ class CCrmDealDetailsComponent extends CBitrixComponent
 				)
 			),
 		);
+
+		$this->arResult['ENTITY_FIELDS'][] = array(
+			'name' => 'UTM',
+			'title' => Loc::getMessage('CRM_DEAL_FIELD_UTM'),
+			'type' => 'custom',
+			'data' => array('view' => 'UTM_VIEW_HTML'),
+			'editable' => false
+		);
+
+		//region WAITING FOR LOCATION SUPPORT
+		/*
+		if($this->isTaxMode)
+		{
+			$this->arResult['ENTITY_FIELDS'][] = array(
+				'name' => 'LOCATION_ID',
+				'title' => Loc::getMessage('CRM_DEAL_FIELD_LOCATION_ID'),
+				'type' => 'custom',
+				'data' => array(
+					'edit' => 'LOCATION_EDIT_HTML',
+					'view' => 'LOCATION_VIEW_HTML'
+				),
+				'editable' => true
+			);
+		}
+		*/
+		//endregion
+
 		$this->arResult['ENTITY_FIELDS'] = array_merge(
 			$this->arResult['ENTITY_FIELDS'],
 			array_values($this->userFieldInfos)
@@ -854,10 +883,11 @@ class CCrmDealDetailsComponent extends CBitrixComponent
 						array(
 							array('name' => 'TYPE_ID'),
 							array('name' => 'BEGINDATE'),
-							//array('name' => 'STAGE_ID'),
+							//array('name' => 'LOCATION_ID'),
 							array('name' => 'OPENED'),
 							array('name' => 'ASSIGNED_BY_ID'),
 							array('name' => 'COMMENTS'),
+							array('name' => 'UTM'),
 						),
 						$userFieldConfigElements
 					)
@@ -900,8 +930,6 @@ class CCrmDealDetailsComponent extends CBitrixComponent
 			$currencyID = $this->entityData['CURRENCY_ID'];
 		}
 
-		$bTaxMode = \CCrmTax::isTaxMode();
-
 		// Determine person type
 		$personTypes = CCrmPaySystem::getPersonTypeIDs();
 		$personTypeID = 0;
@@ -909,7 +937,7 @@ class CCrmDealDetailsComponent extends CBitrixComponent
 		{
 			$personTypeID = $companyID > 0 ? $personTypes['COMPANY'] : $personTypes['CONTACT'];
 		}
-/*
+
 		ob_start();
 		$APPLICATION->IncludeComponent('bitrix:crm.product_row.list',
 			'',
@@ -923,7 +951,7 @@ class CCrmDealDetailsComponent extends CBitrixComponent
 				'PERMISSION_ENTITY_TYPE' => $this->arResult['PERMISSION_ENTITY_TYPE'],
 				'PERSON_TYPE_ID' => $personTypeID,
 				'CURRENCY_ID' => $currencyID,
-				'LOCATION_ID' => $bTaxMode && isset($this->entityData['LOCATION_ID']) ? $this->entityData['LOCATION_ID'] : '',
+				'LOCATION_ID' => $this->isTaxMode && isset($this->entityData['LOCATION_ID']) ? $this->entityData['LOCATION_ID'] : '',
 				'CLIENT_SELECTOR_ID' => '', //TODO: Add Client Selector
 				'PRODUCT_ROWS' =>  isset($this->entityData['PRODUCT_ROWS']) ? $this->entityData['PRODUCT_ROWS'] : null,
 				'HIDE_MODE_BUTTON' => !$this->isEditMode ? 'Y' : 'N',
@@ -948,259 +976,11 @@ class CCrmDealDetailsComponent extends CBitrixComponent
 			'name' => Loc::getMessage('CRM_DEAL_TAB_PRODUCTS'),
 			'html' => $html
 		);
-*/
+
 		if ($this->entityData['IS_RECURRING'] !== "Y")
 		{
 			if($this->entityID > 0)
 			{
-				
-				//Фиктивный вызов без отображения. Вкладка загрузки отображается только для админов, АУП и ответственных
-					
- 					if (CCrmDeal::CheckUpdatePermission($this->arResult['ENTITY_ID'], CCrmPerms::GetUserPermissions(CUser::GetID()))){
- 						ob_start();
-
- 						$APPLICATION->IncludeComponent(
- 							'ucre:gallery.upload',
- 							'',
- 							array('ENTITY' => $this->arResult['ENTITY_DATA'],
- 										'FIELDS' => array(
- 											'Фотографии' => 'UF_CRM_1472038962',
- 											'Планировки' => 'UF_CRM_1476517423',
- 											'Фото для внутреннего пользования' => 'UF_CRM_1513322128',
- 											'Документы по заявке' => 'UF_CRM_1472704376',
- 											'Подписанная заявка' => 'UF_CRM_1512462544',
- 											'Скан агентского договора' => 'UF_CRM_1512462594',
- 										)
- 									 )
- 						);
-
- 						$html = ob_get_contents();
- 						ob_end_clean();
- 						/*
- 						$this->arResult['TABS'][] = array(
- 							'id' => 'tabImgEdit',
- 							'name' => 'Загрузка',
- 							'html' => $html
- 						);*/
- 					}
-/*---------------------- изменения кода для работы компонентов ЕЦН -------------------------------*/
-				if ($this->arResult['CATEGORY_ID'] == 0 || $this->arResult['CATEGORY_ID'] == 4){
-					ob_start();
-					/*Общий компонент для отображения данных связанного объекта*/
-					$APPLICATION->IncludeComponent(
-						'ucre:crm.deal.ro',
-						'',
-						array('DEAL_ID' => $this->arResult['ENTITY_ID'])
-					);
-					/*----------------------------------------------------------*/
-					$html = ob_get_contents();
-					ob_end_clean();
-					$this->arResult['TABS'][] = array(
-						'id' => 'tab_roObject',
-						'name' => 'Объект',
-						'html' =>$html
-					);
-					
-					ob_start();
-					/*Общий компонент для отображения галереи изображений из обозначенных полей*/
-					$APPLICATION->IncludeComponent(
-						'ucre:gallery',
-						'',
-						array('ENTITY' => $this->arResult['ENTITY_DATA'],
-									'FIELDS' => array(
-										'Фотографии' => 'UF_CRM_1472038962',
-										'Планировки' => 'UF_CRM_1476517423',
-										'Фото для внутреннего пользования' => 'UF_CRM_1513322128',
-									)
-								 )
-					);
-					/*----------------------------------------------------------*/
-					/*Общий компонент для отображения галереи изображений из обозначенных полей*/
-					$rsUser = CUser::GetByID(CUser::GetID()); $arUser = $rsUser->Fetch();
-					if (CUser::IsAdmin() || $arUser['WORK_DEPARTMENT'] == 'АУП' || CUser::GetID() == $this->arResult['ENTITY_DATA']['ASSIGNED_BY_ID']){
-						$APPLICATION->IncludeComponent(
-							'ucre:gallery',
-							'',
-							array('ENTITY' => $this->arResult['ENTITY_DATA'],
-										'FIELDS' => array(
-											'Документы по заявке' => 'UF_CRM_1472704376',
-											'Подписанная заявка' => 'UF_CRM_1512462544',
-											'Скан агентского договора' => 'UF_CRM_1512462594',
-										)
-									 )
-						);
-					}
-					/*----------------------------------------------------------*/
-					$html = ob_get_contents();
-					ob_end_clean();
-					
-					//Добавление кнопки редактировать по условию
-					$edit = CCrmDeal::CheckUpdatePermission($this->arResult['ENTITY_ID'], CCrmPerms::GetUserPermissions(CUser::GetID()))?'<div class="galleryUploadWrapper"><div></div><div></div><div></div><div id="galleryUpload">Редактировать</div><div></div><div></div><div></div></div>':"";
-					
-					$this->arResult['TABS'][] = array(
-						'id' => 'tabImg',
-						'name' => 'Изображения',
-						'html' =>'<div id="ucreImageDiv">'.$edit.$html.'</div>'
-					);
-
-					ob_start();
-					/*Общий компонент для отображения лога выгрузки на Авито*/
-					$APPLICATION->IncludeComponent(
-						'ucre:crm.avito.log',
-						'',
-						array(
-							'OBJECT_ID' =>$this->arResult['ENTITY_DATA']['UF_CRM_1469534140']['VALUE'],
-							'COUNT' => 42
-						)
-					);
-					/*----------------------------------------------------------*/
-					$html = ob_get_contents();
-					ob_end_clean();
-					$this->arResult['TABS'][] = array(
-						'id' => 'tab_avitoLog',
-						'name' => 'Лог Авито',
-						'html' =>$html
-					);
-				}
-				if ($this->arResult['CATEGORY_ID'] == 3 || $this->arResult['CATEGORY_ID'] == 9){
-					ob_start();
-					/*Общий компонент для отображения галереи изображений из обозначенных полей*/
-					$APPLICATION->IncludeComponent(
-						'ucre:gallery',
-						'',
-						array('ENTITY' => $this->arResult['ENTITY_DATA'],
-									'FIELDS' => array(
-										'Фотографии' => 'UF_CRM_1472038962',
-										'Планировки' => 'UF_CRM_1476517423',
-										'Фото для внутреннего пользования' => 'UF_CRM_1513322128',
-									)
-								 )
-					);
-					/*----------------------------------------------------------*/
-					/*Общий компонент для отображения галереи изображений из обозначенных полей*/
-					$rsUser = CUser::GetByID(CUser::GetID()); $arUser = $rsUser->Fetch();
-					if (CUser::IsAdmin() || $arUser['WORK_DEPARTMENT'] == 'АУП' || CUser::GetID() == $this->arResult['ENTITY_DATA']['ASSIGNED_BY_ID']){
-						$APPLICATION->IncludeComponent(
-							'ucre:gallery',
-							'',
-							array('ENTITY' => $this->arResult['ENTITY_DATA'],
-										'FIELDS' => array(
-											'Документы по заявке' => 'UF_CRM_1472704376',
-											'Подписанная заявка' => 'UF_CRM_1512462544',
-											'Скан агентского договора' => 'UF_CRM_1512462594',
-										)
-									 )
-						);
-					}
-					/*----------------------------------------------------------*/
-					$html = ob_get_contents();
-					ob_end_clean();
-					
-					//Добавление кнопки редактировать по условию
-					$edit = CCrmDeal::CheckUpdatePermission($this->arResult['ENTITY_ID'], CCrmPerms::GetUserPermissions(CUser::GetID()))?'<div class="galleryUploadWrapper"><div></div><div></div><div></div><div id="galleryUpload">Редактировать</div><div></div><div></div><div></div></div>':"";
-					
-					$this->arResult['TABS'][] = array(
-						'id' => 'tabImg',
-						'name' => 'Изображения',
-						'html' =>'<div id="ucreImageDiv">'.$edit.$html.'</div>'
-					);
-				}
-				if ($this->arResult['CATEGORY_ID'] == 2){
-					ob_start();
-					/*Компонент для редактирования географии поиска для заявок на покупку*/
-					$APPLICATION->IncludeComponent(
-						'ucre:crm.deal.geo',
-						'',
-						array('DEAL_ID' => $this->arResult['ENTITY_ID'])
-					);
-					/*----------------------------------------------------------*/
-					$html = ob_get_contents();
-					ob_end_clean();
-					$this->arResult['TABS'][] = array(
-						'id' => 'tab_geo',
-						'name' => 'Область поиска',
-						'html' => $html
-					);
-					
-					ob_start();
-					/*Общий компонент для отображения галереи изображений из обозначенных полей*/
-					$APPLICATION->IncludeComponent(
-						'ucre:gallery',
-						'',
-						array('ENTITY' => $this->arResult['ENTITY_DATA'],
-									'FIELDS' => array(
-										'Фотографии' => 'UF_CRM_1472038962',
-										'Планировки' => 'UF_CRM_1476517423',
-										'Фото для внутреннего пользования' => 'UF_CRM_1513322128',
-									)
-								 )
-					);
-					/*----------------------------------------------------------*/
-					/*Общий компонент для отображения галереи изображений из обозначенных полей*/
-					$rsUser = CUser::GetByID(CUser::GetID()); $arUser = $rsUser->Fetch();
-					if (CUser::IsAdmin() || $arUser['WORK_DEPARTMENT'] == 'АУП' || CUser::GetID() == $this->arResult['ENTITY_DATA']['ASSIGNED_BY_ID']){
-						$APPLICATION->IncludeComponent(
-							'ucre:gallery',
-							'',
-							array('ENTITY' => $this->arResult['ENTITY_DATA'],
-										'FIELDS' => array(
-											'Документы по заявке' => 'UF_CRM_1472704376',
-											'Подписанная заявка' => 'UF_CRM_1512462544',
-											'Скан агентского договора' => 'UF_CRM_1512462594',
-										)
-									 )
-						);
-					}
-					/*----------------------------------------------------------*/
-					$html = ob_get_contents();
-					ob_end_clean();
-					
-					//Добавление кнопки редактировать по условию
-					$edit = CCrmDeal::CheckUpdatePermission($this->arResult['ENTITY_ID'], CCrmPerms::GetUserPermissions(CUser::GetID()))?'<div class="galleryUploadWrapper"><div></div><div></div><div></div><div id="galleryUpload">Редактировать</div><div></div><div></div><div></div></div>':"";
-					
-					$this->arResult['TABS'][] = array(
-						'id' => 'tabImg',
-						'name' => 'Изображения',
-						'html' =>'<div id="ucreImageDiv">'.$edit.$html.'</div>'
-					);
-					
-					
-					
-					ob_start();
-					/*Компонент для отображения информации по встречным заявкам*/
-					$APPLICATION->IncludeComponent(
-						"ucre:select.relevant.for_buy",
-						"",
-						array('ID' => $this->arResult['ENTITY_ID']),
-						false
-					);
-					/*----------------------------------------------------------*/
-					$html = ob_get_contents();
-					ob_end_clean();
-					$this->arResult['TABS'][] = array(
-						'id' => 'tab_relevant',
-						'name' => 'Встречные заявки',
-						'html' => $html
-					);
-					ob_start();
-					/*Компонент для отображения информации по потенциальным сделкам*/
-					$APPLICATION->IncludeComponent(
-						"ucre:deals.potential.for_buy",
-						"",
-						array('ID' => $this->arResult['ENTITY_ID']),
-						false
-					);
-					/*----------------------------------------------------------*/
-					$html = ob_get_contents();
-					ob_end_clean();
-					$this->arResult['TABS'][] = array(
-						'id' => 'tab_potentials',
-						'name' => 'Потенциальные сделки',
-						'html' => $html
-					);
-				}
-/*---------------------- конец изменений кода для работы компонентов ЕЦН -------------------------------*/
-				
 				$quoteID = isset($this->entityData['QUOTE_ID']) ? (int)$this->entityData['QUOTE_ID'] : 0;
 				if($quoteID > 0)
 				{
@@ -1570,6 +1350,9 @@ class CCrmDealDetailsComponent extends CBitrixComponent
 	}
 	public function prepareEntityData()
 	{
+		/** @global \CMain $APPLICATION */
+		global $APPLICATION;
+
 		if($this->entityData)
 		{
 			return $this->entityData;
@@ -1599,9 +1382,9 @@ class CCrmDealDetailsComponent extends CBitrixComponent
 				$this->entityData['CURRENCY_ID'] = \CCrmCurrency::GetBaseCurrencyID();
 			}
 
-			$this->entityData['OPENED'] = \Bitrix\Crm\Settings\CompanySettings::getCurrent()->getOpenedFlag() ? 'Y' : 'N';
+			$this->entityData['OPENED'] = \Bitrix\Crm\Settings\DealSettings::getCurrent()->getOpenedFlag() ? 'Y' : 'N';
 		}
-		else if($this->entityID <= 0)
+		elseif($this->entityID <= 0)
 		{
 			$this->entityData = array();
 			//region Default Dates
@@ -1686,6 +1469,52 @@ class CCrmDealDetailsComponent extends CBitrixComponent
 				$this->entityData['CURRENCY_ID'] = \CCrmCurrency::GetBaseCurrencyID();
 			}
 
+			//region UTM
+			ob_start();
+			$APPLICATION->IncludeComponent(
+				'bitrix:crm.utm.entity.view',
+				'',
+				array('FIELDS' => $this->entityData),
+				false,
+				array('HIDE_ICONS' => 'Y', 'ACTIVE_COMPONENT' => 'Y')
+			);
+			$this->entityData['UTM_VIEW_HTML'] = ob_get_contents();
+			ob_end_clean();
+			//endregion
+
+			//region WAITING FOR LOCATION SUPPORT
+			/*
+			if($this->isTaxMode)
+			{
+				$locationID = isset($this->entityData['LOCATION_ID']) ? $this->entityData['LOCATION_ID'] : '';
+				ob_start();
+				\CSaleLocation::proxySaleAjaxLocationsComponent(
+					array(
+						'AJAX_CALL' => '�',
+						'COUNTRY_INPUT_NAME' => 'LOC_COUNTRY',
+						'REGION_INPUT_NAME' => 'LOC_REGION',
+						'CITY_INPUT_NAME' => 'LOC_CITY',
+						'CITY_OUT_LOCATION' => 'Y',
+						'LOCATION_VALUE' => $locationID,
+						'ORDER_PROPS_ID' => "DEAL_{$this->entityID}",
+						'ONCITYCHANGE' => 'BX.onCustomEvent(\'CrmProductRowSetLocation\', [\'LOC_CITY\']);',
+						'SHOW_QUICK_CHOOSE' => 'N'
+					),
+					array(
+						"CODE" => $locationID,
+						"ID" => "",
+						"PROVIDE_LINK_BY" => "code",
+						"JS_CALLBACK" => 'CrmProductRowSetLocation'
+					),
+					'popup'
+				);
+				$locationHtml = ob_get_contents();
+				ob_end_clean();
+
+				$this->entityData['LOCATION_EDIT_HTML'] = $locationHtml;
+				$this->entityData['LOCATION_VIEW_HTML'] = '';
+			}
+			*/
 			//region Default Responsible and Stage ID for copy mode
 			if($this->isCopyMode)
 			{
@@ -1835,6 +1664,7 @@ class CCrmDealDetailsComponent extends CBitrixComponent
 		{
 			$this->prepareMultifieldData(\CCrmOwnerType::Company, $companyID, 'PHONE', $multiFildData);
 			$this->prepareMultifieldData(\CCrmOwnerType::Company, $companyID, 'EMAIL', $multiFildData);
+			$this->prepareMultifieldData(\CCrmOwnerType::Company, $companyID, 'IM', $multiFildData);
 
 			$isEntityReadPermitted = \CCrmCompany::CheckReadPermission($companyID, $this->userPermissions);
 			$companyInfo = \CCrmEntitySelectorHelper::PrepareEntityInfo(
@@ -1875,6 +1705,7 @@ class CCrmDealDetailsComponent extends CBitrixComponent
 		{
 			$this->prepareMultifieldData(CCrmOwnerType::Contact, $contactID, 'PHONE', $multiFildData);
 			$this->prepareMultifieldData(\CCrmOwnerType::Contact, $contactID, 'EMAIL', $multiFildData);
+			$this->prepareMultifieldData(\CCrmOwnerType::Contact, $contactID, 'IM', $multiFildData);
 
 			$isEntityReadPermitted = CCrmContact::CheckReadPermission($contactID, $this->userPermissions);
 			$clientInfo['SECONDARY_ENTITY_DATA'][] = CCrmEntitySelectorHelper::PrepareEntityInfo(
