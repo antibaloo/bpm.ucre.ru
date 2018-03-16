@@ -981,6 +981,253 @@ class CCrmDealDetailsComponent extends CBitrixComponent
 		{
 			if($this->entityID > 0)
 			{
+							
+ 				//Фиктивный вызов без отображения. Вкладка загрузки отображается только для админов, АУП и ответственных		
+ 							
+  					if (CCrmDeal::CheckUpdatePermission($this->arResult['ENTITY_ID'], CCrmPerms::GetUserPermissions(CUser::GetID()))){		
+  						ob_start();		
+ 		
+  						$APPLICATION->IncludeComponent(		
+  							'ucre:gallery.upload',		
+  							'',		
+  							array('ENTITY' => $this->arResult['ENTITY_DATA'],		
+  										'FIELDS' => array(		
+  											'Фотографии' => 'UF_CRM_1472038962',		
+  											'Планировки' => 'UF_CRM_1476517423',		
+  											'Фото для внутреннего пользования' => 'UF_CRM_1513322128',		
+  											'Документы по заявке' => 'UF_CRM_1472704376',		
+  											'Подписанная заявка' => 'UF_CRM_1512462544',		
+  											'Скан агентского договора' => 'UF_CRM_1512462594',		
+  										)		
+  									 )		
+  						);		
+ 		
+  						$html = ob_get_contents();		
+  						ob_end_clean();		
+  						/*		
+  						$this->arResult['TABS'][] = array(		
+  							'id' => 'tabImgEdit',		
+  							'name' => 'Загрузка',		
+  							'html' => $html		
+  						);*/		
+  					}		
+ /*---------------------- изменения кода для работы компонентов ЕЦН -------------------------------*/		
+ 				if ($this->arResult['CATEGORY_ID'] == 0 || $this->arResult['CATEGORY_ID'] == 4){		
+ 					ob_start();		
+ 					/*Общий компонент для отображения данных связанного объекта*/		
+ 					$APPLICATION->IncludeComponent(		
+ 						'ucre:crm.deal.ro',		
+ 						'',		
+ 						array('DEAL_ID' => $this->arResult['ENTITY_ID'])		
+ 					);		
+ 					/*----------------------------------------------------------*/		
+ 					$html = ob_get_contents();		
+ 					ob_end_clean();		
+ 					$this->arResult['TABS'][] = array(		
+ 						'id' => 'tab_roObject',		
+ 						'name' => 'Объект',		
+ 						'html' =>$html		
+ 					);		
+ 							
+ 					ob_start();		
+ 					/*Общий компонент для отображения галереи изображений из обозначенных полей*/		
+ 					$APPLICATION->IncludeComponent(		
+ 						'ucre:gallery',		
+ 						'',		
+ 						array('ENTITY' => $this->arResult['ENTITY_DATA'],		
+ 									'FIELDS' => array(		
+ 										'Фотографии' => 'UF_CRM_1472038962',		
+ 										'Планировки' => 'UF_CRM_1476517423',		
+ 										'Фото для внутреннего пользования' => 'UF_CRM_1513322128',		
+ 									)		
+ 								 )		
+ 					);		
+ 					/*----------------------------------------------------------*/		
+ 					/*Общий компонент для отображения галереи изображений из обозначенных полей*/		
+ 					$rsUser = CUser::GetByID(CUser::GetID()); $arUser = $rsUser->Fetch();		
+ 					if (CUser::IsAdmin() || $arUser['WORK_DEPARTMENT'] == 'АУП' || CUser::GetID() == $this->arResult['ENTITY_DATA']['ASSIGNED_BY_ID']){		
+ 						$APPLICATION->IncludeComponent(		
+ 							'ucre:gallery',		
+ 							'',		
+ 							array('ENTITY' => $this->arResult['ENTITY_DATA'],		
+ 										'FIELDS' => array(		
+ 											'Документы по заявке' => 'UF_CRM_1472704376',		
+ 											'Подписанная заявка' => 'UF_CRM_1512462544',		
+ 											'Скан агентского договора' => 'UF_CRM_1512462594',		
+ 										)		
+ 									 )		
+ 						);		
+ 					}		
+ 					/*----------------------------------------------------------*/		
+ 					$html = ob_get_contents();		
+ 					ob_end_clean();		
+ 							
+ 					//Добавление кнопки редактировать по условию		
+ 					$edit = CCrmDeal::CheckUpdatePermission($this->arResult['ENTITY_ID'], CCrmPerms::GetUserPermissions(CUser::GetID()))?'<div class="galleryUploadWrapper"><div></div><div></div><div></div><div id="galleryUpload">Редактировать</div><div></div><div></div><div></div></div>':"";		
+ 							
+ 					$this->arResult['TABS'][] = array(		
+ 						'id' => 'tabImg',		
+ 						'name' => 'Изображения',		
+ 						'html' =>'<div id="ucreImageDiv">'.$edit.$html.'</div>'		
+ 					);		
+ 		
+ 					ob_start();		
+ 					/*Общий компонент для отображения лога выгрузки на Авито*/		
+ 					$APPLICATION->IncludeComponent(		
+ 						'ucre:crm.avito.log',		
+ 						'',		
+ 						array(		
+ 							'OBJECT_ID' =>$this->arResult['ENTITY_DATA']['UF_CRM_1469534140']['VALUE'],		
+ 							'COUNT' => 42		
+ 						)		
+ 					);		
+ 					/*----------------------------------------------------------*/		
+ 					$html = ob_get_contents();		
+ 					ob_end_clean();		
+ 					$this->arResult['TABS'][] = array(		
+ 						'id' => 'tab_avitoLog',		
+ 						'name' => 'Лог Авито',		
+ 						'html' =>$html		
+ 					);		
+ 				}		
+ 				if ($this->arResult['CATEGORY_ID'] == 3 || $this->arResult['CATEGORY_ID'] == 9){		
+ 					ob_start();		
+ 					/*Общий компонент для отображения галереи изображений из обозначенных полей*/		
+ 					$APPLICATION->IncludeComponent(		
+ 						'ucre:gallery',		
+ 						'',		
+ 						array('ENTITY' => $this->arResult['ENTITY_DATA'],		
+ 									'FIELDS' => array(		
+ 										'Фотографии' => 'UF_CRM_1472038962',		
+ 										'Планировки' => 'UF_CRM_1476517423',		
+ 										'Фото для внутреннего пользования' => 'UF_CRM_1513322128',		
+ 									)		
+ 								 )		
+ 					);		
+ 					/*----------------------------------------------------------*/		
+ 					/*Общий компонент для отображения галереи изображений из обозначенных полей*/		
+ 					$rsUser = CUser::GetByID(CUser::GetID()); $arUser = $rsUser->Fetch();		
+ 					if (CUser::IsAdmin() || $arUser['WORK_DEPARTMENT'] == 'АУП' || CUser::GetID() == $this->arResult['ENTITY_DATA']['ASSIGNED_BY_ID']){		
+ 						$APPLICATION->IncludeComponent(		
+ 							'ucre:gallery',		
+ 							'',		
+ 							array('ENTITY' => $this->arResult['ENTITY_DATA'],		
+ 										'FIELDS' => array(		
+ 											'Документы по заявке' => 'UF_CRM_1472704376',		
+ 											'Подписанная заявка' => 'UF_CRM_1512462544',		
+ 											'Скан агентского договора' => 'UF_CRM_1512462594',		
+ 										)		
+ 									 )		
+ 						);		
+ 					}		
+ 					/*----------------------------------------------------------*/		
+ 					$html = ob_get_contents();		
+ 					ob_end_clean();		
+ 							
+ 					//Добавление кнопки редактировать по условию		
+ 					$edit = CCrmDeal::CheckUpdatePermission($this->arResult['ENTITY_ID'], CCrmPerms::GetUserPermissions(CUser::GetID()))?'<div class="galleryUploadWrapper"><div></div><div></div><div></div><div id="galleryUpload">Редактировать</div><div></div><div></div><div></div></div>':"";		
+ 							
+ 					$this->arResult['TABS'][] = array(		
+ 						'id' => 'tabImg',		
+ 						'name' => 'Изображения',		
+ 						'html' =>'<div id="ucreImageDiv">'.$edit.$html.'</div>'		
+ 					);		
+ 				}		
+ 				if ($this->arResult['CATEGORY_ID'] == 2){		
+ 					ob_start();		
+ 					/*Компонент для редактирования географии поиска для заявок на покупку*/		
+ 					$APPLICATION->IncludeComponent(		
+ 						'ucre:crm.deal.geo',		
+ 						'',		
+ 						array('DEAL_ID' => $this->arResult['ENTITY_ID'])		
+ 					);		
+ 					/*----------------------------------------------------------*/		
+ 					$html = ob_get_contents();		
+ 					ob_end_clean();		
+ 					$this->arResult['TABS'][] = array(		
+ 						'id' => 'tab_geo',		
+ 						'name' => 'Область поиска',		
+ 						'html' => $html		
+ 					);		
+ 							
+ 					ob_start();		
+ 					/*Общий компонент для отображения галереи изображений из обозначенных полей*/		
+ 					$APPLICATION->IncludeComponent(		
+ 						'ucre:gallery',		
+ 						'',		
+ 						array('ENTITY' => $this->arResult['ENTITY_DATA'],		
+ 									'FIELDS' => array(		
+ 										'Фотографии' => 'UF_CRM_1472038962',		
+ 										'Планировки' => 'UF_CRM_1476517423',		
+ 										'Фото для внутреннего пользования' => 'UF_CRM_1513322128',		
+ 									)		
+ 								 )		
+ 					);		
+ 					/*----------------------------------------------------------*/		
+ 					/*Общий компонент для отображения галереи изображений из обозначенных полей*/		
+ 					$rsUser = CUser::GetByID(CUser::GetID()); $arUser = $rsUser->Fetch();		
+ 					if (CUser::IsAdmin() || $arUser['WORK_DEPARTMENT'] == 'АУП' || CUser::GetID() == $this->arResult['ENTITY_DATA']['ASSIGNED_BY_ID']){		
+ 						$APPLICATION->IncludeComponent(		
+ 							'ucre:gallery',		
+ 							'',		
+ 							array('ENTITY' => $this->arResult['ENTITY_DATA'],		
+ 										'FIELDS' => array(		
+ 											'Документы по заявке' => 'UF_CRM_1472704376',		
+ 											'Подписанная заявка' => 'UF_CRM_1512462544',		
+ 											'Скан агентского договора' => 'UF_CRM_1512462594',		
+ 										)		
+ 									 )		
+ 						);		
+ 					}		
+ 				/*----------------------------------------------------------*/		
+ 					$html = ob_get_contents();		
+ 					ob_end_clean();		
+ 							
+ 					//Добавление кнопки редактировать по условию		
+ 					$edit = CCrmDeal::CheckUpdatePermission($this->arResult['ENTITY_ID'], CCrmPerms::GetUserPermissions(CUser::GetID()))?'<div class="galleryUploadWrapper"><div></div><div></div><div></div><div id="galleryUpload">Редактировать</div><div></div><div></div><div></div></div>':"";		
+ 							
+ 					$this->arResult['TABS'][] = array(		
+ 						'id' => 'tabImg',		
+ 						'name' => 'Изображения',		
+ 						'html' =>'<div id="ucreImageDiv">'.$edit.$html.'</div>'		
+ 					);		
+ 							
+ 							
+ 							
+ 					ob_start();		
+ 					/*Компонент для отображения информации по встречным заявкам*/		
+ 					$APPLICATION->IncludeComponent(		
+ 						"ucre:select.relevant.for_buy",		
+ 						"",		
+ 						array('ID' => $this->arResult['ENTITY_ID']),		
+ 						false		
+ 					);		
+ 					/*----------------------------------------------------------*/		
+ 					$html = ob_get_contents();		
+ 					ob_end_clean();		
+ 					$this->arResult['TABS'][] = array(		
+ 						'id' => 'tab_relevant',		
+ 						'name' => 'Встречные заявки',		
+ 						'html' => $html		
+ 					);		
+ 					ob_start();		
+ 					/*Компонент для отображения информации по потенциальным сделкам*/		
+ 					$APPLICATION->IncludeComponent(		
+ 						"ucre:deals.potential.for_buy",		
+ 						"",		
+ 						array('ID' => $this->arResult['ENTITY_ID']),		
+ 						false		
+ 					);		
+ 				/*----------------------------------------------------------*/		
+ 					$html = ob_get_contents();		
+ 					ob_end_clean();		
+ 					$this->arResult['TABS'][] = array(		
+ 						'id' => 'tab_potentials',		
+ 						'name' => 'Потенциальные сделки',		
+ 						'html' => $html		
+ 					);		
+ 				}		
+ /*---------------------- конец изменений кода для работы компонентов ЕЦН -------------------------------*/
 				$quoteID = isset($this->entityData['QUOTE_ID']) ? (int)$this->entityData['QUOTE_ID'] : 0;
 				if($quoteID > 0)
 				{
@@ -1490,7 +1737,7 @@ class CCrmDealDetailsComponent extends CBitrixComponent
 				ob_start();
 				\CSaleLocation::proxySaleAjaxLocationsComponent(
 					array(
-						'AJAX_CALL' => '�',
+						'AJAX_CALL' => '�',
 						'COUNTRY_INPUT_NAME' => 'LOC_COUNTRY',
 						'REGION_INPUT_NAME' => 'LOC_REGION',
 						'CITY_INPUT_NAME' => 'LOC_CITY',
