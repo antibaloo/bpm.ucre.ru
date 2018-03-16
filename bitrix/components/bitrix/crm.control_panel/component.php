@@ -63,6 +63,8 @@ $arParams['PATH_TO_LEAD_DETAILS'] = CrmCheckPath('PATH_TO_LEAD_DETAILS', $arPara
 $arParams['PATH_TO_QUOTE_LIST'] = CrmCheckPath('PATH_TO_QUOTE_LIST', isset($arParams['PATH_TO_QUOTE_LIST']) ? $arParams['PATH_TO_QUOTE_LIST'] : '', '#SITE_DIR#crm/quote/list/');
 $arParams['PATH_TO_QUOTE_EDIT'] = (isset($arParams['PATH_TO_QUOTE_EDIT']) && $arParams['PATH_TO_QUOTE_EDIT'] !== '') ? $arParams['PATH_TO_QUOTE_EDIT'] : '#SITE_DIR#crm/quote/edit/#quote_id#/';
 $arParams['PATH_TO_QUOTE_KANBAN'] = (isset($arParams['PATH_TO_QUOTE_KANBAN']) && $arParams['PATH_TO_QUOTE_KANBAN'] !== '') ? $arParams['PATH_TO_QUOTE_KANBAN'] : '#SITE_DIR#crm/quote/kanban/';
+$arParams['PATH_TO_QUOTE_DETAILS'] = CrmCheckPath('PATH_TO_QUOTE_DETAILS', $arParams['PATH_TO_QUOTE_DETAILS'], '#SITE_DIR#crm/quote/details/#quote_id#/');
+
 $arParams['PATH_TO_INVOICE_LIST'] = CrmCheckPath('PATH_TO_INVOICE_LIST', isset($arParams['PATH_TO_INVOICE_LIST']) ? $arParams['PATH_TO_INVOICE_LIST'] : '', '#SITE_DIR#crm/invoice/list/');
 $arParams['PATH_TO_INVOICE_RECUR'] = CrmCheckPath('PATH_TO_INVOICE_RECUR', isset($arParams['PATH_TO_INVOICE_RECUR']) ? $arParams['PATH_TO_INVOICE_RECUR'] : '', '#SITE_DIR#crm/invoice/recur/');
 $arParams['PATH_TO_INVOICE_EDIT'] = (isset($arParams['PATH_TO_INVOICE_EDIT']) && $arParams['PATH_TO_INVOICE_EDIT'] !== '') ? $arParams['PATH_TO_INVOICE_EDIT'] : '#SITE_DIR#crm/invoice/edit/#invoice_id#/';
@@ -209,7 +211,7 @@ if($isAdmin || CCrmLead::CheckReadPermission(0, $userPermissions))
 	);
 
 	$actions = array();
-	if($isAdmin || \CCrmLead::CheckCreatePermission($userPermissions))
+	if($isAdmin || CCrmLead::CheckCreatePermission($userPermissions))
 	{
 		if($isSliderEnabled)
 		{
@@ -256,7 +258,7 @@ if($isAdmin || CCrmDeal::CheckReadPermission(0, $userPermissions))
 	);
 
 	$actions = array();
-	if($isAdmin || \CCrmDeal::CheckCreatePermission($userPermissions, $currentCategoryID))
+	if($isAdmin || CCrmDeal::CheckCreatePermission($userPermissions, $currentCategoryID))
 	{
 		if($isSliderEnabled)
 		{
@@ -344,8 +346,29 @@ if($isAdmin || !$userPermissions->HavePerm('INVOICE', BX_CRM_PERM_NONE, 'READ'))
 	}
 }
 
-if($isAdmin || !$userPermissions->HavePerm('QUOTE', BX_CRM_PERM_NONE, 'READ'))
+if($isAdmin || CCrmQuote::CheckReadPermission(0, $userPermissions))
 {
+	$actions = array();
+	if($isAdmin || CCrmQuote::CheckCreatePermission($userPermissions))
+	{
+		//if($isSliderEnabled)
+		//{
+		//	$createUrl = CComponentEngine::MakePathFromTemplate(
+		//		$arParams['PATH_TO_QUOTE_DETAILS'],
+		//		array('quote_id' => 0)
+		//	);
+		//}
+		//else
+		//{
+			$createUrl = CComponentEngine::MakePathFromTemplate(
+				$arParams['PATH_TO_QUOTE_EDIT'],
+				array('quote_id' => 0)
+			);
+		//}
+
+		$actions[] = array('ID' => 'CREATE', 'URL' => $createUrl);
+	}
+
 	$stdItems['QUOTE'] = array(
 		'ID' => 'QUOTE',
 		'MENU_ID' => 'menu_crm_quote',
@@ -355,15 +378,7 @@ if($isAdmin || !$userPermissions->HavePerm('QUOTE', BX_CRM_PERM_NONE, 'READ'))
 			$arParams['PATH_TO_QUOTE_INDEX'] !== '' ? $arParams['PATH_TO_QUOTE_INDEX'] : $arParams['PATH_TO_QUOTE_LIST']
 		),
 		'ICON' => 'quote',
-		'ACTIONS' => array(
-			array(
-				'ID' => 'CREATE',
-				'URL' =>  CComponentEngine::MakePathFromTemplate(
-					$arParams['PATH_TO_QUOTE_EDIT'],
-					array('quote_id' => 0)
-				)
-			)
-		)
+		'ACTIONS' => $actions
 	);
 }
 
@@ -377,7 +392,7 @@ if($isAdmin || CCrmContact::CheckReadPermission(0, $userPermissions))
 	);
 
 	$actions = array();
-	if($isAdmin || \CCrmContact::CheckCreatePermission($userPermissions))
+	if($isAdmin || CCrmContact::CheckCreatePermission($userPermissions))
 	{
 		if($isSliderEnabled)
 		{
@@ -422,7 +437,7 @@ if($isAdmin || CCrmCompany::CheckReadPermission(0, $userPermissions))
 	);
 
 	$actions = array();
-	if($isAdmin || \CCrmCompany::CheckCreatePermission($userPermissions))
+	if($isAdmin || CCrmCompany::CheckCreatePermission($userPermissions))
 	{
 		if($isSliderEnabled)
 		{
