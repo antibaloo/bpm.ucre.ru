@@ -20,7 +20,7 @@ $MESS["CRM_COMPANY_SECTION_ADDITIONAL"] = "Дополнительно";
 $MESS["CRM_COMPANY_TAB_INVOICES"] = "Счета";
 $MESS["CRM_COMPANY_TAB_EVENT"] = "История";
 $MESS["CRM_COMPANY_TAB_QUOTE"] = "Предложения";
-$MESS["CRM_COMPANY_TAB_DEAL"] = "Заявки";
+$MESS["CRM_COMPANY_TAB_DEAL"] = "Сделки";
 $MESS["CRM_COMPANY_TAB_BIZPROC"] = "Бизнес-процессы";
 $MESS["CRM_COMPANY_TAB_PORTRAIT"] = "Портрет";
 $MESS["CRM_COMPANY_TAB_TREE"] = "Связи";
@@ -33,6 +33,7 @@ $MESS["CRM_COMPANY_FIELD_CONTACT_LEGEND"] = "Контакты, связанны�
 $MESS["CRM_COMPANY_FIELD_REQUISITES"] = "Реквизиты";
 $MESS["CRM_COMPANY_NOT_FOUND"] = "Компания не найдена";
 $MESS["CRM_COMPANY_FIELD_ID"] = "ID";
+$MESS["CRM_COMPANY_FIELD_UTM"] = "UTM-метки";
 
 
 
