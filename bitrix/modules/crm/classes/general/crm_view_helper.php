@@ -2802,6 +2802,29 @@ class CCrmViewHelper
 		}
 		return $formFieldNames;
 	}
+	public static function PrepareQuoteStatusInfoExtraParams(array &$infos)
+	{
+		foreach(array_keys($infos) as $statusID)
+		{
+			$semanticID = CCrmQuote::GetSemanticID($statusID);
+			$infos[$statusID]['SEMANTICS'] = $semanticID;
+			if(!isset($infos[$statusID]['COLOR']))
+			{
+				if($semanticID === Bitrix\Crm\PhaseSemantics::SUCCESS)
+				{
+					$infos[$statusID]['COLOR'] = \CCrmViewHelper::SUCCESS_COLOR;
+				}
+				elseif($semanticID === Bitrix\Crm\PhaseSemantics::FAILURE)
+				{
+					$infos[$statusID]['COLOR'] = \CCrmViewHelper::FAILURE_COLOR;
+				}
+				else
+				{
+					$infos[$statusID]['COLOR'] = \CCrmViewHelper::PROCESS_COLOR;
+				}
+			}
+		}
+	}
 
 	public static function GetCurrencyText($currencyID)
 	{
