@@ -60,4 +60,6 @@ Erstellen Sie einen wiederkehrenden Auftrag, legen Sie einen Zeitplan und eine P
 ";
 $MESS["CRM_DEAL_QUOTE_LINK"] = "Auftrag wurde aus dem Angebot <a target='_blank' href='#URL#'>#TITLE#</a> erstellt";
 $MESS["CRM_DEAL_TAB_TREE"] = "Abhängigkeiten";
+$MESS["CRM_DEAL_FIELD_LOCATION_ID"] = "Standort";
+$MESS["CRM_DEAL_FIELD_UTM"] = "UTM-Parameter";
 ?>

@@ -59,4 +59,6 @@ $MESS["CRM_RECURRING_DEAL_B24_BLOCK_TEXT"] = "Let Bitrix24 create deals for you!
 		<strong>Recurring Deals Are Available in \"Standard\" And \"Professional\" Plans</strong>";
 $MESS["CRM_DEAL_QUOTE_LINK"] = "Deal was created based on the quote <a target='_blank' href='#URL#'>#TITLE#</a>";
 $MESS["CRM_DEAL_TAB_TREE"] = "Dependencies";
+$MESS["CRM_DEAL_FIELD_LOCATION_ID"] = "Location";
+$MESS["CRM_DEAL_FIELD_UTM"] = "UTM parameters";
 ?>
