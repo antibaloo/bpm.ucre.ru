@@ -937,7 +937,7 @@ class CCrmDealDetailsComponent extends CBitrixComponent
 		{
 			$personTypeID = $companyID > 0 ? $personTypes['COMPANY'] : $personTypes['CONTACT'];
 		}
-
+/*
 		ob_start();
 		$APPLICATION->IncludeComponent('bitrix:crm.product_row.list',
 			'',
@@ -976,7 +976,7 @@ class CCrmDealDetailsComponent extends CBitrixComponent
 			'name' => Loc::getMessage('CRM_DEAL_TAB_PRODUCTS'),
 			'html' => $html
 		);
-
+*/
 		if ($this->entityData['IS_RECURRING'] !== "Y")
 		{
 			if($this->entityID > 0)
