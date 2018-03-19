@@ -1,5 +1,4 @@
 <?php
-use \Bitrix\Crm\Category\DealCategory;
 if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) die();
 global $APPLICATION;
 $APPLICATION->SetAdditionalCSS('/bitrix/js/crm/css/crm.css');
@@ -335,6 +334,13 @@ if(!function_exists('__CrmQuickPanelViewRenderSection'))
 				}
 				echo '</div>';
 			}
+			elseif($type === 'money')
+			{
+				echo '<div class="crm-lead-header-text-wrapper">';
+				echo '<div class="crm-lead-header-text-view-wrapper">', isset($data['formatted_sum']) ? $data['formatted_sum'] : '', '</div>';
+				echo '<div class="crm-lead-header-text-edit-wrapper" style="display: none;"></div>';
+				echo '</div>';
+			}
 			elseif($type === 'text')
 			{
 				$html = isset($data['text']) ? htmlspecialcharsbx($data['text']) : '';
@@ -407,7 +413,6 @@ if(!function_exists('__CrmQuickPanelViewRenderSection'))
 						$title = $arResult['HEAD_TITLE'];
 						$headerConfig['TITLE'] = array('fieldId' => $arResult['HEAD_TITLE_FIELD_ID']);
 						?><div id="<?="{$guid}_title"?>" class="crm-lead-header-title">
-						 <?if ($entityTypeID === CCrmOwnerType::Deal) echo "<span style='color: blue; font-size: 18px; vertical-align: middle;' title='Заявку создал(а): ".$entityFields['CREATED_BY_NAME']." ".$entityFields['CREATED_BY_LAST_NAME']."'>".DealCategory::getName($entityFields['CATEGORY_ID']).": </span>";?>
 							<span class="crm-lead-header-title-text"><?=$title?></span>
 						<span class="crm-lead-header-title-edit-wrapper" style="display: none;"></span>
 							<div class="crm-lead-header-title-edit"></div>
