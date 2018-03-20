@@ -1226,7 +1226,7 @@ class CCrmDealDetailsComponent extends CBitrixComponent
  						'name' => 'Потенциальные сделки',		
  						'html' => $html		
  					);		
- 				}		
+ 				}
  /*---------------------- конец изменений кода для работы компонентов ЕЦН -------------------------------*/
 				$quoteID = isset($this->entityData['QUOTE_ID']) ? (int)$this->entityData['QUOTE_ID'] : 0;
 				if($quoteID > 0)
