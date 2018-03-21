@@ -1,4 +1,9 @@
 <?
+/*------------------Убираем вкладку товары------------------------*/
+foreach ($arResult['TABS'] as $key=>$tab){
+  if ($tab['id'] == 'tab_products') unset($arResult['TABS'][$key]);
+}
+/*----------------------------------------------------------------*/
 if ($arResult['ENTITY_ID']>0){
   if ($arResult['CATEGORY_ID'] == 0 || $arResult['CATEGORY_ID'] == 4){
     
