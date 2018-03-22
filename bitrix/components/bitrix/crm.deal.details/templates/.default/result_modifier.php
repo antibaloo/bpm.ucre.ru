@@ -235,12 +235,29 @@ if ($arResult['ENTITY_ID']>0){
   }
 }
 if ($USER->GetID() == 24 || $USER->GetID() == 1){
-  $custom = array(
-    'id' => 'tab_custom',
-    'name' => 'Something',
-    'html' => "Тестовая вкладка из result_modifier.php"
-  );
-  array_unshift($arResult['TABS'], $custom);
+  if ($arResult['CATEGORY_ID'] == 2){
+    ob_start();
+    /*Компонент для отображения информации по встречным заявкам*/
+    $APPLICATION->IncludeComponent(
+      "ucre:crm.offer.buy",
+      "",
+      array(
+        'ID' => $arResult['ENTITY_ID'],
+        'OFFER_AJAX_ID' => 'offerAjax_'.time(),
+      ),
+      false
+    );
+    /*----------------------------------------------------------*/
+    $html = ob_get_contents();
+    ob_end_clean();
+    $offer = array(
+      'id' => 'tab_offer',
+      'name' => 'Новые встречные',
+      'html' => "<div id='".$offerAjaxId."'>".$html."</div>"
+    );
+    array_unshift($arResult['TABS'], $offer);
+  }
+  
 }
 
 ?>
