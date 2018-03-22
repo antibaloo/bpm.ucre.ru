@@ -236,6 +236,7 @@ if ($arResult['ENTITY_ID']>0){
 }
 if ($USER->GetID() == 24 || $USER->GetID() == 1){
   if ($arResult['CATEGORY_ID'] == 2){
+    $offerAjaxId = 'offerAjax_'.time();
     ob_start();
     /*Компонент для отображения информации по встречным заявкам*/
     $APPLICATION->IncludeComponent(
@@ -243,7 +244,7 @@ if ($USER->GetID() == 24 || $USER->GetID() == 1){
       "",
       array(
         'ID' => $arResult['ENTITY_ID'],
-        'OFFER_AJAX_ID' => 'offerAjax_'.time(),
+        'OFFER_AJAX_ID' => $offerAjaxId,
       ),
       false
     );
