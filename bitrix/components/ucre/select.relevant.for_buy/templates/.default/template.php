@@ -76,7 +76,6 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED!==true)die();
 </div>
 <script>
   $("#submit").click(function () {
-console.log("1");
     var data = $('#select_relevant_to_buy').serialize();
     $.ajax({
       url: "<?=$arResult['COMPONENT_PATH']?>/ajax.php",
