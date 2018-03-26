@@ -1,0 +1,16 @@
+.offerForm{
+  height: 60px;
+  width: 50%;
+  background-color: lightblue;
+  float: left;
+}
+.offerMap{
+  width: 50%;
+  background-color: lightgray;
+  float: right;
+}
+.offerResultGrid{
+  clear: both;
+  width: 100%;
+  background-color: lightyellow;
+}

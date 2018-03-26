@@ -1,11 +1,41 @@
 <?php
 if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED!==true) die();
 CModule::IncludeModule("crm");
+use Bitrix\Main\UI\Extension;
 
-$template = "template";
+Extension::load('ui.buttons');
+Extension::load('ui.buttons.icons');
+
+$template = "notype";
 
 if (isset($arParams["PARAMS"])){//Вызов из формы
   $arResult['PARAMS'] = $arParams["PARAMS"];
+  switch ($arResult['PARAMS']['UF_CRM_58CFC7CDAAB96']){
+    case '1':
+      $template="room";
+      break;
+    case '2':
+      $template="flat";
+      break;
+    case '3':
+      $template="house";
+      break;
+    case '4':
+      $template="town";
+      break;
+    case '5':
+      $template="dacha";
+      break;
+    case '6':
+      $template="plot";
+      break;
+    case '7':
+      $template="comm";
+      break;
+    default:
+      $template="notype";
+      break;
+  }
 }else{                          //Вызов из кода
   if (isset($arParams['ID'])){
     //Читаем параметры поиска из БД
@@ -25,6 +55,32 @@ if (isset($arParams["PARAMS"])){//Вызов из формы
     unset($mainDeal['CATEGORY_ID']); //Убираем ненужный параметр, чтоб не мешал
     unset($mainDeal['ID']);          //Убираем ненужный параметр, чтоб не мешал
     $arResult['PARAMS'] = $mainDeal;
+    switch ($arResult['PARAMS']['UF_CRM_58CFC7CDAAB96']){
+      case '1':
+        $template="room";
+        break;
+      case '2':
+        $template="flat";
+        break;
+      case '3':
+        $template="house";
+        break;
+      case '4':
+        $template="town";
+        break;
+      case '5':
+        $template="dacha";
+        break;
+      case '6':
+        $template="plot";
+        break;
+      case '7':
+        $template="comm";
+        break;
+      default:
+        $template="notype";
+        break;
+    }
   }else{
     $template = "error";
     $arResult['ERRORS'][] = "Не задан id заявки";
