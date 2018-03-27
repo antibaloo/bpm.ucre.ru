@@ -103,6 +103,40 @@ if ($arResult['ENTITY_ID']>0){
     array_unshift($arResult['TABS'], $object, $gallery, $avitoLog);
   }
   if ($arResult['CATEGORY_ID'] == 3 || $arResult['CATEGORY_ID'] == 9){
+    $arGroups = $USER->GetUserGroup($USER->GetID());
+    if (in_array(18,$arGroups) || $USER->IsAdmin()){
+      /*-------------------------Фотографирование клиента-------------------------*/
+      ob_start();
+      if ($arResult['ENTITY_DATA']['CONTACT_ID']){
+        $arContact = CCrmContact::GetByID($arResult['ENTITY_DATA']['CONTACT_ID']);
+        if (!$arContact['PHOTO']){
+          $APPLICATION->IncludeComponent(
+            'ucre:contact.photo',
+            '',
+            array('CONTACT_ID' => $arResult['ENTITY_DATA']['CONTACT_ID'])
+          );
+          $html = ob_get_contents();
+          ob_end_clean();
+          $photo = array(
+            'id' => 'tabPhoto',
+            'name' => 'Фото',
+            'html' =>$html
+          );
+          array_unshift($arResult['TABS'], $photo);
+        }
+      }else{
+        echo "<h2>Нет связанного контакта!</h2>";
+        $html = ob_get_contents();
+        ob_end_clean();
+        $photo = array(
+          'id' => 'tabPhoto',
+          'name' => 'ФК',
+          'html' =>$html
+        );
+        array_unshift($arResult['TABS'], $photo);
+      }
+      /*--------------------------------------------------------------------------*/
+    }
     ob_start();
     /*Общий компонент для отображения галереи изображений из обозначенных полей*/
     $APPLICATION->IncludeComponent(
