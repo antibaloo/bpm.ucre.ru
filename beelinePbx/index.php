@@ -86,7 +86,7 @@ $releaseTime = str_replace("'","",$beelineCall['releaseTime']);
 $addressOfRecord = str_replace("'","",$beelineCall['addressOfRecord']);
 $recordingState = str_replace("'","",$beelineCall['recordingState']);
 
-
+$personality = str_replace("'","",$beelineCall['personality']);
 
 
 $restHelper = new \Bitrix\Voximplant\Rest\Helper;
@@ -256,7 +256,7 @@ if ($eventType == 'xsi:CallReleasedEvent') {
     'CALL_ID' => getBitrixByBeelinepbx($callId),
     'DURATION' => $duration,
     'USER_ID' => $assignedById,
-    'ADD_TO_CHAT' => true,
+    'ADD_TO_CHAT' => false,
     'RECORD_URL' => '',
     'STATUS_CODE' => $statusCode,
   );
@@ -292,9 +292,29 @@ if ($eventType == 'xsi:CallReleasedEvent') {
     $oActivity = new CCrmActivity;
     $acFields = array('COMPLETED' => 'N');
     $oActivity->Update($finishData['CRM_ACTIVITY_ID'], $acFields,true, true, array('CURRENT_USER' => 24));
+    
+    //Уведомление о внутренних пропущенных звонках
+    if($remotePartyCallType == 'Group' && $personality == 'Terminator'){
+      switch ($statusCode){
+        case 486:
+          $message = "Ваш телефон был занят (".date("H:i:s d.m.Y").")";
+          break;
+        case 480:
+          $message = "Ваш телефон был недоступен (".date("H:i:s d.m.Y").")";
+          break;
+        default:
+          $message = "Пропущенный вызов (".date("H:i:s d.m.Y").")";
+          break;
+      }
+      $arFields = array(
+        "MESSAGE_TYPE" => "P", # P - private chat, G - group chat, S - notification
+        "TO_USER_ID" =>  getUserByTargetId($targetId),
+        "FROM_USER_ID" => getUserByTargetId($remotePartyUserId),
+        "MESSAGE" => $message,
+        "AUTHOR_ID" => getUserByTargetId($remotePartyUserId),
+      );
+      CIMMessenger::Add($arFields);
+    }
   }
-  
-  
 }
-
 ?>
