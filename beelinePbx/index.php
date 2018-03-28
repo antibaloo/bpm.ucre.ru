@@ -256,7 +256,7 @@ if ($eventType == 'xsi:CallReleasedEvent') {
     'CALL_ID' => getBitrixByBeelinepbx($callId),
     'DURATION' => $duration,
     'USER_ID' => $assignedById,
-    'ADD_TO_CHAT' => false,
+    'ADD_TO_CHAT' => ($remotePartyCallType == 'Group')?false:true,
     'RECORD_URL' => '',
     'STATUS_CODE' => $statusCode,
   );
