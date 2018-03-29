@@ -6,8 +6,25 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED!==true) die();
 </pre>
 <div class="offerForm">
   <form id="crm_offer_buy">
-    Тип недвижимости<input name="UF_CRM_58CFC7CDAAB96" type="text" value="<?=$arResult['PARAMS']['UF_CRM_58CFC7CDAAB96']?>">
-    <input type="hidden" name="OFFER_AJAX_ID" value="<?=$arResult['OFFER_AJAX_ID']?>">
+    <div class="gridWrapper">
+      <div class="gridTitle">Тип объекта</div>
+      <div class="gridValue">
+        <select name="UF_CRM_58CFC7CDAAB96">
+          <option value="">(выберите тип объекта)</option>
+          <option value="1" <?=($arResult['PARAMS']['UF_CRM_58CFC7CDAAB96'] == 1)?"selected":""?>>Комната</option>
+          <option value="2" <?=($arResult['PARAMS']['UF_CRM_58CFC7CDAAB96'] == 2)?"selected":""?>>Квартира</option>
+          <option value="3" <?=($arResult['PARAMS']['UF_CRM_58CFC7CDAAB96'] == 3)?"selected":""?>>Дом</option>
+          <option value="4" <?=($arResult['PARAMS']['UF_CRM_58CFC7CDAAB96'] == 4)?"selected":""?>>Таунхаус</option>
+          <option value="5" <?=($arResult['PARAMS']['UF_CRM_58CFC7CDAAB96'] == 5)?"selected":""?>>Дача</option>
+          <option value="6" <?=($arResult['PARAMS']['UF_CRM_58CFC7CDAAB96'] == 6)?"selected":""?>>Участок</option>
+          <option value="7" <?=($arResult['PARAMS']['UF_CRM_58CFC7CDAAB96'] == 7)?"selected":""?>>Коммерческий</option>
+        </select>
+      </div>
+      <div class="gridTitle"></div>
+      <div class="gridValue">
+      </div>
+    </div>
+    <input type="hidden" name="OFFER_AJAX_ID" value="<?=$arResult['OFFER_AJAX_ID']?>"><!-- ID блока обертки шаблона -->
   </form>
   <center><a href="#" id="offerBuySearch" class="ui-btn ui-btn-bg-primary">Искать</a></center>
 </div>
