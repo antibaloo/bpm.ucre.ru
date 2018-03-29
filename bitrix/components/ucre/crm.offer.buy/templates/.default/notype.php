@@ -6,10 +6,20 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED!==true) die();
 </pre>
 <div class="offerForm">
   <form id="crm_offer_buy">
-    Тип недвижимости<input name="UF_CRM_58CFC7CDAAB96" type="text" value="<?=$arResult['PARAMS']['UF_CRM_58CFC7CDAAB96']?>">
+    <div class="typeWrapper">
+      <div class="empty"></div>
+      <div class="objectType" typeId="1">Комната</div>
+      <div class="objectType" typeId="2">Квартира</div>
+      <div class="objectType" typeId="3">Дом</div>
+      <div class="objectType" typeId="4">Таунхаус</div>
+      <div class="objectType" typeId="5">Дача</div>
+      <div class="objectType" typeId="6">Участок</div>
+      <div class="objectType" typeId="7">Коммерческий</div>
+      <div class="empty"></div>
+    </div>
+    <input type="hidden" id="UF_CRM_58CFC7CDAAB96" name="UF_CRM_58CFC7CDAAB96" value="">
     <input type="hidden" name="OFFER_AJAX_ID" value="<?=$arResult['OFFER_AJAX_ID']?>">
   </form>
-  <center><a href="#" id="offerBuySearch" class="ui-btn ui-btn-bg-primary">Искать</a></center>
 </div>
 <div class="offerMap">
   Карта
@@ -24,7 +34,8 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED!==true) die();
     console.log($(".offerForm").height());
     $(".offerMap").height($(".offerForm").height());
   });
-  $("#offerBuySearch").click(function () {
+  $(".objectType").click(function(){
+    $("#UF_CRM_58CFC7CDAAB96").val($(this).attr("typeId"));
     var data = $('#crm_offer_buy').serialize();
     $.ajax({
       url: "<?=$arResult['COMPONENT_PATH']?>/ajax.php",
