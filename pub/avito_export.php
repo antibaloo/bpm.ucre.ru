@@ -1,10 +1,11 @@
 <?php
-$start = microtime(true);//Засекаем время выполнения скрипта
+$start = microtime(true);															//Засекаем время выполнения скрипта
 require ($_SERVER['DOCUMENT_ROOT'] . "/bitrix/modules/main/include/prolog_before.php");
+include($_SERVER['DOCUMENT_ROOT'].'/include/avito/functions.php');
 CModule::IncludeModule('iblock');
 CModule::IncludeModule('crm');
 $locations = simplexml_load_file('http://autoload.avito.ru/format/Locations.xml');
-$cityspr = array();//Справочник населенных пунктов Оренбургской области по версии Авито
+$cityspr = array();																		//Справочник населенных пунктов Оренбургской области по версии Авито
 $cityCoords = array();
 $districtspr = array("Ленинский", "Промышленный", "Центральный", "Дзержинский","отсутствует");//Справочник районов города
 foreach ($locations->Region as $region) {
@@ -137,9 +138,11 @@ while($aRes = $db_res->Fetch()){
       }
     }else{//Если населенного пункта нет в справочнике Авито
 			$city = "";
-			$distance = 17.846840;//условное расстояние по координатам до Москвы
+			$distance = 1227748.693549;//расстояние в метрах Оренбург - Москвы, для первого сравнения
+			//$distance = 17.846840;//условное расстояние по координатам до Москвы
 			foreach($cityCoords as $name=>$coords){
-				$temp = sqrt(($aRes['PROPERTY_298']-$coords['lat'])*($aRes['PROPERTY_298']-$coords['lat'])+($aRes['PROPERTY_299']-$coords['lon'])*($aRes['PROPERTY_299']-$coords['lon']));
+				$temp = calculateTheDistance($aRes['PROPERTY_298'], $aRes['PROPERTY_299'], $coords['lat'], $coords['lon']);
+				//$temp = sqrt(($aRes['PROPERTY_298']-$coords['lat'])*($aRes['PROPERTY_298']-$coords['lat'])+($aRes['PROPERTY_299']-$coords['lon'])*($aRes['PROPERTY_299']-$coords['lon']));
 				if ($temp<$distance) {
 					$distance = $temp;
 					$city = $name;
