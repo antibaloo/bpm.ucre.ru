@@ -9,7 +9,7 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true)
 {
 	die();
 }
-CJSCore::Init(array("jquery"));
+
 //Ajax Performance Optimization
 if (isset($_GET["RELOAD"]) && $_GET["RELOAD"] == "Y")
 {
@@ -29,7 +29,7 @@ else if (isset($_GET["IFRAME"]) && $_GET["IFRAME"] === "Y" && !isset($_GET["SONE
 }
 
 CModule::IncludeModule("intranet");
-CJSCore::Init("sidepanel_bitrix24");
+CJSCore::Init("sidepanel_bitrix24", "socnetslider");
 
 Loc::loadMessages($_SERVER["DOCUMENT_ROOT"]."/bitrix/templates/".SITE_TEMPLATE_ID."/header.php");
 
