@@ -2,10 +2,11 @@
 if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED!==true) die();
 ?>
 <pre>
-<?print_r($arResult);?>
+<?//print_r($arResult);?>
 </pre>
 <div class="offerForm">
   <form id="crm_offer_buy">
+    <input name="ID" type="hidden" value="<?=$arResult['PARAMS']['ID']?>">
     <div class="gridWrapper">
       <div class="gridTitle">Тип объекта</div>
       <div class="gridValue">
@@ -60,7 +61,10 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED!==true) die();
       <div class="gridTitle">Цена до</div>
       <div class="gridValue"><input name ="UF_CRM_58958B5751841" type="number" min="100000" step="50000" value="<?=$arResult['PARAMS']['UF_CRM_58958B5751841']?>"></div>
       <div class="gridTitle">Область поиска</div>
-      <div class="gridValue"><input type="checkbox" name="GEO" value="1" <?=($arResult['PARAMS']['GEO'] === "1")?"checked":""?>></div>
+      <div class="gridValue">
+        <input type="checkbox" name="GEO_USE" value="1" <?=($arResult['PARAMS']['GEO_USE'] === "1")?"checked":""?>>
+        <input type="hidden" id= "GEO" name="GEO" value="<?=$arResult['PARAMS']['GEO']?>">
+      </div>
       <div class="gridTitle"></div>
       <div class="gridValue"></div>
     </div>
@@ -68,15 +72,35 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED!==true) die();
   </form>
   <center><a href="#" id="offerBuySearch" class="ui-btn ui-btn-bg-primary">Искать</a></center>
 </div>
-<div class="offerMap">
-  Карта
+<div id="offerMap" class="offerMap">
 </div>
 
 <div class="offerResultGrid">
   Грид
 </div>
-
+<script src="https://api-maps.yandex.ru/2.1/?load=package.full&lang=ru-RU"></script>
 <script>
+  var myMap,polygon;
+  ymaps.ready(init);
+  function init () {
+    myMap = new ymaps.Map('offerMap', {
+      center: [51.779700, 55.116868],
+      zoom: 13,
+      controls: ['zoomControl', 'typeSelector']
+    });
+    
+    if ($("#GEO").val()!=""){
+      polygon = new ymaps.Polygon([JSON.parse($("#GEO").val())], {}, {
+        fillColor: '#1092DC',
+        strokeColor: '#0000FF',
+        opacity: 0.5,
+        strokeWidth: 3
+      });
+      myMap.geoObjects.add(polygon);
+      myMap.setBounds(polygon.geometry.getBounds());
+    }
+    
+  }
   $("#offerBuySearch").click(function () {
     var data = $('#crm_offer_buy').serialize();
     $.ajax({
