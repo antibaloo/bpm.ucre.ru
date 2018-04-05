@@ -2,9 +2,10 @@
 if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED!==true) die();
 ?>
 <pre>
-<?print_r($arResult);?>
+<?//print_r($arResult);?>
 </pre>
-<div class="offerForm">
+<div class="offerForm" style="clear:both;width:100%;height:auto">
+  <center><h2>Выберите тип объекта</h2></center>
   <form id="crm_offer_buy">
     <div class="typeWrapper">
       <div class="empty"></div>
@@ -21,19 +22,8 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED!==true) die();
     <input type="hidden" name="OFFER_AJAX_ID" value="<?=$arResult['OFFER_AJAX_ID']?>">
   </form>
 </div>
-<div class="offerMap">
-  Карта
-</div>
-
-<div class="offerResultGrid">
-  Грид
-</div>
 
 <script>
-  $(document).ready(function() {
-    console.log($(".offerForm").height());
-    $(".offerMap").height($(".offerForm").height());
-  });
   $(".objectType").click(function(){
     $("#UF_CRM_58CFC7CDAAB96").val($(this).attr("typeId"));
     var data = $('#crm_offer_buy').serialize();
