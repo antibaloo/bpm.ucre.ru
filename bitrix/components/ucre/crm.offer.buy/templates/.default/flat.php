@@ -44,23 +44,23 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED!==true) die();
       <div class="gridTitle">S <sub>кух.</sub> от</div>
       <div class="gridValue"><input name ="UF_CRM_58958B52F2BAC" type="number" min="1" value="<?=$arResult['PARAMS']['UF_CRM_58958B52F2BAC']?>"></div>
       <div class="gridTitle">Этаж от</div>
-      <div class="gridValue"></div>
+      <div class="gridValue"><input name ="UF_CRM_1506501917" type="number" min="1" value="<?=$arResult['PARAMS']['UF_CRM_1506501917']?>"></div>
       <div class="gridTitle">Этаж до</div>
-      <div class="gridValue"></div>
+      <div class="gridValue"><input name ="UF_CRM_1506501950" type="number" min="1" value="<?=$arResult['PARAMS']['UF_CRM_1506501950']?>"></div>
       <div class="gridTitle">Этажность от</div>
-      <div class="gridValue"></div>
+      <div class="gridValue"><input name ="UF_CRM_1522901904" type="number" min="1" value="<?=$arResult['PARAMS']['UF_CRM_1522901904']?>"></div>
       <div class="gridTitle">Этажность до</div>
-      <div class="gridValue"></div>
+      <div class="gridValue"><input name ="UF_CRM_1522901921" type="number" min="1" value="<?=$arResult['PARAMS']['UF_CRM_1522901921']?>"></div>
       <div class="gridTitle">Не последний</div>
-      <div class="gridValue"></div>
+      <div class="gridValue"><input type="checkbox" name="UF_CRM_1521541289" value="1" <?=($arResult['PARAMS']['UF_CRM_1521541289'])?"checked":""?>></div>
       <div class="gridTitle">Есть балкон</div>
-      <div class="gridValue"></div>
+      <div class="gridValue"><input type="checkbox" name="UF_CRM_58958B532A119" value="1" <?=($arResult['PARAMS']['UF_CRM_58958B532A119'])?"checked":""?>></div>
       <div class="gridTitle">Цена от</div>
-      <div class="gridValue"></div>
+      <div class="gridValue"><input name ="UF_CRM_58958B576448C" type="number" min="100000" step="50000" value="<?=$arResult['PARAMS']['UF_CRM_58958B576448C']?>"></div>
       <div class="gridTitle">Цена до</div>
-      <div class="gridValue"></div>
+      <div class="gridValue"><input name ="UF_CRM_58958B5751841" type="number" min="100000" step="50000" value="<?=$arResult['PARAMS']['UF_CRM_58958B5751841']?>"></div>
       <div class="gridTitle">Область поиска</div>
-      <div class="gridValue"></div>
+      <div class="gridValue"><input type="checkbox" name="GEO" value="1" <?=($arResult['PARAMS']['GEO'] === "1")?"checked":""?>></div>
       <div class="gridTitle"></div>
       <div class="gridValue"></div>
     </div>
@@ -91,5 +91,8 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED!==true) die();
         $("#<?=$arResult['OFFER_AJAX_ID']?>").html("Технические неполадки! В ближайшее время все будет исправлено!");
       },
     });
+  });
+  $("#<?=$arResult['OFFER_AJAX_ID']?>").blur(function(){
+    console.log("Изменение размера");
   });
 </script>

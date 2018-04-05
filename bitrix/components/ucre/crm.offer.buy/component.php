@@ -52,12 +52,22 @@ if (isset($arParams["PARAMS"])){//Вызов из формы
         "UF_CRM_58958B5207D0C",     //Тип дома
         "UF_CRM_58958B52BA439",     //Общая площадь не менее
         "UF_CRM_58958B52F2BAC",     //Площадь кухни не менее
+        "UF_CRM_1506501917",        //Этаж от
+        "UF_CRM_1506501950",        //Этаж до
+        "UF_CRM_1521541289",        //Не последний
+        "UF_CRM_1522901904",        //Этажность от
+        "UF_CRM_1522901921",        //Этажность до
+        "UF_CRM_58958B532A119",     //Есть балкон
+        "UF_CRM_58958B576448C",     //Цена от
+        "UF_CRM_58958B5751841",     //Цена до
+        
       ),
       array()
     );
     $mainDeal = $rsDeal->Fetch();
     unset($mainDeal['ID']); //Убираем ненужный параметр
     $arResult['PARAMS'] = $mainDeal;
+    $arResult['PARAMS']['GEO'] = "1"; //По-умолчанию включен учет области поиска
     switch ($arResult['PARAMS']['UF_CRM_58CFC7CDAAB96']){
       case '1':
         $template="room";
