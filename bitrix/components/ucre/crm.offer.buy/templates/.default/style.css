@@ -6,9 +6,13 @@
 .offerMap{
   height: 350px;
   width: 50%;
-  background-color: lightgray;
   float: right;
 }
+/*
+#map {
+  height: 350px;
+  width: 50%;
+}*/
 .offerResultGrid{
   clear: both;
   width: 100%;
