@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Установка приложения для генерация согласий на осмотр</title>
+     <!-- Bootstrap -->
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="css/application.css" rel="stylesheet">
+  </head>
+  <body>
+    <div id="app" class="container-fluid">
+      <div class="bs-callout bs-callout-danger"><i class="fa fa-cloud pull-left fa-3x"></i>
+        <p>Создание информационного блока для хранения данных о уже сгенерированных пакетах согласий и генерации новых.</p>
+      </div>
+    </div>
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script type="text/javascript" src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/application.js"></script>
+    <script src="//api.bitrix24.com/api/v1/"></script>
+    <script>
+      $(document).ready(function () {
+        BX24.init(function(){
+          /*
+          BX24.callMethod(
+            'entity.delete', {'ENTITY': 'agreement'},
+            function(result){
+              console.log(result);
+              confirm("Продолжить?");
+            }
+          );
+          */
+          BX24.callMethod('entity.add', {'ENTITY': 'agreement', 'NAME': 'Agreements', 'ACCESS': {AU:'W'}});
+          BX24.callMethod('entity.item.property.add', {ENTITY: 'agreement', PROPERTY: 'leadsCreated', NAME: 'Лиды созданы', TYPE: 'N'});
+          BX24.callMethod('entity.item.property.add', {ENTITY: 'agreement', PROPERTY: 'first', NAME: 'Первый id', TYPE: 'N'});
+          BX24.callMethod('entity.item.property.add', {ENTITY: 'agreement', PROPERTY: 'last', NAME: 'Последний id', TYPE: 'N'});
+          /*----------------------------------------------*/
+          // Хранилище agreement
+          // NAME - Тестовое описание диапазона согласий 
+          // DATE_CREATE - Дата генерации          
+          // PROPERTY_leadCreated - признак создания лидов
+          // PROPERTY_first - id первого согласия диапазона      
+          // PROPERTY_last - id последнего согласия диапазона     
+          /*----------------------------------------------*/
+          BX24.installFinish();
+        });
+      });
+    </script>
+  </body>
+</html>

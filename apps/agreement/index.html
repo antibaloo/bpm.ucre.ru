@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Генерация согласий на осмотр</title>
+    <!-- Bootstrap -->
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="css/application.css" rel="stylesheet">
+  </head>
+  <body>
+    <div id="app" class="container-fluid">
+      <div class="bs-callout bs-callout-info">
+        <h4>Список созданных диапазонов согласий</h4>
+        <p>Текущий пользователь: <span id="user-name"><i class="fa fa-spinner fa-spin"></i></span></p>
+        <a href="#createRange" class="btn btn-primary" data-toggle="modal">Создать диапазон</a>
+        <input type="hidden" id="allCount" disabled>
+      </div>
+      <div class="row">
+        <div class="col-md-12 col-sm-12">
+          <div class="panel panel-default">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Описание</th>
+                  <th>Дата генерации</th>
+                  <th>Кол-во</th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="range-list">
+                <tr>
+                  <td colspan="3"><i class="fa fa-spinner fa-spin"></i></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div id="createRange" class="modal fade">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <!-- Заголовок модального окна -->
+            <div class="modal-header">
+              <h4 class="modal-title">Параметры диапазона согласий</h4>
+            </div>
+            <!-- Основное содержимое модального окна -->
+            <div class="modal-body">
+              <form>
+                <div class="form-row">
+                  <div class="form-group col-md-8">
+                    <input id="argeementDesc" type="text" class="form-control" placeholder="Описание диапазона">
+                  </div>
+                  <div class="form-group col-md-4">
+                    <input id="agreementCount" type="number" class="form-control" placeholder="Количество" min="10" step="10">
+                  </div>
+                </div>
+              </form>
+            </div>
+            <!-- Футер модального окна -->
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+              <button id="generateAgreement" type="button" class="btn btn-primary" data-dismiss="modal">Генерация</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script type="text/javascript" src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/jspdf.min.js"></script>
+    <script type="text/javascript" src="js/qrcode.js"></script>
+    <script type="text/javascript" src="js/application.js"></script>
+    <script src="//api.bitrix24.com/api/v1/"></script>
+    <script>
+      $(document).ready(function () {
+        BX24.init(function(){
+          app.saveFrameWidth();
+          app.displayCurrentUser('#user-name');
+          app.displayRanges();
+          app.resizeFrame();
+        });
+        $("#generateAgreement").click(function(){
+          app.saveFrameWidth();
+          app.addRange($("#argeementDesc").val(),Number($("#allCount").val())+1,Number($("#allCount").val())+Number($("#agreementCount").val()));
+          $("#argeementDesc").val("");
+          $("#agreementCount").val("");
+          app.displayRanges();
+          app.resizeFrame();
+        });
+      });
+    </script>
+  </body>
+</html>
