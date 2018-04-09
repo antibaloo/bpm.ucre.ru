@@ -13,16 +13,16 @@ if ($_GET['count'] > 0){
     $responce = curl_exec($client);
     $json = json_decode($responce, true);
     if (isset($json['errorCode'])){
+      echo "<pre>";print_r($json);echo "</pre>";
       echo $arRecord['logTime']." - ".$arRecord['extTrackingId'].": Запись не найдена ". date("H:i:s d-m-Y")."<br>";
     }else{
-      file_put_contents('/home/bitrix/www_bpm/callRecordTmp/'.$arRecord['bitrixCallId'].'.wav', $responce);
-      exec('lame -V 1 /home/bitrix/www_bpm/callRecordTmp/'.$arRecord['bitrixCallId'].'.wav /home/bitrix/www_bpm/callRecordTmp/'.$arRecord['bitrixCallId'].'.mp3');
-      unlink('/home/bitrix/www_bpm/callRecordTmp/'.$arRecord['bitrixCallId'].'.wav');
+      file_put_contents('/home/bitrix/www_bpm/callRecordTmp/'.$arRecord['bitrixCallId'].'.mp3', $responce);
       $restHelper = new \Bitrix\Voximplant\Rest\Helper;
       $result = $restHelper->attachRecordWithUrl($arRecord['bitrixCallId'],'https://bpm.ucre.ru/callRecordTmp/'.$arRecord['bitrixCallId'].'.mp3');
-      unlink('/home/bitrix/www_bpm/callRecordTmp/'.$arRecord['bitrixCallId'].'.mp3');
       echo $arRecord['logTime']." - ".$arRecord['extTrackingId']." Запись найдена ". date("H:i:s d-m-Y")."<br>";
       $DB->Query("update b_beeline_record_log set recordState='Uploaded', uploadTime = ".$DB->GetNowFunction()."  where id = '".$arRecord['id']."'");
+      sleep (15);
+      unlink('/home/bitrix/www_bpm/callRecordTmp/'.$arRecord['bitrixCallId'].'.mp3');
     }
   }
 }else{
