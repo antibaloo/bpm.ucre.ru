@@ -13,7 +13,6 @@ if ($_GET['count'] > 0){
     $responce = curl_exec($client);
     $json = json_decode($responce, true);
     if (isset($json['errorCode'])){
-      echo "<pre>";print_r($json);echo "</pre>";
       echo $arRecord['logTime']." - ".$arRecord['extTrackingId'].": Запись не найдена ". date("H:i:s d-m-Y")."<br>";
     }else{
       file_put_contents('/home/bitrix/www_bpm/callRecordTmp/'.$arRecord['bitrixCallId'].'.mp3', $responce);
