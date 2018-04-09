@@ -10,6 +10,7 @@ $APPLICATION->IncludeComponent(
       'UF_CRM_5895BC940ED3F'  => $_POST['UF_CRM_5895BC940ED3F'],  //Рынок поиска
       'UF_CRM_58958B529E628'  => $_POST['UF_CRM_58958B529E628'],  //Кол-во комнат 
       'UF_CRM_58958B5207D0C'  => $_POST['UF_CRM_58958B5207D0C'],  //Тип дома
+      'UF_CRM_1522993078'     => $_POST['UF_CRM_1522993078'],     //Материал стен
       "UF_CRM_58958B52BA439"  => $_POST['UF_CRM_58958B52BA439'],  //Общая площадь не менее
       "UF_CRM_58958B52F2BAC"  => $_POST['UF_CRM_58958B52F2BAC'],  //Площадь кухни не менее
       "UF_CRM_1506501917"     => $_POST['UF_CRM_1506501917'],     //Этаж от

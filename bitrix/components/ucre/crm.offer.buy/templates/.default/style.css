@@ -8,11 +8,6 @@
   width: 50%;
   float: right;
 }
-.offerResultGrid{
-  clear: both;
-  width: 100%;
-  background-color: lightyellow;
-}
 .gridWrapper{
   display: grid;
   grid-template-columns: 1fr 2fr 1fr 2fr;
@@ -52,4 +47,28 @@
 .objectType:hover{
   background: cornflowerblue;
   cursor: pointer;
+}
+.resultGridWrapper{
+  clear: both;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr 5fr 1fr 5fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-gap: 5px;
+  padding: 5px;
+}
+.resultGridHeader{
+  font-weight: bold;
+  text-align: center;
+  background-color: #58D3F7;
+  padding: 5px;
+}
+.resultGridCell{
+  background-color: #F5F6CE;
+  padding: 5px;
+}
+.rightCell{
+  text-align: right;
+}
+.centerCell{
+  text-align: center;
 }

@@ -2,7 +2,9 @@
 if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED!==true) die();
 ?>
 <pre>
-<?//print_r($arResult);?>
+<?//print_r($arResult);
+//var_dump($arResult['PARAMS']['GEO_USE']);
+?>
 </pre>
 <div class="offerForm">
   <form id="crm_offer_buy">
@@ -62,7 +64,7 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED!==true) die();
       <div class="gridValue"><input name ="UF_CRM_58958B5751841" type="number" min="100000" step="50000" value="<?=$arResult['PARAMS']['UF_CRM_58958B5751841']?>"></div>
       <div class="gridTitle">Область поиска</div>
       <div class="gridValue">
-        <input type="checkbox" name="GEO_USE" value="1" <?=($arResult['PARAMS']['GEO_USE'] === "1")?"checked":""?>>
+        <input type="checkbox" id="GEO_USE" name="GEO_USE" value="1" <?=($arResult['PARAMS']['GEO_USE'] === "1")?"checked":""?>>
         <input type="hidden" id= "GEO" name="GEO" value="<?=$arResult['PARAMS']['GEO']?>">
       </div>
       <div class="gridTitle"></div>
@@ -75,18 +77,46 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED!==true) die();
 <div id="offerMap" class="offerMap">
 </div>
 
-<div class="offerResultGrid">
-  Грид
+<div class="resultGridWrapper">
+  <div class="resultGridHeader"></div>
+  <div class="resultGridHeader">id</div>
+  <div class="resultGridHeader">Название заявки</div>
+  <div class="resultGridHeader">Цена</div>
+  <div class="resultGridHeader">Адрес объекта</div>
+  <div class="resultGridHeader" title="Количество комнат">N<sub>к</sub></div>
+  <div class="resultGridHeader" title="Общая площадь">S<sub>о</sub></div>
+  <div class="resultGridHeader" title="Площадь кухни">S<sub>к</sub></div>
+  <div class="resultGridHeader">Б</div>
+  <div class="resultGridHeader">Т</div>
+  <div class="resultGridHeader">Эт.</div>
+  <div class="resultGridHeader">Ответственный</div>
+<?foreach ($arResult['GRID'] as $row){?>
+  <div class="resultGridCell centerCell"><a href="javascript:add2potential(<?=$row['ID']?>)"><span style="color:green;font-weight: bold">+</span></a></div>
+  <div class="resultGridCell rightCell"><?=$row['ID']?></div>
+  <div class="resultGridCell"><?=$row['TITLE']?></div>
+  <div class="resultGridCell rightCell"><?=$row['UF_CRM_58958B5734602']?></div>
+  <div class="resultGridCell"></div>
+  <div class="resultGridCell"></div>
+  <div class="resultGridCell"></div>
+  <div class="resultGridCell"></div>
+  <div class="resultGridCell"></div>
+  <div class="resultGridCell"></div>
+  <div class="resultGridCell"></div>
+  <div class="resultGridCell"></div>
+<?}?>
 </div>
 <script src="https://api-maps.yandex.ru/2.1/?load=package.full&lang=ru-RU"></script>
 <script>
   var myMap,polygon;
+  var points = <?php echo json_encode($arResult['POINTS']);?>;
+  var outPoints = <?php echo json_encode($arResult['OUT_POINTS']);?>;
+
   ymaps.ready(init);
   function init () {
     myMap = new ymaps.Map('offerMap', {
       center: [51.779700, 55.116868],
       zoom: 13,
-      controls: ['zoomControl', 'typeSelector']
+      controls: ['zoomControl', 'typeSelector'/*, 'fullscreenControl'*/]
     });
     
     if ($("#GEO").val()!=""){
@@ -99,7 +129,62 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED!==true) die();
       myMap.geoObjects.add(polygon);
       myMap.setBounds(polygon.geometry.getBounds());
     }
-    
+    for (var point of points){
+      var myGeoObject = new ymaps.GeoObject({
+        // Описываем геометрию типа "Точка".
+        geometry: {
+          type: "Point",
+          coordinates: [point.lat, point.lon]
+        },
+        // Описываем данные геообъекта.
+        properties: {
+          hintContent: point.name,
+          balloonContentHeader: point.name,
+          balloonContentBody: "тут будет ссылка и кнопки",
+        }
+      }, {
+        // Задаем пресет метки с точкой без содержимого.
+        preset: "islands#darkGreenCircleDotIcon",
+        // Включаем возможность перетаскивания.
+        draggable: false,
+        // Переопределяем макет содержимого нижней части балуна.
+        balloonContentFooterLayout: ymaps.templateLayoutFactory.createClass(
+          'population: {{ properties.population }}, coordinates: {{ geometry.coordinates }}'
+        ),
+        // Отключаем задержку закрытия всплывающей подсказки.
+        hintCloseTimeout: null
+      })
+      myMap.geoObjects.add(myGeoObject);
+    }
+    if ( !$("#GEO_USE").is( ":checked" ) ){
+      for (var outPoint of outPoints){
+        var myGeoObject = new ymaps.GeoObject({
+          // Описываем геометрию типа "Точка".
+          geometry: {
+            type: "Point",
+            coordinates: [outPoint.lat, outPoint.lon]
+          },
+          // Описываем данные геообъекта.
+          properties: {
+            hintContent: outPoint.name,
+            balloonContentHeader: outPoint.name,
+            balloonContentBody: "тут будет ссылка и кнопки",
+          }
+        }, {
+          // Задаем пресет метки с точкой без содержимого.
+          preset: "islands#grayCircleDotIcon",
+          // Включаем возможность перетаскивания.
+          draggable: false,
+          // Переопределяем макет содержимого нижней части балуна.
+          balloonContentFooterLayout: ymaps.templateLayoutFactory.createClass(
+            'population: {{ properties.population }}, coordinates: {{ geometry.coordinates }}'
+          ),
+          // Отключаем задержку закрытия всплывающей подсказки.
+          hintCloseTimeout: null
+        })
+        myMap.geoObjects.add(myGeoObject);
+      }
+    }
   }
   $("#offerBuySearch").click(function () {
     var data = $('#crm_offer_buy').serialize();
