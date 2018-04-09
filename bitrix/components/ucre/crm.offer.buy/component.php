@@ -194,7 +194,6 @@ if ($template != 'error' && $template != 'notype'){//Запускаем поис
   
   /*--Проверка условий попадания в географическую область поиска--*/
   if ($arResult['PARAMS']['GEO']!=""){
-    
     while ($aRes=$rsData->Fetch()){
       if ($arResult['PARAMS']['GEO_USE'] === "1"){ //Строго в области поиска
         if ($aRes['PROPERTY_298'] && $aRes['PROPERTY_299']){
@@ -218,8 +217,15 @@ if ($template != 'error' && $template != 'notype'){//Запускаем поис
         }
       }
     }
-    $rsData->InitFromArray($arResult['GRID']);
+  }else{
+    while ($aRes=$rsData->Fetch()){
+      if ($aRes['PROPERTY_298'] && $aRes['PROPERTY_299']){
+        $arResult['GRID'][] = $aRes; //Забираем в результат
+        $arResult['POINTS'][] = array("lat"=> $aRes['PROPERTY_298'], "lon" => $aRes['PROPERTY_299'], "name" => $aRes['NAME']);
+      }
+    }
   }
+  $rsData->InitFromArray($arResult['GRID']);
   /*-------------------------------------------------------------*/
   
   
